@@ -38,7 +38,12 @@ export interface AuthProvider {
    * Use before sensitive actions.
    */
   verifySessionFresh(): Promise<Session | null>
-  signOut(): Promise<void>
+  /**
+   * Clears the session cookies. With `redirectTo` it returns the identity provider's end-session URL (RP-initiated
+   * logout): redirect the browser there and it comes back to `redirectTo`. Without it (or without an ID token) the
+   * session is ended by a direct call and nothing is returned.
+   */
+  signOut(redirectTo?: string): Promise<string | void>
   /**
    * Reissues the token so the claims copied from user data (`calendar`) are current. Call it from the Server
    * Action that changed that data.

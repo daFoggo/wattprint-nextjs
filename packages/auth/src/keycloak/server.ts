@@ -13,6 +13,7 @@ import {
 import { verifyKeycloakJwt } from "./jwks"
 import {
   buildAuthorizationUrl,
+  buildEndSessionUrl,
   createPkceChallenge,
   exchangeAuthorizationCode,
   fetchKeycloakUserInfo,
@@ -100,11 +101,18 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
       }
     },
 
-    async signOut(): Promise<void> {
+    async signOut(redirectTo?: string): Promise<string | void> {
       const cookieStore = await cookies()
       const refreshToken = cookieStore.get(cookieNames.refresh)?.value
+      const idToken = cookieStore.get(cookieNames.id)?.value
 
       try {
+        if (redirectTo && idToken) {
+          return buildEndSessionUrl(oidcConfig, {
+            idTokenHint: idToken,
+            redirectTo,
+          })
+        }
         if (refreshToken) {
           await logoutKeycloakSession(oidcConfig, refreshToken)
         }

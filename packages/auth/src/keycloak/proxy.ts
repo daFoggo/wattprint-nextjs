@@ -111,9 +111,11 @@ export async function updateSession(
   } catch (error) {
     // An outage (network, 5xx) must not sign everyone out: keep the cookies so the next request retries, and
     // let a token that has not expired yet keep working. Only a refresh the IdP rejected ends the session.
+    // invalid_client (wrong secret) is a deployment mistake and must not sign everyone out.
     const rejected =
       error instanceof KeycloakTokenError &&
-      [400, 401, 403].includes(error.status)
+      error.status === 400 &&
+      error.code === "invalid_grant"
     if (!rejected) {
       console.error("[keycloak-proxy] token refresh failed:", error)
       return {

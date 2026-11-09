@@ -80,6 +80,30 @@ describe("Keycloak AuthProvider & Proxy", () => {
     expect(cookieJar.has("nmb-dashboard-auth.id")).toBe(false)
   })
 
+  it("returns the end-session URL for RP-initiated logout and still clears the cookies", async () => {
+    const { createKeycloakProvider } = await import("../keycloak/server")
+    cookieJar.set("nmb-dashboard-auth.access", "acc")
+    cookieJar.set("nmb-dashboard-auth.refresh", "ref")
+    cookieJar.set("nmb-dashboard-auth.id", "id-token")
+    const fetchMock = vi.spyOn(globalThis, "fetch")
+
+    const provider = createKeycloakProvider({
+      cookieName: "nmb-dashboard-auth",
+    })
+    const url = await provider.signOut("http://localhost:3001/sign-in")
+
+    const parsed = new URL(String(url))
+    expect(parsed.pathname).toMatch(/protocol\/openid-connect\/logout$/)
+    expect(parsed.searchParams.get("id_token_hint")).toBe("id-token")
+    expect(parsed.searchParams.get("post_logout_redirect_uri")).toBe(
+      "http://localhost:3001/sign-in"
+    )
+    // The browser ends the session; no direct call is made.
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(cookieJar.has("nmb-dashboard-auth.id")).toBe(false)
+    expect(cookieJar.has("nmb-dashboard-auth.refresh")).toBe(false)
+  })
+
   it("short-circuits in updateSession when no tokens are present", async () => {
     const { updateSession } = await import("../keycloak/proxy")
     const req = new NextRequest("http://localhost:3001/dashboard")

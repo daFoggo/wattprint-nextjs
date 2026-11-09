@@ -95,14 +95,38 @@ export async function exchangeAuthorizationCode(
 export class KeycloakTokenError extends Error {
   constructor(
     readonly status: number,
-    message: string
+    message: string,
+    readonly code?: string
   ) {
     super(message)
     this.name = "KeycloakTokenError"
   }
 }
 
-export async function refreshKeycloakTokens(
+// Refresh tokens are single use (realm `revokeRefreshToken`), but one page load fires several requests that
+// carry the same cookie. The first refresh wins; the rest share its answer for a few seconds, per process.
+const REFRESH_SHARE_MS = 10_000
+const inFlight = new Map<string, Promise<KeycloakTokenResponse>>()
+
+export function refreshKeycloakTokens(
+  config: KeycloakOidcConfig,
+  refreshToken: string
+): Promise<KeycloakTokenResponse> {
+  let shared = inFlight.get(refreshToken)
+  if (!shared) {
+    shared = requestRefresh(config, refreshToken)
+    inFlight.set(refreshToken, shared)
+    // A failure must not be replayed: a later request retries (outage) or sees the IdP's answer again.
+    // The share window starts when the answer arrives, so a slow IdP never lets a second refresh start.
+    shared.then(
+      () => setTimeout(() => inFlight.delete(refreshToken), REFRESH_SHARE_MS).unref?.(),
+      () => inFlight.delete(refreshToken)
+    )
+  }
+  return shared
+}
+
+async function requestRefresh(
   config: KeycloakOidcConfig,
   refreshToken: string
 ): Promise<KeycloakTokenResponse> {
@@ -118,13 +142,21 @@ export async function refreshKeycloakTokens(
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
+    signal: AbortSignal.timeout(10_000),
   })
 
   if (!res.ok) {
     const errorText = await res.text()
+    let code: string | undefined
+    try {
+      code = (JSON.parse(errorText) as { error?: string }).error
+    } catch {
+      // not JSON: no code
+    }
     throw new KeycloakTokenError(
       res.status,
-      `Token refresh failed (${res.status}): ${errorText}`
+      `Token refresh failed (${res.status}): ${errorText}`,
+      code
     )
   }
 
@@ -145,6 +177,18 @@ export async function fetchKeycloakUserInfo(
   } catch {
     return null
   }
+}
+
+/** RP-initiated logout: the browser is sent here, Keycloak ends the SSO session and returns to `redirectTo`. */
+export function buildEndSessionUrl(
+  config: KeycloakOidcConfig,
+  params: { idTokenHint: string; redirectTo: string }
+): string {
+  const url = new URL(getKeycloakEndpoints(config.issuer).logout)
+  url.searchParams.set("client_id", config.clientId)
+  url.searchParams.set("id_token_hint", params.idTokenHint)
+  url.searchParams.set("post_logout_redirect_uri", params.redirectTo)
+  return url.toString()
 }
 
 export async function logoutKeycloakSession(

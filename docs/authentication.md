@@ -32,6 +32,8 @@ In `apps/dashboard/` unless they start with `packages/`:
 - `proxy.ts`: `updateSession(request, AUTH_OPTIONS)` from `@workspace/auth/proxy`; `redirectWithSession` keeps refreshed cookies on redirects.
 - `config/auth.ts`: `AUTH_OPTIONS` (cookie name `nmb-dashboard-auth`); `lib/auth.ts`: `getAuthProvider()` bound to it.
 - `features/auth/actions.ts`: `signInWithKeycloakAction` (starts the flow) and `signOutAction`. `app/auth/callback/route.ts` finishes it; `app/auth/expired/route.ts` clears a rejected session.
+- Refresh-token rotation is on in the realm: `refreshKeycloakTokens` is single-flight per refresh token (in-process; several instances need a shared lock or sticky sessions). A failed refresh is not replayed.
+- Sign-out is RP-initiated: `signOutAction` redirects to Keycloak's end-session URL (`id_token_hint`, `post_logout_redirect_uri` = `/sign-in`, registered on the client); cookies are cleared either way. Without an id cookie it falls back to a back-channel logout.
 - `features/auth/components`: `GoogleSignInButton`, `SignOutMenuItem`, `FormError` (they hold no logic; the Server Action is a prop).
 - `lib/http.ts`: `apiFetch` sends the Bearer token to FastAPI (`API_BASE_URL`).
 - `packages/auth/src/keycloak/{server,proxy,oidc,jwks,cookies}.ts`: the provider, the proxy refresh, OIDC calls, token verification and cookie names.

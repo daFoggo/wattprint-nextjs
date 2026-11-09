@@ -72,10 +72,18 @@ describe("keycloak refresh", () => {
 
   it("clears the cookies when the refresh token is rejected", async () => {
     state.refresh = async () => {
-      throw new KeycloakTokenError(400, "invalid_grant")
+      throw new KeycloakTokenError(400, "invalid_grant", "invalid_grant")
     }
     const result = await updateSession(request(cookies(true)), OPTIONS)
     expect(result.isAuthenticated).toBe(false)
     expect(result.response.cookies.get("app.refresh")?.value).toBe("")
+  })
+
+  it("keeps the cookies on invalid_client (deployment mistake)", async () => {
+    state.refresh = async () => {
+      throw new KeycloakTokenError(401, "bad secret", "invalid_client")
+    }
+    const result = await updateSession(request(cookies(true)), OPTIONS)
+    expect(result.response.cookies.get("app.refresh")?.value).not.toBe("")
   })
 })
