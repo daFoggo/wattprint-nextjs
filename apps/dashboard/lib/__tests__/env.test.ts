@@ -6,12 +6,12 @@ import { parseServerEnv } from "../env"
 
 describe("parseServerEnv", () => {
   it("defaults API_BASE_URL to the local FastAPI", () => {
-    expect(parseServerEnv({}).API_BASE_URL).toBe("http://localhost:8000")
+    expect(parseServerEnv({}).API_BASE_URL).toBe("http://localhost:8000/api/v1")
   })
 
   it("treats an empty variable as unset", () => {
     expect(parseServerEnv({ API_BASE_URL: "" }).API_BASE_URL).toBe(
-      "http://localhost:8000"
+      "http://localhost:8000/api/v1"
     )
   })
 
