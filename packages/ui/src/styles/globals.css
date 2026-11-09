@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+@source "../../../apps/**/*.{ts,tsx}";
+@source "../../../components/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+@source "../../../ui-patterns/src/**/*.{ts,tsx}";
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+  --font-pixel-square: var(--font-pixel-square);
+  --font-pixel-grid: var(--font-pixel-grid);
+}
+
+/* Flat by default: every `shadow-*` utility (including those in shadcn components) renders no shadow. */
+@theme {
+  --shadow-2xs: 0 0 #0000;
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 0 #0000;
+  --shadow-lg: 0 0 #0000;
+  --shadow-xl: 0 0 #0000;
+  --shadow-2xl: 0 0 #0000;
+}
+
+/*
+ * Logo motion: the one exception to "only colors are custom" (docs/design-system.md, Logo).
+ * Frame-by-frame (`steps()`) so pixels jump instead of sliding. Use only via AppLogo, always
+ * behind `motion-safe:`.
+ */
+@theme {
+  --animate-logo-plus: logo-plus 4s steps(1, end) infinite;
+  --animate-logo-cross: logo-cross 4s steps(1, end) infinite;
+  --animate-logo-rise: logo-rise 3s steps(4, end) infinite;
+  --animate-logo-rise-late: logo-rise 3s steps(4, end) 1s infinite;
+  --animate-logo-rise-later: logo-rise 3s steps(4, end) 2s infinite;
+
+  @keyframes logo-plus {
+    0% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 0;
+    }
+    82% {
+      opacity: 1;
+    }
+  }
+  @keyframes logo-cross {
+    0% {
+      opacity: 0;
+    }
+    70% {
+      opacity: 1;
+    }
+    82% {
+      opacity: 0;
+    }
+  }
+  @keyframes logo-rise {
+    0% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-3px);
+    }
+  }
+}
+
+/*
+ * Palette: Mistral-style flat design. Light is warm cream, dark is steel (#101013). Values only: token names stay the
+ * stock shadcn ones so `shadcn add` and Animate UI updates never conflict (docs/design-system.md, Color).
+ * chart-1..4 are the brand ramp (orange, tangerine, yellow, red); pixel art and accents read them.
+ */
+:root {
+  --background: #fbfbf8;
+  --foreground: #1a1a1e;
+  --card: #f5f4ef;
+  --card-foreground: #1a1a1e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1e;
+  --primary: #101013;
+  --primary-foreground: #fafaf4;
+  --secondary: #ebe9e0;
+  --secondary-foreground: #1a1a1e;
+  --muted: #f5f4ef;
+  --muted-foreground: #62626c;
+  --accent: #ebe9e0;
+  --accent-foreground: #1a1a1e;
+  --destructive: #cc1100;
+  --border: #e4e3de;
+  --input: #8b8879;
+  --ring: #6d6d78;
+  --chart-1: #ff5229;
+  --chart-2: #ff8204;
+  --chart-3: #ffaf01;
+  --chart-4: #e51300;
+  --chart-5: #6d6d78;
+  --radius: 0.375rem;
+  --sidebar: #f5f4ef;
+  --sidebar-foreground: #1a1a1e;
+  --sidebar-primary: #101013;
+  --sidebar-primary-foreground: #fafaf4;
+  --sidebar-accent: #ebe9e0;
+  --sidebar-accent-foreground: #1a1a1e;
+  --sidebar-border: #e4e3de;
+  --sidebar-ring: #6d6d78;
+}
+
+.dark {
+  --background: #101013;
+  --foreground: #fafaf4;
+  --card: #1a1a1e;
+  --card-foreground: #fafaf4;
+  --popover: #1a1a1e;
+  --popover-foreground: #fafaf4;
+  --primary: #f1f1f3;
+  --primary-foreground: #1a1a1e;
+  --secondary: #27272b;
+  --secondary-foreground: #fafaf4;
+  --muted: #1a1a1e;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272b;
+  --accent-foreground: #fafaf4;
+  --destructive: #ff6660;
+  --border: #27272b;
+  --input: #707080;
+  --ring: #6d6d78;
+  --chart-1: #ff5229;
+  --chart-2: #ff8204;
+  --chart-3: #ffaf01;
+  --chart-4: #ff6660;
+  --chart-5: #a1a1aa;
+  --sidebar: #101013;
+  --sidebar-foreground: #fafaf4;
+  --sidebar-primary: #f1f1f3;
+  --sidebar-primary-foreground: #1a1a1e;
+  --sidebar-accent: #27272b;
+  --sidebar-accent-foreground: #fafaf4;
+  --sidebar-border: #27272b;
+  --sidebar-ring: #6d6d78;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+ 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* An input-group control is square inside a rounded wrapper: clip Chrome's square autofill fill to the wrapper's corners. */
+[data-slot="input-group"] {
+  overflow: hidden;
+}
+
+/*
+ * Overlays dim the page, they do not blur it. shadcn's `backdrop-blur-sm` repaints the whole screen
+ * behind a sliding sheet or dialog on every frame, which is the main cause of laggy overlays.
+ */
+[data-slot$="overlay"] {
+  backdrop-filter: none;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply overscroll-y-none;
+  }
+  body {
+    @apply bg-background text-foreground;
+    position: relative;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

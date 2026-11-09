@@ -1,0 +1,68 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "globalEnv": [
+    "CI",
+    "BASE_URL"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**",
+        "dist/**"
+      ],
+      "env": [
+        "AUTH_PROVIDER",
+        "API_BASE_URL",
+        "NODE_ENV",
+        "EXPOSE_TESTING_API",
+        "KEYCLOAK_ISSUER",
+        "KEYCLOAK_CLIENT_ID",
+        "KEYCLOAK_CLIENT_SECRET",
+        "DASHBOARD_ORIGIN"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ]
+    },
+    "format": {
+      "cache": false
+    },
+    "transit": {
+      "dependsOn": [
+        "^transit"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "transit"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ]
+    },
+    "test:e2e": {
+      "cache": false,
+      "env": [
+        "AUTH_PROVIDER"
+      ]
+    }
+  }
+}
