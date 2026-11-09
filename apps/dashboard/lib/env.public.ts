@@ -5,9 +5,9 @@ import { z } from "zod"
  * literally (`process.env.NEXT_PUBLIC_X`) so Next.js can inline it at build time.
  */
 const publicSchema = z.object({
-  NEXT_PUBLIC_APP_URL: z.url().default("http://localhost:3001"),
+  NEXT_PUBLIC_APP_URL: z.url().default("http://localhost:11092"),
   /** The public landing page (apps/web); the auth pages link back to it. */
-  NEXT_PUBLIC_LANDING_URL: z.url().default("http://localhost:3000"),
+  NEXT_PUBLIC_LANDING_URL: z.url().default("http://localhost:11091"),
 })
 
 export const publicEnv = publicSchema.parse({

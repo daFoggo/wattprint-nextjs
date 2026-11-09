@@ -5,8 +5,8 @@ import { z } from "zod"
  * literally (`process.env.NEXT_PUBLIC_X`) so Next.js can inline it at build time.
  */
 const publicSchema = z.object({
-  NEXT_PUBLIC_APP_URL: z.url().default("http://localhost:3000"),
-  NEXT_PUBLIC_DASHBOARD_URL: z.url().default("http://localhost:3001"),
+  NEXT_PUBLIC_APP_URL: z.url().default("http://localhost:11091"),
+  NEXT_PUBLIC_DASHBOARD_URL: z.url().default("http://localhost:11092"),
 })
 
 export const publicEnv = publicSchema.parse({

@@ -35,7 +35,7 @@ describe("Keycloak AuthProvider & Proxy", () => {
     const pkce = JSON.stringify({
       state: "expected-state",
       codeVerifier: "verifier-1",
-      redirectUri: "http://localhost:3001/auth/callback",
+      redirectUri: "http://localhost:11092/auth/callback",
     })
     // One PKCE cookie per login attempt, named after its state.
     cookieJar.set("nmb-dashboard-auth.pkce.expected-state", pkce)
@@ -90,13 +90,13 @@ describe("Keycloak AuthProvider & Proxy", () => {
     const provider = createKeycloakProvider({
       cookieName: "nmb-dashboard-auth",
     })
-    const url = await provider.signOut("http://localhost:3001/sign-in")
+    const url = await provider.signOut("http://localhost:11092/sign-in")
 
     const parsed = new URL(String(url))
     expect(parsed.pathname).toMatch(/protocol\/openid-connect\/logout$/)
     expect(parsed.searchParams.get("id_token_hint")).toBe("id-token")
     expect(parsed.searchParams.get("post_logout_redirect_uri")).toBe(
-      "http://localhost:3001/sign-in"
+      "http://localhost:11092/sign-in"
     )
     // The browser ends the session; no direct call is made.
     expect(fetchMock).not.toHaveBeenCalled()
@@ -106,7 +106,7 @@ describe("Keycloak AuthProvider & Proxy", () => {
 
   it("short-circuits in updateSession when no tokens are present", async () => {
     const { updateSession } = await import("../keycloak/proxy")
-    const req = new NextRequest("http://localhost:3001/dashboard")
+    const req = new NextRequest("http://localhost:11092/dashboard")
     const result = await updateSession(req, {
       cookieName: "nmb-dashboard-auth",
     })
@@ -135,7 +135,7 @@ describe("Keycloak AuthProvider & Proxy", () => {
     )
 
     const { updateSession } = await import("../keycloak/proxy")
-    const req = new NextRequest("http://localhost:3001/dashboard")
+    const req = new NextRequest("http://localhost:11092/dashboard")
     req.cookies.set("nmb-dashboard-auth.refresh", "existing-refresh-token")
 
     const result = await updateSession(req, {

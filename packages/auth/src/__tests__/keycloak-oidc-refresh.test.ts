@@ -68,7 +68,7 @@ describe("buildEndSessionUrl", () => {
     const url = new URL(
       buildEndSessionUrl(config, {
         idTokenHint: "id.tok.en",
-        redirectTo: "http://localhost:3001/sign-in",
+        redirectTo: "http://localhost:11092/sign-in",
       })
     )
     expect(url.origin + url.pathname).toBe(
@@ -77,7 +77,7 @@ describe("buildEndSessionUrl", () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({
       client_id: "wattprint-web",
       id_token_hint: "id.tok.en",
-      post_logout_redirect_uri: "http://localhost:3001/sign-in",
+      post_logout_redirect_uri: "http://localhost:11092/sign-in",
     })
   })
 })

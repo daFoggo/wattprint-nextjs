@@ -22,7 +22,7 @@ const { updateSession } = await import("../keycloak/proxy")
 const now = () => Math.floor(Date.now() / 1000)
 
 function request(cookies: Record<string, string>) {
-  return new NextRequest("http://localhost:3000/dashboard", {
+  return new NextRequest("http://localhost:11091/dashboard", {
     headers: {
       cookie: Object.entries(cookies)
         .map(([k, v]) => `${k}=${v}`)

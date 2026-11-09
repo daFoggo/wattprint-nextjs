@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import nextConfig from "../../next.config"
 
-const ORIGIN = "http://dashboard.internal:3001"
+const ORIGIN = "http://dashboard.internal:11092"
 
 async function beforeFiles() {
   const rewrites = await nextConfig.rewrites!()

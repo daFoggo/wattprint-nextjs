@@ -13,10 +13,10 @@ The dashboard supports one stack: `AUTH_PROVIDER=keycloak`. Any other value fail
 
 ```
 AUTH_PROVIDER=keycloak
-KEYCLOAK_ISSUER=http://localhost:8180/realms/wattprint
+KEYCLOAK_ISSUER=http://localhost:11095/realms/wattprint
 KEYCLOAK_CLIENT_ID=wattprint-web
 KEYCLOAK_CLIENT_SECRET=<required>
-API_BASE_URL=http://localhost:8000/api/v1
+API_BASE_URL=http://localhost:11093/api/v1
 ```
 
 `KEYCLOAK_CLIENT_SECRET` is required (also during `next build`; CI uses a placeholder). Every variable read at build time must also be listed in `turbo.json` (`build.env`).

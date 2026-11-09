@@ -9,7 +9,7 @@
         "web",
         "dev"
       ],
-      "port": 3000
+      "port": 11091
     },
     {
       "name": "dashboard",
@@ -19,7 +19,7 @@
         "dashboard",
         "dev"
       ],
-      "port": 3001
+      "port": 11092
     }
   ]
 }

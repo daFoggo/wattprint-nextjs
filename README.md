@@ -25,7 +25,7 @@ scoped `@workspace/*`, declared with `workspace:*`, and never nested or imported
 
 ```bash
 pnpm install
-pnpm dev                          # all apps: web (landing) on :3000, dashboard on :3001
+pnpm dev                          # all apps: web (landing) on :11091, dashboard on :11092
 pnpm turbo run dev --filter=dashboard   # one app
 pnpm build
 pnpm check                        # lint + typecheck + test

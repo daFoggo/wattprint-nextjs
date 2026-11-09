@@ -11,7 +11,7 @@ function contentSecurityPolicy(): string {
   const formActions = ["'self'", "https://accounts.google.com"]
   // Keycloak OIDC sends the browser to the Keycloak realm auth endpoint.
   const keycloakIssuer =
-    process.env.KEYCLOAK_ISSUER || "http://localhost:8180/realms/wattprint"
+    process.env.KEYCLOAK_ISSUER || "http://localhost:11095/realms/wattprint"
   formActions.push(new URL(keycloakIssuer).origin)
 
   const directives = [

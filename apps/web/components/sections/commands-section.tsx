@@ -33,7 +33,7 @@ export function CommandsSection() {
           </div>
         ))}
         <p className="max-w-2xl text-base text-muted-foreground">
-          Landing on :3000, dashboard on :3001. Configure Keycloak in{" "}
+          Landing on :11091, dashboard on :11092. Configure Keycloak in{" "}
           <code className="font-mono text-sm">apps/dashboard/.env.local</code>{" "}
           (<code className="font-mono text-sm">KEYCLOAK_CLIENT_SECRET</code> is
           required); see{" "}

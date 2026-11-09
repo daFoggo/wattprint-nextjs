@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@tabler/icons-react"],
   },
   async rewrites() {
-    const origin = process.env.DASHBOARD_ORIGIN ?? "http://localhost:3001"
+    const origin = process.env.DASHBOARD_ORIGIN ?? "http://localhost:11092"
     // beforeFiles: Vercel resolves segment prefetches (`.segments`) before the afterFiles rewrites run.
     const beforeFiles = [
       ...DASHBOARD_PATHS.flatMap((path) => [

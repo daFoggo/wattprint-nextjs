@@ -19,7 +19,7 @@ vi.mock("@workspace/auth/proxy", () => ({
 const { proxy } = await import("../../proxy")
 
 const run = (path: string) =>
-  proxy(new NextRequest(new URL(path, "http://localhost:3001")))
+  proxy(new NextRequest(new URL(path, "http://localhost:11092")))
 
 describe("proxy", () => {
   beforeEach(() => {

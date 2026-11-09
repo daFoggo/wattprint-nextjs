@@ -7,7 +7,7 @@ import { z } from "zod"
 export function getAuthSchema(isProd = process.env.NODE_ENV === "production") {
   return z.object({
     AUTH_PROVIDER: z.literal("keycloak"),
-    KEYCLOAK_ISSUER: z.url().default("http://localhost:8180/realms/wattprint"),
+    KEYCLOAK_ISSUER: z.url().default("http://localhost:11095/realms/wattprint"),
     KEYCLOAK_CLIENT_ID: z.string().min(1).default("wattprint-web"),
     KEYCLOAK_CLIENT_SECRET: isProd
       ? z.string().min(1, "KEYCLOAK_CLIENT_SECRET is required in production")

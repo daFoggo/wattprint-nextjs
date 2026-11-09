@@ -10,7 +10,7 @@ describe("parseAuthConfig", () => {
     })
     expect(config).toMatchObject({
       AUTH_PROVIDER: "keycloak",
-      KEYCLOAK_ISSUER: "http://localhost:8180/realms/wattprint",
+      KEYCLOAK_ISSUER: "http://localhost:11095/realms/wattprint",
       KEYCLOAK_CLIENT_ID: "wattprint-web",
     })
   })

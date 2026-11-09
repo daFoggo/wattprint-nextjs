@@ -29,13 +29,13 @@ describe("keycloak cookies & PKCE parsing", () => {
         JSON.stringify({
           state: "s1",
           codeVerifier: "v1",
-          redirectUri: "http://localhost:3001/auth/callback",
+          redirectUri: "http://localhost:11092/auth/callback",
         })
       )
     ).toEqual({
       state: "s1",
       codeVerifier: "v1",
-      redirectUri: "http://localhost:3001/auth/callback",
+      redirectUri: "http://localhost:11092/auth/callback",
     })
   })
 })
@@ -202,7 +202,7 @@ describe("OIDC URL builder", () => {
     }
     const url = new URL(
       buildAuthorizationUrl(cfg, {
-        redirectUri: "http://localhost:3001/auth/callback",
+        redirectUri: "http://localhost:11092/auth/callback",
         state: pkce.state,
         codeChallenge: pkce.codeChallenge,
       })
