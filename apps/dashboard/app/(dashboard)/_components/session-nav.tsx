@@ -1,5 +1,5 @@
 import { hasPermission } from "@workspace/auth/permissions"
-import { SignOutMenuItem } from "@/features/auth/components/sign-out-menu-item"
+import { SignOutButton } from "@/features/auth/components/sign-out-button"
 
 import { ScopedNav } from "@/components/layout/sidebar/scoped-nav"
 import { UserMenu } from "@/components/layout/sidebar/user-menu"
@@ -26,7 +26,7 @@ export async function SessionAccount() {
       email={session.email}
       role={session.role}
     >
-      <SignOutMenuItem action={signOutAction} />
+      <SignOutButton action={signOutAction} />
     </UserMenu>
   )
 }

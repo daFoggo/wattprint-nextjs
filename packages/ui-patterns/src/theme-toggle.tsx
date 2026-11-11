@@ -1,33 +1,37 @@
 "use client"
 
+import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 
 import {
-  ThemeTogglerButton,
-  ThemeTogglerButtonIcon,
-  type Resolved,
-  type ThemeSelection,
-} from "@workspace/ui/components/animate-ui/buttons/theme-toggler"
+  ThemeToggle as HairlineThemeToggle,
+  type Theme,
+} from "@workspace/ui/components/hairline/theme-toggle"
+import { cn } from "@workspace/ui/lib/utils"
 
-/** Icon button that flips between light and dark. Needs `ThemeProvider` above it. */
-export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, resolvedTheme, setTheme } = useTheme()
-  const currentTheme = (theme ?? "light") as ThemeSelection
-  const currentResolved = (resolvedTheme ?? "light") as Resolved
+const subscribe = () => () => {}
 
+/**
+ * Theme control. `icon` (default) flips light/dark; `segmented` is the Light / System / Dark choice of the account menu.
+ * Needs `ThemeProvider` above it.
+ */
+export function ThemeToggle({
+  variant = "icon",
+  className,
+}: {
+  variant?: "icon" | "segmented"
+  className?: string
+}) {
+  const { theme, setTheme } = useTheme()
+  // next-themes only knows the theme on the client; a placeholder keeps the server HTML and the first paint in step.
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false)
+  if (!mounted) return <span aria-hidden className={cn("inline-flex size-9", className)} />
   return (
-    <ThemeTogglerButton
-      variant="ghost"
-      size="icon-sm"
-      modes={["light", "dark"]}
-      theme={currentTheme}
-      resolvedTheme={currentResolved}
-      setTheme={setTheme}
-      aria-label="Toggle theme"
+    <HairlineThemeToggle
+      variant={variant}
+      value={(theme ?? "dark") as Theme}
+      onValueChange={setTheme}
       className={className}
-    >
-      <ThemeTogglerButtonIcon />
-      <span className="sr-only">Toggle theme</span>
-    </ThemeTogglerButton>
+    />
   )
 }

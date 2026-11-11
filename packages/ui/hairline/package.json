@@ -1,0 +1,7 @@
+{
+  "//": "shadcn CLI needs a package.json next to components.json; real deps live in ../package.json. List them here too so the CLI skips installing.",
+  "private": true,
+  "dependencies": {
+    "lucide-react": "^1.70.0"
+  }
+}

@@ -1,4 +1,4 @@
-import { Button } from "@workspace/ui/components/button"
+import { linkButton } from "@workspace/ui-patterns/link-button"
 
 import { publicEnv } from "@/lib/env.public"
 
@@ -11,9 +11,9 @@ export default function NotFound() {
       <p className="text-muted-foreground">
         The page you are looking for does not exist or has moved.
       </p>
-      <Button size="lg" render={<a href={publicEnv.NEXT_PUBLIC_LANDING_URL} />} nativeButton={false}>
+      <a href={publicEnv.NEXT_PUBLIC_LANDING_URL} className={linkButton()}>
         Back to home
-      </Button>
+      </a>
     </main>
   )
 }

@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   // Makes relative canonicals (`/some/path`) absolute.
   metadataBase: new URL(publicEnv.NEXT_PUBLIC_APP_URL),
   title: {
-    default: "Next Mono Base",
-    template: "%s | Next Mono Base",
+    default: "WattPrint",
+    template: "%s | WattPrint",
   },
   description:
-    "A Next.js monorepo base: auth, data, UI kit and conventions ready to build on.",
+    "Your energy dashboard: track your home's electricity use in one place.",
 }
 
 export default function RootLayout({

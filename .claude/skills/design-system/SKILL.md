@@ -16,20 +16,23 @@ section when a case is not covered here.
 ## Hard rules (check every className you write)
 
 1. Nothing is custom. Everything numeric uses Tailwind's default scale. **No arbitrary values**
-   (`mt-[54px]`, `text-[13px]`, `grid-cols-[auto_1fr]`, `rounded-[10px]`). Only exception: the logo's
-   `--animate-logo-*` keyframes, used by `AppLogo` alone.
+   (`mt-[54px]`, `text-[13px]`, `grid-cols-[auto_1fr]`, `rounded-[10px]`).
 2. Smallest text is `text-xs`. Weights: `font-normal`, `font-medium`.
 3. shadcn components: choose a `size` / `variant` prop. Never set `h-*`, `px-*`, `py-*`, `text-*` on them via
    `className`; layout classes (`w-full`, `mt-*`, `self-*`) are fine.
 4. Style through the stock shadcn tokens (`bg-background`, `text-muted-foreground`, `border-border`, `bg-primary`), never
    hex or `dark:` color pairs. Both themes must work; dark is the default. Errors: `text-destructive`. No custom color
    tokens and no shadows (`shadow-*` is neutralised in `globals.css`).
+   **Surface, not lines** (doc §2 Surfaces): page `bg-background` → section plate `rounded-3xl bg-card p-6` (tray of cards:
+   `p-2`) with **no border** → card inside it `rounded-xl border bg-background p-4`. Never `border-*` on a page region,
+   column or plate; never a plate in a plate. Vendored components keep their own rings; the rule is for layout.
 5. `font-serif` exists but is opt-in; do not apply it unless asked.
 6. CSS that comes from `vercel-react-view-transitions` (`::view-transition-*`) or `web-design-guidelines`
    (`content-visibility`, `transition`, etc.) must snap to the Tailwind scale and color tokens too; see
-7. Never edit a shadcn or Animate UI component file to restyle it: change a token in `globals.css` or pick a `variant`/`size`.
-   That keeps `shadcn add --diff` and Animate UI updates conflict-free (docs/design-system.md, Updating shadcn and Animate UI).
-8. The brand accent is `chart-1` (orange). Fonts load once in `@workspace/ui/lib/fonts`; do not load fonts per app.
+7. Never edit a shadcn or Hairline UI component file to restyle it: change a token in `globals.css` or pick a `variant`/`size`/prop.
+   That keeps `shadcn add --diff` and `pnpm hairline` updates conflict-free (docs/design-system.md, Updating shadcn and Hairline UI).
+8. The brand is green: `primary` = `chart-1` = `oklch(64.48% 0.1488 158.78)`, text on it `primary-foreground` (near-black).
+   `text-primary` only for icons and large text in light mode (3.1:1 on white). Fonts load once in `@workspace/ui/lib/fonts`; do not load fonts per app.
 
 ## Spacing tier lookup
 
@@ -44,7 +47,7 @@ section when a case is not covered here.
 | Major break (to related posts, CTA) | `mt-28` (`max-sm:mt-16`) |
 
 Space above a heading is always larger than below it. Put spacing on the parent (`flex flex-col gap-*`), not margins on
-children. Separate with space first, `border-b` second, a bordered box only for media objects.
+children. Separate with space first, a plate (`bg-card`) second; borders only on cards inside a plate.
 
 ## Layout and responsive
 
@@ -53,32 +56,29 @@ children. Separate with space first, `border-b` second, a bordered box only for 
 - Mobile-first. Only `lg` changes structure (rail stacks above, TOC hides, nav becomes a burger, rows split into two
   lines). `sm` / `md` / `xl` only adjust gutters, hide extras or tune columns.
 - Reflow, never shrink type or truncate titles. Hide in this order: keyboard hint, category, tile/TOC, date.
-- List rows: `flex items-start gap-4 border-b py-4`, no gap between rows; hover `hover:bg-primary
-  hover:text-primary-foreground`.
+- List rows: `flex items-start gap-4 py-4` inside a plate, split by `divide-y divide-border`; hover `hover:bg-accent`.
 - Anchor targets: `scroll-mt-24 max-sm:scroll-mt-18`.
 - `ItemGroup` whose children are not real list items must pass `role="none"` (upstream `ItemGroup` ships `role="list"`).
 
-## Components (Animate UI First)
+## Components (Hairline UI first)
 
-**Always prioritize Animate UI components and primitives over static shadcn components or hand-rolled animations whenever possible.**
-
-- All interactive shadcn components in `@workspace/ui/components/*` (`accordion`, `alert-dialog`, `checkbox`, `collapsible`, `combobox`, `context-menu`, `dialog`, `drawer`, `dropdown-menu`, `hover-card`, `input-otp`, `menubar`, `navigation-menu`, `pagination`, `popover`, `preview-link-card`, `progress`, `questionnaire`, `radio-group`, `select`, `sheet`, `sidebar`, `slider`, `switch`, `tabs`, `toast`, `toggle`, `toggle-group`, `tooltip`) are already animated with **Animate UI v2** (`@animate-ui/react`, Base UI primitives).
-- Dedicated Animate UI primitives and registry components live in `@workspace/ui/components/animate-ui/*` (see `.agents/skills/animate-ui/SKILL.md`).
+**Use a Hairline UI component (`@workspace/ui/components/hairline/*`) before shadcn (`@workspace/ui/components/ui/*`) or hand-rolled motion.** Finding, adding, updating and patching them: `.agents/skills/hairline-ui/SKILL.md`.
 
 | Need | Use |
 | :--- | :--- |
-| Primary CTA | `<Button size="lg">` (or `@workspace/ui/components/animate-ui/buttons/button` for spring press) |
-| Form / toolbar button | `<Button>` or `size="sm"` |
+| Primary CTA | Hairline `<Button size="lg">` |
+| Form / toolbar button | Hairline `<Button>` or `size="sm"` |
 | Secondary | `variant="outline"` |
-| Copy / Ripple / Theme switch | `@workspace/ui/components/animate-ui/buttons/{copy,ripple,theme-toggler}` |
-| Animated numbers (stats, odometers, wheels) | `@workspace/ui/components/animate-ui/numbers/{counting-number,sliding-number,scrolling-number}` |
-| Layout & pointer effects | `@workspace/ui/components/animate-ui/effects/{auto-height,scroll-fade,tilt,highlight,effect}` |
-| Overlapping avatars | `@workspace/ui/components/animate-ui/avatar-group` |
-| Chips | `<Badge variant="default">` / `variant="outline"` |
-| Filter tabs | `<TabsList variant="line">` (gliding highlight & sliding panels built in) |
-| Form error / success | `<Alert variant="destructive">` / `<Alert>` |
+| Link styled as a button | `linkButton()` from `@workspace/ui-patterns/link-button` |
+| Copy / theme switch | Hairline `copy-button`; `ThemeToggle` from `@workspace/ui-patterns/theme-toggle` |
+| Changing numbers / labels | Hairline `number-roll`, `text-morph` |
+| Menus, dialogs, sheets, tooltips, toasts | Hairline `dropdown-menu`, `dialog`, `sheet`, `tooltip`, `toast-stack` |
+| Chips | Hairline `badge` |
+| Filter tabs | Hairline `tabs` / `segmented-control` |
+| Form error / success | Hairline `<Alert tone="danger" title>` / `tone="success"` |
+| Breadcrumb | shadcn `Breadcrumb` (Hairline's uses a plain `<a>`) |
 
-Add components from `packages/ui`: `pnpm dlx shadcn@latest add <name>`, then **always** run `pnpm --filter @workspace/ui animate` so its primitives are swapped for `@animate-ui/react`. Its `components.json` is the only one (`style: "base-nova"`). Keep `@tabler/icons-react` as the sole icon library.
+Install nothing with a bare `shadcn add https://hairlineui.com/...` (it overwrites shadcn files): use `pnpm --filter @workspace/ui hairline`. shadcn components: `pnpm dlx shadcn@latest add <name>` from `packages/ui` (they land in `components/ui/`). Keep `@tabler/icons-react` as the icon library in app code.
 
 ## Navigation
 
@@ -87,8 +87,10 @@ anchors use `scroll-mt-24`; the logo scrolls to `0`.
 
 ## Dashboard shell (doc §8)
 
-- Two full-height columns: shadcn `<Sidebar collapsible="icon">` · main `flex-1 min-w-0`. Each = `<ColumnHeader>` (`flex h-14
-  shrink-0 items-center gap-4 border-b px-4`) + a body with `no-scrollbar overflow-y-auto`. No third column: a record opens in a
+- Two full-height columns: our `<Sidebar>` (`components/layout/sidebar/sidebar.tsx`) · main `flex-1 min-w-0`, both on `bg-background`
+  with no rule between them. The sidebar is a floating plate (`p-2` frame, `rounded-3xl bg-sidebar`) with a `<ColumnHeader>`
+  (logo + trigger) on top; the main column has no header bar, just an `h-8 text-sm` breadcrumb row above the page head.
+  Theme is chosen in the account panel (Light / System / Dark), not by a header button. Body with `no-scrollbar overflow-y-auto`. No third column: a record opens in a
   detail sheet from the page.
 - Logo lives in the sidebar header; below `md` (or with the sidebar collapsed) it shows in the main header next to the `SidebarTrigger`.
 - Sidebar body = labelled sections (`config/navigation.ts`), named by content (`Workspace`, `Settings`), never "Tree".
@@ -105,7 +107,7 @@ anchors use `scroll-mt-24`; the logo scrolls to `0`.
   `bg-muted`, selected `bg-primary/10`, chevron `aria-expanded:bg-transparent`. Never animate a size (width, max-width): slide with transform/opacity only; no `backdrop-filter`; memoize provider values.
   List rows elsewhere: selected `bg-primary text-primary-foreground`.
 - Metrics are a `dl` row, no stat cards. One focal accent per screen.
-- Logo: always `<AppLogo variant size motion />` (doc § Logo), sizes 16/24/32 only, animated (`idle`) by default everywhere.
+- Logo: always `<AppLogo variant size />` (doc § Logo): a home drawn as a wiring diagram (apex = meter, three lines down to green device dots), static, ink follows the theme; sizes 16/24/32/256px only.
 
 ## Type and motion
 

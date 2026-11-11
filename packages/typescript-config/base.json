@@ -11,7 +11,8 @@
     "module": "NodeNext",
     "moduleDetection": "force",
     "moduleResolution": "NodeNext",
-    "noUncheckedIndexedAccess": true,
+    // Off because vendored Hairline UI (packages/ui/src/components/hairline, kept unedited) indexes without guards and every app type-checks its source.
+    "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,

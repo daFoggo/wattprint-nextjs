@@ -230,7 +230,7 @@ export async function generateStaticParams() {
 ```tsx
 // app/(dashboard)/cases/error.tsx
 'use client'
-import { Button } from '@workspace/ui/components/button'
+import { Button } from '@workspace/ui/components/hairline/button'
 
 export default function CasesError({
   error,

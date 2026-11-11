@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { Button } from "@workspace/ui/components/button"
+import { linkButton } from "@workspace/ui-patterns/link-button"
 
 export default function NotFound() {
   return (
@@ -11,9 +11,9 @@ export default function NotFound() {
       <p className="text-muted-foreground">
         The page you are looking for does not exist or has moved.
       </p>
-      <Button size="lg" render={<Link href="/" />} nativeButton={false}>
+      <Link href="/" className={linkButton()}>
         Back to home
-      </Button>
+      </Link>
     </main>
   )
 }

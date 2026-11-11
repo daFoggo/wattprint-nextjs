@@ -3,25 +3,24 @@ import { IconShieldCheck, IconClock, IconFileCheck } from "@tabler/icons-react"
 
 
 import { CONTAINER } from "@/config/layout"
-import { Header } from "@/components/sections/header"
-import { Footer } from "@/components/sections/footer"
+import { SiteHeader } from "@/components/site-header"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy Policy and personal data protection principles for Next Mono Base.",
+  description: "Privacy Policy and personal data protection principles for WattPrint.",
 }
 
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <Header />
+      <SiteHeader />
 
       <main className={`${CONTAINER} py-12 sm:py-16`}>
         <article className="mx-auto flex max-w-3xl flex-col gap-10">
           {/* Header */}
-          <div className="flex flex-col gap-3 border-b border-border pb-8">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-0.5 font-mono text-xs text-foreground">
+              <span className="inline-flex items-center gap-1 rounded-full bg-card px-2.5 py-0.5 font-mono text-xs text-foreground">
                 <IconShieldCheck className="size-3.5 text-foreground" />
                 Compliance Standard 2026
               </span>
@@ -33,7 +32,7 @@ export default function PrivacyPolicyPage() {
               Privacy Policy &amp; Data Protection
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
-              This Privacy Policy explains how Next Mono Base (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;)
+              This Privacy Policy explains how WattPrint (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;)
               collects, processes, protects, and retains your personal data in accordance with applicable data
               protection laws, including the Personal Data Protection Law (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP,
               as well as international standards (GDPR and CCPA).
@@ -44,13 +43,13 @@ export default function PrivacyPolicyPage() {
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">1. Data Controller and Contact Information</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Next Mono Base operates as the data controller for personal data processed through our website and dashboard.
+              WattPrint operates as the data controller for personal data processed through our website and dashboard.
               If you have any questions, requests, or concerns regarding your privacy or this policy, you may reach our Data Protection Officer (DPO) at:
             </p>
-            <div className="border border-border bg-card p-4 font-mono text-xs text-foreground">
-              <p>Organization: Next Mono Base Engineering</p>
-              <p>Email: privacy@next-mono-base.local</p>
-              <p>Support: security@next-mono-base.local</p>
+            <div className="rounded-2xl bg-card p-4 font-mono text-xs text-foreground">
+              <p>Organization: WattPrint</p>
+              <p>Email: privacy@wattprint.local</p>
+              <p>Support: security@wattprint.local</p>
             </div>
           </section>
 
@@ -84,25 +83,25 @@ export default function PrivacyPolicyPage() {
               In compliance with Article 9 of Law No. 91/2025/QH15 and GDPR Article 6, we process data only on clear legal grounds:
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="border border-border bg-card p-4">
+              <div className="rounded-2xl bg-card p-4">
                 <span className="font-medium text-xs text-foreground uppercase tracking-wider font-mono">Performance of Contract</span>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   Provisioning user accounts, authenticating sessions through Keycloak, and managing workspace resources.
                 </p>
               </div>
-              <div className="border border-border bg-card p-4">
+              <div className="rounded-2xl bg-card p-4">
                 <span className="font-medium text-xs text-foreground uppercase tracking-wider font-mono">Explicit Consent</span>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   Affirmatively provided when registering an account. Silence or pre-ticked checkboxes are never deemed consent.
                 </p>
               </div>
-              <div className="border border-border bg-card p-4">
+              <div className="rounded-2xl bg-card p-4">
                 <span className="font-medium text-xs text-foreground uppercase tracking-wider font-mono">Legitimate Interests</span>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   Protecting systems from denial-of-service, enforcing rate limits, preventing CSRF attacks, and detecting security breaches.
                 </p>
               </div>
-              <div className="border border-border bg-card p-4">
+              <div className="rounded-2xl bg-card p-4">
                 <span className="font-medium text-xs text-foreground uppercase tracking-wider font-mono">Statutory Compliance</span>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   Adhering to cybersecurity recordkeeping, regulatory investigations, and lawful audit requirements.
@@ -144,7 +143,7 @@ export default function PrivacyPolicyPage() {
               Under Article 4 of Law No. 91/2025/QH15 and Decree No. 356/2025/ND-CP, you hold fundamental rights over your data.
               We commit to the following concrete response service-level agreements (SLAs):
             </p>
-            <div className="flex flex-col divide-y divide-border border border-border bg-card font-mono text-xs">
+            <div className="flex flex-col divide-y divide-border rounded-2xl bg-card font-mono text-xs">
               <div className="flex items-center justify-between p-3.5">
                 <span className="text-foreground">Acknowledgement of Receipt</span>
                 <span className="font-medium text-foreground">Within 2 business days</span>
@@ -171,7 +170,7 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-xl font-medium text-foreground">7. Account Deletion and Data Retention</h2>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              You may request account deletion by submitting a written request to <code className="font-mono text-xs">privacy@next-mono-base.local</code>. Upon confirmation,
+              You may request account deletion by submitting a written request to <code className="font-mono text-xs">privacy@wattprint.local</code>. Upon confirmation,
               all personal data, active tokens, and workspace associations will be irreversibly purged within 20 business days.
             </p>
           </section>
@@ -199,8 +198,6 @@ export default function PrivacyPolicyPage() {
           </section>
         </article>
       </main>
-
-      <Footer />
     </>
   )
 }

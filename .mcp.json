@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "hairline-ui": {
+      "type": "http",
+      "url": "https://hairlineui.com/api/mcp"
+    },
+    "awwwards": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "awwwards-mcp"
+      ],
+      "env": {}
+    }
+  }
+}

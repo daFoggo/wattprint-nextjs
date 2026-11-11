@@ -112,7 +112,7 @@ When creating a new component, choose its location based on **reusability scope*
 | **Feature-Domain** | `features/<name>/components/` | Used across **multiple pages within the same feature/domain**. | `features/invoices/components/invoice-table.tsx` |
 | **App-Wide Shell** | `components/layout/` | App shell, navigation, global header, sidebar. | `components/layout/sidebar/nav-tree.tsx` |
 | **App-Wide Shared** | `components/shared/` | Reusable across **multiple features**, but specific to `apps/dashboard` (pure presentational UI). | `components/shared/copy-button.tsx`, `components/shared/detail-sheet.tsx` |
-| **Primitive UI** | `packages/ui/src/components/` | Generic, **zero-business-logic** primitives from shadcn/ui. | `@workspace/ui/components/button` |
+| **Primitive UI** | `packages/ui/src/components/{hairline,ui}/` | Generic, **zero-business-logic** components from Hairline UI (first choice) and shadcn/ui, vendored unedited. | `@workspace/ui/components/hairline/button` |
 
 #### How to Share UI Across Features Without Violating ESLint (`features/A` cannot import `features/B`)
 

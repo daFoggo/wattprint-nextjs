@@ -1,5 +1,3 @@
-import { GlyphBackground } from "@workspace/ui/components/animate-ui/backgrounds/glyph"
-
 import { ThemeToggle } from "@workspace/ui-patterns/theme-toggle"
 import { Stagger } from "@/components/shared/stagger"
 import { AppLogo } from "@workspace/ui-patterns/app-logo"
@@ -11,8 +9,9 @@ const LANDING_URL = publicEnv.NEXT_PUBLIC_LANDING_URL
 /** Left rail from lg: wordmark, page-specific showcase centered, footer. Hidden below lg. */
 export function AuthAside({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="hidden border-r lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col xl:col-span-7">
-      <GlyphBackground className="flex flex-1 flex-col px-9 text-foreground">
+    <aside className="hidden lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col lg:p-2 xl:col-span-7">
+      {/* A section plate: set apart by its surface, not a rule (docs/design-system.md, Surfaces). */}
+      <div className="flex flex-1 flex-col rounded-3xl bg-card px-7 text-foreground">
         <div className="relative flex h-24 shrink-0 items-center">
           <a href={LANDING_URL}>
             <AppLogo size="lg" />
@@ -23,10 +22,10 @@ export function AuthAside({ children }: { children: React.ReactNode }) {
         </div>
         {/* Same height as the header so the showcase stays vertically centered. */}
         <div className="relative flex h-24 shrink-0 items-center justify-between text-sm text-muted-foreground">
-          <span>© 2026 Next Mono Base</span>
+          <span>© 2026 WattPrint</span>
           <ThemeToggle />
         </div>
-      </GlyphBackground>
+      </div>
     </aside>
   )
 }

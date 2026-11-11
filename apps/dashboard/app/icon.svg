@@ -1,21 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 10 10" shape-rendering="crispEdges">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
   <style>
-    .ink { fill: #18181b } .brand { fill: #ff5229 } .ember { fill: #a1a1aa }
-    @media (prefers-color-scheme: dark) {
-      .ink { fill: #fafafa } .brand { fill: #ff5229 } .ember { fill: #52525b }
-    }
+    .ink { stroke: #262626 } .dev { fill: #00a86b }
+    @media (prefers-color-scheme: dark) { .ink { stroke: #ededed } }
   </style>
-  <g class="ink">
-    <rect x="0" y="1" width="1" height="1"/>
-    <rect x="1" y="2" width="1" height="1"/>
-    <rect x="2" y="3" width="1" height="2"/>
-    <rect x="1" y="5" width="1" height="1"/>
-    <rect x="0" y="6" width="1" height="1"/>
-  </g>
-  <g class="brand">
-    <rect x="5" y="2" width="1" height="1"/>
-    <rect x="4" y="3" width="3" height="1"/>
-    <rect x="5" y="4" width="1" height="1"/>
-  </g>
-  <rect class="ember" x="7" y="1" width="1" height="1"/>
+  <path class="ink" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 18.2v-6.7l8-7 8 7v6.7M12 9v9.2"/>
+  <g class="dev"><circle cx="4" cy="20" r="1.6"/><circle cx="12" cy="20" r="1.6"/><circle cx="20" cy="20" r="1.6"/></g>
 </svg>

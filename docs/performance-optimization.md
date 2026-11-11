@@ -18,13 +18,13 @@ Use `next/dynamic` (composite of `React.lazy()` and `<Suspense>`) to split heavy
 ```tsx
 'use client'
 import dynamic from 'next/dynamic'
-import { Skeleton } from '@workspace/ui/components/skeleton'
+import { Skeleton } from '@workspace/ui/components/hairline/skeleton'
 
 // 1. Loaded in a separate bundle, rendered with skeleton while downloading
 const CaseKanbanBoard = dynamic(
   () => import('@/features/cases/components/case-kanban-board'),
   {
-    loading: () => <Skeleton className="h-[500px] w-full" />,
+    loading: () => <Skeleton shape="block" height={500} />,
   }
 )
 
@@ -34,7 +34,7 @@ const InteractiveChart = dynamic(
   () => import('@/components/shared/canvas-chart'),
   {
     ssr: false,
-    loading: () => <Skeleton className="h-[300px] w-full" />,
+    loading: () => <Skeleton shape="block" height={300} />,
   }
 )
 ```

@@ -2,28 +2,14 @@
 
 import type { ReactNode } from "react"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@workspace/ui/components/dialog"
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@workspace/ui/components/drawer"
+import { Dialog } from "@workspace/ui/components/hairline/dialog"
+import { Sheet } from "@workspace/ui/components/hairline/sheet"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
 
-const WIDTH = { md: "sm:max-w-xl", lg: "sm:max-w-3xl" } as const
-
 /**
- * Dialog from `md` up, bottom Drawer below it (shadcn "Responsive Dialog"). The body scrolls
- * inside the drawer and inside the dialog when it is taller than the screen.
+ * Dialog from `md` up, bottom Sheet below it (Hairline UI). Both are a native `<dialog>`: focus stays
+ * inside, the page is inert, and the body scrolls inside the panel when it is taller than the screen.
  */
 export function ResponsiveDialog({
   open,
@@ -37,40 +23,13 @@ export function ResponsiveDialog({
   onOpenChange: (open: boolean) => void
   title: string
   description: string
-  size?: keyof typeof WIDTH
+  /** `md` 520px, `lg` 680px wide. */
+  size?: "md" | "lg"
   children: ReactNode
 }) {
   const desktop = useMediaQuery("(min-width: 768px)")
-
-  if (desktop) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          className={`${WIDTH[size]} max-h-svh gap-6 overflow-y-auto p-6`}
-        >
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
-          {children}
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-  return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>{description}</DrawerDescription>
-        </DrawerHeader>
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-4">
-          {children}
-        </div>
-      </DrawerContent>
-    </Drawer>
-  )
+  const panel = { open, onOpenChange, title, description, children }
+  return desktop ? <Dialog {...panel} size={size} /> : <Sheet {...panel} side="bottom" />
 }
 
 /** Buttons row for a form inside `ResponsiveDialog`: stacked on mobile, right-aligned from `sm`. */

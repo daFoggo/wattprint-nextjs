@@ -37,7 +37,7 @@ All principles derive from and link back to the Single Source of Truth in `docs/
 | **Random, time, sync DB** | Today's date: `getToday()` (`lib/clock.ts`, `"use cache: private"`); other: `await io()` inside `<Suspense>` | [reads.md](references/reads.md) | [data-fetching.md §1](../../../docs/data-fetching.md#1-mental-model) |
 | **Client-only shared state (Zustand)** | Per-provider store factory in `features/<name>/store.ts` + provider in `components/`, mounted in `app/` (no global store, never read in Server Components) | [client-state.md](references/client-state.md) | [client-state.md](../../../docs/client-state.md) |
 | **Reset or keep client state across navigation** | Cache Components preserves state (`<Activity>`); reset via handler, data-derived key, or `bfcacheId` key | [client-state.md](references/client-state.md) | [client-state.md §5.3](../../../docs/client-state.md#53-state-outlives-navigation) |
-| **UI components, animations & motion** | **Animate UI first**: use `@workspace/ui/components/*` (animated via `@animate-ui/react`) and `@workspace/ui/components/animate-ui/*` over static shadcn or custom motion | [animate-ui](../animate-ui/SKILL.md) | [design-system.md §6, §9](../../../docs/design-system.md) |
+| **UI components, animations & motion** | **Hairline UI first**: use `@workspace/ui/components/hairline/*` over shadcn (`@workspace/ui/components/ui/*`) or custom motion | [hairline-ui](../hairline-ui/SKILL.md) | [design-system.md §6, §9](../../../docs/design-system.md) |
 | **Redis cache / SSE / Uploads** | Distributed CacheHandler, Presigned URLs, `connection()` | [reads.md](references/reads.md) | [advanced-patterns.md](../../../docs/advanced-patterns.md) |
 
 ---

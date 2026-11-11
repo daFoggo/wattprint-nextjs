@@ -14,7 +14,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Run tasks via `pnpm turbo run <task> [--filter=<pkg>]`; verify with `pnpm check` and `pnpm build`.
 - Dependencies go in the package that uses them; root holds only repo tooling. No root `tsconfig.json`.
 - Turbopack compiles workspace packages automatically; do not add `transpilePackages` for them.
-- Import workspace packages through their `exports` (e.g. `@workspace/ui/components/button`); do not add tsconfig `paths` for them.
+- Import workspace packages through their `exports` (e.g. `@workspace/ui/components/hairline/button`); do not add tsconfig `paths` for them.
 - Cache Components (`cacheComponents` + `partialPrefetching`) are enabled in `apps/dashboard/next.config.ts`. Wrap runtime APIs (`cookies()`, `headers()`, `params`, `searchParams`) in `<Suspense>`; use `"use cache"` + `cacheLife` for cached data.
 - See `CONTRIBUTING.md` for details.
 
@@ -33,10 +33,10 @@ The docs in `docs/` are the single source of truth for `apps/dashboard` (the das
 | The Keycloak + FastAPI stack: realm, client, Google sign-in, env, seams | `docs/providers.md` |
 | Performance, code splitting, lazy loading, Core Web Vitals | `docs/performance-optimization.md` |
 | Redis cache, large uploads, SSE, telemetry, instant-navigation tests | `docs/advanced-patterns.md` |
-| UI: theme tokens, typography, spacing, responsive, shadcn component sizes, pixel art, updating shadcn and Animate UI, patterns, page templates, motion, admin shell | `docs/design-system.md` |
+| UI: theme tokens, typography, spacing, responsive, shadcn component sizes, pixel art, updating shadcn and Hairline UI, patterns, page templates, motion, admin shell | `docs/design-system.md` |
 
 For a fast decision (which pattern applies) use the skill `.agents/skills/next-mono-base/SKILL.md`; it links back to the docs above.
-For any className, layout, theme or motion work use `.agents/skills/design-system/SKILL.md` (no arbitrary Tailwind values; component sizes via props) and `.agents/skills/animate-ui/SKILL.md` (always prioritize Animate UI components/primitives in `@workspace/ui/components/*` and `@workspace/ui/components/animate-ui/*` over static shadcn components).
+For any className, layout, theme or motion work use `.agents/skills/design-system/SKILL.md` (no arbitrary Tailwind values; component sizes via props) and `.agents/skills/hairline-ui/SKILL.md` (always prioritize Hairline UI components in `@workspace/ui/components/hairline/*` over shadcn in `@workspace/ui/components/ui/*`; never install Hairline with a bare `shadcn add`).
 `.claude/skills/` is a copy of `.agents/skills/` (Claude Code reads it): change a skill in both, then check with `diff -rq --strip-trailing-cr .agents/skills .claude/skills`.
 
 <!-- BEGIN:turborepo-agent-rules -->

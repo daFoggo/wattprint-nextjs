@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/hairline/button"
+import { linkButton } from "@workspace/ui-patterns/link-button"
 
 import { publicEnv } from "@/lib/env.public"
 
@@ -28,14 +29,12 @@ export default function AuthError({
         <Button size="lg" onClick={() => retry()}>
           Try again
         </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          render={<a href={publicEnv.NEXT_PUBLIC_LANDING_URL} />}
-          nativeButton={false}
+        <a
+          href={publicEnv.NEXT_PUBLIC_LANDING_URL}
+          className={linkButton({ variant: "outline" })}
         >
           Back to home
-        </Button>
+        </a>
       </div>
     </div>
   )

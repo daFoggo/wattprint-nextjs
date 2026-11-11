@@ -180,7 +180,7 @@ Page-specific UI goes in `app/<route>/_components/`; UI shared by several pages 
 `features/<name>/components/`; business-free primitives belong in `packages/ui`, and composed UI both apps share in
 `packages/ui-patterns` (extract only with a second consumer). Split a component when a part needs its own state, its own
 Suspense boundary, or the server/client line moves. Full decision table: [project-structure.md](project-structure.md) §3.1 and §7.
-Look and spacing: [design-system.md](design-system.md); use Animate UI components first.
+Look and spacing: [design-system.md](design-system.md); use Hairline UI components first.
 
 ## 8. Tests
 

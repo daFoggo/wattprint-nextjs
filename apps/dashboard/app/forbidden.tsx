@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { IconArrowRight } from "@tabler/icons-react"
 
-import { buttonVariants } from "@workspace/ui/components/button-variants"
+import { linkButton } from "@workspace/ui-patterns/link-button"
 
 import { DASHBOARD_PATH } from "@/config/routes"
 
@@ -24,11 +24,10 @@ export default function Forbidden() {
       </p>
       <Link
         href={DASHBOARD_PATH}
-        className={buttonVariants({ size: "lg", className: "group" })}
+        className={linkButton({ className: "group" })}
       >
         Back to dashboard
         <IconArrowRight
-          data-icon="inline-end"
           aria-hidden
           className="motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover:translate-x-1"
         />

@@ -23,11 +23,7 @@ export default function DashboardPage() {
       <Suspense fallback={null}>
         <Guard />
       </Suspense>
-      <PageHead title="Overview">
-        This is your dashboard. Add a feature by following
-        docs/adding-a-feature.md: its pages go under app/(dashboard) and its
-        links in config/navigation.ts.
-      </PageHead>
+      <PageHead title="Overview" />
       <Suspense fallback={null}>
         <Backend />
       </Suspense>

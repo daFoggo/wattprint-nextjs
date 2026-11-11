@@ -3,25 +3,24 @@ import { IconScale, IconAlertTriangle } from "@tabler/icons-react"
 
 
 import { CONTAINER } from "@/config/layout"
-import { Header } from "@/components/sections/header"
-import { Footer } from "@/components/sections/footer"
+import { SiteHeader } from "@/components/site-header"
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms of Service and developer agreement for Next Mono Base.",
+  description: "Terms of Service and developer agreement for WattPrint.",
 }
 
 export default function TermsOfServicePage() {
   return (
     <>
-      <Header />
+      <SiteHeader />
 
       <main className={`${CONTAINER} py-12 sm:py-16`}>
         <article className="mx-auto flex max-w-3xl flex-col gap-10">
           {/* Header */}
-          <div className="flex flex-col gap-3 border-b border-border pb-8">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-0.5 font-mono text-xs text-foreground">
+              <span className="inline-flex items-center gap-1 rounded-full bg-card px-2.5 py-0.5 font-mono text-xs text-foreground">
                 <IconScale className="size-3.5 text-primary" />
                 Legal Agreement
               </span>
@@ -33,7 +32,7 @@ export default function TermsOfServicePage() {
               Terms of Service
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
-              These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of Next Mono Base,
+              These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of WattPrint,
               including the web landing site, dashboard, and associated software packages. By creating
               an account or continuing to use our services, you agree to be bound by these Terms.
             </p>
@@ -43,7 +42,7 @@ export default function TermsOfServicePage() {
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">1. Open Source License and Codebase</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              The underlying Next Mono Base repository and architecture starter code are licensed under the MIT License.
+              The underlying WattPrint repository and architecture starter code are licensed under the MIT License.
               You are free to use, modify, and distribute the template code for personal or commercial projects, subject
               to the inclusion of the original copyright notice and permission notice.
             </p>
@@ -69,7 +68,7 @@ export default function TermsOfServicePage() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               You agree not to misuse the platform or assist others in doing so. Specifically, you agree not to:
             </p>
-            <div className="flex flex-col gap-2 border border-border bg-card p-4 text-xs text-muted-foreground">
+            <div className="flex flex-col gap-2 rounded-2xl bg-card p-4 text-xs text-muted-foreground">
               <div className="flex items-start gap-2">
                 <IconAlertTriangle className="size-4 shrink-0 text-amber-500 mt-0.5" />
                 <span>Violate applicable local, national, or international regulations, including the Law on Cybersecurity and Personal Data Protection Law.</span>
@@ -100,7 +99,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-xl font-medium text-foreground">5. Limitation of Liability and Disclaimers</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
               The software and services are provided &ldquo;AS IS&rdquo;, without warranty of any kind, express or implied.
-              In no event shall Next Mono Base or its authors be liable for any direct, indirect, incidental, or consequential
+              In no event shall WattPrint or its authors be liable for any direct, indirect, incidental, or consequential
               damages arising from the use or inability to use the software.
             </p>
           </section>
@@ -125,8 +124,6 @@ export default function TermsOfServicePage() {
           </section>
         </article>
       </main>
-
-      <Footer />
     </>
   )
 }

@@ -3,8 +3,6 @@
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 
-import { AnimateUIProvider } from "@workspace/ui/provider"
-
 /** Dark by default (docs/design-system.md); light and the system setting stay available. */
 function ThemeProvider({
   children,
@@ -18,7 +16,7 @@ function ThemeProvider({
       disableTransitionOnChange
       {...props}
     >
-      <AnimateUIProvider>{children}</AnimateUIProvider>
+      {children}
     </NextThemesProvider>
   )
 }

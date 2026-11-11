@@ -3,8 +3,8 @@
 import { createContext, use, useRef, useState } from "react"
 import { IconChevronsRight } from "@tabler/icons-react"
 
-import { Button } from "@workspace/ui/components/button"
-import { SheetClose, SheetContent } from "@workspace/ui/components/sheet"
+import { Button } from "@workspace/ui/components/ui/button"
+import { SheetClose, SheetContent } from "@workspace/ui/components/ui/sheet"
 import { cn } from "@workspace/ui/lib/utils"
 
 /**

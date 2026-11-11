@@ -1,13 +1,6 @@
-import { IconAlertCircle } from "@tabler/icons-react"
-
-import { Alert, AlertDescription } from "@workspace/ui/components/alert"
+import { Alert } from "@workspace/ui/components/hairline/alert"
 
 export function FormError({ message }: { message?: string }) {
   if (!message) return null
-  return (
-    <Alert variant="destructive">
-      <IconAlertCircle />
-      <AlertDescription>{message}</AlertDescription>
-    </Alert>
-  )
+  return <Alert tone="danger" title={message} />
 }

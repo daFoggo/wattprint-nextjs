@@ -1,6 +1,5 @@
 import { cn } from "@workspace/ui/lib/utils"
 
-// 8x8 pixel grid: every mark size is a whole multiple (2, 3, 4px per pixel), so it stays crisp.
 const MARK = { sm: "size-4", md: "size-6", lg: "size-8", xl: "size-64" } as const
 // `/none`: line-height 1, so the wordmark box is exactly its font size and centers on the mark.
 const TEXT = {
@@ -12,78 +11,32 @@ const TEXT = {
 const GAP = { sm: "gap-2", md: "gap-2.5", lg: "gap-3", xl: "gap-4" } as const
 
 type Size = keyof typeof MARK
-type Motion = "static" | "idle"
 
 /**
- * A `>` prompt (ink, follows the theme), a little spark (primary) and one ember (muted).
- * `idle`: the spark twinkles (+ flips to ×) and embers rise, frame by frame (`steps()`).
- * Under prefers-reduced-motion the idle mark renders exactly like the static one.
+ * A home drawn as a wiring diagram: the roof apex is the single meter, the two roof-and-wall lines and the centre line
+ * are the feeds it splits into, and each ends in a device (brand green). That is what WattPrint does: one sensor at the
+ * breaker, energy per device. The lines are `currentColor`, so they follow the theme.
  */
-function LogoMark({ size, motion }: { size: Size; motion: Motion }) {
-  const idle = motion === "idle"
+function LogoMark({ size }: { size: Size }) {
   return (
     <svg
-      viewBox="0 0 8 8"
-      style={{ shapeRendering: "crispEdges" }}
+      viewBox="0 0 24 24"
       aria-hidden
+      fill="none"
       className={cn("shrink-0", MARK[size])}
     >
-      <g className="fill-current">
-        <rect x="0" y="1" width="1" height="1" />
-        <rect x="1" y="2" width="1" height="1" />
-        <rect x="2" y="3" width="1" height="2" />
-        <rect x="1" y="5" width="1" height="1" />
-        <rect x="0" y="6" width="1" height="1" />
-      </g>
-      <g
-        className={cn("fill-chart-1", idle && "motion-safe:animate-logo-plus")}
-      >
-        <rect x="5" y="2" width="1" height="1" />
-        <rect x="4" y="3" width="3" height="1" />
-        <rect x="5" y="4" width="1" height="1" />
-      </g>
-      {idle ? (
-        <>
-          <g className="fill-chart-1 opacity-0 motion-safe:animate-logo-cross">
-            <rect x="4" y="2" width="1" height="1" />
-            <rect x="6" y="2" width="1" height="1" />
-            <rect x="5" y="3" width="1" height="1" />
-            <rect x="4" y="4" width="1" height="1" />
-            <rect x="6" y="4" width="1" height="1" />
-          </g>
-          <g className="fill-muted-foreground/50">
-            <rect
-              x="7"
-              y="3"
-              width="1"
-              height="1"
-              className="opacity-0 motion-safe:animate-logo-rise"
-            />
-            <rect
-              x="6"
-              y="2"
-              width="1"
-              height="1"
-              className="opacity-0 motion-safe:animate-logo-rise-late"
-            />
-            <rect
-              x="4"
-              y="2"
-              width="1"
-              height="1"
-              className="opacity-0 motion-safe:animate-logo-rise-later"
-            />
-          </g>
-        </>
-      ) : null}
-      {/* The static ember; in `idle` the rising embers take its place (only when motion is allowed). */}
-      <rect
-        x="7"
-        y="1"
-        width="1"
-        height="1"
-        className={cn("fill-muted-foreground/50", idle && "motion-safe:hidden")}
+      <path
+        className="stroke-current"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 18.2v-6.7l8-7 8 7v6.7M12 9v9.2"
       />
+      <g className="fill-chart-1">
+        <circle cx="4" cy="20" r="1.6" />
+        <circle cx="12" cy="20" r="1.6" />
+        <circle cx="20" cy="20" r="1.6" />
+      </g>
     </svg>
   )
 }
@@ -91,19 +44,16 @@ function LogoMark({ size, motion }: { size: Size; motion: Motion }) {
 /**
  * App logo (design system § Logo). `full` (mark + wordmark) by default; `mark` where space is
  * tight; `wordmark` where the mark already shows nearby. `size` scales mark and wordmark together.
- * `motion` is `idle` everywhere in the app; `static` only where the mark must stay still (print, dense lists).
  * Pure visual: wrap it in a Link where it should navigate.
  */
 export function AppLogo({
   variant = "full",
   size = "md",
-  motion = "idle",
   className,
   textClassName,
 }: {
   variant?: "full" | "mark" | "wordmark"
   size?: Size
-  motion?: Motion
   className?: string
   /** For the wordmark only, e.g. to hide it inside a collapsed sidebar. */
   textClassName?: string
@@ -111,20 +61,20 @@ export function AppLogo({
   return (
     <span
       role={variant === "mark" ? "img" : undefined}
-      aria-label={variant === "mark" ? "Next Mono Base" : undefined}
+      aria-label={variant === "mark" ? "WattPrint" : undefined}
       // Block-level flex: an inline-flex box sits on the text baseline and leaves a gap below it.
       className={cn("flex w-fit items-center", GAP[size], className)}
     >
-      {variant === "wordmark" ? null : <LogoMark size={size} motion={motion} />}
+      {variant === "wordmark" ? null : <LogoMark size={size} />}
       {variant === "mark" ? null : (
         <span
           className={cn(
-            "font-mono font-medium tracking-tight",
+            "font-mono font-semibold tracking-tight",
             TEXT[size],
             textClassName
           )}
         >
-          next-mono-base
+          WattPrint
         </span>
       )}
     </span>

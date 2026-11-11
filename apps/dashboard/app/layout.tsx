@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@workspace/ui-patterns/theme-provider"
 import { WebVitals } from "@/components/shared/web-vitals"
-import { Toaster } from "@workspace/ui/components/toast"
+import { Toaster } from "@workspace/ui/components/hairline/toast-stack"
 import { cn } from "@workspace/ui/lib/utils"
 import { fontClassName, fontStyle } from "@workspace/ui/lib/fonts"
 import { publicEnv } from "@/lib/env.public"
@@ -12,11 +12,11 @@ export const metadata: Metadata = {
   // Makes relative canonicals (`/some/path`) absolute.
   metadataBase: new URL(publicEnv.NEXT_PUBLIC_APP_URL),
   title: {
-    default: "Next Mono Base",
-    template: "%s | Next Mono Base",
+    default: "WattPrint",
+    template: "%s | WattPrint",
   },
   description:
-    "A Next.js monorepo base: auth, data, UI kit and conventions ready to build on.",
+    "Your energy dashboard: track your home's electricity use in one place.",
 }
 
 export default function RootLayout({
@@ -33,7 +33,8 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <Toaster>{children}</Toaster>
+          {children}
+          <Toaster />
           <WebVitals />
         </ThemeProvider>
       </body>

@@ -1,6 +1,6 @@
 # next-mono-base
 
-Next.js 16.4 + Turborepo + pnpm monorepo base with shadcn/ui (`base-nova` + Animate UI) and Keycloak authentication (Google sign-in) in front of a FastAPI backend.
+Next.js 16.4 + Turborepo + pnpm monorepo base with shadcn/ui (`base-nova`) + Hairline UI and Keycloak authentication (Google sign-in) in front of a FastAPI backend.
 
 The conventions live in [docs/](docs/): read the one for the area you change before changing it (index in [AGENTS.md](AGENTS.md)).
 
@@ -40,7 +40,8 @@ details: [docs/providers.md](docs/providers.md)); `KEYCLOAK_CLIENT_SECRET` is re
 pnpm dlx shadcn@latest add button -c apps/dashboard
 ```
 
-Components land in `packages/ui/src/components`; import with
-`import { Button } from "@workspace/ui/components/button"`.
+shadcn components land in `packages/ui/src/components/ui`, Hairline UI ones in `packages/ui/src/components/hairline`
+(`pnpm --filter @workspace/ui hairline`, see `.agents/skills/hairline-ui/SKILL.md`); import with
+`import { Button } from "@workspace/ui/components/hairline/button"`.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for conventions.

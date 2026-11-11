@@ -53,6 +53,230 @@
   --font-serif: var(--font-serif);
   --font-pixel-square: var(--font-pixel-square);
   --font-pixel-grid: var(--font-pixel-grid);
+  @keyframes ui-col-in {
+  from {
+    max-width: 0;
+    opacity: 0;
+    }
+  to {
+    max-width: 1em;
+    opacity: 1;
+    }
+  }
+  @keyframes ui-col-out {
+  from {
+    max-width: 1em;
+    opacity: 1;
+    }
+  to {
+    max-width: 0;
+    opacity: 0;
+    }
+  }
+  @keyframes ui-bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.35;
+    }
+  40% {
+    transform: translateY(-3px);
+    opacity: 1;
+    }
+  }
+  @keyframes ui-blink {
+  0%, 100% {
+    opacity: 1;
+    }
+  50% {
+    opacity: 0;
+    }
+  }
+  @keyframes ui-skeleton {
+  from {
+    transform: translateX(-100%);
+    }
+  to {
+    transform: translateX(100%);
+    }
+  }
+  @keyframes ui-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-progress {
+  from {
+    transform: scaleX(0);
+    }
+  to {
+    transform: scaleX(1);
+    }
+  }
+  @keyframes ui-shimmer {
+  0% {
+    background-position: 150% 0;
+    }
+  100% {
+    background-position: -50% 0;
+    }
+  }
+  @keyframes ui-fade-in {
+  from {
+    opacity: 0;
+    }
+  to {
+    opacity: 1;
+    }
+  }
+  @keyframes ui-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-breathe {
+  0%, 100% {
+    transform: scale(0.82);
+    opacity: 0.55;
+    }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+    }
+  }
+  @keyframes ui-sheen {
+  from {
+    mask-position: 150% 0;
+    }
+  to {
+    mask-position: -50% 0;
+    }
+  }
+  @keyframes ui-chip-in {
+  from {
+    opacity: 0.35;
+    transform: scale(0.9);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+    }
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+    }
+  }
+  @keyframes ui-note-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ui-from));
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-scan {
+  from {
+    transform: translateX(-100%);
+    }
+  to {
+    transform: translateX(250%);
+    }
+  }
+  @keyframes ui-indeterminate {
+  from {
+    transform: translateX(-100%);
+    }
+  to {
+    transform: translateX(340%);
+    }
+  }
+  @keyframes ui-wave {
+  0%, 100% {
+    transform: scaleY(0.35);
+    }
+  50% {
+    transform: scaleY(1);
+    }
+  }
+  @keyframes ui-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.6);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-drain {
+  from {
+    stroke-dashoffset: 0;
+    }
+  to {
+    stroke-dashoffset: var(--ui-ring);
+    }
+  }
+  @keyframes ui-empty-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(4px);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    }
+  }
+  @keyframes ui-empty-out {
+  from {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+    filter: blur(4px);
+    }
+  }
+  @keyframes ui-slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
+  @keyframes ui-slide-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+    }
+  to {
+    opacity: 1;
+    transform: none;
+    }
+  }
 }
 
 /* Flat by default: every `shadow-*` utility (including those in shadcn components) renders no shadow. */
@@ -67,131 +291,83 @@
 }
 
 /*
- * Logo motion: the one exception to "only colors are custom" (docs/design-system.md, Logo).
- * Frame-by-frame (`steps()`) so pixels jump instead of sliding. Use only via AppLogo, always
- * behind `motion-safe:`.
- */
-@theme {
-  --animate-logo-plus: logo-plus 4s steps(1, end) infinite;
-  --animate-logo-cross: logo-cross 4s steps(1, end) infinite;
-  --animate-logo-rise: logo-rise 3s steps(4, end) infinite;
-  --animate-logo-rise-late: logo-rise 3s steps(4, end) 1s infinite;
-  --animate-logo-rise-later: logo-rise 3s steps(4, end) 2s infinite;
-
-  @keyframes logo-plus {
-    0% {
-      opacity: 1;
-    }
-    70% {
-      opacity: 0;
-    }
-    82% {
-      opacity: 1;
-    }
-  }
-  @keyframes logo-cross {
-    0% {
-      opacity: 0;
-    }
-    70% {
-      opacity: 1;
-    }
-    82% {
-      opacity: 0;
-    }
-  }
-  @keyframes logo-rise {
-    0% {
-      opacity: 0;
-      transform: translateY(0);
-    }
-    25% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-3px);
-    }
-  }
-}
-
-/*
- * Palette: Mistral-style flat design. Light is warm cream, dark is steel (#101013). Values only: token names stay the
- * stock shadcn ones so `shadcn add` and Animate UI updates never conflict (docs/design-system.md, Color).
- * chart-1..4 are the brand ramp (orange, tangerine, yellow, red); pixel art and accents read them.
+ * Palette: WattPrint, after Hairline UI's own site (hairlineui.com): neutral grey surfaces that step lighter instead of
+ * casting shadows, alpha borders and hover fills that work on any surface, one brand green. Values only: token names stay
+ * the stock shadcn ones so `shadcn add` and `pnpm hairline` updates never conflict (docs/design-system.md, Color).
+ * Surfaces: page `background` → section plate `card` → inner card `background` + `border` (docs/design-system.md, Surfaces).
+ * `primary` is the brand green in both themes; its text is near-black (6.4:1; white would be 3.1:1).
+ * chart-1 is the brand green (logo, accents); chart-2..5 are the data colors (blue, orange, violet, amber).
  */
 :root {
-  --background: #fbfbf8;
-  --foreground: #1a1a1e;
-  --card: #f5f4ef;
-  --card-foreground: #1a1a1e;
+  --background: #ffffff;
+  --foreground: #262626;
+  --card: #f5f5f5;
+  --card-foreground: #262626;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1e;
-  --primary: #101013;
-  --primary-foreground: #fafaf4;
-  --secondary: #ebe9e0;
-  --secondary-foreground: #1a1a1e;
-  --muted: #f5f4ef;
-  --muted-foreground: #62626c;
-  --accent: #ebe9e0;
-  --accent-foreground: #1a1a1e;
-  --destructive: #cc1100;
-  --border: #e4e3de;
-  --input: #8b8879;
-  --ring: #6d6d78;
-  --chart-1: #ff5229;
-  --chart-2: #ff8204;
-  --chart-3: #ffaf01;
-  --chart-4: #e51300;
-  --chart-5: #6d6d78;
-  --radius: 0.375rem;
-  --sidebar: #f5f4ef;
-  --sidebar-foreground: #1a1a1e;
-  --sidebar-primary: #101013;
-  --sidebar-primary-foreground: #fafaf4;
-  --sidebar-accent: #ebe9e0;
-  --sidebar-accent-foreground: #1a1a1e;
-  --sidebar-border: #e4e3de;
-  --sidebar-ring: #6d6d78;
+  --popover-foreground: #262626;
+  --primary: oklch(64.48% 0.1488 158.78);
+  --primary-foreground: #0a0a0a;
+  --secondary: #ededed;
+  --secondary-foreground: #262626;
+  --muted: #f0f0f0;
+  --muted-foreground: #666666;
+  --accent: #2626260d;
+  --accent-foreground: #262626;
+  --destructive: #e11d48;
+  --border: #2626261a;
+  --input: #2626261f;
+  --ring: oklch(64.48% 0.1488 158.78);
+  --chart-1: oklch(64.48% 0.1488 158.78);
+  --chart-2: #305dde;
+  --chart-3: #e8743b;
+  --chart-4: #8b6fe8;
+  --chart-5: #e0a21b;
+  --radius: 0.625rem;
+  --sidebar: #f5f5f5;
+  --sidebar-foreground: #262626;
+  --sidebar-primary: oklch(64.48% 0.1488 158.78);
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #2626260d;
+  --sidebar-accent-foreground: #262626;
+  --sidebar-border: #2626261a;
+  --sidebar-ring: oklch(64.48% 0.1488 158.78);
 }
-
 .dark {
-  --background: #101013;
-  --foreground: #fafaf4;
-  --card: #1a1a1e;
-  --card-foreground: #fafaf4;
-  --popover: #1a1a1e;
-  --popover-foreground: #fafaf4;
-  --primary: #f1f1f3;
-  --primary-foreground: #1a1a1e;
-  --secondary: #27272b;
-  --secondary-foreground: #fafaf4;
-  --muted: #1a1a1e;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272b;
-  --accent-foreground: #fafaf4;
-  --destructive: #ff6660;
-  --border: #27272b;
-  --input: #707080;
-  --ring: #6d6d78;
-  --chart-1: #ff5229;
-  --chart-2: #ff8204;
-  --chart-3: #ffaf01;
-  --chart-4: #ff6660;
-  --chart-5: #a1a1aa;
-  --sidebar: #101013;
-  --sidebar-foreground: #fafaf4;
-  --sidebar-primary: #f1f1f3;
-  --sidebar-primary-foreground: #1a1a1e;
-  --sidebar-accent: #27272b;
-  --sidebar-accent-foreground: #fafaf4;
-  --sidebar-border: #27272b;
-  --sidebar-ring: #6d6d78;
+  --background: #191919;
+  --foreground: #ededed;
+  --card: #222222;
+  --card-foreground: #ededed;
+  --popover: #262626;
+  --popover-foreground: #ededed;
+  --primary: oklch(64.48% 0.1488 158.78);
+  --primary-foreground: #0a0a0a;
+  --secondary: #303030;
+  --secondary-foreground: #ededed;
+  --muted: #2c2c2c;
+  --muted-foreground: #a3a3a3;
+  --accent: #ffffff0f;
+  --accent-foreground: #f5f5f5;
+  --destructive: #f43f5e;
+  --border: #ffffff1a;
+  --input: #ffffff24;
+  --ring: oklch(64.48% 0.1488 158.78);
+  --chart-1: oklch(64.48% 0.1488 158.78);
+  --chart-2: #5b82ea;
+  --chart-3: #d95926;
+  --chart-4: #9085e9;
+  --chart-5: #c98500;
+  --sidebar: #222222;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: oklch(64.48% 0.1488 158.78);
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #ffffff0f;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #ffffff1a;
+  --sidebar-ring: oklch(64.48% 0.1488 158.78);
 }
-
 @utility no-scrollbar {
   scrollbar-width: none;
- 
+
   &::-webkit-scrollbar {
     display: none;
   }

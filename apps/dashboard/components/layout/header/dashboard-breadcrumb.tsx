@@ -11,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@workspace/ui/components/breadcrumb"
+} from "@workspace/ui/components/ui/breadcrumb"
 
 import { breadcrumbTrail, type NavScope } from "@/config/navigation"
 
@@ -24,7 +24,7 @@ export function DashboardBreadcrumb({ scopes }: { scopes: NavScope[] }) {
   const crumbs = breadcrumbTrail(pathname, scopes)
   return (
     <Breadcrumb className="min-w-0">
-      <BreadcrumbList className="flex-nowrap text-base capitalize">
+      <BreadcrumbList className="flex-nowrap text-sm capitalize">
         {crumbs.map((crumb, index) => {
           if (index === crumbs.length - 1) {
             return (
@@ -49,9 +49,7 @@ export function DashboardBreadcrumb({ scopes }: { scopes: NavScope[] }) {
                   crumb.label
                 )}
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-muted-foreground/50 max-sm:hidden">
-                /
-              </BreadcrumbSeparator>
+              <BreadcrumbSeparator className="text-muted-foreground/50 max-sm:hidden" />
             </Fragment>
           )
         })}
