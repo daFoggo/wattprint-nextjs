@@ -5,21 +5,26 @@ import { useState } from "react"
 import { DonutChart } from "@workspace/ui/components/hairline/donut-chart"
 import { SegmentedControl } from "@workspace/ui/components/hairline/segmented-control"
 
-import { DEMO_DEVICES_NOW, DEMO_DEVICES_TODAY } from "../demo"
+import { DEMO_DEVICES_TODAY, DEMO_DEVICES_WEEK } from "../demo"
 
 const VIEWS = {
-  now: { data: DEMO_DEVICES_NOW, center: "Using now", unit: "W", digits: 0 },
   today: {
     data: DEMO_DEVICES_TODAY,
     center: "Today so far",
     unit: "kWh",
     digits: 1,
   },
+  week: {
+    data: DEMO_DEVICES_WEEK,
+    center: "Last 7 days",
+    unit: "kWh",
+    digits: 1,
+  },
 }
 
-/** Where the power goes, now (W) or today so far (kWh), like Sense's device view. Sample data until NILM runs. */
+/** Where the power goes, today so far or over the last 7 days (kWh), like Sense's device view. Sample data until NILM runs. */
 export function DeviceMix({ className }: { className?: string }) {
-  const [view, setView] = useState<keyof typeof VIEWS>("now")
+  const [view, setView] = useState<keyof typeof VIEWS>("today")
   const { data, center, unit, digits } = VIEWS[view]
   return (
     <DonutChart
@@ -33,8 +38,8 @@ export function DeviceMix({ className }: { className?: string }) {
           value={view}
           onValueChange={(v) => setView(v as keyof typeof VIEWS)}
           options={[
-            { value: "now", label: "Now" },
             { value: "today", label: "Today" },
+            { value: "week", label: "Week" },
           ]}
         />
       }

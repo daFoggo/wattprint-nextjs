@@ -15,12 +15,14 @@ export const DEMO_DEVICES_TODAY: DonutSlice[] = [
   { id: "other", label: "Other", value: 0.3 },
 ]
 
-/** What is drawing power right now, in W (the Sense "Now" bubbles). */
-export const DEMO_DEVICES_NOW: DonutSlice[] = [
-  { id: "always-on", label: "Always on", value: 96 },
-  { id: "fridge", label: "Fridge-freezer", value: 82 },
-  { id: "tv", label: "Television", value: 21 },
-  { id: "other", label: "Other", value: 12 },
+/** The last 7 days by device, in kWh. */
+export const DEMO_DEVICES_WEEK: DonutSlice[] = [
+  { id: "always-on", label: "Always on", value: 13.3 },
+  { id: "fridge", label: "Fridge-freezer", value: 8.4 },
+  { id: "kettle", label: "Kettle", value: 4.6 },
+  { id: "washer", label: "Washing machine", value: 3.8 },
+  { id: "tv", label: "Television", value: 3.1 },
+  { id: "other", label: "Other", value: 2.2 },
 ]
 
 // [minutes before the latest reading, device, what happened, room]
