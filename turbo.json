@@ -23,6 +23,9 @@
       "env": [
         "AUTH_PROVIDER",
         "API_BASE_URL",
+        "OPENWEATHER_API_KEY",
+        "WEATHER_LAT",
+        "WEATHER_LON",
         "NODE_ENV",
         "EXPOSE_TESTING_API",
         "KEYCLOAK_ISSUER",

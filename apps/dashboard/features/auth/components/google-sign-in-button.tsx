@@ -5,7 +5,11 @@ import { Google } from "@workspace/ui/components/ui/svgs/google"
  * The only way in: the Server Action starts the Keycloak flow with `kc_idp_hint=google`.
  * Neutral (`secondary`), not brand green: Google's multicolour mark belongs on a plain surface.
  */
-export function GoogleSignInButton({ action }: { action: () => Promise<void> }) {
+export function GoogleSignInButton({
+  action,
+}: {
+  action: () => Promise<void>
+}) {
   return (
     <form action={action}>
       <Button
