@@ -7,11 +7,12 @@ import { cn } from "@workspace/ui/lib/utils"
 import { PageHead } from "@/components/layout/page-head"
 import { HideOnError } from "@/components/shared/hide-on-error"
 import { Stagger } from "@/components/shared/stagger"
+import { BillSummary } from "@/features/billing/components/bill-summary"
+import { getCurrentBill } from "@/features/billing/queries"
 import { DailyTrend } from "@/features/energy/components/daily-trend"
 import { DeviceList } from "@/features/energy/components/device-list"
 import { DeviceMix } from "@/features/energy/components/device-mix"
 import { DeviceTimeline } from "@/features/energy/components/device-timeline"
-import { LivePower } from "@/features/energy/components/live-power"
 import { UsageCompare } from "@/features/energy/components/usage-compare"
 import { getDashboard } from "@/features/energy/queries"
 import { WeatherCard } from "@/features/weather/components/weather-card"
@@ -20,17 +21,17 @@ import { requirePermission } from "@/lib/dal"
 
 export const metadata: Metadata = { title: "Overview" }
 
-// Bento on lg (12 columns), widths alternating so no two rows line up; devices lead, top left,
-// then one row about energy and one about devices:
-//   by device 4 | live 8
+// Bento on lg (12 columns), widths alternating so no two rows line up; devices and what they
+// cost lead, then one row about energy and one about devices:
+//   by device 4 | bill 8 (a tray: breakdown | tier, then today)
 //   30 days 8   | compare 4
-//   activity 4  | devices 8
+//   activity 5  | devices 7
 const TILE = {
   mix: "lg:col-span-4",
-  live: "lg:col-span-8",
-  devices: "lg:col-span-8",
+  bill: "lg:col-span-8",
+  devices: "lg:col-span-7",
   compare: "lg:col-span-4",
-  activity: "lg:col-span-4",
+  activity: "lg:col-span-5",
   trend: "lg:col-span-8",
 }
 
@@ -60,7 +61,7 @@ async function Guard() {
  * live or sampled is shown: it would describe a home the account does not have.
  */
 async function Tiles() {
-  const data = await getDashboard()
+  const [data, bill] = await Promise.all([getDashboard(), getCurrentBill()])
   if (!data) {
     return (
       <section className="flex flex-col gap-2 rounded-3xl bg-card p-6 lg:col-span-12">
@@ -75,8 +76,9 @@ async function Tiles() {
   const { latest, days } = data
   return (
     <>
-      <DeviceMix className={TILE.mix} />
-      <LivePower className={TILE.live} />
+      {/* No tariff on the home: nothing to price, so the device mix takes the row. */}
+      <DeviceMix className={bill ? TILE.mix : "lg:col-span-12"} />
+      {bill ? <BillSummary bill={bill} className={TILE.bill} /> : null}
       <DailyTrend days={days} className={TILE.trend} />
       <UsageCompare days={days} className={TILE.compare} />
       {/* No meter data yet: the activity sample would pretend otherwise. */}
@@ -98,7 +100,7 @@ function TileSkeletons() {
   return (
     <>
       <TileSkeleton className={TILE.mix} height={320} />
-      <TileSkeleton className={TILE.live} height={320} />
+      <TileSkeleton className={TILE.bill} height={320} />
       <TileSkeleton className={TILE.trend} height={360} />
       <TileSkeleton className={TILE.compare} height={360} />
       <TileSkeleton className={TILE.activity} height={360} />
@@ -123,8 +125,8 @@ export default function DashboardPage() {
           </HideOnError>
         }
       >
-        Your home right now, against the weeks before, and where the energy
-        goes.
+        What this cycle costs, your energy against the weeks before, and where
+        it goes.
       </PageHead>
       {/* Each direct child is a tile: Stagger slides them in one after another as they stream. */}
       <Stagger className="grid grid-cols-1 gap-4 *:nth-6:delay-500 lg:grid-cols-12">

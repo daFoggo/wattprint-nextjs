@@ -1,12 +1,12 @@
 import type { Permission } from "@workspace/auth/permissions"
 
-import { DASHBOARD_PATH } from "@/config/routes"
+import { BILL_PATH, DASHBOARD_PATH } from "@/config/routes"
 
 /**
  * Semantic icon names, resolved to Tabler icons in `components/layout/sidebar/nav-icons.tsx`. Names (not
  * components) because `entries` cross from a Server Component to the client `NavTree`.
  */
-export type NavIconName = "overview" | "settings"
+export type NavIconName = "overview" | "bill" | "settings"
 
 export type NavLink = {
   title: string
@@ -53,6 +53,12 @@ export const NAV_SCOPES: NavScope[] = [
             title: "Overview",
             href: DASHBOARD_PATH,
             icon: "overview",
+            permission: "account:view",
+          },
+          {
+            title: "Bill",
+            href: BILL_PATH,
+            icon: "bill",
             permission: "account:view",
           },
         ],
