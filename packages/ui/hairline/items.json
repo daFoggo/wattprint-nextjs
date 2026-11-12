@@ -136,6 +136,8 @@
     "@hairline/action-receipt",
     "@hairline/chat-notice",
     "@hairline/usage-meter",
+    "@hairline/share-bar",
+    "@hairline/token-bucket",
     "@hairline/usage-limits",
     "@hairline/chat-scroll",
     "@hairline/message-edit",

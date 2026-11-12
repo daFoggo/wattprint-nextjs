@@ -290,6 +290,8 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 | `compare-bars.tsx`, `combo-chart.tsx`, `donut-chart.tsx` | A `unit` prop written after every figure (feature patch) | Intl has no kWh or W unit, and the Overview puts units after numbers, not in titles |
 | `compare-bars.tsx` | An `action` slot beside the title; the header wraps when narrow (feature patch) | The Overview's Week/Month switch, as `DonutChart`'s `action` |
 | `compare-bars.tsx` | Bar slots and fills ease `left`, `width` and `height` (feature patch) | Switching Week/Month jumped every bar; with positional keys the bars now glide |
+| `token-bucket.tsx` | A `fillUsed` prop: the tokens are what is used, packed from the left (first token in the leftmost slot, so they slide in left to right), and the figure, meter text and amber state count what is left (feature patch) | The Overview's tier card: a tariff tier reads as used kWh filling up, the empty end is what is left |
+| `token-bucket.tsx` | A `header` node that replaces the title row; `title` still names the meter (feature patch) | The Overview's tier card: the price now and the next one, large, with an arrow between |
 
 Patches fix bugs first. A **feature patch** (marked above) is allowed only when the product needs a capability that no prop
 or wrapper can give; keep it small, say why in `patch.mjs`, and list it here so an upstream update re-checks it.
