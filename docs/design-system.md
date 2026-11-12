@@ -287,6 +287,7 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 | `floating.ts` | `preventDefault()` on Escape | Escape in a menu also closed the Sheet/Dialog around it |
 | `trend-chart.tsx`, `combo-chart.tsx` | The sr-only table sits in a `div.sr-only` | A `<table>` ignores the 1px height of `sr-only`: one row per bucket or day added a screen of empty scroll (dashboard Overview) |
 | `number-roll.tsx` | `overflow-clip` beside the `clip-path` | The clipped 0-9 digit stacks still counted as scrollable overflow near the end of a page |
+| `log-stream.tsx` | The clock shows UTC until hydrated, then local time; narrow rows show the time without the milliseconds | The server renders in UTC, so the local clock mismatched on hydration (Activity tile); narrow rows hid the time |
 | `compare-bars.tsx`, `combo-chart.tsx`, `donut-chart.tsx` | A `unit` prop written after every figure (feature patch) | Intl has no kWh or W unit, and the Overview puts units after numbers, not in titles |
 | `compare-bars.tsx` | An `action` slot beside the title; the header wraps when narrow (feature patch) | The Overview's Week/Month switch, as `DonutChart`'s `action` |
 | `compare-bars.tsx` | Bar slots and fills ease `left`, `width` and `height` (feature patch) | Switching Week/Month jumped every bar; with positional keys the bars now glide |

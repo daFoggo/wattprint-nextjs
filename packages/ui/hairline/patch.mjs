@@ -248,6 +248,24 @@ export const PATCHES = [
     to: "              </span>\n            </p>\n          </div>\n          )}{/* patched (hairline/patch.mjs) */}\n\n          <div\n            role=\"meter\"",
   },
   {
+    file: "log-stream.tsx",
+    why: "The clock read the local time on the server and in the browser: the server's timezone is UTC, so hydration mismatched the Activity tile. Both renders show UTC, then the visitor's timezone; the milliseconds come apart so narrow rows can drop them.",
+    from: "const pad = (n: number, w = 2) => String(n).padStart(w, \"0\");\nconst clock = (d: DateLike) => {\n  const t = new Date(toTime(d));\n  return `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`;\n};",
+    to: "const pad = (n: number, w = 2) => String(n).padStart(w, \"0\");\nconst clock = (d: DateLike, local: boolean) => { // patched (hairline/patch.mjs): UTC until hydrated, then local\n  const t = new Date(toTime(d));\n  const [h, m, s] = local ? [t.getHours(), t.getMinutes(), t.getSeconds()] : [t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()];\n  return [`${pad(h)}:${pad(m)}:${pad(s)}`, `.${pad(t.getMilliseconds(), 3)}`] as const;\n};\n// The server and the hydrating render both show UTC, then the visitor's timezone takes over.\nconst subscribeNothing = () => () => {};\nconst useHydrated = () => React.useSyncExternalStore(subscribeNothing, () => true, () => false);",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Each row picks its clock after hydration (see above).",
+    from: "  const [copied, setCopied] = React.useState(false);\n  const has = Boolean(line.data && Object.keys(line.data).length);",
+    to: "  const [copied, setCopied] = React.useState(false);\n  const hydrated = useHydrated();\n  const [time, ms] = clock(line.at, hydrated); // patched (hairline/patch.mjs)\n  const has = Boolean(line.data && Object.keys(line.data).length);",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Narrow rows hid the time altogether; they now show it without the milliseconds.",
+    from: "      <span aria-hidden=\"true\" className={`absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full ${TICK[line.level]}`} />\n      <time dateTime={new Date(toTime(line.at)).toISOString()} className=\"hidden w-[6.6rem] shrink-0 text-muted-foreground tabular-nums @md:block\">\n        {clock(line.at)}\n      </time>",
+    to: "      <span aria-hidden=\"true\" className={`absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full ${TICK[line.level]}`} />\n      {/* patched (hairline/patch.mjs): narrow rows show the time, without the milliseconds */}\n      <time dateTime={new Date(toTime(line.at)).toISOString()} className=\"w-[4.1rem] shrink-0 text-muted-foreground tabular-nums @md:w-[6.6rem]\">\n        {time}\n        <span className=\"hidden @md:inline\">{ms}</span>\n      </time>",
+  },
+  {
     file: "number-roll.tsx",
     why: "Each digit column is a 0-9 stack clipped only by clip-path, which hides it but still counts as scrollable overflow: a NumberRoll near the end of a page added a screen of empty scroll.",
     from: '<span className="relative inline-block [clip-path:inset(0)]">',

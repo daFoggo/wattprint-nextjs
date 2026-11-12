@@ -82,10 +82,14 @@ const useReducedMotion = () =>
 
 const toTime = (d: DateLike) => (d instanceof Date ? d.getTime() : typeof d === "number" ? d : new Date(d).getTime());
 const pad = (n: number, w = 2) => String(n).padStart(w, "0");
-const clock = (d: DateLike) => {
+const clock = (d: DateLike, local: boolean) => { // patched (hairline/patch.mjs): UTC until hydrated, then local
   const t = new Date(toTime(d));
-  return `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`;
+  const [h, m, s] = local ? [t.getHours(), t.getMinutes(), t.getSeconds()] : [t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()];
+  return [`${pad(h)}:${pad(m)}:${pad(s)}`, `.${pad(t.getMilliseconds(), 3)}`] as const;
 };
+// The server and the hydrating render both show UTC, then the visitor's timezone takes over.
+const subscribeNothing = () => () => {};
+const useHydrated = () => React.useSyncExternalStore(subscribeNothing, () => true, () => false);
 
 /** The message with every match marked. */
 function Marked({ text, query }: { text: string; query: string }) {
@@ -128,6 +132,8 @@ interface RowProps {
 const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle }: RowProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [copied, setCopied] = React.useState(false);
+  const hydrated = useHydrated();
+  const [time, ms] = clock(line.at, hydrated); // patched (hairline/patch.mjs)
   const has = Boolean(line.data && Object.keys(line.data).length);
 
   React.useLayoutEffect(() => {
@@ -143,8 +149,10 @@ const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle 
   const head = (
     <>
       <span aria-hidden="true" className={`absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full ${TICK[line.level]}`} />
-      <time dateTime={new Date(toTime(line.at)).toISOString()} className="hidden w-[6.6rem] shrink-0 text-muted-foreground tabular-nums @md:block">
-        {clock(line.at)}
+      {/* patched (hairline/patch.mjs): narrow rows show the time, without the milliseconds */}
+      <time dateTime={new Date(toTime(line.at)).toISOString()} className="w-[4.1rem] shrink-0 text-muted-foreground tabular-nums @md:w-[6.6rem]">
+        {time}
+        <span className="hidden @md:inline">{ms}</span>
       </time>
       <span className={`w-[2.6rem] shrink-0 uppercase ${TONE[line.level]}`}>{line.level === "error" ? "err" : line.level}</span>
       {line.source && <span className="hidden w-[4.5rem] shrink-0 truncate text-muted-foreground @sm:block">{line.source}</span>}
