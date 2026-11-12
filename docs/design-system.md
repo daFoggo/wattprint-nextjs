@@ -285,6 +285,14 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 | `toast-stack.tsx` | Server snapshot returns one cached `[]` | A new array per call made React warn on every page (`<Toaster />` is in the root layout) |
 | `dropdown-menu.tsx`, `popover.tsx` | Portal into the enclosing `<dialog>` when there is one | A modal `<dialog>` (Sheet, Dialog) makes `<body>` inert: menus and the account panel in the mobile sidebar Sheet could not be clicked |
 | `floating.ts` | `preventDefault()` on Escape | Escape in a menu also closed the Sheet/Dialog around it |
+| `trend-chart.tsx`, `combo-chart.tsx` | The sr-only table sits in a `div.sr-only` | A `<table>` ignores the 1px height of `sr-only`: one row per bucket or day added a screen of empty scroll (dashboard Overview) |
+| `number-roll.tsx` | `overflow-clip` beside the `clip-path` | The clipped 0-9 digit stacks still counted as scrollable overflow near the end of a page |
+| `compare-bars.tsx`, `combo-chart.tsx`, `donut-chart.tsx` | A `unit` prop written after every figure (feature patch) | Intl has no kWh or W unit, and the Overview puts units after numbers, not in titles |
+| `compare-bars.tsx` | An `action` slot beside the title; the header wraps when narrow (feature patch) | The Overview's Week/Month switch, as `DonutChart`'s `action` |
+| `compare-bars.tsx` | Bar slots and fills ease `left`, `width` and `height` (feature patch) | Switching Week/Month jumped every bar; with positional keys the bars now glide |
+
+Patches fix bugs first. A **feature patch** (marked above) is allowed only when the product needs a capability that no prop
+or wrapper can give; keep it small, say why in `patch.mjs`, and list it here so an upstream update re-checks it.
 
 Found by an audit of the whole folder (Next 16 prerendering, navigation, images, listeners, global side effects) and
 handled in app code instead of patches. Keep them in mind when adopting more components:
@@ -410,6 +418,10 @@ collapse and expand groups, Enter opens.
 - **One focal accent per screen**: the current tree item. Status uses small square dots: `bg-foreground` for "needs
   review", `bg-destructive` for blocked, `bg-muted-foreground/50` for done.
 - **No big-number tiles.** Metrics are one `dl` row: mono `text-xs` label, `text-2xl font-medium` value, separated by space.
+- **Dashboard tiles are Hairline cards.** The Overview bento is made of self-carded Hairline components (`bg-background`,
+  1px ring). A hand-made tile beside them copies that shell (`rounded-3xl border bg-background`) instead of a plate, so the
+  grid reads as one set: today only the weather card. Its liquid takes a Tailwind palette colour per sky (amber clear,
+  sky rain…) with a matching ink; that is the one place app code uses palette colours, like Hairline's status colours.
 - **Selected list row is inverted** (`bg-primary text-primary-foreground`); hover is only `bg-accent`.
 - **A detail sheet is context, not a route.** It opens from the page that owns the data and keeps its own open state.
 - **Usage meters are flat**: a `bg-primary` fill over a `bg-muted` track (shadcn `Progress`).
@@ -446,7 +458,7 @@ Next Mono Base look is composed on top in `apps/dashboard/components/layout/`, g
 | `UserMenu` | `sidebar/user-menu.tsx` | Hairline `Popover` (288px) off the account row: `Avatar`, name, email, Theme row, then the caller's children (`SignOutButton` from `features/auth`, a `secondary` Hairline `Button`) |
 | `DashboardBreadcrumb`, `CrumbMenu` | `header/dashboard-breadcrumb.tsx`, `header/crumb-menu.tsx` | shadcn `Breadcrumb` (links stay `next/link`); scoped pages start with a Hairline `DropdownMenu` of siblings (`Crumb.options`, `router.push` on select) then the page title from the nav |
 | `ScopedNav` | `sidebar/scoped-nav.tsx` | Client; the sidebar sections of the current scope, over `NavTree` |
-| `PageHead`, `Metrics`, `SpecList` | `page-head.tsx`, `components/shared/` | Plain markup |
+| `PageHead`, `Metrics`, `SpecList` | `page-head.tsx`, `components/shared/` | Plain markup; `PageHead` takes an optional `action` beside the title (the Overview's weather card), which drops under it on narrow screens |
 | `InfoHint` | `components/shared/info-hint.tsx` | `Popover` + ghost `icon-xs` `Button`; copy comes from `config/help.ts` (also read by the Guide page). `PageHead`, `Metric` and section titles take a `hint` key |
 | `ResponsiveDialog` | `components/shared/responsive-dialog.tsx` | Hairline `Dialog` from `md` up, bottom Hairline `Sheet` below; `size` `md` (520px) or `lg` (680px); `DialogActions` for the button row. Use it for every form that opens over a page |
 

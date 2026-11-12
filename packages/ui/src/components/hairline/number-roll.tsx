@@ -133,7 +133,7 @@ const Digit = React.memo(function Digit({ digit, trend, duration, reduced, rollI
   };
 
   return (
-    <span className="relative inline-block [clip-path:inset(0)]">
+    <span className={/* patched (hairline/patch.mjs): clip-path alone still counts as scroll overflow */ "relative inline-block overflow-clip [clip-path:inset(0)]"}>
       <span className="invisible">{digit}</span>
       <span
         ref={stripRef}

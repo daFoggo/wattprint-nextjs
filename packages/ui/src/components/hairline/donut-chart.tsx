@@ -51,6 +51,8 @@ export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   action?: React.ReactNode;
   /** Above the figure in the centre while nothing is pointed at. */
   centerLabel?: string;
+  /** After every figure, e.g. "kWh" (patched (hairline/patch.mjs): Intl has no energy units). */
+  unit?: string;
   format?: Intl.NumberFormatOptions;
   locales?: string | string[];
   /** Ring thickness in px, at the ring's full size. */
@@ -97,6 +99,7 @@ export function DonutChart({
   description,
   action,
   centerLabel = "Total",
+  unit, // patched (hairline/patch.mjs)
   format,
   locales,
   thickness = 16,
@@ -190,7 +193,7 @@ export function DonutChart({
   });
 
   const current = arcs.find((a) => a.id === active && a.shown) ?? null;
-  const fmt = (n: number) => new Intl.NumberFormat(hydrated ? locales : (locales ?? "en-US"), format).format(n);
+  const fmt = (n: number) => new Intl.NumberFormat(hydrated ? locales : (locales ?? "en-US"), format).format(n) + (unit ? ` ${unit}` : ""); // patched (hairline/patch.mjs): the unit
   const trackLength = gauge ? span - stroke : circumference;
   const turn = gauge ? 180 : -90;
   const transitionFor = (delay: number) =>
@@ -272,6 +275,8 @@ export function DonutChart({
               </span>
               <span className={`font-semibold leading-tight tracking-[-0.03em] text-foreground tabular-nums ${figureSize}`}>
                 <NumberRoll value={visible ? (current ? current.amount : total) : 0} format={format} locales={locales} duration={900} />
+                {/* patched (hairline/patch.mjs): the unit after the figure */}
+                {unit && <span className="ml-1 text-[13px] font-normal tracking-normal text-muted-foreground">{unit}</span>}
               </span>
               <span
                 className="grid text-[11.5px] text-muted-foreground tabular-nums transition-[grid-template-rows,opacity] duration-300 @md:text-[12px]"
@@ -315,7 +320,7 @@ export function DonutChart({
                     />
                     <span className={`min-w-0 flex-1 truncate ${a.shown ? "text-foreground" : "text-muted-foreground line-through decoration-muted-foreground/60"}`}>{a.label}</span>
                     <span className="tabular-nums text-foreground">
-                      <NumberRoll value={visible ? a.amount : 0} format={format} locales={locales} duration={900} />
+                      <NumberRoll value={visible ? a.amount : 0} format={format} locales={locales} duration={900} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
                     </span>
                     <span className="w-10 text-right text-[11.5px] tabular-nums text-muted-foreground @md:text-[12px]">
                       <NumberRoll value={visible ? a.share : 0} format={{ style: "percent" }} duration={900} />

@@ -140,6 +140,7 @@
     "@hairline/chat-scroll",
     "@hairline/message-edit",
     "@hairline/chat-history",
-    "@hairline/agent-playback"
+    "@hairline/agent-playback",
+    "@hairline/compare-bars"
   ]
 }

@@ -641,7 +641,8 @@ export function TrendChart({
           : ""}
       </p>
       {to && (
-        <table className="sr-only">
+        // patched (hairline/patch.mjs): a <table> ignores the 1px height of sr-only, so a div carries it.
+        <div className="sr-only"><table>
           <caption>{label}</caption>
           <thead>
             <tr>
@@ -659,7 +660,7 @@ export function TrendChart({
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div> // patched (hairline/patch.mjs): closes the wrapper above
       )}
     </div>
   );

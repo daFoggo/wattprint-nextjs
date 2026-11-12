@@ -172,13 +172,13 @@ export function SortableList<T extends { id: string }>({
     const els = items.map((it) => rows.current.get(it.id)!);
     drag.current = { id, from, to: from, startY: e.clientY, tops: els.map((el) => el.offsetTop), heights: els.map((el) => el.offsetHeight) };
     samples.current = [];
-    samplePointer(samples.current, e.clientY, performance.now());
+    samplePointer(samples.current, e.clientY, e.timeStamp);
     setLifted(id);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     const d = drag.current;
     if (!d) return;
-    samplePointer(samples.current, e.clientY, performance.now());
+    samplePointer(samples.current, e.clientY, e.timeStamp);
     const rawDy = e.clientY - d.startY;
     const minCenter = d.tops[0] + d.heights[0] / 2;
     const maxCenter = d.tops[d.tops.length - 1] + d.heights[d.heights.length - 1] / 2;
@@ -211,8 +211,8 @@ export function SortableList<T extends { id: string }>({
     if (!d) return;
     let to = d.to;
     if (e) {
-      samplePointer(samples.current, e.clientY, performance.now());
-      const vy = releaseVelocity(samples.current, performance.now());
+      samplePointer(samples.current, e.clientY, e.timeStamp);
+      const vy = releaseVelocity(samples.current, e.timeStamp);
       if (Math.abs(vy) > 0.35) {
         const rawDy = e.clientY - d.startY;
         const naturalCenter = d.tops[d.from] + d.heights[d.from] / 2 + rawDy;

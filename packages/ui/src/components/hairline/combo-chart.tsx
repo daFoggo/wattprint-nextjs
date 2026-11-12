@@ -44,6 +44,8 @@ export interface ComboChartProps extends React.HTMLAttributes<HTMLDivElement> {
   previous?: number;
   /** The two marks' names, for the legend and the readout. */
   series?: [string, string];
+  /** After every figure, e.g. "kWh" (patched (hairline/patch.mjs): Intl has no energy units). */
+  unit?: string;
   format?: Intl.NumberFormatOptions;
   locales?: string | string[];
 }
@@ -121,6 +123,7 @@ export function ComboChart({
   average: averageProp,
   previous,
   series = ["Orders", "7-day average"],
+  unit, // patched (hairline/patch.mjs)
   format,
   locales,
   className = "",
@@ -238,7 +241,7 @@ export function ComboChart({
     setActive(Math.min(n - 1, Math.max(0, active === null ? from : moves[e.key])));
   };
 
-  const fmt = (v: number) => new Intl.NumberFormat(locales, { maximumFractionDigits: 0, ...format }).format(v);
+  const fmt = (v: number) => new Intl.NumberFormat(locales, { maximumFractionDigits: 0, ...format }).format(v) + (unit ? ` ${unit}` : ""); // patched (hairline/patch.mjs): the unit
   const name = (i: number) => days[i]?.title ?? days[i]?.label ?? "";
   const every = width && n ? Math.max(1, Math.ceil(44 / (width / n))) : 1;
   // Labels thin out on narrow screens; the hovered one always shows, and its close neighbours step aside for it.
@@ -262,6 +265,8 @@ export function ComboChart({
                   locales={locales}
                   duration={active !== null ? 600 : 1000}
                 />
+                {/* patched (hairline/patch.mjs): the unit after the figure */}
+                {unit && <span className="ml-1 text-[13px] font-normal tracking-normal text-muted-foreground">{unit}</span>}
               </span>
               {change !== null && (
                 <span
@@ -295,7 +300,7 @@ export function ComboChart({
               )}
             </p>
             <p className="mt-1 flex items-baseline gap-[0.3em] whitespace-nowrap text-[11.5px] text-muted-foreground @md:text-[12.5px]">
-              <NumberRoll value={visible ? (active !== null ? average[active] : daily) : 0} format={whole} locales={locales} duration={700} />
+              <NumberRoll value={visible ? (active !== null ? average[active] : daily) : 0} format={whole} locales={locales} duration={700} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
               <TextMorph>{active !== null ? `on the ${series[1].toLowerCase()}` : "a day on average"}</TextMorph>
             </p>
           </div>
@@ -425,7 +430,7 @@ export function ComboChart({
             <div key={t.label} className="min-w-0 px-2.5 first:pl-0 last:pr-0 @md:px-3.5">
               <dt className="truncate text-[11px] text-muted-foreground @md:text-[11.5px]">{t.label}</dt>
               <dd className="mt-0.5 text-[13.5px] font-medium tracking-[-0.01em] text-foreground @md:text-[14.5px]">
-                <NumberRoll value={visible ? t.value : 0} format={whole} locales={locales} duration={800} />
+                <NumberRoll value={visible ? t.value : 0} format={whole} locales={locales} duration={800} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
               </dd>
               <dd className="truncate text-[10.5px] text-muted-foreground @md:text-[11px]">{t.note}</dd>
             </div>
@@ -435,7 +440,8 @@ export function ComboChart({
         <p aria-live="polite" className="sr-only">
           {keyboard && active !== null ? `${name(active)}: ${fmt(values[active])}, ${series[1].toLowerCase()} ${fmt(average[active])}` : ""}
         </p>
-        <table className="sr-only">
+        {/* patched (hairline/patch.mjs): a <table> ignores the 1px height of sr-only, so a div carries it. */}
+        <div className="sr-only"><table>
           <caption>
             {title}: {fmt(total)} over {n} days
           </caption>
@@ -455,7 +461,7 @@ export function ComboChart({
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>{/* patched (hairline/patch.mjs): closes the wrapper above */}
       </div>
     </div>
   );
