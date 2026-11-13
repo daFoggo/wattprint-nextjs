@@ -16,7 +16,13 @@ import type { KcContext } from "../KcContext"
 type RegisterContext = Extract<KcContext, { pageId: "register.ftl" }>
 
 /** Attributes this form renders; KcPage falls back to keycloakify's generic page if the realm's user profile adds others. */
-export const REGISTER_FIELDS = ["username", "email", "firstName", "lastName", "locale"]
+export const REGISTER_FIELDS = [
+  "username",
+  "email",
+  "firstName",
+  "lastName",
+  "locale",
+]
 
 type Policies = RegisterContext["passwordPolicies"]
 type Msg = I18n["msgStr"]
@@ -28,34 +34,105 @@ type Msg = I18n["msgStr"]
 function passwordRules(policies: Policies, email: string, msgStr: Msg) {
   const count = (re: RegExp, v: string) => (v.match(re) ?? []).length
   const p = policies ?? {}
-  const rules: { label: string; ok: (v: string) => boolean }[] = []
+  const rules: { key: string; label: string; ok: (v: string) => boolean }[] = []
   if (p.length)
     rules.push({
+      key: "length",
       label: msgStr("passwordMinLength", String(p.length)),
       ok: (v) => v.length >= p.length!,
     })
+  // Same character classes as Keycloak's policy providers (Java Character.isUpperCase, isDigit, isLetterOrDigit).
   for (const [n, key, re] of [
-    [p.digits, "passwordDigits", /\d/g],
-    [p.upperCase, "passwordUpperCase", /[A-Z]/g],
-    [p.lowerCase, "passwordLowerCase", /[a-z]/g],
-    [p.specialChars, "passwordSpecialChars", /[^A-Za-z0-9]/g],
+    [p.upperCase, "passwordUpperCase", /\p{Lu}/gu],
+    [p.lowerCase, "passwordLowerCase", /\p{Ll}/gu],
+    [p.digits, "passwordDigits", /\p{Nd}/gu],
+    [p.specialChars, "passwordSpecialChars", /[^\p{L}\p{Nd}]/gu],
   ] as const)
-    if (n) rules.push({ label: msgStr(key, String(n)), ok: (v) => count(re, v) >= n })
+    if (n)
+      rules.push({
+        key,
+        label: msgStr(key, String(n)),
+        ok: (v) => count(re, v) >= n,
+      })
   // Email is the username in this realm, so notUsername and notEmail are the same check.
   if (p.notUsername || p.notEmail)
     rules.push({
+      key: "notEmail",
       label: msgStr("passwordNotEmail"),
       ok: (v) => v.toLowerCase() !== email.trim().toLowerCase(),
     })
   return rules
 }
 
-/** A password Keycloak would reject is always "Weak"; one it accepts starts at "Fair", Hairline's heuristic adds the rest. */
+/** Every rule, ticked as the typed password meets it (as Supabase's sign-up does). */
+function PasswordChecklist({
+  rules,
+  password,
+}: {
+  rules: ReturnType<typeof passwordRules>
+  password: string
+}) {
+  if (!rules.length) return null
+  return (
+    <ul id="password-rules" className="flex flex-col gap-1.5 px-3 text-sm">
+      {rules.map((rule) => {
+        const ok = password !== "" && rule.ok(password)
+        return (
+          <li
+            key={rule.key}
+            className={`flex items-center gap-2 transition-colors duration-200 ${ok ? "text-foreground" : "text-muted-foreground"}`}
+          >
+            <svg
+              viewBox="0 0 16 16"
+              className="size-4 shrink-0"
+              aria-hidden="true"
+            >
+              {ok ? (
+                <>
+                  <circle cx="8" cy="8" r="7" className="fill-emerald-500" />
+                  <path
+                    d="M5 8.2 7 10.2 11 6"
+                    fill="none"
+                    className="stroke-background"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </>
+              ) : (
+                <circle
+                  cx="8"
+                  cy="8"
+                  r="6.25"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+              )}
+            </svg>
+            {rule.label}
+            <span className="sr-only">{ok ? " ✓" : ""}</span>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+/** The meter fills with the checklist: "Strong" only once every rule passes (Keycloak accepts it). No rules: Hairline's heuristic. */
 function policyScore(rules: ReturnType<typeof passwordRules>) {
   return (password: string): PasswordScore => {
     if (!password) return 0
-    if (!rules.every((rule) => rule.ok(password))) return 1
-    return Math.max(2, scorePassword(password)) as PasswordScore
+    if (!rules.length) return scorePassword(password)
+    // Too short is weak, whatever else it has.
+    if (rules.some((rule) => rule.key === "length" && !rule.ok(password)))
+      return 1
+    const passed = rules.filter((rule) => rule.ok(password)).length
+    if (passed === rules.length) return 4
+    return Math.max(
+      1,
+      Math.min(3, Math.ceil((passed / rules.length) * 4))
+    ) as PasswordScore
   }
 }
 
@@ -69,7 +146,10 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
   const { url, profile, messagesPerField, passwordPolicies } = kcContext
   const { msg, msgStr, currentLanguage } = i18n
   const [submitting, setSubmitting] = useState(false)
-  const [email, setEmail] = useState(profile.attributesByName.email?.value ?? "")
+  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState(
+    profile.attributesByName.email?.value ?? ""
+  )
 
   const rules = passwordRules(passwordPolicies, email, msgStr)
   const value = (name: string) => profile.attributesByName[name]?.value ?? ""
@@ -160,20 +240,20 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
           required
           error={error("email") ?? error("username")}
         />
-        <PasswordInput
-          id="password"
-          name="password"
-          label={msg("password")}
-          autoComplete="new-password"
-          required
-          strength={policyScore(rules)}
-          hint={
-            rules.length
-              ? rules.map((rule) => rule.label).join(", ") + "."
-              : undefined
-          }
-          error={error("password")}
-        />
+        <div className="flex flex-col gap-3">
+          <PasswordInput
+            id="password"
+            name="password"
+            label={msg("password")}
+            autoComplete="new-password"
+            required
+            strength={policyScore(rules)}
+            onValueChange={setPassword}
+            aria-describedby="password-rules"
+            error={error("password")}
+          />
+          <PasswordChecklist rules={rules} password={password} />
+        </div>
         <PasswordInput
           id="password-confirm"
           name="password-confirm"
