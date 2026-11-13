@@ -2,7 +2,7 @@
 
 import { usePathname } from "@/i18n/navigation"
 
-import { sectionsFor, type NavScope } from "@/config/navigation"
+import { currentHref, sectionsFor, type NavScope } from "@/config/navigation"
 
 import { AppSidebarSection } from "@/components/layout/sidebar/app-sidebar"
 import { NavTree, useNavLabel } from "@/components/layout/sidebar/nav-tree"
@@ -14,9 +14,12 @@ import { NavTree, useNavLabel } from "@/components/layout/sidebar/nav-tree"
 export function ScopedNav({ scopes }: { scopes: NavScope[] }) {
   const pathname = usePathname()
   const navLabel = useNavLabel()
-  return sectionsFor(scopes, pathname).map((section) => (
+  const sections = sectionsFor(scopes, pathname)
+  // Across every section, so one link is marked even when sections nest paths.
+  const current = currentHref(sections, pathname)
+  return sections.map((section) => (
     <AppSidebarSection key={section.label} label={navLabel(section.label)}>
-      <NavTree entries={section.entries} />
+      <NavTree entries={section.entries} current={current} />
     </AppSidebarSection>
   ))
 }

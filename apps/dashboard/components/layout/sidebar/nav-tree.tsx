@@ -3,7 +3,6 @@
 import { useId, useState } from "react"
 import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
-import { usePathname } from "@/i18n/navigation"
 import { IconChevronDown } from "@tabler/icons-react"
 
 import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
@@ -22,7 +21,7 @@ import { NavIcon } from "@/components/layout/sidebar/nav-icons"
 // `group-data-[collapsible=icon]` is the sidebar's 48px icon rail: rows keep only their icon.
 // `relative` lifts the row above the gliding highlight; the transparent border reserves the current row's outline.
 const row = cn(
-  "group/row relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent px-1.5 py-1.5 text-sm text-muted-foreground hover:text-foreground group-data-[collapsible=icon]:justify-center",
+  "group/row relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent px-1.5 py-1.5 text-sm text-muted-foreground group-data-[collapsible=icon]:justify-center hover:text-foreground",
   INTERACTION_FOCUS
 )
 
@@ -50,10 +49,22 @@ function RowLabel({ children }: { children: React.ReactNode }) {
  * groups indent, two levels max. One hover surface glides from row to row, as in Hairline menus.
  * Only the icon stays when the sidebar collapses to its icon rail.
  */
-export function NavTree({ entries }: { entries: NavEntry[] }) {
+export function NavTree({
+  entries,
+  current,
+}: {
+  entries: NavEntry[]
+  /** The href to mark as the current page (`currentHref`), which also covers the pages under a link. */
+  current?: string
+}) {
   const reduced = useInteractionReducedMotion()
   // `moved` is false for the first row hovered, so the surface fades in instead of sliding from the top.
-  const [hover, setHover] = useState({ top: 0, height: 0, shown: false, moved: false })
+  const [hover, setHover] = useState({
+    top: 0,
+    height: 0,
+    shown: false,
+    moved: false,
+  })
   return (
     <ul
       className="relative flex flex-col gap-1"
@@ -91,9 +102,9 @@ export function NavTree({ entries }: { entries: NavEntry[] }) {
       {entries.map((entry) => (
         <li key={entry.title}>
           {"items" in entry ? (
-            <TreeGroup group={entry} />
+            <TreeGroup group={entry} current={current} />
           ) : (
-            <TreeLink link={entry} />
+            <TreeLink link={entry} current={current === entry.href} />
           )}
         </li>
       ))}
@@ -101,10 +112,8 @@ export function NavTree({ entries }: { entries: NavEntry[] }) {
   )
 }
 
-function TreeLink({ link }: { link: NavLink }) {
-  const pathname = usePathname()
+function TreeLink({ link, current }: { link: NavLink; current: boolean }) {
   const { setOpenMobile, iconRail } = useSidebar()
-  const current = pathname === link.href
   const title = useNavLabel()(link.title)
   const anchor = (
     <Link
@@ -147,8 +156,7 @@ function TreeLink({ link }: { link: NavLink }) {
   )
 }
 
-function TreeGroup({ group }: { group: NavGroup }) {
-  const pathname = usePathname()
+function TreeGroup({ group, current }: { group: NavGroup; current?: string }) {
   const { iconRail } = useSidebar()
   const reduced = useInteractionReducedMotion()
   const [open, setOpen] = useState(true)
@@ -156,7 +164,7 @@ function TreeGroup({ group }: { group: NavGroup }) {
   const panelId = useId()
   // The icon rail has no room for a group header: its links show flat instead.
   const expanded = iconRail || open
-  const containsCurrent = group.items.some((item) => item.href === pathname)
+  const containsCurrent = group.items.some((item) => item.href === current)
   return (
     <div>
       <button
@@ -186,13 +194,15 @@ function TreeGroup({ group }: { group: NavGroup }) {
         className="grid"
         style={{
           gridTemplateRows: expanded ? "1fr" : "0fr",
-          transition: reduced ? undefined : `grid-template-rows 300ms ${EASE_OUT}`,
+          transition: reduced
+            ? undefined
+            : `grid-template-rows 300ms ${EASE_OUT}`,
         }}
       >
         <ul className="flex min-h-0 flex-col gap-1 overflow-hidden pl-3 group-data-[collapsible=icon]:pl-0">
           {group.items.map((item) => (
             <li key={item.href}>
-              <TreeLink link={item} />
+              <TreeLink link={item} current={item.href === current} />
             </li>
           ))}
         </ul>

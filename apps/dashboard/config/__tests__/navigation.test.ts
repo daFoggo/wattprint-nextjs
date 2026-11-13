@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import {
   breadcrumbTrail,
+  currentHref,
   filterNav,
   fillHref,
   NAV_SCOPES,
@@ -57,6 +58,22 @@ describe("sectionsFor / fillHref", () => {
       .map((e) => ("href" in e ? e.href : ""))
     expect(hrefs).toContain("/customer/42/invoices")
     expect(hrefs.join()).not.toContain(":")
+  })
+})
+
+describe("currentHref", () => {
+  const sections = sectionsFor(NAV_SCOPES, "/dashboard")
+  it("marks a page's own link", () => {
+    expect(currentHref(sections, "/dashboard")).toBe("/dashboard")
+    expect(currentHref(sections, "/dashboard/bill")).toBe("/dashboard/bill")
+  })
+  it("marks the closest link for a page under it, not Overview", () => {
+    expect(currentHref(sections, "/dashboard/devices/fridge")).toBe(
+      "/dashboard/devices"
+    )
+  })
+  it("does not match a path that only shares the start of a word", () => {
+    expect(currentHref(sections, "/dashboard/billing")).toBe("/dashboard")
   })
 })
 

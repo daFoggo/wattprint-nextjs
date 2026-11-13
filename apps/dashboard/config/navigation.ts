@@ -123,6 +123,19 @@ export function fillHref(href: string, params: Record<string, string>) {
   )
 }
 
+/**
+ * The href of the link the pathname is on: its own, else the longest link it lies under, so a device's page marks
+ * Devices (and not Overview, which every dashboard path starts with).
+ */
+export function currentHref(sections: NavSection[], pathname: string) {
+  const hrefs = sections.flatMap((s) =>
+    s.entries.flatMap((e) => ("items" in e ? e.items : [e]).map((l) => l.href))
+  )
+  return hrefs
+    .filter((href) => pathname === href || pathname.startsWith(`${href}/`))
+    .sort((a, b) => b.length - a.length)[0]
+}
+
 /** Sections of the pathname's scope with real hrefs. */
 export function sectionsFor(
   scopes: NavScope[],
