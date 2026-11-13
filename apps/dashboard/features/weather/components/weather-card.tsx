@@ -52,13 +52,13 @@ const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
 
 // The liquid's colour follows the sky. Literal classes, so Tailwind generates them.
 const PALETTE = {
-  clear: { liquid: "text-amber-400", ink: "text-neutral-950" },
-  night: { liquid: "text-indigo-400", ink: "text-white" },
-  clouds: { liquid: "text-slate-400", ink: "text-neutral-950" },
-  rain: { liquid: "text-sky-500", ink: "text-white" },
-  storm: { liquid: "text-violet-500", ink: "text-white" },
-  snow: { liquid: "text-cyan-200", ink: "text-neutral-950" },
-  mist: { liquid: "text-zinc-400", ink: "text-neutral-950" },
+  clear: "text-amber-400",
+  night: "text-indigo-400",
+  clouds: "text-slate-400",
+  rain: "text-sky-500",
+  storm: "text-violet-500",
+  snow: "text-cyan-200",
+  mist: "text-zinc-400",
 }
 
 function mood(code: string): keyof typeof PALETTE {
@@ -71,45 +71,43 @@ function mood(code: string): keyof typeof PALETTE {
   return "clouds"
 }
 
-/** Warmer is fuller: 0°C fills a fifth of the card, 40°C four fifths. */
+/**
+ * Warmer is fuller, but the liquid stays a band under the words: 0°C fills 6% of the card, 40°C
+ * 24%, which with the highest wave (about 9px in a gale) still ends below the text on a 72px card.
+ */
 const levelFor = (celsius: number) =>
-  0.2 + (Math.min(40, Math.max(0, celsius)) / 40) * 0.6
+  0.06 + (Math.min(40, Math.max(0, celsius)) / 40) * 0.18
 
-/** The card's face; drawn twice, the second in an ink that reads on the liquid, clipped to where the liquid covers it. */
-function Face({ weather, ink }: { weather: Weather; ink?: boolean }) {
+/** The card's face: the words sit at the top, clear of the liquid below. */
+function Face({ weather }: { weather: Weather }) {
   const { now, next } = weather
   const sky = now.weather[0]!
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
   const t = useTranslations("weather")
   const hour = clock(useLocale())
-  const muted = ink ? "" : "text-muted-foreground"
   return (
-    <div className="flex h-full flex-col justify-between p-4">
-      <div
-        className={`flex items-center justify-between gap-3 text-sm ${muted}`}
-      >
-        <span className="flex items-center gap-1.5">
-          <Sky code={sky.icon} aria-hidden className="size-4" />
-          {t("title")}
+    <div className="flex items-start justify-between gap-3 px-4 pt-2">
+      <p className="flex items-center gap-2">
+        <Sky
+          code={sky.icon}
+          aria-hidden
+          className="size-5 text-muted-foreground"
+        />
+        <span className="text-2xl font-medium tracking-tight tabular-nums">
+          {Math.round(now.main.temp)}
         </span>
-        <span className="tabular-nums">{hour(now.dt)}</span>
-      </div>
-      <div className="flex items-end justify-between gap-3">
-        <p className="flex items-baseline gap-1">
-          <span className="text-4xl font-medium tracking-tight tabular-nums">
-            {Math.round(now.main.temp)}
-          </span>
-          <span className={`text-sm ${muted}`}>°C</span>
-        </p>
-        <div className="flex flex-col items-end gap-1 text-right text-sm">
-          <span className="font-medium">{sentence(sky.description)}</span>
-          <span className={`tabular-nums ${muted}`}>
-            {t("rainBy", {
-              pct: Math.round(wettest.pop * 100),
-              time: hour(wettest.dt),
-            })}
-          </span>
-        </div>
+        <span className="text-xs text-muted-foreground">°C</span>
+      </p>
+      <div className="flex min-w-0 flex-col items-end text-right text-xs">
+        <span className="truncate text-sm font-medium">
+          {sentence(sky.description)}
+        </span>
+        <span className="text-muted-foreground tabular-nums">
+          {t("rainBy", {
+            pct: Math.round(wettest.pop * 100),
+            time: hour(wettest.dt),
+          })}
+        </span>
       </div>
     </div>
   )
@@ -128,14 +126,14 @@ export function WeatherCard({ weather }: { weather: Weather }) {
   const sky = now.weather[0]!
   const temps = next.map((slot) => slot.main.temp)
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
-  const palette = PALETTE[mood(sky.icon)]
+  const liquid = PALETTE[mood(sky.icon)]
   const level = levelFor(now.main.temp)
   return (
     <Popover
       label={t("title")}
       side="bottom"
       align="end"
-      width={300}
+      width={256}
       trigger={
         <button
           type="button"
@@ -143,49 +141,37 @@ export function WeatherCard({ weather }: { weather: Weather }) {
             temp: Math.round(now.main.temp),
             sky: sky.description,
           })}
-          className="relative isolate h-32 w-80 cursor-pointer overflow-clip rounded-3xl border bg-background text-left text-foreground motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:active:scale-95"
+          className="relative isolate h-18 w-64 cursor-pointer overflow-clip rounded-2xl border bg-background text-left text-foreground motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:active:scale-95"
         >
-          <LiquidSky
-            level={level}
-            wind={now.wind.speed}
-            colorClass={palette.liquid}
-          />
-          <div className="relative h-full">
+          <LiquidSky level={level} wind={now.wind.speed} colorClass={liquid} />
+          <div className="relative">
             <Face weather={weather} />
-          </div>
-          {/* Where the liquid covers the words they turn light, cut along the mean waterline. */}
-          <div
-            aria-hidden
-            className={`absolute inset-0 ${palette.ink}`}
-            style={{ clipPath: `inset(${(1 - level) * 100}% 0 0 0)` }}
-          >
-            <Face weather={weather} ink />
           </div>
         </button>
       }
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col">
             <p className="flex items-baseline gap-1">
-              <span className="text-3xl font-medium tracking-tight tabular-nums">
+              <span className="text-2xl font-medium tracking-tight tabular-nums">
                 {Math.round(now.main.temp)}
               </span>
               <span className="text-sm text-muted-foreground">°C</span>
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {t("feelsLike", { temp: Math.round(now.main.feels_like) })}
             </p>
           </div>
           <Sky
             code={sky.icon}
             aria-hidden
-            className="size-10 text-muted-foreground"
+            className="size-8 text-muted-foreground"
           />
         </div>
 
-        <div className="flex flex-col gap-2 rounded-xl bg-card p-3">
-          <div className="flex items-baseline justify-between gap-3 text-sm">
+        <div className="flex flex-col gap-1.5 rounded-xl bg-card p-2.5">
+          <div className="flex items-baseline justify-between gap-3 text-xs">
             <span className="text-muted-foreground">{t("next24")}</span>
             <span className="font-medium tabular-nums">
               {Math.round(Math.min(...temps))}–{Math.round(Math.max(...temps))}
@@ -200,7 +186,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
             variant="area"
             color="primary"
             width="100%"
-            height={40}
+            height={32}
             showScrubber
             format={{ maximumFractionDigits: 0 }}
             suffix="°C"
@@ -216,7 +202,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           </div>
         </div>
 
-        <dl className="grid grid-cols-3 gap-3">
+        <dl className="grid grid-cols-3 gap-2">
           {[
             [t("humidity"), `${now.main.humidity}`, "%"],
             [
@@ -233,12 +219,12 @@ export function WeatherCard({ weather }: { weather: Weather }) {
               "%",
             ],
           ].map(([term, value, unit]) => (
-            <div key={term} className="flex flex-col gap-1">
+            <div key={term} className="flex flex-col gap-0.5">
               <dt className="font-mono text-xs text-muted-foreground">
                 {term}
               </dt>
               <dd className="flex items-baseline gap-1">
-                <span className="text-lg font-medium tabular-nums">
+                <span className="text-base font-medium tabular-nums">
                   {value}
                 </span>
                 <span className="text-xs text-muted-foreground">{unit}</span>

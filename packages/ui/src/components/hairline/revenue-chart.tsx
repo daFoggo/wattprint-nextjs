@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -172,6 +173,7 @@ export function RevenueChart({
   className = "",
   ...props
 }: RevenueChartProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
   const [own, setOwn] = React.useState(defaultValue ?? metrics[0]?.id);
@@ -267,7 +269,7 @@ export function RevenueChart({
   const fmt = (v: number) => new Intl.NumberFormat(locales, format).format(v);
   const monthName = (i: number) => titles?.[i] ?? labels[i];
   // "last year" reads as words; "2025" reads as "in 2025".
-  const then = (label: string) => (/^\d/.test(label) ? `in ${label}` : label.toLowerCase());
+  const then = (label: string) => (/^\d/.test(label) ? t("in {label}", { label }) : label.toLowerCase());
   const compact = { ...format, notation: "compact" as const, minimumFractionDigits: 0, maximumFractionDigits: 1 };
   const every = width && n ? Math.max(1, Math.ceil(34 / (width / n))) : 1;
   // Labels thin out on narrow screens; the hovered one always shows, and its close neighbours step aside for it.
@@ -321,7 +323,7 @@ export function RevenueChart({
         <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
           <div className="min-w-0">
             <p className="text-[12px] text-muted-foreground @md:text-[13px]">
-              <TextMorph>{active !== null ? `${metric?.label} in ${monthName(active)}` : (metric?.label ?? "")}</TextMorph>
+              <TextMorph>{active !== null ? t("{metric} in {month}", { metric: metric?.label ?? "", month: monthName(active) }) : (metric?.label ?? "")}</TextMorph>
             </p>
             <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <span className="text-[22px] font-medium leading-tight tracking-[-0.03em] @md:text-[26px] text-foreground">
@@ -356,7 +358,7 @@ export function RevenueChart({
                         strokeLinejoin="round"
                       />
                     </svg>
-                    <NumberRoll value={visible ? Math.abs(change ?? lastChange) : 0} format={{ style: "percent", maximumFractionDigits: 1 }} duration={700} />
+                    <NumberRoll value={visible ? Math.abs(change ?? lastChange) : 0} format={{ style: "percent", maximumFractionDigits: 1 }} locales={/* patched (hairline/patch.mjs) */ locales} duration={700} />
                   </span>
                 </span>
               </span>
@@ -365,14 +367,14 @@ export function RevenueChart({
               <p className="mt-1 flex items-baseline gap-[0.3em] whitespace-nowrap text-[11.5px] text-muted-foreground @md:text-[12.5px]">
                 <NumberRoll value={visible ? before : 0} format={format} locales={locales} duration={700} />
                 <TextMorph>
-                  {active !== null ? `in ${monthName(active)} ${/^\d/.test(series[1]) ? series[1] : series[1].toLowerCase()}` : then(series[1])}
+                  {active !== null ? t("in {month} {series}", { month: monthName(active), series: /^\d/.test(series[1]) ? series[1] : series[1].toLowerCase() }) : then(series[1])}
                 </TextMorph>
               </p>
             )}
           </div>
 
           {metrics.length > 1 && (
-            <div role="radiogroup" aria-label="Measure" className="relative inline-flex shrink-0 rounded-full bg-muted p-0.5">
+            <div role="radiogroup" aria-label={t("Measure")} className="relative inline-flex shrink-0 rounded-full bg-muted p-0.5">
               <span
                 aria-hidden="true"
                 className="absolute inset-y-0.5 left-0 rounded-full bg-background shadow-[0_0_0_1px_var(--border)]"
@@ -448,7 +450,7 @@ export function RevenueChart({
             ref={plotRef}
             role="group"
             tabIndex={0}
-            aria-label={`${metric?.label ?? ""}, ${series[0]} against ${series[1]}. Use the arrow keys to read each month.`}
+            aria-label={t("{metric}, {current} against {previous}. Use the arrow keys to read each month.", { metric: metric?.label ?? "", current: series[0], previous: series[1] })}
             onKeyDown={onKeyDown}
             onBlur={() => keyboard && (setActive(null), setKeyboard(false))}
             onPointerMove={(e) => {
@@ -539,14 +541,15 @@ export function RevenueChart({
             ? `${monthName(active)}: ${fmt(current[active] ?? 0)}${previous[active] !== undefined ? `, ${series[1].toLowerCase()} ${fmt(previous[active])}` : ""}`
             : ""}
         </p>
-        <table className="sr-only">
+        {/* patched (hairline/patch.mjs): a <table> ignores the 1px size of sr-only, so a div carries it. */}
+        <div className="sr-only"><table>
           <caption>
             {metric?.label}: {fmt(add(current))} {series[0].toLowerCase()}
             {prevSame.length ? `, ${fmt(add(prevSame))} ${series[1].toLowerCase()} over the same months` : ""}
           </caption>
           <thead>
             <tr>
-              <th scope="col">Month</th>
+              <th scope="col">{t("Month")}</th>
               <th scope="col">{series[0]}</th>
               {previous.length > 0 && <th scope="col">{series[1]}</th>}
             </tr>
@@ -560,7 +563,7 @@ export function RevenueChart({
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>{/* patched (hairline/patch.mjs): closes the wrapper above */}
       </div>
     </div>
   );

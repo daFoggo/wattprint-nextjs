@@ -2,7 +2,10 @@
   "nav": {
     "dashboard": "Dashboard",
     "overview": "Overview",
-    "bill": "Bill"
+    "statistics": "Statistics",
+    "devices": "Devices",
+    "bill": "Bill",
+    "settings": "Settings"
   },
   "roles": {
     "customer": "Customer",
@@ -17,7 +20,7 @@
   "close": "Close",
   "overview": {
     "title": "Overview",
-    "description": "What this cycle costs, your energy against the weeks before, and where it goes.",
+    "description": "This cycle’s cost, energy against the weeks before, where the power goes and what needs a look.",
     "noHomeTitle": "No home yet",
     "noHomeDescription": "This account is not a member of a home. Ask the owner for an invite code, or pair a meter."
   },
@@ -26,5 +29,21 @@
     "description": "This billing cycle so far, priced tier by tier as the electricity company will.",
     "emptyTitle": "No bill yet",
     "emptyDescription": "This account has no home with a tariff plan to price its energy."
+  },
+  "devices": {
+    "title": "Devices",
+    "description": "Every device in the home: whether it is on, how much energy it uses and what it costs. Sample data until device detection runs."
+  },
+  "device": {
+    "title": "Device",
+    "neighbours": "Previous and next device"
+  },
+  "statistics": {
+    "title": "Statistics",
+    "description": "Energy by day, week, month and year; against last week, last month and similar homes; and what the cycle will come to."
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Your home, its tariff and what WattPrint tells you about. A preview: changes are not saved to the server yet."
   }
 }

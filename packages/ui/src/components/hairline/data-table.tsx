@@ -95,6 +95,8 @@ export interface DataTableProps<T> extends Omit<React.HTMLAttributes<HTMLDivElem
   onEdit?: (row: T, key: string, value: string) => Promise<void> | void;
   /** Rows open into this. */
   renderDetail?: (row: T) => React.ReactNode;
+  /** Clicking a row (or Enter on it) calls this, e.g. to open the record's page (patched (hairline/patch.mjs)). */
+  onRowClick?: (row: T) => void;
   pageSize?: number;
   label?: string;
 }
@@ -165,6 +167,7 @@ type RowActions<T> = {
   edit: (e: { id: string; key: string }) => void;
   finish: (row: T, key: string, value: string | null) => void;
   detail: (row: T) => React.ReactNode;
+  open: (row: T) => void; // patched (hairline/patch.mjs): onRowClick
 };
 
 type RowProps<T> = {
@@ -176,6 +179,7 @@ type RowProps<T> = {
   selectable: boolean;
   canEdit: boolean;
   hasDetail: boolean;
+  clickable: boolean; // patched (hairline/patch.mjs): onRowClick
   isSelected: boolean;
   isOpen: boolean;
   /** When its tick draws, in a range selection. */
@@ -243,8 +247,9 @@ function TableRowView<T>(p: RowProps<T>) {
       aria-expanded={p.hasDetail ? p.isOpen : undefined}
       tabIndex={p.rowTab}
       onFocus={(e) => e.target === e.currentTarget && a.current.cursor({ id, col: -1 })}
-      className={`relative border-b border-border transition-colors duration-200 last:border-b-0 ${CELL_FOCUS}`}
-      style={{ background: p.isSelected ? "color-mix(in oklab, var(--primary) 5%, var(--background))" : "var(--background)" }}
+      onClick={() => p.clickable && a.current.open(row)} // patched (hairline/patch.mjs)
+      className={`relative border-b border-border transition-colors duration-200 last:border-b-0 ${p.clickable ? "cursor-pointer hover:bg-accent" : ""} ${CELL_FOCUS}`}
+      style={{ background: p.isSelected ? "color-mix(in oklab, var(--primary) 5%, var(--background))" : p.clickable ? undefined : "var(--background)" }}
     >
       {/* Columns, wide */}
       <div className="grid min-h-12 items-center @max-[34rem]:hidden" style={{ gridTemplateColumns: p.tracks }}>
@@ -302,8 +307,8 @@ function TableRowView<T>(p: RowProps<T>) {
         <button
           type="button"
           tabIndex={-1}
-          disabled={!p.hasDetail}
-          onClick={() => p.hasDetail && a.current.toggleOpen(id, row)}
+          disabled={!p.hasDetail && !p.clickable}
+          onClick={() => (p.hasDetail ? a.current.toggleOpen(id, row) : p.clickable && a.current.open(row))} // patched (hairline/patch.mjs)
           className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left disabled:cursor-default"
         >
           <span className="min-w-0 flex-1">
@@ -364,6 +369,7 @@ export function DataTable<T>({
   undoFor = 5000,
   onEdit,
   renderDetail,
+  onRowClick, // patched (hairline/patch.mjs)
   pageSize = 10,
   label = "Table",
   className = "",
@@ -639,6 +645,7 @@ export function DataTable<T>({
         const col = columns[c.col];
         if (col && editable(col)) setEditing({ id: c.id, key: col.key });
         else if (renderDetail) toggleOpen(c.id, row);
+        else onRowClick?.(row); // patched (hairline/patch.mjs)
       },
     };
     const go = keys[e.key];
@@ -679,9 +686,10 @@ export function DataTable<T>({
     edit: (e) => setEditing(e),
     finish: finishEdit,
     detail: (row) => renderDetail?.(row),
+    open: (row) => onRowClick?.(row), // patched (hairline/patch.mjs)
   });
   React.useLayoutEffect(() => {
-    rowActions.current = { toggle, toggleOpen, cursor: (c) => setCursor(c), edit: (e) => setEditing(e), finish: finishEdit, detail: (row) => renderDetail?.(row) };
+    rowActions.current = { toggle, toggleOpen, cursor: (c) => setCursor(c), edit: (e) => setEditing(e), finish: finishEdit, detail: (row) => renderDetail?.(row), open: (row) => onRowClick?.(row) /* patched (hairline/patch.mjs) */ };
   });
 
   return (
@@ -871,7 +879,7 @@ export function DataTable<T>({
                   tracks={tracks}
                   selectable={selectable}
                   canEdit={!!onEdit}
-                  hasDetail={!!renderDetail}
+                  hasDetail={!!renderDetail} clickable={!!onRowClick} /* patched (hairline/patch.mjs) */
                   isSelected={selected.has(id)}
                   isOpen={open.has(id)}
                   delay={cascade ? Math.max(0, cascade.ids.indexOf(id)) * 28 : 0}

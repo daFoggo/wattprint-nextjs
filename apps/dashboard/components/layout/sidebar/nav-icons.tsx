@@ -1,4 +1,6 @@
 import {
+  IconChartBar,
+  IconDevices,
   IconLayoutDashboard,
   IconReceipt,
   IconSettings,
@@ -10,6 +12,8 @@ import type { NavIconName } from "@/config/navigation"
 /** `Record` makes TypeScript fail here when a name is added to `NavIconName` without an icon. */
 const NAV_ICONS: Record<NavIconName, Icon> = {
   overview: IconLayoutDashboard,
+  statistics: IconChartBar,
+  devices: IconDevices,
   bill: IconReceipt,
   settings: IconSettings,
 }

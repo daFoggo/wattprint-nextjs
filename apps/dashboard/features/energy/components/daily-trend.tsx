@@ -38,7 +38,8 @@ export function DailyTrend({
       series={[t("dailyTrend.daily"), t("dailyTrend.average")]}
       days={whole.slice(start).map((d) => ({
         key: d.date,
-        label: dayLabel(d.date, locale, { month: "short", day: "numeric" }),
+        // Numeric (16/10): "16 thg 10" is wider than the chart allows a label, so neighbours overlapped.
+        label: dayLabel(d.date, locale, { month: "numeric", day: "numeric" }),
         title: dayLabel(d.date, locale, {
           weekday: "long",
           month: "long",

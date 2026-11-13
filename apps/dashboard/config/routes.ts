@@ -6,6 +6,9 @@ export const SIGN_IN_PATH = "/sign-in"
 export const AUTH_PAGES = [SIGN_IN_PATH] as const
 export const DASHBOARD_PATH = "/dashboard"
 export const BILL_PATH = "/dashboard/bill"
+export const SETTINGS_PATH = "/dashboard/settings"
+export const STATISTICS_PATH = "/dashboard/statistics"
+export const DEVICES_PATH = "/dashboard/devices"
 export const OAUTH_CALLBACK_PATH = "/auth/callback"
 /**
  * Clears the session cookie, then goes to sign-in. Used when the backend rejects a token

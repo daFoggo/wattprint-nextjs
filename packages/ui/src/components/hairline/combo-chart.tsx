@@ -295,7 +295,7 @@ export function ComboChart({
                           strokeLinejoin="round"
                         />
                       </svg>
-                      <NumberRoll value={visible ? Math.abs(change) : 0} format={{ style: "percent", maximumFractionDigits: 1 }} duration={700} />
+                      <NumberRoll value={visible ? Math.abs(change) : 0} format={{ style: "percent", maximumFractionDigits: 1 }} locales={/* patched (hairline/patch.mjs) */ locales} duration={700} />
                     </span>
                   </span>
                 </span>

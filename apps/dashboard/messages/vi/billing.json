@@ -3,21 +3,6 @@
   "tier": "Bậc {tier}",
   "now": "Hiện tại",
   "vat": "VAT {vat}%",
-  "billCard": {
-    "period": "{start} – {end} · giá điện sinh hoạt bậc thang",
-    "partial": "Thiếu dữ liệu",
-    "straddle": "Giá điện thay đổi trong kỳ",
-    "soFar": "Tính đến nay, gồm {vat}% VAT · <kwh></kwh>",
-    "today": "Hôm nay · <kwh></kwh>",
-    "meter": "Bậc {tier} · {price}/kWh",
-    "topTier": "Bậc cao nhất: mỗi kWh tiếp theo giá {price}, chưa gồm VAT.",
-    "caption": "Điện năng và thành tiền theo từng bậc trong kỳ này, chưa gồm VAT",
-    "colTier": "Bậc",
-    "colPrice": "Đơn giá",
-    "colUsed": "Đã dùng",
-    "colAmount": "Thành tiền",
-    "total": "Tổng cộng"
-  },
   "billSummary": {
     "caption": "Tính đến nay trong kỳ, {kwh} kWh",
     "part": "Bậc {tier}, {kwh} kWh",
@@ -25,5 +10,60 @@
     "topTier": "Bậc {tier}, bậc cao nhất",
     "today": "Hôm nay <amount></amount> · {kwh} kWh",
     "viewDetails": "Xem chi tiết hóa đơn"
+  },
+  "history": {
+    "thisYear": "Năm nay (mẫu)",
+    "lastYear": "Năm ngoái (mẫu)",
+    "amount": "Tiền điện từng tháng",
+    "kwh": "Điện năng từng tháng (kWh)"
+  },
+  "forecast": {
+    "title": "Dự báo hóa đơn cuối kỳ",
+    "description": "Nếu cứ dùng như từ đầu kỳ đến nay, tính đến hết ngày {end}.",
+    "amount": "Hóa đơn dự kiến",
+    "kwh": "Điện năng dự kiến",
+    "tier": "Kết thúc ở",
+    "tierValue": "Bậc {tier}",
+    "higher": "Cao hơn {pct} so với tháng trước ({amount}, mẫu).",
+    "lower": "Thấp hơn {pct} so với tháng trước ({amount}, mẫu).",
+    "nextTitle": "Ngày {date} sang bậc {tier}",
+    "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn."
+  },
+  "overview": {
+    "title": "Hóa đơn kỳ này, {start} – {end}",
+    "description": "Giá điện sinh hoạt bậc thang, đã gồm VAT · còn {days} ngày nữa chốt kỳ",
+    "soFar": "Đến hôm nay",
+    "today": "Hôm nay",
+    "forecast": "Dự kiến cuối kỳ",
+    "kwh": "{kwh} kWh",
+    "forecastNote": "{kwh} kWh · kết thúc ở bậc {tier}",
+    "change": "Dự kiến so với tháng trước",
+    "more": "Nhiều hơn",
+    "less": "Ít hơn",
+    "lastMonth": "Tháng trước {amount} (mẫu)",
+    "partial": "Thiếu dữ liệu",
+    "straddle": "Giá điện thay đổi trong kỳ"
+  },
+  "ladder": {
+    "title": "Giá bậc thang và điện đã dùng ở từng bậc",
+    "description": "Dùng hết một bậc thì sang bậc sau, giá cao hơn. Giá chưa gồm VAT.",
+    "caption": "Từng bậc giá: khoảng kWh, đơn giá, điện năng đã dùng và thành tiền trong kỳ này",
+    "colTier": "Bậc và đơn giá",
+    "colUsed": "Đã dùng",
+    "colAmount": "Thành tiền",
+    "range": "{from}–{to} kWh · {price}/kWh",
+    "rangeTop": "Từ {from} kWh · {price}/kWh",
+    "used": "{used}/{size} kWh",
+    "usedTop": "{used} kWh",
+    "subtotal": "Tạm tính",
+    "total": "Tổng cộng"
+  },
+  "past": {
+    "title": "Hóa đơn 6 tháng trước",
+    "description": "Dữ liệu mẫu, tính theo biểu giá hiện tại",
+    "chart": "Biểu đồ 12 tháng",
+    "colMonth": "Tháng",
+    "colKwh": "kWh",
+    "colAmount": "Tiền điện, so với tháng trước"
   }
 }

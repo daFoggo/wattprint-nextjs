@@ -286,12 +286,17 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 | `dropdown-menu.tsx`, `popover.tsx` | Portal into the enclosing `<dialog>` when there is one | A modal `<dialog>` (Sheet, Dialog) makes `<body>` inert: menus and the account panel in the mobile sidebar Sheet could not be clicked |
 | `floating.ts` | `preventDefault()` on Escape | Escape in a menu also closed the Sheet/Dialog around it |
 | `trend-chart.tsx`, `combo-chart.tsx` | The sr-only table sits in a `div.sr-only` | A `<table>` ignores the 1px height of `sr-only`: one row per bucket or day added a screen of empty scroll (dashboard Overview) |
+| `revenue-chart.tsx` | The change chip passes `locales`; the sr-only table sits in a `div.sr-only` | The chip read "8.2%" beside Vietnamese figures; the table (one row per month) pushed the Statistics page 240px wider than a phone |
 | `number-roll.tsx` | `overflow-clip` beside the `clip-path` | The clipped 0-9 digit stacks still counted as scrollable overflow near the end of a page |
 | `log-stream.tsx` | The clock shows UTC until hydrated, then local time; narrow rows show the time without the milliseconds | The server renders in UTC, so the local clock mismatched on hydration (Activity tile); narrow rows hid the time |
 | `compare-bars.tsx`, `combo-chart.tsx`, `donut-chart.tsx` | A `unit` prop written after every figure (feature patch) | Intl has no kWh or W unit, and the Overview puts units after numbers, not in titles |
 | `compare-bars.tsx` | An `action` slot beside the title; the header wraps when narrow (feature patch) | The Overview's Week/Month switch, as `DonutChart`'s `action` |
 | `compare-bars.tsx` | Bar slots and fills ease `left`, `width` and `height` (feature patch) | Switching Week/Month jumped every bar; with positional keys the bars now glide |
 | `token-bucket.tsx` | A `fillUsed` prop: the tokens are what is used, packed from the left (first token in the leftmost slot, so they slide in left to right), and the figure, meter text and amber state count what is left (feature patch) | The Overview's tier card: a tariff tier reads as used kWh filling up, the empty end is what is left |
+| `data-table.tsx` | An `onRowClick` prop: the whole row is clickable with an `accent` hover fill, Enter on a row and the narrow card open it too (feature patch) | The Devices list opens a device from anywhere on its row; a link in the name cell was a small target and `renderDetail` only opens a panel |
+| `spending-ring.tsx` | With a category open, the legend starts with the same small "All" button as the ring's centre (feature patch) | Cost by room: after picking a room in the list, the way back sits where the hand is; the centre button alone was easy to miss |
+| `floating.ts` | `themeVars` copies the anchor's theme tokens only when they differ from the page's; otherwise the portal inherits them live | Popovers, menus and tooltips froze the theme they opened in, so switching light/dark from the account menu left the menu in the old theme until it closed |
+| `log-stream.tsx` | A `header` node above the toolbar (feature patch) | The title only named the log for screen readers: the Overview's device log was the one card without a heading |
 | `token-bucket.tsx` | A `header` node that replaces the title row; `title` still names the meter (feature patch) | The Overview's tier card: the price now and the next one, large, with an arrow between |
 
 Patches fix bugs first. A **feature patch** (marked above) is allowed only when the product needs a capability that no prop

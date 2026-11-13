@@ -25,6 +25,9 @@ const TOKENS = ["--background", "--foreground", "--popover", "--popover-foregrou
 export function themeVars(anchor: Element | null): React.CSSProperties {
   if (!anchor) return {};
   const style = getComputedStyle(anchor);
+  // patched (hairline/patch.mjs): the page's own theme is inherited live, so it follows a theme switch while open.
+  const page = getComputedStyle(document.documentElement);
+  if (TOKENS.every((t) => style.getPropertyValue(t) === page.getPropertyValue(t))) return {};
   const vars: Record<string, string> = {};
   for (const t of TOKENS) {
     const v = style.getPropertyValue(t);

@@ -3,12 +3,12 @@
   "week": "Week",
   "last7Days": "Last 7 days",
   "dailyTrend": {
-    "title": "Energy",
+    "title": "Energy each day, last 30 days",
     "daily": "Daily energy",
     "average": "7-day average"
   },
   "usageCompare": {
-    "title": "Energy use",
+    "title": "Energy against the same days before",
     "compareBy": "Compare by",
     "month": "Month",
     "weekBefore": "Week before",
@@ -16,14 +16,15 @@
     "fourWeeksBefore": "4 weeks before"
   },
   "deviceMix": {
-    "title": "By device",
-    "description": "Sample data until device detection runs.",
+    "title": "Energy by device",
     "period": "Period",
-    "todaySoFar": "Today so far"
+    "todaySoFar": "Today so far",
+    "more": "See statistics",
+    "rest": "{count} more devices"
   },
   "deviceList": {
     "label": "Devices, sample data",
-    "search": "Search devices · sample data",
+    "search": "Search devices",
     "colDevice": "Device",
     "colStatus": "Status",
     "colNow": "Now",
@@ -31,11 +32,9 @@
     "off": "Off",
     "nounOne": "device",
     "nounOther": "devices",
-    "viewDetails": "View details",
-    "comingSoon": "{device}: device pages are coming soon"
-  },
-  "deviceTimeline": {
-    "title": "Device activity, sample"
+    "colMonth": "This month",
+    "weekLabel": "{device}, energy over the last 7 days",
+    "onAt": "On · {watts} W"
   },
   "demo": {
     "devices": {
@@ -55,21 +54,77 @@
       "livingRoom": "Living room",
       "utility": "Utility"
     },
-    "notes": {
-      "fridge": "On for 18 min, cycles about every 40 min",
-      "tv": "On for 41 min",
-      "hifi": "On standby since this morning",
-      "kettle": "Off for 4 min, 5 boils today",
-      "washer": "Finished a 58 min cycle an hour ago",
-      "dishwasher": "Ran twice today",
-      "microwave": "Off for 1 h 35 min",
-      "toaster": "Off for 2 h"
-    },
-    "events": {
-      "offAfter": "{device} was on for {min} min, now off",
-      "turnedOn": "{device} turned on",
-      "finishedCycle": "{device} finished a {min} min cycle",
-      "ranTimes": "{device} was on {count, plural, one {# time} other {# times}}, now off"
+    "tips": {
+      "alwaysOn": "Background load is what the home draws when nobody is using anything: router, chargers, devices on standby. Every 10 W running all year costs about 88 kWh.",
+      "fridge": "Keep it 10 cm from the wall, keep the door seals clean and set the fridge to 3–5 °C. Longer runs than usual often mean a leaking seal or a dusty condenser.",
+      "kettle": "Boil only the water you need: a full kettle takes twice the time and energy of half a kettle.",
+      "washer": "Wash full loads in cold water; most of a washing machine's energy heats the water.",
+      "tv": "Lower the screen brightness and switch it off when nobody watches: standby still draws power.",
+      "hifi": "Amplifiers draw power even when idle; switch them off at the socket.",
+      "dishwasher": "Run only full loads on the eco programme, and skip heated drying when you can.",
+      "microwave": "For small portions a microwave uses less energy than the hob or the oven.",
+      "toaster": "High power in short bursts; unplug it when not in use.",
+      "other": "Energy not yet put down to a device. It shrinks as the system learns more of the home's devices."
     }
+  },
+  "sample": "Sample data until device detection runs.",
+  "timeline": {
+    "title": "Device log, last 24 hours",
+    "running": "{device} is on",
+    "ran": "{device} ran {h, plural, =0 {} other {#h }}{m} min · {kwh} kWh",
+    "deviceTitle": "Log, last 24 hours",
+    "runningSelf": "On now",
+    "ranSelf": "Ran {h, plural, =0 {} other {#h }}{m} min · {kwh} kWh",
+    "description": "Which devices ran, for how long and what they used · sample data",
+    "deviceDescription": "Ran {count, plural, one {# time} other {# times}} · each line is one run, on to off"
+  },
+  "power": {
+    "range": "Range",
+    "day": "24 hours",
+    "week": "7 days",
+    "month": "30 days",
+    "quarter": "90 days",
+    "deviceTitle": "Device power, last 24 hours",
+    "title": "Whole-home power over time"
+  },
+  "deviceStats": {
+    "avgOn": "Average when on",
+    "peak": "Peak power",
+    "month": "Energy this month",
+    "monthAmount": "Cost this month",
+    "year": "Estimate for the year",
+    "share": "Of the whole home"
+  },
+  "deviceDays": {
+    "title": "Energy each day this month",
+    "daily": "Daily energy",
+    "average": "3-day average"
+  },
+  "about": {
+    "title": "Against devices of its kind, and saving tips",
+    "typical": "A device of this kind usually draws <b>{typical} W</b> when on; yours averages <b>{yours} W</b>."
+  },
+  "roomSpending": {
+    "title": "This month’s cost by room",
+    "hint": "Tap a room to see its devices · sample data",
+    "label": "This month",
+    "allDevices": "All devices",
+    "roomTitle": "This month’s cost · {room}",
+    "roomHint": "Each device in the room · sample data"
+  },
+  "cycleCompare": {
+    "title": "Running total: this cycle against the last",
+    "previous": "last cycle",
+    "less": "Up to yesterday, {pct} less than at this point last cycle.",
+    "more": "Up to yesterday, {pct} more than at this point last cycle.",
+    "noChange": "A new cycle: no whole day to compare yet."
+  },
+  "standby": {
+    "title": "Background load: power used with nothing on",
+    "description": "The home’s lowest draw each day: what it uses with nobody using anything, such as the router, chargers and devices on standby.",
+    "level": "Level now",
+    "year": "A year",
+    "cost": "Cost a year",
+    "chart": "Background load each day, last 30 days"
   }
 }

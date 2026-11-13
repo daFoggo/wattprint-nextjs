@@ -20,10 +20,17 @@ import { NavIcon } from "@/components/layout/sidebar/nav-icons"
 import { useNavLabel } from "@/components/layout/sidebar/nav-tree"
 
 /** Renders `breadcrumbTrail`; below sm only the current page stays visible. */
-export function DashboardBreadcrumb({ scopes }: { scopes: NavScope[] }) {
+export function DashboardBreadcrumb({
+  scopes,
+  names,
+}: {
+  scopes: NavScope[]
+  /** A record's name by its id segment (see `breadcrumbTrail`). */
+  names?: Record<string, string>
+}) {
   const pathname = usePathname()
   const navLabel = useNavLabel()
-  const crumbs = breadcrumbTrail(pathname, scopes).map((crumb) => ({
+  const crumbs = breadcrumbTrail(pathname, scopes, names).map((crumb) => ({
     ...crumb,
     label: navLabel(crumb.label),
   }))

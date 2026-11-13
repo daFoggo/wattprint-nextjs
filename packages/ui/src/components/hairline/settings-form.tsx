@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { StatusButton, type ActionStatus } from "./status-button";
 import { TextMorph } from "./text-morph";
@@ -184,6 +185,7 @@ function Fold({ open, reduced, children }: { open: boolean; reduced: boolean; ch
 
 /** "Saving" → "Saved" beside a label that saved itself; it fades once it's said it. */
 function SavedMark({ status, reduced }: { status: ActionStatus; reduced: boolean }) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const open = status !== "idle";
   const [label, setLabel] = React.useState("Saving");
   const next = status === "pending" ? "Saving" : status === "success" ? "Saved" : status === "error" ? "Not saved" : label;
@@ -208,7 +210,7 @@ function SavedMark({ status, reduced }: { status: ActionStatus; reduced: boolean
               <DrawnCheck drawn={status === "success"} reduced={reduced} className="size-3" />
             </span>
           </span>
-          <TextMorph>{label}</TextMorph>
+          <TextMorph>{t(label)}</TextMorph>
         </span>
       </span>
     </span>
@@ -397,6 +399,7 @@ export function SettingsForm({
   className = "",
   ...props
 }: SettingsFormProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
   const [inner, setInner] = React.useState(defaultValue);
@@ -517,7 +520,7 @@ export function SettingsForm({
       setErrors((e) => ({ ...e, ...problems }));
       setShakes((s) => ({ ...s, ...Object.fromEntries(Object.keys(problems).map((k) => [k, (s[k] ?? 0) + 1])) }));
       setBar("error");
-      setBarNote(Object.keys(problems).length === 1 ? "One field needs a look." : `${Object.keys(problems).length} fields need a look.`);
+      setBarNote(Object.keys(problems).length === 1 ? t("One field needs a look.") : t("{n} fields need a look.", { n: Object.keys(problems).length }));
       focusFirst(Object.keys(problems));
       return;
     }
@@ -531,13 +534,13 @@ export function SettingsForm({
       setEdits((e) => Object.fromEntries(Object.entries(e).filter(([k, v]) => !(k in patch) || v !== patch[k])));
       setChecks((c) => without(c, Object.keys(patch)));
       setBar("success");
-      setAnnounce("Changes saved.");
+      setAnnounce(t("Changes saved."));
     } catch (e) {
       const fieldErrors = e instanceof SettingsFormError ? e.fields : {};
       setErrors((x) => ({ ...x, ...fieldErrors }));
       setShakes((s) => ({ ...s, ...Object.fromEntries(Object.keys(fieldErrors).map((k) => [k, (s[k] ?? 0) + 1])) }));
       setBar("error");
-      const why = message(e, "Your changes couldn't be saved.");
+      const why = message(e, t("Your changes couldn't be saved."));
       setBarNote(why);
       setAnnounce(why);
       focusFirst(Object.keys(fieldErrors));
@@ -554,7 +557,7 @@ export function SettingsForm({
     if (!reduced)
       for (const n of names)
         inputs.current.get(n)?.animate([{ opacity: 0.2, filter: "blur(3px)" }, { opacity: 1, filter: "blur(0px)" }], { duration: 420, easing: EASE });
-    setAnnounce("Changes discarded.");
+    setAnnounce(t("Changes discarded."));
   };
 
   // Saved: the bar says so for a moment, then folds away.
@@ -578,7 +581,7 @@ export function SettingsForm({
 
   const shown = count || lastCount;
   const left =
-    bar === "success" ? "Changes saved" : barNote ?? `${shown} unsaved ${shown === 1 ? "change" : "changes"}`;
+    bar === "success" ? t("Changes saved") : barNote ?? t(shown === 1 ? "{n} unsaved change" : "{n} unsaved changes", { n: shown });
 
   return (
     <div
@@ -694,9 +697,9 @@ export function SettingsForm({
               disabled={bar === "pending" || !count}
               className={`h-7 cursor-pointer rounded-full px-2.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent ${FOCUS}`}
             >
-              Reset
+              {t("Reset")}
             </button>
-            <StatusButton size="sm" status={bar} labels={{ idle: "Save", pending: "Saving", success: "Saved", error: "Try again" }} onClick={save} />
+            <StatusButton size="sm" status={bar} labels={{ idle: t("Save"), pending: t("Saving"), success: t("Saved"), error: t("Try again") }} onClick={save} />
           </div>
         </Fold>
       </div>

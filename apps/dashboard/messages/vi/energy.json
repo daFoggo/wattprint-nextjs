@@ -3,12 +3,12 @@
   "week": "Tuần",
   "last7Days": "7 ngày qua",
   "dailyTrend": {
-    "title": "Điện năng",
+    "title": "Điện năng mỗi ngày, 30 ngày qua",
     "daily": "Điện năng theo ngày",
     "average": "Trung bình 7 ngày"
   },
   "usageCompare": {
-    "title": "Điện năng tiêu thụ",
+    "title": "Điện năng so với cùng kỳ trước",
     "compareBy": "So sánh theo",
     "month": "Tháng",
     "weekBefore": "Tuần trước đó",
@@ -16,14 +16,15 @@
     "fourWeeksBefore": "4 tuần trước đó"
   },
   "deviceMix": {
-    "title": "Theo thiết bị",
-    "description": "Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động.",
+    "title": "Điện năng theo thiết bị",
     "period": "Khoảng thời gian",
-    "todaySoFar": "Hôm nay đến giờ"
+    "todaySoFar": "Hôm nay đến giờ",
+    "more": "Xem thống kê",
+    "rest": "{count} thiết bị khác"
   },
   "deviceList": {
     "label": "Thiết bị, dữ liệu mẫu",
-    "search": "Tìm thiết bị · dữ liệu mẫu",
+    "search": "Tìm thiết bị",
     "colDevice": "Thiết bị",
     "colStatus": "Trạng thái",
     "colNow": "Hiện tại",
@@ -31,11 +32,9 @@
     "off": "Tắt",
     "nounOne": "thiết bị",
     "nounOther": "thiết bị",
-    "viewDetails": "Xem chi tiết",
-    "comingSoon": "{device}: trang thiết bị sắp ra mắt"
-  },
-  "deviceTimeline": {
-    "title": "Hoạt động thiết bị, mẫu"
+    "colMonth": "Tháng này",
+    "weekLabel": "{device}, điện năng 7 ngày qua",
+    "onAt": "Đang bật · {watts} W"
   },
   "demo": {
     "devices": {
@@ -55,21 +54,77 @@
       "livingRoom": "Phòng khách",
       "utility": "Phòng giặt"
     },
-    "notes": {
-      "fridge": "Bật 18 phút, khoảng 40 phút chạy một chu kỳ",
-      "tv": "Bật 41 phút",
-      "hifi": "Ở chế độ chờ từ sáng nay",
-      "kettle": "Tắt 4 phút, hôm nay đã đun 5 lần",
-      "washer": "Xong một chu kỳ 58 phút cách đây 1 giờ",
-      "dishwasher": "Hôm nay đã chạy 2 lần",
-      "microwave": "Tắt 1 giờ 35 phút",
-      "toaster": "Tắt 2 giờ"
-    },
-    "events": {
-      "offAfter": "{device} đã bật {min} phút, giờ đã tắt",
-      "turnedOn": "{device} đã bật",
-      "finishedCycle": "{device} đã xong một chu kỳ {min} phút",
-      "ranTimes": "{device} đã chạy {count} lần, giờ đã tắt"
+    "tips": {
+      "alwaysOn": "Điện nền là phần điện tiêu thụ cả khi không ai dùng: modem, bộ sạc, thiết bị ở chế độ chờ. Mỗi 10 W chạy suốt năm tốn khoảng 88 kWh.",
+      "fridge": "Để tủ cách tường 10 cm, giữ gioăng cửa sạch và đặt ngăn mát 3–5 °C. Tủ chạy lâu hơn thường lệ thường do gioăng hở hoặc dàn nóng bám bụi.",
+      "kettle": "Chỉ đun lượng nước cần dùng: đun đầy ấm tốn gấp đôi thời gian và điện so với nửa ấm.",
+      "washer": "Giặt đủ tải bằng nước lạnh; phần lớn điện của máy giặt là để làm nóng nước.",
+      "tv": "Giảm độ sáng màn hình và tắt hẳn khi không xem: chế độ chờ vẫn tốn điện.",
+      "hifi": "Bộ khuếch đại vẫn tốn điện khi để chờ; tắt ở ổ cắm khi không dùng.",
+      "dishwasher": "Chỉ chạy khi đầy và dùng chế độ tiết kiệm (eco); bỏ bước sấy nóng nếu có thể.",
+      "microwave": "Hâm phần ăn nhỏ bằng lò vi sóng tốn ít điện hơn bếp hoặc lò nướng.",
+      "toaster": "Công suất cao nhưng chạy ngắn; rút phích khi không dùng.",
+      "other": "Phần điện chưa gán được cho thiết bị nào. Con số này nhỏ dần khi hệ thống nhận ra thêm thiết bị trong nhà."
     }
+  },
+  "sample": "Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động.",
+  "timeline": {
+    "title": "Nhật ký thiết bị, 24 giờ qua",
+    "running": "{device} đang bật",
+    "ran": "{device} chạy {h, plural, =0 {} other {# giờ }}{m} phút · {kwh} kWh",
+    "deviceTitle": "Nhật ký 24 giờ qua",
+    "runningSelf": "Đang bật",
+    "ranSelf": "Chạy {h, plural, =0 {} other {# giờ }}{m} phút · {kwh} kWh",
+    "description": "Thiết bị nào đã chạy, chạy bao lâu và tốn bao nhiêu điện · dữ liệu mẫu",
+    "deviceDescription": "Chạy {count} lần · mỗi dòng là một lần bật đến lúc tắt"
+  },
+  "power": {
+    "range": "Khoảng thời gian",
+    "day": "24 giờ",
+    "week": "7 ngày",
+    "month": "30 ngày",
+    "quarter": "90 ngày",
+    "deviceTitle": "Công suất thiết bị, 24 giờ qua",
+    "title": "Công suất cả nhà theo thời gian"
+  },
+  "deviceStats": {
+    "avgOn": "Trung bình khi bật",
+    "peak": "Công suất đỉnh",
+    "month": "Điện năng tháng này",
+    "monthAmount": "Tiền điện tháng này",
+    "year": "Ước tính cả năm",
+    "share": "Trong điện cả nhà"
+  },
+  "deviceDays": {
+    "title": "Điện năng mỗi ngày trong tháng",
+    "daily": "Điện năng theo ngày",
+    "average": "Trung bình 3 ngày"
+  },
+  "about": {
+    "title": "So với thiết bị cùng loại và mẹo tiết kiệm",
+    "typical": "Loại thiết bị này thường dùng <b>{typical} W</b> khi bật; của bạn trung bình <b>{yours} W</b>."
+  },
+  "roomSpending": {
+    "title": "Tiền điện tháng này theo phòng",
+    "hint": "Chạm vào một phòng để xem từng thiết bị · dữ liệu mẫu",
+    "label": "Tháng này",
+    "allDevices": "Tất cả thiết bị",
+    "roomTitle": "Tiền điện tháng này · {room}",
+    "roomHint": "Từng thiết bị trong phòng · dữ liệu mẫu"
+  },
+  "cycleCompare": {
+    "title": "Điện năng cộng dồn: kỳ này so với kỳ trước",
+    "previous": "kỳ trước",
+    "less": "Đến hôm qua dùng ít hơn {pct} so với cùng thời điểm kỳ trước.",
+    "more": "Đến hôm qua dùng nhiều hơn {pct} so với cùng thời điểm kỳ trước.",
+    "noChange": "Kỳ mới bắt đầu: chưa có ngày trọn vẹn để so sánh."
+  },
+  "standby": {
+    "title": "Điện nền: phần điện tốn cả khi không dùng gì",
+    "description": "Mức thấp nhất mỗi ngày của cả nhà: phần điện tốn cả khi không ai dùng gì, như modem, bộ sạc và thiết bị ở chế độ chờ.",
+    "level": "Mức hiện tại",
+    "year": "Mỗi năm",
+    "cost": "Tiền mỗi năm",
+    "chart": "Điện nền mỗi ngày, 30 ngày qua"
   }
 }

@@ -1,12 +1,19 @@
 import type { Permission } from "@workspace/auth/permissions"
 
-import { BILL_PATH, DASHBOARD_PATH } from "@/config/routes"
+import {
+  BILL_PATH,
+  DASHBOARD_PATH,
+  DEVICES_PATH,
+  SETTINGS_PATH,
+  STATISTICS_PATH,
+} from "@/config/routes"
 
 /**
  * Semantic icon names, resolved to Tabler icons in `components/layout/sidebar/nav-icons.tsx`. Names (not
  * components) because `entries` cross from a Server Component to the client `NavTree`.
  */
-export type NavIconName = "overview" | "bill" | "settings"
+export type NavIconName =
+  "overview" | "statistics" | "devices" | "bill" | "settings"
 
 export type NavLink = {
   /** Message key in `layout.nav`, translated at render; unknown keys show as is. */
@@ -57,9 +64,27 @@ export const NAV_SCOPES: NavScope[] = [
             permission: "account:view",
           },
           {
+            title: "statistics",
+            href: STATISTICS_PATH,
+            icon: "statistics",
+            permission: "account:view",
+          },
+          {
+            title: "devices",
+            href: DEVICES_PATH,
+            icon: "devices",
+            permission: "account:view",
+          },
+          {
             title: "bill",
             href: BILL_PATH,
             icon: "bill",
+            permission: "account:view",
+          },
+          {
+            title: "settings",
+            href: SETTINGS_PATH,
+            icon: "settings",
             permission: "account:view",
           },
         ],
@@ -160,10 +185,14 @@ export type Crumb = {
 
 /**
  * Breadcrumb from the URL: it reads like the path (`dashboard / settings`). A segment links when a nav link
- * points at it, and the last crumb is the page, named by the nav. To show names instead of ids in a scope, add an
- * argument carrying them and build that scope's crumbs from it, with `options` for sibling menus (docs/routing-and-layouts.md §6.4).
+ * points at it, and the last crumb is the page, named by the nav. `names` shows a record's name for its id segment
+ * (`devices / Fridge`, not `devices / 0192…`); scopes can add `options` for sibling menus (docs/routing-and-layouts.md §6.4).
  */
-export function breadcrumbTrail(pathname: string, scopes: NavScope[]): Crumb[] {
+export function breadcrumbTrail(
+  pathname: string,
+  scopes: NavScope[],
+  names: Record<string, string> = {}
+): Crumb[] {
   if (!resolveScope(scopes, pathname)) return []
   const links = navLinks(sectionsFor(scopes, pathname))
   const page = links.find((link) => link.href === pathname)?.title
@@ -171,7 +200,7 @@ export function breadcrumbTrail(pathname: string, scopes: NavScope[]): Crumb[] {
   const crumbs: Crumb[] = segments.map((segment, index) => {
     const href = `/${segments.slice(0, index + 1).join("/")}`
     return {
-      label: segment,
+      label: names[decodeURIComponent(segment)] ?? segment,
       href: links.some((link) => link.href === href) ? href : undefined,
     }
   })

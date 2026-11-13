@@ -48,6 +48,40 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     "Waiting for the first line…": "Đang chờ dòng đầu tiên…",
     new: "mới",
 
+    // SpendingRing
+    "{pct}% of spending": "{pct}% tổng chi",
+    "{pct}% of {part}": "{pct}% của {part}",
+    "{amount} over budget": "Vượt ngân sách {amount}",
+    "of {amount} budget": "trên ngân sách {amount}",
+    ", opens its parts": ", mở để xem chi tiết",
+    All: "Tất cả",
+
+    // ThresholdLine
+    alert: "cảnh báo",
+    alerts: "cảnh báo",
+    "{label} at {value}": "{label} ở mức {value}",
+
+    // RevenueChart
+    "in {label}": "năm {label}",
+    "{metric} in {month}": "{metric} · {month}",
+    "in {month} {series}": "{month}, {series}",
+    Measure: "Chỉ số",
+    "{metric}, {current} against {previous}. Use the arrow keys to read each month.":
+      "{metric}, {current} so với {previous}. Dùng phím mũi tên để đọc từng tháng.",
+    Month: "Tháng",
+
+    // SettingsForm
+    "Not saved": "Chưa lưu",
+    "One field needs a look.": "Một ô cần xem lại.",
+    "{n} fields need a look.": "{n} ô cần xem lại.",
+    "Changes saved.": "Đã lưu thay đổi.",
+    "Changes saved": "Đã lưu thay đổi",
+    "Your changes couldn't be saved.": "Chưa lưu được thay đổi.",
+    "Changes discarded.": "Đã bỏ các thay đổi.",
+    "{n} unsaved change": "{n} thay đổi chưa lưu",
+    "{n} unsaved changes": "{n} thay đổi chưa lưu",
+    Reset: "Hoàn tác",
+
     // DonutChart
     "No data": "Chưa có dữ liệu",
     Slices: "Các phần",
@@ -79,8 +113,10 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     "Switch to dark theme": "Chuyển sang giao diện tối",
 
     // Sparkline
-    "{label}: start {start}, end {end}, upward trend.": "{label}: đầu {start}, cuối {end}, xu hướng tăng.",
-    "{label}: start {start}, end {end}, downward trend.": "{label}: đầu {start}, cuối {end}, xu hướng giảm.",
+    "{label}: start {start}, end {end}, upward trend.":
+      "{label}: đầu {start}, cuối {end}, xu hướng tăng.",
+    "{label}: start {start}, end {end}, downward trend.":
+      "{label}: đầu {start}, cuối {end}, xu hướng giảm.",
 
     // ShareBar
     Collapse: "Thu gọn",
@@ -100,7 +136,8 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     "{current} against {previous}": "{current} so với {previous}",
     "{title}, {current} against {previous}. Use the arrow keys to read each bar.":
       "{title}, {current} so với {previous}. Dùng phím mũi tên để xem từng cột.",
-    "{title}, {current}. Use the arrow keys to read each bar.": "{title}, {current}. Dùng phím mũi tên để xem từng cột.",
+    "{title}, {current}. Use the arrow keys to read each bar.":
+      "{title}, {current}. Dùng phím mũi tên để xem từng cột.",
 
     // ComboChart
     "{title} on {day}": "{title} ngày {day}",
@@ -123,15 +160,19 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     "Sorted by {column}, descending.": "Đã sắp xếp theo {column}, giảm dần.",
     "{n} selected.": "Đã chọn {n}.",
     "Selection cleared.": "Đã bỏ chọn.",
-    "{n} {noun} {done}. Undo is available.": "{n} {noun}: {done}. Có thể hoàn tác.",
+    "{n} {noun} {done}. Undo is available.":
+      "{n} {noun}: {done}. Có thể hoàn tác.",
     removed: "đã xóa",
     "{action} failed.": "{action} không thành công.",
-    "Couldn't {action} {n} {noun}. They're back.": "Không thể {action} {n} {noun}. Đã khôi phục lại.",
-    "{action} failed. The rows are back.": "{action} không thành công. Các dòng đã được khôi phục.",
+    "Couldn't {action} {n} {noun}. They're back.":
+      "Không thể {action} {n} {noun}. Đã khôi phục lại.",
+    "{action} failed. The rows are back.":
+      "{action} không thành công. Các dòng đã được khôi phục.",
     "Undone. {n} {noun} back.": "Đã hoàn tác. Đã khôi phục {n} {noun}.",
     "Saved {column}.": "Đã lưu {column}.",
     "Couldn't save {column} for {row}.": "Không thể lưu {column} của {row}.",
-    "Couldn't save. {column} is back to what it was.": "Không thể lưu. {column} đã trở về giá trị cũ.",
+    "Couldn't save. {column} is back to what it was.":
+      "Không thể lưu. {column} đã trở về giá trị cũ.",
     "Page {page} of {pages}.": "Trang {page}/{pages}.",
     "Closed {row}.": "Đã đóng {row}.",
     "Opened {row}.": "Đã mở {row}.",

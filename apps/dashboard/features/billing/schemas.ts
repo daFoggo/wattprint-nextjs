@@ -27,3 +27,11 @@ export const CurrentBillSchema = z.object({
 })
 
 export type CurrentBill = z.infer<typeof CurrentBillSchema>
+
+/** One past cycle (tb_bill): its month, kWh and amount with VAT. */
+export const PastBillSchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
+  kwh: z.number(),
+  amount: z.number(),
+})
+export type PastBill = z.infer<typeof PastBillSchema>

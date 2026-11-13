@@ -2,7 +2,10 @@
   "nav": {
     "dashboard": "Bảng điều khiển",
     "overview": "Tổng quan",
-    "bill": "Hóa đơn"
+    "statistics": "Thống kê",
+    "devices": "Thiết bị",
+    "bill": "Hóa đơn",
+    "settings": "Cài đặt"
   },
   "roles": {
     "customer": "Khách hàng",
@@ -17,7 +20,7 @@
   "close": "Đóng",
   "overview": {
     "title": "Tổng quan",
-    "description": "Chi phí kỳ này, điện năng so với các tuần trước và điện đi đâu.",
+    "description": "Chi phí kỳ này, điện năng so với các tuần trước, điện đi đâu và điều gì cần chú ý.",
     "noHomeTitle": "Chưa có nhà",
     "noHomeDescription": "Tài khoản này chưa thuộc nhà nào. Hãy xin chủ nhà mã mời, hoặc ghép nối một công tơ."
   },
@@ -26,5 +29,21 @@
     "description": "Kỳ hóa đơn này tính đến nay, tính theo từng bậc như công ty điện lực.",
     "emptyTitle": "Chưa có hóa đơn",
     "emptyDescription": "Tài khoản này chưa có nhà nào có biểu giá để tính tiền điện."
+  },
+  "devices": {
+    "title": "Thiết bị",
+    "description": "Từng thiết bị trong nhà: đang bật hay tắt, dùng bao nhiêu điện và tốn bao nhiêu tiền. Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động."
+  },
+  "device": {
+    "title": "Thiết bị",
+    "neighbours": "Thiết bị trước và sau"
+  },
+  "statistics": {
+    "title": "Thống kê",
+    "description": "Điện năng theo ngày, tuần, tháng và năm; so với tuần trước, tháng trước và các hộ tương tự; và cuối kỳ sẽ hết bao nhiêu."
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "description": "Thông tin nhà, giá điện và những gì WattPrint báo cho bạn. Bản xem trước: thay đổi chưa được lưu lên máy chủ."
   }
 }

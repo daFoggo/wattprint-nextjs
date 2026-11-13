@@ -1,34 +1,62 @@
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { LogStream } from "@workspace/ui/components/hairline/log-stream"
 
-import { DEMO_EVENTS } from "../demo"
+import type { Activity } from "../schemas"
 
-/** Device events today, newest at the bottom. Sample data until NILM runs (see demo.ts). */
+/**
+ * Runs as log lines, newest at the bottom: a finished run at its end, a running one at its start. On one
+ * device's page (`named={false}`) the lines leave out the device and its room.
+ */
 export function DeviceTimeline({
-  latest,
+  activity,
+  title,
+  description,
+  named = true,
   className,
 }: {
-  latest: number
+  activity: Activity[]
+  title: string
+  description: string
+  named?: boolean
   className?: string
 }) {
-  const t = useTranslations("energy")
-  // Timed back from `latest` (ms) so the sample reads as recent, oldest first.
-  const lines = [...DEMO_EVENTS].reverse().map((e) => ({
-    id: `${e.device}-${e.ago}`,
-    at: latest - e.ago * 60_000,
-    level: "info" as const,
-    message: t(`demo.events.${e.event}`, {
-      device: t(`demo.devices.${e.device}`),
-      min: e.values?.min ?? 0,
-      count: e.values?.count ?? 0,
-    }),
-    source: t(`demo.rooms.${e.room}`),
-  }))
+  const t = useTranslations("energy.timeline")
+  const kwh = new Intl.NumberFormat(useLocale(), { maximumFractionDigits: 2 })
+  const lines = activity
+    .map((run) => {
+      const minutes = Math.max(
+        1,
+        Math.round(((run.end ?? run.start) - run.start) / 60_000)
+      )
+      return {
+        id: `${run.device}-${run.start}`,
+        at: run.end ?? run.start,
+        level: "info" as const,
+        message:
+          run.end === null
+            ? t(named ? "running" : "runningSelf", { device: run.name })
+            : t(named ? "ran" : "ranSelf", {
+                device: run.name,
+                h: Math.floor(minutes / 60),
+                m: minutes % 60,
+                kwh: kwh.format(run.kwh),
+              }),
+        source: named ? (run.room ?? undefined) : undefined,
+      }
+    })
+    .sort((a, b) => a.at - b.at)
   return (
     <LogStream
       className={className}
-      title={t("deviceTimeline.title")}
+      title={title}
+      // The same heading as the cards beside it (components/shared/tile.tsx).
+      header={
+        <div className="flex flex-col gap-0.5">
+          <h2 className="text-sm font-medium">{title}</h2>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+      }
       defaultValue={lines}
       height={290}
     />

@@ -1,5 +1,3 @@
-import { Link } from "@/i18n/navigation"
-import { IconArrowRight } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { Badge } from "@workspace/ui/components/hairline/badge"
@@ -7,20 +5,18 @@ import { NumberRoll } from "@workspace/ui/components/hairline/number-roll"
 import { ShareBar } from "@workspace/ui/components/hairline/share-bar"
 import { TokenBucket } from "@workspace/ui/components/hairline/token-bucket"
 import { cn } from "@workspace/ui/lib/utils"
-import { linkButton } from "@workspace/ui-patterns/link-button"
 
+import { PillLink } from "@/components/shared/nav-links"
 import { BILL_PATH } from "@/config/routes"
 
 import type { CurrentBill } from "../schemas"
+import { tierColor } from "../tier-color"
 
 const VND = { style: "currency", currency: "VND" } as const
 const formats = (locale: string) => ({
   vnd: new Intl.NumberFormat(locale, VND),
   kwh: new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }),
 })
-// One colour per tier everywhere (ShareBar ranks its parts, so they would recolour by size).
-// Only --chart-1..5 exist; the old tariff has 6 tiers, so wrap around.
-const tierColor = (n: number) => `var(--chart-${((n - 1) % 5) + 1})`
 
 type Tier = CurrentBill["tiers"][number]
 
@@ -47,13 +43,12 @@ function TierNow({ tier }: { tier: Tier }) {
           </Badge>
         </span>
         <span className="text-xs text-muted-foreground tabular-nums">
-          {tier.from_kwh}–{tier.to_kwh} kWh
+          {tier.from_kwh}–{tier.to_kwh} kWh ·{" "}
+          <span className="font-medium whitespace-nowrap text-foreground">
+            {vnd.format(tier.price_per_kwh)}/kWh
+          </span>
         </span>
       </div>
-      <span className="text-lg font-medium whitespace-nowrap tabular-nums">
-        {vnd.format(tier.price_per_kwh)}
-        <span className="text-xs font-normal text-muted-foreground">/kWh</span>
-      </span>
     </div>
   )
 }
@@ -80,7 +75,7 @@ function TierNext({ from, to }: { from: Tier; to: Tier }) {
 }
 
 /**
- * The Overview's bill, a tray of two stacked cards: what the cycle costs so far, opened into its
+ * The Overview's bill, a tray of two stacked cards: what the cycle costs so far, folded until opened into its
  * tiers and VAT, and how much of the current tier is left before the next price. Today's cost and
  * the link to the bill run along the tray's foot.
  */
@@ -124,7 +119,6 @@ export function BillSummary({
         items={parts}
         format={VND}
         locales={locale}
-        defaultExpanded
       />
       {/* The tier card takes what height the row adds, so the foot stays at the bottom. */}
       {tier?.to_kwh != null && next ? (
@@ -134,11 +128,6 @@ export function BillSummary({
           title={t("tier", { tier: tier.tier_no })}
           header={<TierNow tier={tier} />}
           footer={<TierNext from={tier} to={next} />}
-          // The compartment past the gate is the next tier, its slots in its colour.
-          ahead={8}
-          style={
-            { "--tb-wait": tierColor(next.tier_no) } as React.CSSProperties
-          }
           limit={tier.to_kwh - tier.from_kwh}
           remaining={bill.kwh - tier.from_kwh}
           fillUsed
@@ -171,20 +160,9 @@ export function BillSummary({
             ),
           })}
         </p>
-        <Link
-          href={BILL_PATH}
-          className={linkButton({
-            variant: "outline",
-            size: "md",
-            className: "group ml-auto",
-          })}
-        >
+        <PillLink href={BILL_PATH} className="ml-auto">
           {t("billSummary.viewDetails")}
-          <IconArrowRight
-            aria-hidden
-            className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover:translate-x-1"
-          />
-        </Link>
+        </PillLink>
       </div>
     </section>
   )

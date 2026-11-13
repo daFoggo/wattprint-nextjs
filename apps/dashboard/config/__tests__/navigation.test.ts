@@ -78,4 +78,16 @@ describe("breadcrumbTrail", () => {
     const crumbs = breadcrumbTrail("/customer/42/invoices", SCOPES)
     expect(crumbs.map((c) => c.label)).toEqual(["customer", "42", "invoices"])
   })
+
+  it("shows a record's name for its id", () => {
+    const crumbs = breadcrumbTrail("/dashboard/devices/fridge", SCOPES, {
+      fridge: "Tủ lạnh",
+    })
+    expect(crumbs.map((c) => c.label)).toEqual([
+      "dashboard",
+      "devices",
+      "Tủ lạnh",
+    ])
+    expect(crumbs[1]!.href).toBe("/dashboard/devices")
+  })
 })

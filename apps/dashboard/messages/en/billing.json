@@ -3,21 +3,6 @@
   "tier": "Tier {tier}",
   "now": "Now",
   "vat": "VAT {vat}%",
-  "billCard": {
-    "period": "{start} – {end} · tiered residential tariff",
-    "partial": "Partial data",
-    "straddle": "Prices change this cycle",
-    "soFar": "So far, incl. {vat}% VAT · <kwh></kwh>",
-    "today": "Today · <kwh></kwh>",
-    "meter": "Tier {tier} · {price}/kWh",
-    "topTier": "Top tier: every further kWh costs {price} before VAT.",
-    "caption": "Energy and amount in each tariff tier this cycle, before VAT",
-    "colTier": "Tier",
-    "colPrice": "Price",
-    "colUsed": "Used",
-    "colAmount": "Amount",
-    "total": "Total"
-  },
   "billSummary": {
     "caption": "So far this cycle, {kwh} kWh",
     "part": "Tier {tier}, {kwh} kWh",
@@ -25,5 +10,60 @@
     "topTier": "Tier {tier}, the top one",
     "today": "Today <amount></amount> · {kwh} kWh",
     "viewDetails": "View bill details"
+  },
+  "history": {
+    "thisYear": "This year (sample)",
+    "lastYear": "Last year (sample)",
+    "amount": "Cost each month",
+    "kwh": "Energy each month (kWh)"
+  },
+  "forecast": {
+    "title": "Bill forecast for the end of the cycle",
+    "description": "If the rest of the cycle goes like it has so far, up to the end of {end}.",
+    "amount": "Expected bill",
+    "kwh": "Expected energy",
+    "tier": "Ends in",
+    "tierValue": "Tier {tier}",
+    "higher": "{pct} more than last month ({amount}, sample).",
+    "lower": "{pct} less than last month ({amount}, sample).",
+    "nextTitle": "Tier {tier} starts on {date}",
+    "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer."
+  },
+  "overview": {
+    "title": "This bill, {start} – {end}",
+    "description": "Tiered household tariff, VAT included · {days, plural, one {# day} other {# days}} until the meter reading",
+    "soFar": "So far",
+    "today": "Today",
+    "forecast": "Expected at the end",
+    "kwh": "{kwh} kWh",
+    "forecastNote": "{kwh} kWh · ends in tier {tier}",
+    "change": "Expected against last month",
+    "more": "More",
+    "less": "Less",
+    "lastMonth": "Last month {amount} (sample)",
+    "partial": "Missing data",
+    "straddle": "Tariff changed this cycle"
+  },
+  "ladder": {
+    "title": "Tier prices and what you used in each",
+    "description": "Once a tier is used up the next, dearer one starts. Prices before VAT.",
+    "caption": "Each tier: its kWh range, price, energy used and amount this cycle",
+    "colTier": "Tier and price",
+    "colUsed": "Used",
+    "colAmount": "Amount",
+    "range": "{from}–{to} kWh · {price}/kWh",
+    "rangeTop": "From {from} kWh · {price}/kWh",
+    "used": "{used}/{size} kWh",
+    "usedTop": "{used} kWh",
+    "subtotal": "Subtotal",
+    "total": "Total"
+  },
+  "past": {
+    "title": "The last 6 bills",
+    "description": "Sample data, priced with the current tariff",
+    "chart": "12-month chart",
+    "colMonth": "Month",
+    "colKwh": "kWh",
+    "colAmount": "Amount, against the month before"
   }
 }

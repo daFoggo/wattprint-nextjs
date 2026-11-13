@@ -1,0 +1,32 @@
+{
+  "alerts": {
+    "title": "Thiết bị chạy bất thường",
+    "open": "{count} cảnh báo cần xem · dữ liệu mẫu",
+    "none": "Không có gì bất thường · dữ liệu mẫu",
+    "resolved": "đã tự hết",
+    "longer_than_usual": {
+      "title": "{device} chạy lâu hơn thường lệ",
+      "body": "{days} ngày qua mỗi lần chạy khoảng {recent_min} phút, thường lệ {usual_min} phút. Kiểm tra gioăng cửa và dàn nóng."
+    },
+    "new_device": {
+      "title": "Phát hiện một thiết bị mới khoảng {watts, number} W",
+      "body": "Chạy {minutes} phút. Nếu nhà bạn vừa dùng một thiết bị mới, hãy đặt tên để theo dõi riêng."
+    },
+    "repeated_cycle": {
+      "title": "{device} chạy {count} chu kỳ liền nhau",
+      "body": "Có thể do chọn chương trình kép hoặc máy chưa vắt xong."
+    },
+    "allDevices": "Tất cả thiết bị"
+  },
+  "peers": {
+    "more": "So với hộ trung vị · nhiều hơn {pct} số hộ tương tự (mẫu)",
+    "less": "So với hộ trung vị · ít hơn {pct} số hộ tương tự (mẫu)",
+    "median": "Trung vị {homes} hộ",
+    "you": "Nhà bạn, {days} ngày"
+  },
+  "threshold": {
+    "title": "Kéo đường kẻ để thử ngưỡng cảnh báo: một ngày dùng quá bao nhiêu kWh thì báo",
+    "period": "trong {days} ngày qua",
+    "label": "Ngưỡng kWh mỗi ngày"
+  }
+}

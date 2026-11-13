@@ -1,0 +1,32 @@
+{
+  "alerts": {
+    "title": "Devices running out of the ordinary",
+    "open": "{count, plural, one {# alert} other {# alerts}} to look at · sample data",
+    "none": "Nothing out of the ordinary · sample data",
+    "resolved": "cleared",
+    "longer_than_usual": {
+      "title": "{device} runs longer than usual",
+      "body": "Over the last {days} days each run lasted about {recent_min} min, against {usual_min} min usually. Check the door seals and the condenser."
+    },
+    "new_device": {
+      "title": "A new device of about {watts, number} W",
+      "body": "It ran for {minutes} min. If the home has a new appliance, name it to follow it on its own."
+    },
+    "repeated_cycle": {
+      "title": "{device} ran {count} cycles back to back",
+      "body": "A double programme, or a spin that did not finish."
+    },
+    "allDevices": "All devices"
+  },
+  "peers": {
+    "more": "Against the median home · more than {pct} of similar homes (sample)",
+    "less": "Against the median home · less than {pct} of similar homes (sample)",
+    "median": "Median of {homes} homes",
+    "you": "Your home, {days} days"
+  },
+  "threshold": {
+    "title": "Drag the line to try an alert: how many kWh in a day is too many",
+    "period": "in the last {days} days",
+    "label": "Daily kWh limit"
+  }
+}

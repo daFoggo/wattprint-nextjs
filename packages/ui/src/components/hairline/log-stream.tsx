@@ -57,6 +57,8 @@ export interface LogStreamProps extends Omit<React.HTMLAttributes<HTMLDivElement
   /** The scrolling area's height. */
   height?: number | string;
   title?: string;
+  /** Shown above the toolbar, e.g. the title and a line under it (patched (hairline/patch.mjs)). */
+  header?: React.ReactNode;
 }
 
 const EASE = "cubic-bezier(0.16,1,0.3,1)";
@@ -216,7 +218,7 @@ const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle 
   );
 });
 
-export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1000, height = 420, title = "Logs", className = "", ...props }: LogStreamProps) {
+export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1000, height = 420, header /* patched (hairline/patch.mjs) */, title = "Logs", className = "", ...props }: LogStreamProps) {
   const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
@@ -399,6 +401,8 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
       }}
       {...props}
     >
+      {/* patched (hairline/patch.mjs): the header above the toolbar */}
+      {header && <div className="px-4 pt-4 @md:px-5 @md:pt-5">{header}</div>}
       <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2.5 @md:px-4">
         <button
           type="button"
