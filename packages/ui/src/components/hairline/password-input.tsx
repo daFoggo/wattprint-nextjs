@@ -130,7 +130,7 @@ export function PasswordInput({
               </span>
             ))}
           </div>
-          <span className={`w-12 text-right text-[12px] font-medium ${score ? TEXT[score - 1] : "text-muted-foreground"}`}>
+          <span className={`w-16 whitespace-nowrap text-right text-[12px] font-medium ${score ? TEXT[score - 1] : "text-muted-foreground"}`}>
             <TextMorph>{score ? t(strengthLabels[score - 1]) : " "}</TextMorph>
           </span>
         </div>

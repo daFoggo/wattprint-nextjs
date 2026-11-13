@@ -4,7 +4,11 @@ import type { PageProps } from "keycloakify/login/pages/PageProps"
 
 import { Button } from "@workspace/ui/components/hairline/button"
 import { Input } from "@workspace/ui/components/hairline/input"
-import { PasswordInput } from "@workspace/ui/components/hairline/password-input"
+import {
+  PasswordInput,
+  scorePassword,
+  type PasswordScore,
+} from "@workspace/ui/components/hairline/password-input"
 
 import type { I18n } from "../i18n"
 import type { KcContext } from "../KcContext"
@@ -13,6 +17,47 @@ type RegisterContext = Extract<KcContext, { pageId: "register.ftl" }>
 
 /** Attributes this form renders; KcPage falls back to keycloakify's generic page if the realm's user profile adds others. */
 export const REGISTER_FIELDS = ["username", "email", "firstName", "lastName", "locale"]
+
+type Policies = RegisterContext["passwordPolicies"]
+type Msg = I18n["msgStr"]
+
+/**
+ * The realm's password rules (the ones Keycloak exposes to the page), each with its line in the hint and its check.
+ * The hint and the meter both come from this list, so they say what Keycloak enforces.
+ */
+function passwordRules(policies: Policies, email: string, msgStr: Msg) {
+  const count = (re: RegExp, v: string) => (v.match(re) ?? []).length
+  const p = policies ?? {}
+  const rules: { label: string; ok: (v: string) => boolean }[] = []
+  if (p.length)
+    rules.push({
+      label: msgStr("passwordMinLength", String(p.length)),
+      ok: (v) => v.length >= p.length!,
+    })
+  for (const [n, key, re] of [
+    [p.digits, "passwordDigits", /\d/g],
+    [p.upperCase, "passwordUpperCase", /[A-Z]/g],
+    [p.lowerCase, "passwordLowerCase", /[a-z]/g],
+    [p.specialChars, "passwordSpecialChars", /[^A-Za-z0-9]/g],
+  ] as const)
+    if (n) rules.push({ label: msgStr(key, String(n)), ok: (v) => count(re, v) >= n })
+  // Email is the username in this realm, so notUsername and notEmail are the same check.
+  if (p.notUsername || p.notEmail)
+    rules.push({
+      label: msgStr("passwordNotEmail"),
+      ok: (v) => v.toLowerCase() !== email.trim().toLowerCase(),
+    })
+  return rules
+}
+
+/** A password Keycloak would reject is always "Weak"; one it accepts starts at "Fair", Hairline's heuristic adds the rest. */
+function policyScore(rules: ReturnType<typeof passwordRules>) {
+  return (password: string): PasswordScore => {
+    if (!password) return 0
+    if (!rules.every((rule) => rule.ok(password))) return 1
+    return Math.max(2, scorePassword(password)) as PasswordScore
+  }
+}
 
 /**
  * register.ftl with the realm's fixed profile (email as username, first and last name), posted natively to
@@ -24,7 +69,9 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
   const { url, profile, messagesPerField, passwordPolicies } = kcContext
   const { msg, msgStr, currentLanguage } = i18n
   const [submitting, setSubmitting] = useState(false)
+  const [email, setEmail] = useState(profile.attributesByName.email?.value ?? "")
 
+  const rules = passwordRules(passwordPolicies, email, msgStr)
   const value = (name: string) => profile.attributesByName[name]?.value ?? ""
   const error = (name: string) =>
     messagesPerField.existsError(name) ? (
@@ -107,6 +154,7 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
           type="email"
           label={msg("email")}
           defaultValue={value("email")}
+          onValueChange={setEmail}
           autoComplete="email"
           inputMode="email"
           required
@@ -118,10 +166,10 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
           label={msg("password")}
           autoComplete="new-password"
           required
-          strength
+          strength={policyScore(rules)}
           hint={
-            passwordPolicies?.length
-              ? msgStr("passwordMinLength", String(passwordPolicies.length))
+            rules.length
+              ? rules.map((rule) => rule.label).join(", ") + "."
               : undefined
           }
           error={error("password")}

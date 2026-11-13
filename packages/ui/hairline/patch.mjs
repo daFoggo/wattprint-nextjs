@@ -447,6 +447,12 @@ export const PATCHES = [
   text("password-input.tsx", 'hint={caps ? "Caps Lock is on" : hint}', 'hint={caps ? t("Caps Lock is on") : hint}'),
   text("password-input.tsx", 'aria-label={shown ? "Hide password" : "Show password"}', 'aria-label={shown ? t("Hide password") : t("Show password")}'),
   text("password-input.tsx", '{score ? strengthLabels[score - 1] : " "}', '{score ? t(strengthLabels[score - 1]) : " "}'),
+  {
+    file: "password-input.tsx",
+    why: "The strength word sat in a fixed 48px box: longer labels (\"Trung bình\") wrapped onto two lines.",
+    from: '<span className={`w-12 text-right text-[12px] font-medium',
+    to: '<span className={`w-16 whitespace-nowrap text-right text-[12px] font-medium',
+  },
 
   imports("input.tsx"),
   hook("input.tsx", "}: InputProps) {\n"),
