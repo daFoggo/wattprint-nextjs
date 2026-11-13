@@ -1,13 +1,14 @@
-/** A local date ("YYYY-MM-DD") as words, e.g. "Thu, Nov 12". Pure: no clock, same on server and client. */
+/** A local date ("YYYY-MM-DD") as words in `locale`, e.g. "Thu, Nov 12". Pure: no clock, same on server and client. */
 export function dayLabel(
   date: string,
+  locale: string,
   options: Intl.DateTimeFormatOptions = {
     weekday: "short",
     month: "short",
     day: "numeric",
   }
 ) {
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString(locale, {
     ...options,
     timeZone: "UTC",
   })

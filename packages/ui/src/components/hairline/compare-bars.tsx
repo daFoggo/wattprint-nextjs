@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -138,6 +139,7 @@ export function CompareBars({
   className = "",
   ...props
 }: CompareBarsProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const hydrated = useHydrated();
   const locale = locales ?? (hydrated ? undefined : "en-US");
@@ -350,14 +352,14 @@ export function CompareBars({
           </span>
         </div>
         <p className="mt-0.5 text-[11.5px] text-muted-foreground @md:text-[12.5px]">
-          <TextMorph>{on ? `${currentLabel} against ${previousLabel.toLowerCase()}` : currentLabel}</TextMorph>
+          <TextMorph>{on ? t("{current} against {previous}", { current: currentLabel, previous: previousLabel.toLowerCase() }) : currentLabel}</TextMorph>
         </p>
 
         <div
           ref={plotRef}
           role="group"
           tabIndex={0}
-          aria-label={`${title}, ${currentLabel}${on ? ` against ${previousLabel}` : ""}. Use the arrow keys to read each bar.`}
+          aria-label={t(on ? "{title}, {current} against {previous}. Use the arrow keys to read each bar." : "{title}, {current}. Use the arrow keys to read each bar.", { title, current: currentLabel, previous: previousLabel })}
           onKeyDown={onKeyDown}
           onBlur={() => keyboard && (setActive(null), setKeyboard(false))}
           onPointerMove={(e) => {
@@ -483,7 +485,7 @@ export function CompareBars({
           </caption>
           <thead>
             <tr>
-              <th scope="col">Day</th>
+              <th scope="col">{t("Day")}</th>
               <th scope="col">{currentLabel}</th>
               <th scope="col">{previousLabel}</th>
             </tr>

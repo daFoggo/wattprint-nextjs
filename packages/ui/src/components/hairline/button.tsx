@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { TextMorph } from "./text-morph";
 import { EASE_OUT, INTERACTION_PRESS, interactionIcon } from "./ui-interaction-motion";
 
@@ -165,6 +166,7 @@ export function Button({
   }: ButtonProps) {
   const innerRef = React.useRef<HTMLButtonElement | null>(null);
   const reduced = useReducedMotion();
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
 
   React.useImperativeHandle(ref, () => innerRef.current as HTMLButtonElement);
 
@@ -173,12 +175,12 @@ export function Button({
   const isAsyncFlow = status !== undefined || loading;
 
   // Resolve current text label
-  const idleLabel = typeof children === "string" ? children : DEFAULT_LABELS.idle;
+  const idleLabel = typeof children === "string" ? children : t(DEFAULT_LABELS.idle);
   const labels: Record<ActionStatus, string> = {
     idle: statusLabels?.idle ?? idleLabel,
-    pending: statusLabels?.pending ?? DEFAULT_LABELS.pending,
-    success: statusLabels?.success ?? DEFAULT_LABELS.success,
-    error: statusLabels?.error ?? DEFAULT_LABELS.error,
+    pending: statusLabels?.pending ?? t(DEFAULT_LABELS.pending),
+    success: statusLabels?.success ?? t(DEFAULT_LABELS.success),
+    error: statusLabels?.error ?? t(DEFAULT_LABELS.error),
   };
   const activeLabel = labels[currentStatus];
 

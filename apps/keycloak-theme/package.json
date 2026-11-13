@@ -1,0 +1,34 @@
+{
+  "name": "keycloak-theme",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port 11098",
+    "build": "tsc --noEmit && vite build",
+    "build:jar": "pnpm build && keycloakify build && node scripts/install-jar.mjs",
+    "lint": "eslint --max-warnings 0",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@workspace/ui": "workspace:*",
+    "@workspace/ui-patterns": "workspace:*",
+    "geist": "1.9.0-canary.2",
+    "keycloakify": "11.16.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.3.0",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^10",
+    "typescript": "^5",
+    "vite": "^8.3.4"
+  }
+}

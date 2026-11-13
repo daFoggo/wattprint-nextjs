@@ -1,12 +1,15 @@
 "use client"
 
 import { IconSelector } from "@tabler/icons-react"
+import { useTranslations } from "next-intl"
 
 import { Avatar } from "@workspace/ui/components/hairline/avatar"
 import { Popover } from "@workspace/ui/components/hairline/popover"
+import type { Role } from "@workspace/auth/permissions"
 import { ThemeToggle } from "@workspace/ui-patterns/theme-toggle"
 
 import { useSidebar } from "@/components/layout/sidebar/sidebar"
+import { LocaleSwitch } from "@/components/shared/locale-switch"
 
 /**
  * Account row pinned to the sidebar bottom: initials avatar, name and role (just the avatar in the
@@ -21,13 +24,16 @@ export function UserMenu({
 }: {
   name: string
   email: string | null
-  role: string
+  role: Role
   children: React.ReactNode
 }) {
   const { iconRail } = useSidebar()
+  const tCommon = useTranslations("common")
+  const t = useTranslations("layout")
+  const roleLabel = t(`roles.${role}`)
   return (
     <Popover
-      label="Account"
+      label={t("account")}
       width={288}
       side={iconRail ? "right" : "top"}
       align={iconRail ? "end" : "start"}
@@ -35,14 +41,14 @@ export function UserMenu({
         <button
           type="button"
           data-sidebar="menu-button"
-          aria-label={`Account: ${name} [${role}]`}
+          aria-label={t("accountLabel", { name, role: roleLabel })}
           className="flex w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl p-1.5 text-left transition-colors duration-150 hover:bg-accent aria-expanded:bg-accent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0.5"
         >
           <Avatar name={name} size="sm" />
           <span className="flex min-w-0 flex-1 flex-col group-data-[collapsible=icon]:hidden">
             <span className="truncate text-sm font-medium">{name}</span>
-            <span className="truncate text-xs text-muted-foreground capitalize">
-              {role}
+            <span className="truncate text-xs text-muted-foreground">
+              {roleLabel}
             </span>
           </span>
           <IconSelector
@@ -65,8 +71,14 @@ export function UserMenu({
           </div>
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-sm text-muted-foreground">Theme</span>
+          <span className="text-sm text-muted-foreground">{t("theme")}</span>
           <ThemeToggle variant="segmented" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm text-muted-foreground">
+            {tCommon("language")}
+          </span>
+          <LocaleSwitch />
         </div>
         {children}
       </div>

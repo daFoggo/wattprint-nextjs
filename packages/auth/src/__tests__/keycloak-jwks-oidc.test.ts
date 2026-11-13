@@ -193,23 +193,30 @@ describe("required claims", () => {
 })
 
 describe("OIDC URL builder", () => {
-  it("builds the Google idp hint URL with S256 PKCE", () => {
+  it("builds the login URL with S256 PKCE, and the provider / language only when asked", () => {
     const pkce = createPkceChallenge()
     const cfg = {
       issuer: "http://localhost:8080/realms/dashboard",
       clientId: "dashboard-app",
       clientSecret: "secret",
     }
-    const url = new URL(
-      buildAuthorizationUrl(cfg, {
-        redirectUri: "http://localhost:11092/auth/callback",
-        state: pkce.state,
-        codeChallenge: pkce.codeChallenge,
-      })
-    )
+    const base = {
+      redirectUri: "http://localhost:11092/auth/callback",
+      state: pkce.state,
+      codeChallenge: pkce.codeChallenge,
+    }
+    const url = new URL(buildAuthorizationUrl(cfg, base))
     expect(url.pathname).toBe("/realms/dashboard/protocol/openid-connect/auth")
     expect(url.searchParams.get("code_challenge_method")).toBe("S256")
-    expect(url.searchParams.get("kc_idp_hint")).toBe("google")
+    // Without a provider, Keycloak shows its (themed) login page: email + password and Google.
+    expect(url.searchParams.has("kc_idp_hint")).toBe(false)
+    expect(url.searchParams.has("ui_locales")).toBe(false)
+
+    const google = new URL(
+      buildAuthorizationUrl(cfg, { ...base, provider: "google", locale: "vi" })
+    )
+    expect(google.searchParams.get("kc_idp_hint")).toBe("google")
+    expect(google.searchParams.get("ui_locales")).toBe("vi")
 
     expect(getKeycloakEndpoints(cfg.issuer).certs).toBe(
       "http://localhost:8080/realms/dashboard/protocol/openid-connect/certs"

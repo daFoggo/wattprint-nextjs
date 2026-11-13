@@ -8,6 +8,8 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // next-intl imports `next/server` without an extension, which Node's ESM resolver rejects; Vite resolves it.
+    server: { deps: { inline: ["next-intl"] } },
     exclude: [...configDefaults.exclude, "e2e/**"],
     env: {
       AUTH_PROVIDER: "keycloak",

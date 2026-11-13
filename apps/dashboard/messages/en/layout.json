@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "bill": "Bill"
+  },
+  "roles": {
+    "customer": "Customer",
+    "editor": "Editor",
+    "admin": "Admin"
+  },
+  "account": "Account",
+  "accountLabel": "Account: {name} [{role}]",
+  "theme": "Theme",
+  "toggleSidebar": "Toggle sidebar",
+  "resizeSheet": "Resize sheet",
+  "close": "Close",
+  "overview": {
+    "title": "Overview",
+    "description": "What this cycle costs, your energy against the weeks before, and where it goes.",
+    "noHomeTitle": "No home yet",
+    "noHomeDescription": "This account is not a member of a home. Ask the owner for an invite code, or pair a meter."
+  },
+  "bill": {
+    "title": "Bill",
+    "description": "This billing cycle so far, priced tier by tier as the electricity company will.",
+    "emptyTitle": "No bill yet",
+    "emptyDescription": "This account has no home with a tariff plan to price its energy."
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { EASE_OUT, INTERACTION_FOCUS, INTERACTION_PRESS, interactionIcon, useInteractionReducedMotion } from "./ui-interaction-motion";
 
 /* ─────────────────────────────────────────────────────────
@@ -78,6 +79,7 @@ const ICONS: Record<AlertTone, React.ReactNode> = {
 };
 
 export function Alert({ tone = "info", title, children, action, onDismiss, hidden: hiddenProp, icon, className = "" }: AlertProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const [dismissed, setDismissed] = React.useState(false);
   const hidden = hiddenProp || dismissed;
@@ -127,7 +129,7 @@ export function Alert({ tone = "info", title, children, action, onDismiss, hidde
           {onDismiss && (
             <button
               type="button"
-              aria-label="Dismiss"
+              aria-label={t("Dismiss")}
               onClick={() => setDismissed(true)}
               className={`-mr-1 -mt-1 flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground ${INTERACTION_PRESS} ${INTERACTION_FOCUS}`}
             >

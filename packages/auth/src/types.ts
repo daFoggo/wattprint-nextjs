@@ -51,10 +51,16 @@ export interface AuthProvider {
   refreshSession(): Promise<void>
   /** True when the failure is the Auth server's answer (safe to show), not an outage (rethrow). */
   isExpectedError(error: unknown): boolean
-  /** Google sign-in through Keycloak (`kc_idp_hint=google`, PKCE redirect flow). */
+  /** Sign-in through Keycloak's login page (PKCE redirect flow): email + password, or an identity provider. */
   oauth: {
-    /** Returns the URL to send the browser to. */
-    start(redirectTo: string): Promise<string>
+    /**
+     * Returns the URL to send the browser to. `provider` (e.g. "google") skips the login page for that identity
+     * provider; `locale` sets the login page's language.
+     */
+    start(
+      redirectTo: string,
+      options?: { provider?: string; locale?: string }
+    ): Promise<string>
     /** Completes the flow on the callback route. Throws on failure. */
     exchangeCode(code: string, state?: string | null): Promise<void>
   }

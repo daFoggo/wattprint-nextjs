@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -122,6 +123,7 @@ export function ShareBar({
   className = "",
   ...props
 }: ShareBarProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const hydrated = useHydrated();
   const locale = locales ?? (hydrated ? undefined : "en-US");
@@ -281,7 +283,7 @@ export function ShareBar({
             className={`-my-1 inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-full pl-3 pr-2 text-[12px] font-medium text-muted-foreground shadow-[inset_0_0_0_1px_var(--border)] transition-[color,scale] duration-200 hover:text-foreground active:scale-[0.97] @md:text-[12.5px] ${FOCUS}`}
             style={{ transitionTimingFunction: EASE }}
           >
-            <TextMorph>{open ? "Collapse" : "Breakdown"}</TextMorph>
+            <TextMorph>{open ? t("Collapse") : t("Breakdown")}</TextMorph>
             <svg
               viewBox="0 0 12 12"
               aria-hidden="true"
@@ -296,7 +298,7 @@ export function ShareBar({
           <NumberRoll value={visible ? (shown ? shown.value : total) : 0} format={format} locales={locale} duration={shown ? 600 : 1000} />
         </p>
         <p className="mt-0.5 truncate whitespace-nowrap text-[11.5px] text-muted-foreground @md:text-[12.5px]">
-          <TextMorph>{shown ? `${shown.label} · ${pct(shares[shownIndex])}` : (caption ?? "Total")}</TextMorph>
+          <TextMorph>{shown ? `${shown.label} · ${pct(shares[shownIndex])}` : (caption ?? t("Total"))}</TextMorph>
         </p>
 
         <div ref={stageRef} className="relative mt-4 @md:mt-5" style={{ height: BAR + 14 + legendH }} onPointerLeave={point(null)}>
@@ -361,7 +363,7 @@ export function ShareBar({
           </div>
 
           {/* Open: each row's name and figure, over the bar that landed there. */}
-          <ul id={`${id}-list`} aria-label={`${title} by share`} className="absolute inset-x-0 top-0" style={{ pointerEvents: open ? undefined : "none" }}>
+          <ul id={`${id}-list`} aria-label={t("{title} by share", { title })} className="absolute inset-x-0 top-0" style={{ pointerEvents: open ? undefined : "none" }}>
             {ranked.map((it, i) => (
               <li
                 key={it.key}

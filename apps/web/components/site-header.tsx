@@ -1,7 +1,9 @@
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 
 import { AppLogo } from "@workspace/ui-patterns/app-logo"
 import { ThemeToggle } from "@workspace/ui-patterns/theme-toggle"
+
+import { LocaleSwitch } from "./locale-switch"
 
 export function SiteHeader() {
   return (
@@ -9,7 +11,10 @@ export function SiteHeader() {
       <Link href="/">
         <AppLogo />
       </Link>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        <LocaleSwitch />
+        <ThemeToggle />
+      </div>
     </header>
   )
 }

@@ -15,3 +15,6 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   msw: false
+  # next-intl's message extractor (unused); prebuilt binaries ship as optional packages
+  '@parcel/watcher': false
+  '@swc/core': false

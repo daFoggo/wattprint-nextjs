@@ -14,7 +14,8 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <html lang="en">
+    // Renders outside the locale layout (no next-intl): Vietnamese first, a short English line.
+    <html lang="vi">
       <body
         style={{
           fontFamily:
@@ -33,7 +34,7 @@ export default function GlobalError({
         }}
       >
         <h1 style={{ fontSize: "1.25rem", fontWeight: 600, margin: 0 }}>
-          Something went wrong
+          Đã có lỗi xảy ra
         </h1>
         <p
           style={{
@@ -43,7 +44,9 @@ export default function GlobalError({
             maxWidth: "24rem",
           }}
         >
-          A critical error occurred. Please reload the page or try again.
+          Hệ thống gặp lỗi nghiêm trọng. Vui lòng tải lại trang hoặc thử lại.
+          <br />
+          <span lang="en">Something went wrong. Please reload the page.</span>
         </p>
         <button
           type="button"
@@ -59,7 +62,7 @@ export default function GlobalError({
             border: "none",
           }}
         >
-          Try again
+          Thử lại
         </button>
       </body>
     </html>

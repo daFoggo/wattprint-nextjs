@@ -40,6 +40,10 @@ export function buildAuthorizationUrl(
     redirectUri: string
     state: string
     codeChallenge: string
+    /** Identity provider alias (`kc_idp_hint`): skips Keycloak's login page and goes straight to it. */
+    provider?: string
+    /** Language of Keycloak's pages (`ui_locales`). */
+    locale?: string
   }
 ): string {
   const endpoints = getKeycloakEndpoints(config.issuer)
@@ -53,8 +57,8 @@ export function buildAuthorizationUrl(
   targetUrl.searchParams.set("code_challenge", params.codeChallenge)
   targetUrl.searchParams.set("code_challenge_method", "S256")
 
-  // Skips Keycloak's own login form: Google is the only way in (realm registration is off).
-  targetUrl.searchParams.set("kc_idp_hint", "google")
+  if (params.provider) targetUrl.searchParams.set("kc_idp_hint", params.provider)
+  if (params.locale) targetUrl.searchParams.set("ui_locales", params.locale)
 
   return targetUrl.toString()
 }

@@ -1,0 +1,4 @@
+# Build output and the dev resources keycloakify copies in on `vite dev`
+dist/
+dist_keycloak/
+public/keycloakify-dev-resources/

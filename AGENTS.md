@@ -28,6 +28,7 @@ The docs in `docs/` are the single source of truth for `apps/dashboard` (the das
 | Folder layout, feature slices, ESLint boundaries, extracting `packages/` | `docs/project-structure.md` (summary: `apps/dashboard/features/README.md`) |
 | Data fetching, caching, mutations, Server Actions | `docs/data-fetching.md` |
 | Routes, layouts, parallel and intercepting routes | `docs/routing-and-layouts.md` |
+| UI text, languages (vi/en), `[locale]` routing, number/date formatting | `docs/internationalization.md` |
 | Client-only shared state (Zustand) | `docs/client-state.md` |
 | Auth, sessions, DAL, roles, per-app cookies, `packages/auth` (Keycloak only; env template `apps/dashboard/.env.example`) | `docs/authentication.md` |
 | The Keycloak + FastAPI stack: realm, client, Google sign-in, env, seams | `docs/providers.md` |

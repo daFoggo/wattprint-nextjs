@@ -8,11 +8,18 @@ import { CurrentSchema, ForecastSchema } from "./schemas"
 
 const BASE = "https://api.openweathermap.org/data/2.5"
 
-async function get<T extends z.ZodType>(path: string, schema: T, key: string) {
+async function get<T extends z.ZodType>(
+  path: string,
+  schema: T,
+  key: string,
+  lang: string
+) {
+  // lang: OpenWeather writes the sky's description ("mây rải rác") in it.
   const query = new URLSearchParams({
     lat: String(env.WEATHER_LAT),
     lon: String(env.WEATHER_LON),
     units: "metric",
+    lang,
     appid: key,
   })
   // A hung OpenWeather must not hold the page head open; the boundary hides the card instead.
@@ -23,6 +30,7 @@ async function get<T extends z.ZodType>(path: string, schema: T, key: string) {
   return schema.parse(await res.json()) as z.infer<T>
 }
 
-export const fetchCurrent = (key: string) => get("weather", CurrentSchema, key)
-export const fetchForecast = (key: string) =>
-  get("forecast", ForecastSchema, key)
+export const fetchCurrent = (key: string, lang: string) =>
+  get("weather", CurrentSchema, key, lang)
+export const fetchForecast = (key: string, lang: string) =>
+  get("forecast", ForecastSchema, key, lang)

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 import { MATERIAL_RECESS } from "./ui-interaction-motion";
@@ -36,6 +37,8 @@ export interface TokenBucketProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   refillPerSecond?: number;
   /** Requests your client is holding until a token frees up. */
   waiting?: number;
+  /** Hollow slots past the gate that are not waiting requests, e.g. what comes next (patched (hairline/patch.mjs)). */
+  ahead?: number;
   title?: string;
   /** A second line under the title, e.g. the key or route. */
   caption?: string;
@@ -45,6 +48,8 @@ export interface TokenBucketProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   rateLabel?: string;
   /** Replaces the title row (title, caption, rate) with your own node; `title` still names the meter (patched (hairline/patch.mjs)). */
   header?: React.ReactNode;
+  /** Renders under the tube, e.g. labels for its ends (patched (hairline/patch.mjs)). */
+  footer?: React.ReactNode;
   /** The tokens' colour: any CSS colour. Defaults to --chart-1. */
   color?: string;
   locales?: string | string[];
@@ -270,7 +275,9 @@ export function TokenBucket({
   limit,
   remaining,
   refillPerSecond = 0,
+  footer, // patched (hairline/patch.mjs)
   waiting = 0,
+  ahead = 0, // patched (hairline/patch.mjs)
   title = "Rate limit",
   caption,
   unit = "requests",
@@ -282,6 +289,7 @@ export function TokenBucket({
   className = "",
   ...props
 }: TokenBucketProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const hydrated = useHydrated();
   const locale = locales ?? (hydrated ? undefined : "en-US");
@@ -382,8 +390,8 @@ export function TokenBucket({
     e.base = Math.max(0, Math.min(limit, remaining + grown));
     e.t0 = now;
     const ringsBefore = e.ringsWanted;
-    e.serve += Math.max(0, ringsBefore - waiting);
-    e.ringsWanted = Math.max(0, waiting);
+    e.serve += Math.max(0, ringsBefore - waiting - ahead); // patched (hairline/patch.mjs)
+    e.ringsWanted = Math.max(0, waiting + ahead);
     // The queue opens past the outlet while anyone waits, and closes once it has emptied.
     const gate = e.ringsWanted > 0 ? e.w - Math.min(96, Math.round(e.w * 0.26)) : e.w;
     if (e.w && gate !== e.gate) {
@@ -401,7 +409,7 @@ export function TokenBucket({
       run();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remaining, limit, refillPerSecond, waiting, reduced, run]);
+  }, [remaining, limit, refillPerSecond, waiting, ahead, reduced, run]); // patched (hairline/patch.mjs)
 
   React.useEffect(() => {
     colorRef.current = color;
@@ -442,9 +450,9 @@ export function TokenBucket({
   );
 
   const fmt = (v: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(v);
-  const rate = rateLabel ?? rateText(refillPerSecond, fmt);
+  const rate = rateLabel ?? rateText(refillPerSecond, fmt, t);
   const waits = waiting > 0;
-  const left = fillUsed ? Math.floor(Math.max(0, limit - remaining)) : shown; // patched (hairline/patch.mjs)
+  const left = fillUsed ? Math.round(Math.max(0, limit - remaining) * 10) / 10 : shown; // patched (hairline/patch.mjs)
   const low = left <= limit * 0.1;
 
   return (
@@ -474,7 +482,7 @@ export function TokenBucket({
                 style={{ opacity: waits ? 1 : 0, filter: waits || reduced ? "none" : "blur(3px)", translate: waits || reduced ? "0 0" : "0 4px", transitionTimingFunction: EASE }}
               >
                 <span className="size-1.5 rounded-full bg-current" />
-                <NumberRoll value={Math.max(0, waiting)} locales={locale} duration={700} /> waiting
+                <NumberRoll value={Math.max(0, waiting)} locales={locale} duration={700} /> {t("waiting")}
               </span>
             </p>
           </div>
@@ -486,14 +494,14 @@ export function TokenBucket({
             aria-valuemin={0}
             aria-valuemax={limit}
             aria-valuenow={shown}
-            aria-valuetext={`${fmt(left /* patched (hairline/patch.mjs) */)} of ${fmt(limit)} ${unit} left${rate ? `, refills ${rate}` : ""}${waits ? `, ${fmt(waiting)} waiting` : ""}`}
+            aria-valuetext={/* patched (hairline/patch.mjs) */ t("{left} of {limit} {unit} left", { left: fmt(left), limit: fmt(limit), unit }) + (rate ? t(", refills {rate}", { rate }) : "") + (waits ? t(", {n} waiting", { n: fmt(waiting) }) : "")}
             className="mt-2.5 flex items-baseline gap-1.5"
           >
             <span className={`text-[26px] font-medium leading-none tracking-[-0.04em] tabular-nums @md:text-[30px] ${low ? "text-amber-600 dark:text-amber-400" : "text-foreground"}`} style={{ transition: "color 300ms" }}>
               <NumberRoll value={left /* patched (hairline/patch.mjs) */} locales={locale} duration={600} />
             </span>
             <span className="text-[13px] text-muted-foreground tabular-nums">
-              / {fmt(limit)} <TextMorph>{`${unit} left`}</TextMorph>
+              / {fmt(limit)} <TextMorph>{t("{unit} left", { unit })}</TextMorph>
             </span>
           </div>
 
@@ -510,17 +518,18 @@ export function TokenBucket({
             />
             <div ref={layerRef} className="absolute inset-0" />
           </div>
+          {footer}{/* patched (hairline/patch.mjs) */}
         </div>
       </div>
     </div>
   );
 }
 
-function rateText(perSecond: number, fmt: (v: number) => string) {
+function rateText(perSecond: number, fmt: (v: number) => string, t: ReturnType<typeof useHairlineText>) {
   if (!(perSecond > 0)) return "";
   const near = (v: number) => Math.abs(v - Math.round(v)) < 0.01;
-  if (perSecond >= 1 && near(perSecond)) return `+${fmt(Math.round(perSecond))} a second`;
-  if (near(perSecond * 60)) return `+${fmt(Math.round(perSecond * 60))} a minute`;
-  if (perSecond < 1 && near(1 / perSecond)) return `+1 every ${fmt(Math.round(1 / perSecond))}s`;
-  return `+${fmt(Math.round(perSecond * 3600))} an hour`;
+  if (perSecond >= 1 && near(perSecond)) return t("+{n} a second", { n: fmt(Math.round(perSecond)) });
+  if (near(perSecond * 60)) return t("+{n} a minute", { n: fmt(Math.round(perSecond * 60)) });
+  if (perSecond < 1 && near(1 / perSecond)) return t("+1 every {n}s", { n: fmt(Math.round(1 / perSecond)) });
+  return t("+{n} an hour", { n: fmt(Math.round(perSecond * 3600)) });
 }

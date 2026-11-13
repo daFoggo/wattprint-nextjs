@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { Field, fieldSurface, setNativeValue, useFieldIds, useShake, type FieldSize } from "./field";
 import { EASE_OUT, INTERACTION_FOCUS, interactionIcon, useInteractionReducedMotion } from "./ui-interaction-motion";
 
@@ -65,6 +66,7 @@ export function Input({
   required,
   ...props
 }: InputProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const ids = useFieldIds(id);
   const inner = React.useRef<HTMLInputElement>(null);
@@ -114,7 +116,7 @@ export function Input({
                 type="button"
                 tabIndex={showClear ? 0 : -1}
                 aria-hidden={!showClear}
-                aria-label="Clear"
+                aria-label={t("Clear")}
                 onClick={() => {
                   if (!inner.current) return;
                   setNativeValue(inner.current, "");

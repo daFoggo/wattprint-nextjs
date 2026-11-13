@@ -1,0 +1,75 @@
+{
+  "today": "Today",
+  "week": "Week",
+  "last7Days": "Last 7 days",
+  "dailyTrend": {
+    "title": "Energy",
+    "daily": "Daily energy",
+    "average": "7-day average"
+  },
+  "usageCompare": {
+    "title": "Energy use",
+    "compareBy": "Compare by",
+    "month": "Month",
+    "weekBefore": "Week before",
+    "last4Weeks": "Last 4 weeks",
+    "fourWeeksBefore": "4 weeks before"
+  },
+  "deviceMix": {
+    "title": "By device",
+    "description": "Sample data until device detection runs.",
+    "period": "Period",
+    "todaySoFar": "Today so far"
+  },
+  "deviceList": {
+    "label": "Devices, sample data",
+    "search": "Search devices · sample data",
+    "colDevice": "Device",
+    "colStatus": "Status",
+    "colNow": "Now",
+    "on": "On",
+    "off": "Off",
+    "nounOne": "device",
+    "nounOther": "devices",
+    "viewDetails": "View details",
+    "comingSoon": "{device}: device pages are coming soon"
+  },
+  "deviceTimeline": {
+    "title": "Device activity, sample"
+  },
+  "demo": {
+    "devices": {
+      "alwaysOn": "Always on",
+      "fridge": "Fridge-freezer",
+      "kettle": "Kettle",
+      "washer": "Washing machine",
+      "tv": "Television",
+      "hifi": "Hi-fi",
+      "dishwasher": "Dishwasher",
+      "microwave": "Microwave",
+      "toaster": "Toaster",
+      "other": "Other"
+    },
+    "rooms": {
+      "kitchen": "Kitchen",
+      "livingRoom": "Living room",
+      "utility": "Utility"
+    },
+    "notes": {
+      "fridge": "On for 18 min, cycles about every 40 min",
+      "tv": "On for 41 min",
+      "hifi": "On standby since this morning",
+      "kettle": "Off for 4 min, 5 boils today",
+      "washer": "Finished a 58 min cycle an hour ago",
+      "dishwasher": "Ran twice today",
+      "microwave": "Off for 1 h 35 min",
+      "toaster": "Off for 2 h"
+    },
+    "events": {
+      "offAfter": "{device} was on for {min} min, now off",
+      "turnedOn": "{device} turned on",
+      "finishedCycle": "{device} finished a {min} min cycle",
+      "ranTimes": "{device} was on {count, plural, one {# time} other {# times}}, now off"
+    }
+  }
+}

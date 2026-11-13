@@ -1,0 +1,29 @@
+{
+  "title": "This bill",
+  "tier": "Tier {tier}",
+  "now": "Now",
+  "vat": "VAT {vat}%",
+  "billCard": {
+    "period": "{start} – {end} · tiered residential tariff",
+    "partial": "Partial data",
+    "straddle": "Prices change this cycle",
+    "soFar": "So far, incl. {vat}% VAT · <kwh></kwh>",
+    "today": "Today · <kwh></kwh>",
+    "meter": "Tier {tier} · {price}/kWh",
+    "topTier": "Top tier: every further kWh costs {price} before VAT.",
+    "caption": "Energy and amount in each tariff tier this cycle, before VAT",
+    "colTier": "Tier",
+    "colPrice": "Price",
+    "colUsed": "Used",
+    "colAmount": "Amount",
+    "total": "Total"
+  },
+  "billSummary": {
+    "caption": "So far this cycle, {kwh} kWh",
+    "part": "Tier {tier}, {kwh} kWh",
+    "nextTier": "Tier {tier} from {kwh} kWh",
+    "topTier": "Tier {tier}, the top one",
+    "today": "Today <amount></amount> · {kwh} kWh",
+    "viewDetails": "View bill details"
+  }
+}

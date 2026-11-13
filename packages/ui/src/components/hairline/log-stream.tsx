@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ArrowDown, Search } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -130,6 +131,7 @@ interface RowProps {
 }
 
 const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle }: RowProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const ref = React.useRef<HTMLDivElement>(null);
   const [copied, setCopied] = React.useState(false);
   const hydrated = useHydrated();
@@ -193,7 +195,7 @@ const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle 
                   }}
                   className={`absolute top-1.5 right-1.5 h-6 cursor-pointer rounded-full px-2 font-sans text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${FOCUS}`}
                 >
-                  <TextMorph>{copied ? "Copied" : "Copy"}</TextMorph>
+                  <TextMorph>{copied ? t("Copied") : t("Copy")}</TextMorph>
                 </button>
                 <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-0.5 pr-14">
                   {Object.entries(line.data!).map(([k, v]) => (
@@ -215,6 +217,7 @@ const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle 
 });
 
 export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1000, height = 420, title = "Logs", className = "", ...props }: LogStreamProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
   const [lines, setLines] = React.useState<LogLine[]>(defaultValue);
@@ -340,8 +343,8 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
         incoming.current.push(...waiting);
         if (!frame.current) frame.current = requestAnimationFrame(flush);
       }
-      setAnnounce(waiting.length ? `Live. ${waiting.length} lines played in.` : "Live.");
-    } else setAnnounce("Paused. New lines are held.");
+      setAnnounce(waiting.length ? t("Live. {n} lines played in.", { n: waiting.length }) : t("Live."));
+    } else setAnnounce(t("Paused. New lines are held."));
   };
 
   // Older lines, when the top comes into view.
@@ -407,7 +410,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
             <span className={`size-1.5 rounded-full transition-colors duration-300 ${paused ? "bg-muted-foreground" : "bg-emerald-500"}`} />
             {!paused && !reduced && <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-40 animate-[ui-ping_1.6s_ease-out_infinite]" />}
           </span>
-          <TextMorph>{paused ? "Paused" : "Live"}</TextMorph>
+          <TextMorph>{paused ? t("Paused") : t("Live")}</TextMorph>
           <span
             aria-hidden={!(paused && held) || undefined}
             className="-ml-2 inline-grid text-muted-foreground"
@@ -417,7 +420,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
               <span className="inline-flex items-baseline pl-2 font-normal whitespace-nowrap tabular-nums">
                 ·&nbsp;
                 <NumberRoll value={held || 1} />
-                &nbsp;waiting
+                &nbsp;{t("waiting")}
               </span>
             </span>
           </span>
@@ -425,13 +428,13 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
 
         <label className="flex h-7 min-w-[9rem] flex-1 items-center gap-1.5 rounded-full px-2.5 shadow-[inset_0_0_0_1px_var(--border)] transition-shadow focus-within:shadow-[inset_0_0_0_1px_var(--ring)]">
           <Search className="size-3.5 shrink-0 text-muted-foreground" strokeWidth={1.75} aria-hidden="true" />
-          <span className="sr-only">Search {title}</span>
+          <span className="sr-only">{t("Search {title}", { title })}</span>
           <input
             ref={searchRef}
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search"
+            placeholder={t("Search")}
             className="h-full min-w-0 flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-muted-foreground/70 [@media(pointer:fine)]:text-[12.5px] [&::-webkit-search-cancel-button]:hidden"
           />
           <kbd aria-hidden="true" className="hidden rounded-[5px] px-1 font-mono text-[10.5px] text-muted-foreground shadow-[inset_0_0_0_1px_var(--border)] [@media(pointer:fine)]:block">
@@ -439,7 +442,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
           </kbd>
         </label>
 
-        <div role="group" aria-label="Levels" className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto px-1 [scrollbar-width:none] @lg:mx-0 @lg:px-0">
+        <div role="group" aria-label={t("Levels")} className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto px-1 [scrollbar-width:none] @lg:mx-0 @lg:px-0">
           {LEVELS.map((lv) => {
             const on = shown.has(lv);
             return (
@@ -460,7 +463,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
                 }`}
               >
                 {(lv === "error" || lv === "warn") && <span aria-hidden="true" className={`size-1.5 rounded-full ${TICK[lv]}`} />}
-                {NAMES[lv]}
+                {t(NAMES[lv])}
                 <span className="font-normal text-muted-foreground tabular-nums">
                   <NumberRoll value={counts[lv]} />
                 </span>
@@ -479,14 +482,14 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
           onKeyDown={meant}
           onPointerDown={(e) => e.target === e.currentTarget && meant()}
           tabIndex={0}
-          aria-label={`${title}, newest at the bottom`}
+          aria-label={t("{title}, newest at the bottom", { title })}
           className={`overflow-y-auto overscroll-contain px-1.5 py-1.5 font-mono text-[12px] @md:px-2 ${FOCUS} focus-visible:ring-inset`}
           style={{ height }}
         >
           <div ref={sentinelRef} aria-hidden="true" className="h-px" />
           {loadEarlier && (
             <p className="flex h-7 items-center justify-center gap-2 font-sans text-[11.5px] text-muted-foreground">
-              {noMore ? "Start of the log" : loading ? "Loading earlier lines" : "Scroll up for earlier lines"}
+              {noMore ? t("Start of the log") : loading ? t("Loading earlier lines") : t("Scroll up for earlier lines")}
             </p>
           )}
           <div role="list" aria-label={title} id={`${id}-list`}>
@@ -496,7 +499,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
           </div>
           {!visible.length && (
             <p className="flex h-24 items-center justify-center font-sans text-[12.5px] text-muted-foreground">
-              {lines.length ? "No lines match." : paused ? "Paused." : "Waiting for the first line…"}
+              {lines.length ? t("No lines match.") : paused ? t("Paused.") : t("Waiting for the first line…")}
             </p>
           )}
         </div>
@@ -514,7 +517,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
             <ArrowDown className="size-3.5" strokeWidth={2} aria-hidden="true" />
             <span className="inline-flex items-baseline tabular-nums">
               <NumberRoll value={below || 1} />
-              &nbsp;new
+              &nbsp;{t("new")}
             </span>
           </button>
         </div>

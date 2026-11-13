@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { flushSync } from "react-dom";
 import { TextMorph } from "./text-morph";
 
@@ -159,6 +160,7 @@ export function ThemeToggle({
   className = "",
   ...props
 }: ThemeToggleProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useMedia(reducedQuery);
   const systemDark = useMedia(darkQuery);
   const controlled = value !== undefined;
@@ -226,14 +228,14 @@ export function ThemeToggle({
   }, [variant, index]);
 
   const motion = reduced || !ready;
-  const label = dark ? "Dark" : "Light";
+  const label = dark ? t("Dark") : t("Light");
 
   if (variant === "segmented") {
     return (
       <div
         ref={rootRef}
         role="radiogroup"
-        aria-label="Theme"
+        aria-label={t("Theme")}
         onKeyDown={(e) => {
           const moves: Record<string, number> = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: OPTIONS.length - 1 };
           if (!(e.key in moves)) return;
@@ -266,7 +268,7 @@ export function ThemeToggle({
               type="button"
               role="radio"
               aria-checked={selected}
-              aria-label={o.label}
+              aria-label={t(o.label)}
               tabIndex={selected ? 0 : -1}
               onClick={() => choose(o.value)}
               className={`cursor-pointer relative flex h-8 w-10 items-center justify-center rounded-full transition-colors duration-300 ${FOCUS} ${selected ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
@@ -284,7 +286,7 @@ export function ThemeToggle({
       <button
         type="button"
         // The pill's name starts with the word it shows, so voice control can say it.
-        aria-label={variant === "pill" ? `${label} theme, switch to ${dark ? "light" : "dark"}` : `Switch to ${dark ? "light" : "dark"} theme`}
+        aria-label={variant === "pill" ? (dark ? t("Dark theme, switch to light") : t("Light theme, switch to dark")) : dark ? t("Switch to light theme") : t("Switch to dark theme")}
         aria-pressed={dark}
         onClick={() => choose(dark ? "light" : "dark")}
         className={`cursor-pointer inline-flex h-9 items-center justify-center rounded-full text-foreground shadow-[inset_0_0_0_1px_var(--border)] transition-[background-color,box-shadow] duration-300 hover:bg-accent active:scale-[0.96] ${FOCUS} ${

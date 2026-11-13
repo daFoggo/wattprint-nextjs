@@ -1,8 +1,8 @@
 "use client"
 
 import { Fragment } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Link } from "@/i18n/navigation"
+import { usePathname } from "@/i18n/navigation"
 
 import {
   Breadcrumb,
@@ -17,14 +17,19 @@ import { breadcrumbTrail, type NavScope } from "@/config/navigation"
 
 import { CrumbMenu } from "@/components/layout/header/crumb-menu"
 import { NavIcon } from "@/components/layout/sidebar/nav-icons"
+import { useNavLabel } from "@/components/layout/sidebar/nav-tree"
 
 /** Renders `breadcrumbTrail`; below sm only the current page stays visible. */
 export function DashboardBreadcrumb({ scopes }: { scopes: NavScope[] }) {
   const pathname = usePathname()
-  const crumbs = breadcrumbTrail(pathname, scopes)
+  const navLabel = useNavLabel()
+  const crumbs = breadcrumbTrail(pathname, scopes).map((crumb) => ({
+    ...crumb,
+    label: navLabel(crumb.label),
+  }))
   return (
     <Breadcrumb className="min-w-0">
-      <BreadcrumbList className="flex-nowrap text-sm capitalize">
+      <BreadcrumbList className="flex-nowrap text-sm">
         {crumbs.map((crumb, index) => {
           if (index === crumbs.length - 1) {
             return (

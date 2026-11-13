@@ -1,11 +1,11 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathname } from "@/i18n/navigation"
 
 import { sectionsFor, type NavScope } from "@/config/navigation"
 
 import { AppSidebarSection } from "@/components/layout/sidebar/app-sidebar"
-import { NavTree } from "@/components/layout/sidebar/nav-tree"
+import { NavTree, useNavLabel } from "@/components/layout/sidebar/nav-tree"
 
 /**
  * The sidebar menu of the current URL: picks the scope (global, organization, project, ...) from
@@ -13,8 +13,9 @@ import { NavTree } from "@/components/layout/sidebar/nav-tree"
  */
 export function ScopedNav({ scopes }: { scopes: NavScope[] }) {
   const pathname = usePathname()
+  const navLabel = useNavLabel()
   return sectionsFor(scopes, pathname).map((section) => (
-    <AppSidebarSection key={section.label} label={section.label}>
+    <AppSidebarSection key={section.label} label={navLabel(section.label)}>
       <NavTree entries={section.entries} />
     </AppSidebarSection>
   ))

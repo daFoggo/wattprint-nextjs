@@ -1,8 +1,9 @@
 "use client"
 
 import { useId, useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
+import { usePathname } from "@/i18n/navigation"
 import { IconChevronDown } from "@tabler/icons-react"
 
 import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
@@ -24,6 +25,13 @@ const row = cn(
   "group/row relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent px-1.5 py-1.5 text-sm text-muted-foreground hover:text-foreground group-data-[collapsible=icon]:justify-center",
   INTERACTION_FOCUS
 )
+
+/** Translates a nav title, section label or breadcrumb segment (`layout.nav` keys); anything else, e.g. an id, shows as is. */
+export function useNavLabel() {
+  const t = useTranslations("layout.nav")
+  type Key = Parameters<typeof t>[0]
+  return (label: string) => (t.has(label as Key) ? t(label as Key) : label)
+}
 
 function RowLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -97,6 +105,7 @@ function TreeLink({ link }: { link: NavLink }) {
   const pathname = usePathname()
   const { setOpenMobile, iconRail } = useSidebar()
   const current = pathname === link.href
+  const title = useNavLabel()(link.title)
   const anchor = (
     <Link
       href={link.href}
@@ -105,7 +114,7 @@ function TreeLink({ link }: { link: NavLink }) {
       aria-current={current ? "page" : undefined}
       data-current={current || undefined}
       // The rail hides the label; the tooltip only describes, so the link needs its name here.
-      aria-label={iconRail ? link.title : undefined}
+      aria-label={iconRail ? title : undefined}
       // The mobile sidebar is a Sheet: close it once the user picks a page.
       onClick={() => setOpenMobile(false)}
       className={cn(
@@ -117,7 +126,7 @@ function TreeLink({ link }: { link: NavLink }) {
       <span className="flex text-muted-foreground group-data-current/tree:text-foreground">
         <NavIcon name={link.icon} />
       </span>
-      <RowLabel>{link.title}</RowLabel>
+      <RowLabel>{title}</RowLabel>
       {link.badge ? (
         <span
           data-sidebar="menu-badge"
@@ -130,7 +139,7 @@ function TreeLink({ link }: { link: NavLink }) {
   )
   // Names the icon only in the icon rail; elsewhere the label is visible.
   return iconRail ? (
-    <Tooltip content={link.title} side="right">
+    <Tooltip content={title} side="right">
       {anchor}
     </Tooltip>
   ) : (
@@ -143,6 +152,7 @@ function TreeGroup({ group }: { group: NavGroup }) {
   const { iconRail } = useSidebar()
   const reduced = useInteractionReducedMotion()
   const [open, setOpen] = useState(true)
+  const navLabel = useNavLabel()
   const panelId = useId()
   // The icon rail has no room for a group header: its links show flat instead.
   const expanded = iconRail || open
@@ -161,7 +171,7 @@ function TreeGroup({ group }: { group: NavGroup }) {
           containsCurrent && "text-foreground"
         )}
       >
-        <RowLabel>{group.title}</RowLabel>
+        <RowLabel>{navLabel(group.title)}</RowLabel>
         <IconChevronDown
           aria-hidden
           className={cn(

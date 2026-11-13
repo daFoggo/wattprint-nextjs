@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 
 /* ─────────────────────────────────────────────────────────
  * SPARKLINE: an ultra-compact inline trendline with scrubber
@@ -71,6 +72,7 @@ export function Sparkline({
   style,
   ...rest
 }: SparklineProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const uid = React.useId();
   const gradId = `spark-grad-${uid.replace(/:/g, "")}`;
   const reduced = useReducedMotion();
@@ -317,7 +319,7 @@ export function Sparkline({
 
       {/* Screen reader summary */}
       <span className="sr-only">
-        {label}: start {values[0] ?? 0}, end {values[values.length - 1] ?? 0}, {isPositive ? "upward trend" : "downward trend"}.
+        {t(isPositive ? "{label}: start {start}, end {end}, upward trend." : "{label}: start {start}, end {end}, downward trend.", { label, start: values[0] ?? 0, end: values[values.length - 1] ?? 0 })}
       </span>
     </div>
   );

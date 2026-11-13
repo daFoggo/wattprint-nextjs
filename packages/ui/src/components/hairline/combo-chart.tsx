@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -129,6 +130,7 @@ export function ComboChart({
   className = "",
   ...props
 }: ComboChartProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
   const [visible, setVisible] = React.useState(false);
@@ -255,7 +257,7 @@ export function ComboChart({
         <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
           <div className="min-w-0">
             <p className="text-[12px] text-muted-foreground @md:text-[13px]">
-              <TextMorph>{active !== null ? `${title} on ${name(active)}` : title}</TextMorph>
+              <TextMorph>{active !== null ? t("{title} on {day}", { title, day: name(active) }) : title}</TextMorph>
             </p>
             <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <span className="text-[22px] font-medium leading-tight tracking-[-0.03em] @md:text-[26px] text-foreground">
@@ -301,7 +303,7 @@ export function ComboChart({
             </p>
             <p className="mt-1 flex items-baseline gap-[0.3em] whitespace-nowrap text-[11.5px] text-muted-foreground @md:text-[12.5px]">
               <NumberRoll value={visible ? (active !== null ? average[active] : daily) : 0} format={whole} locales={locales} duration={700} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
-              <TextMorph>{active !== null ? `on the ${series[1].toLowerCase()}` : "a day on average"}</TextMorph>
+              <TextMorph>{active !== null ? t("on the {line}", { line: series[1].toLowerCase() }) : t("a day on average")}</TextMorph>
             </p>
           </div>
         </div>
@@ -335,7 +337,7 @@ export function ComboChart({
             ref={plotRef}
             role="group"
             tabIndex={0}
-            aria-label={`${title}: ${series[0]} with the ${series[1].toLowerCase()}. Use the arrow keys to read each day.`}
+            aria-label={t("{title}: {bars} with the {line}. Use the arrow keys to read each day.", { title, bars: series[0], line: series[1].toLowerCase() })}
             onKeyDown={onKeyDown}
             onBlur={() => keyboard && (setActive(null), setKeyboard(false))}
             onPointerMove={(e) => {
@@ -423,9 +425,9 @@ export function ComboChart({
         {/* The day's highlights as a compact strip under a hairline. */}
         <dl className="mt-4 grid grid-cols-3 divide-x divide-border border-t border-border pt-2.5 @md:mt-5 @md:pt-3">
           {[
-            { label: "Best day", value: values[best] ?? 0, note: days[best]?.label },
-            { label: "Daily average", value: daily, note: `over ${n} days` },
-            { label: "Quietest day", value: values[quiet] ?? 0, note: days[quiet]?.label },
+            { label: t("Best day"), value: values[best] ?? 0, note: days[best]?.label },
+            { label: t("Daily average"), value: daily, note: t("over {n} days", { n }) },
+            { label: t("Quietest day"), value: values[quiet] ?? 0, note: days[quiet]?.label },
           ].map((t) => (
             <div key={t.label} className="min-w-0 px-2.5 first:pl-0 last:pr-0 @md:px-3.5">
               <dt className="truncate text-[11px] text-muted-foreground @md:text-[11.5px]">{t.label}</dt>
@@ -443,11 +445,11 @@ export function ComboChart({
         {/* patched (hairline/patch.mjs): a <table> ignores the 1px height of sr-only, so a div carries it. */}
         <div className="sr-only"><table>
           <caption>
-            {title}: {fmt(total)} over {n} days
+            {t("{title}: {total} over {n} days", { title, total: fmt(total), n })}
           </caption>
           <thead>
             <tr>
-              <th scope="col">Day</th>
+              <th scope="col">{t("Day")}</th>
               <th scope="col">{series[0]}</th>
               <th scope="col">{series[1]}</th>
             </tr>

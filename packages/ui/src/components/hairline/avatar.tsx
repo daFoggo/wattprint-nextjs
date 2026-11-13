@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { EASE_OUT, useInteractionReducedMotion } from "./ui-interaction-motion";
 
@@ -37,6 +38,7 @@ export function initials(name: string) {
 }
 
 export function Avatar({ name, src, size = "md", status, shape = "circle", className = "", style, ...props }: AvatarProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const [loaded, setLoaded] = React.useState<string | null>(null);
   const ready = !!src && loaded === src;
@@ -46,7 +48,7 @@ export function Avatar({ name, src, size = "md", status, shape = "circle", class
   return (
     <span
       role="img"
-      aria-label={status ? `${name}, ${status}` : name}
+      aria-label={status ? `${name}, ${t(status)}` : name}
       className={`relative inline-flex shrink-0 select-none ${className}`}
       style={{ width: px, height: px, ...style }}
       {...props}
@@ -94,6 +96,7 @@ export interface AvatarGroupProps {
 }
 
 export function AvatarGroup({ people, max = 4, size = "sm", className = "" }: AvatarGroupProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const [open, setOpen] = React.useState(false);
   const shown = people.slice(0, max);
@@ -105,7 +108,7 @@ export function AvatarGroup({ people, max = 4, size = "sm", className = "" }: Av
   return (
     <div
       role="group"
-      aria-label={`${people.length} people`}
+      aria-label={t("{n} people", { n: people.length })}
       className={`flex items-center ${className}`}
       onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
       onPointerLeave={() => setOpen(false)}
@@ -125,7 +128,7 @@ export function AvatarGroup({ people, max = 4, size = "sm", className = "" }: Av
         <span
           className="relative flex shrink-0 items-center justify-center rounded-full bg-muted font-medium tabular-nums text-muted-foreground shadow-[inset_0_0_0_1px_var(--border),0_0_0_2px_var(--background)]"
           style={{ width: px, height: px, fontSize: Math.round(px * 0.34), marginLeft: gap, transition: reduced ? "none" : `margin-left 380ms ${EASE_OUT} ${shown.length * 20}ms` }}
-          aria-label={`and ${rest} more`}
+          aria-label={t("and {n} more", { n: rest })}
         >
           +<NumberRoll value={rest} />
         </span>

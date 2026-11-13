@@ -1,11 +1,14 @@
 import "server-only"
 
+import { getLocale } from "next-intl/server"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { SESSION_EXPIRED_PATH, SIGN_IN_PATH } from "@/config/routes"
+import { SIGN_IN_PATH } from "@/config/routes"
+import { getPathname } from "@/i18n/navigation"
 
 import { getAuthProvider } from "./auth"
+import { sessionExpiredPath } from "./dal"
 import { env } from "./env"
 import { ApiError } from "./errors"
 import { apiUrl } from "./url"
@@ -84,7 +87,7 @@ export async function endRejectedSession(): Promise<never> {
     } catch {
       // Still leave: the proxy cannot refresh a rejected session either.
     }
-    redirect(SIGN_IN_PATH)
+    redirect(getPathname({ href: SIGN_IN_PATH, locale: await getLocale() }))
   }
-  redirect(SESSION_EXPIRED_PATH)
+  redirect(await sessionExpiredPath())
 }

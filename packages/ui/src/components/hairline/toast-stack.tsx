@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { TextMorph } from "./text-morph";
 import { createSpring, projectInertia, rubberBand, useInteractionReducedMotion } from "./ui-interaction-motion";
 
@@ -385,6 +386,7 @@ function ToastCard({
   onHeight: (id: string, height: number | null) => void;
 }) {
   const ref = React.useRef<HTMLLIElement>(null);
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const innerRef = React.useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = React.useState(reduced);
   const [drag, setDrag] = React.useState<{ x: number; active: boolean }>({ x: 0, active: false });
@@ -580,7 +582,7 @@ function ToastCard({
           {data.dismissible && (
             <button
               type="button"
-              aria-label="Dismiss"
+              aria-label={t("Dismiss")}
               onClick={() => toast.dismiss(data.id)}
               className={`cursor-pointer absolute right-2.5 top-2.5 flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-[opacity,color,background-color] duration-200 hover:bg-accent hover:text-foreground focus-visible:opacity-100 group-hover/toast:opacity-100 [@media(hover:none)]:opacity-100 ${FOCUS}`}
             >
@@ -607,6 +609,7 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function Toaster({ position = "bottom-right", visible = 3, hotkey = "t", gap = GAP, className = "", ...props }: ToasterProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const list = React.useSyncExternalStore(subscribe, getToasts, getNone);
   const [heights, setHeights] = React.useState<Record<string, number>>({});
@@ -672,7 +675,7 @@ export function Toaster({ position = "bottom-right", visible = 3, hotkey = "t", 
 
   return (
     <section
-      aria-label="Notifications (Alt+T)"
+      aria-label={t("Notifications (Alt+T)")}
       className={`pointer-events-none fixed z-[90] flex w-[min(380px,calc(100vw-32px))] ${top ? "top-4" : "bottom-4"} ${
         side === "left" ? "left-4" : side === "right" ? "right-4" : "left-1/2 -translate-x-1/2"
       } ${className}`}

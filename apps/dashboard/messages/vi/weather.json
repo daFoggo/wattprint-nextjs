@@ -1,0 +1,12 @@
+{
+  "title": "Thời tiết",
+  "rainBy": "Mưa {pct}% lúc {time}",
+  "open": "Thời tiết: {temp}°C, {sky}. Mở dự báo 24 giờ tới.",
+  "feelsLike": "Cảm giác như {temp}°C",
+  "next24": "24 giờ tới",
+  "tempChart": "Nhiệt độ trong 24 giờ tới",
+  "humidity": "Độ ẩm",
+  "wind": "Gió",
+  "rainAt": "Mưa {time}",
+  "updated": "Cập nhật {time} · OpenWeather"
+}

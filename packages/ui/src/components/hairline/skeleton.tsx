@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { EASE_OUT, useInteractionReducedMotion } from "./ui-interaction-motion";
 
 /* ─────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ export interface SkeletonSwapProps {
 
 /** Holds a skeleton while `loading`, then hands over to the content in one motion. */
 export function SkeletonSwap({ loading, fallback, children, label = "Loading", className = "" }: SkeletonSwapProps) {
+  const say = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const inner = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState<number | null>(null);
@@ -90,7 +92,7 @@ export function SkeletonSwap({ loading, fallback, children, label = "Loading", c
     <div aria-busy={loading || undefined} className={`relative overflow-hidden ${className}`} style={{ height: height ?? undefined, transition: reduced ? "none" : `height 360ms ${EASE_OUT}` }}>
       {loading && (
         <span className="sr-only" role="status">
-          {label}
+          {say(label)}
         </span>
       )}
       <div ref={inner}>

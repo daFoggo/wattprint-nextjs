@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import createNextIntlPlugin from "next-intl/plugin"
 
 const isDev = process.env.NODE_ENV === "development"
 
@@ -44,8 +45,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const origin = process.env.DASHBOARD_ORIGIN ?? "http://localhost:11092"
     // beforeFiles: Vercel resolves segment prefetches (`.segments`) before the afterFiles rewrites run.
+    // The English pages live under /en (next-intl, `localePrefix: "as-needed"`) in both apps.
     const beforeFiles = [
-      ...DASHBOARD_PATHS.flatMap((path) => [
+      ...DASHBOARD_PATHS.flatMap((p) => [p, `en/${p}`]).flatMap((path) => [
         { source: `/${path}`, destination: `${origin}/${path}` },
         { source: `/${path}/:rest*`, destination: `${origin}/${path}/:rest*` },
         // Segment prefetches (partialPrefetching) ask for `/<path>.segments/...`.
@@ -65,7 +67,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // Not the dashboard paths: they answer with their own CSP.
-        source: `/((?!(?:${[...DASHBOARD_PATHS, "dashboard-static"].join("|")})(?:/|\\.segments|$)).*)`,
+        source: `/((?!(?:en/)?(?:${[...DASHBOARD_PATHS, "dashboard-static"].join("|")})(?:/|\\.segments|$)).*)`,
         headers: [
           { key: "Content-Security-Policy", value: contentSecurityPolicy() },
           { key: "X-Content-Type-Options", value: "nosniff" },
@@ -76,4 +78,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default createNextIntlPlugin("./i18n/request.ts")(nextConfig)

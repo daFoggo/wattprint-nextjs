@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "description": "Bảng điều khiển năng lượng: theo dõi điện năng của cả nhà ở một nơi."
+  },
+  "language": "Ngôn ngữ",
+  "tryAgain": "Thử lại",
+  "backToHome": "Về trang chủ",
+  "error": {
+    "title": "Đã có lỗi xảy ra",
+    "description": "Hệ thống gặp sự cố ngoài dự kiến. Vui lòng thử lại sau."
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn tìm không tồn tại hoặc đã được chuyển đi."
+  },
+  "forbidden": {
+    "eyebrow": "403 · Không có quyền",
+    "title": "Bạn không có quyền truy cập trang này",
+    "description": "Tài khoản của bạn chưa được cấp quyền vào trang này. Hãy liên hệ quản trị viên nếu bạn nghĩ đây là nhầm lẫn.",
+    "back": "Về bảng điều khiển"
+  }
+}

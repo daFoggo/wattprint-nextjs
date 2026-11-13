@@ -1,3 +1,5 @@
+import { useLocale, useTranslations } from "next-intl"
+
 import { ComboChart } from "@workspace/ui/components/hairline/combo-chart"
 
 import { dayLabel, type Day } from "../days"
@@ -13,6 +15,8 @@ export function DailyTrend({
   days: Day[]
   className?: string
 }) {
+  const t = useTranslations("energy")
+  const locale = useLocale()
   const whole = days.slice(0, -1) // today is still running
   if (whole.length < SPAN + ROLL) return null
   const start = whole.length - SPAN
@@ -29,13 +33,13 @@ export function DailyTrend({
   return (
     <ComboChart
       className={className}
-      title="Energy"
+      title={t("dailyTrend.title")}
       unit="kWh"
-      series={["Daily energy", "7-day average"]}
+      series={[t("dailyTrend.daily"), t("dailyTrend.average")]}
       days={whole.slice(start).map((d) => ({
         key: d.date,
-        label: dayLabel(d.date, { month: "short", day: "numeric" }),
-        title: dayLabel(d.date, {
+        label: dayLabel(d.date, locale, { month: "short", day: "numeric" }),
+        title: dayLabel(d.date, locale, {
           weekday: "long",
           month: "long",
           day: "numeric",
@@ -49,7 +53,7 @@ export function DailyTrend({
           : undefined
       }
       format={{ maximumFractionDigits: 1 }}
-      locales="en-US"
+      locales={locale}
     />
   )
 }

@@ -131,7 +131,7 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
     },
 
     oauth: {
-      async start(redirectTo: string): Promise<string> {
+      async start(redirectTo, options = {}) {
         const cookieStore = await cookies()
         const pkce = createPkceChallenge()
 
@@ -155,6 +155,7 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
           redirectUri: redirectTo,
           state: pkce.state,
           codeChallenge: pkce.codeChallenge,
+          ...options,
         })
       },
 

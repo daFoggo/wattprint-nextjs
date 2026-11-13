@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import createNextIntlPlugin from "next-intl/plugin"
 
 const isDev = process.env.NODE_ENV === "development"
 
@@ -7,7 +8,7 @@ const isDev = process.env.NODE_ENV === "development"
  * and are incompatible with Partial Prerendering (docs: guides/content-security-policy).
  */
 function contentSecurityPolicy(): string {
-  // The redirect chain after the sign-in form ends at Google (kc_idp_hint=google).
+  // The sign-in Server Actions redirect to Keycloak (its themed login page) or on through it to Google.
   const formActions = ["'self'", "https://accounts.google.com"]
   // Keycloak OIDC sends the browser to the Keycloak realm auth endpoint.
   const keycloakIssuer =
@@ -66,4 +67,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default createNextIntlPlugin("./i18n/request.ts")(nextConfig)

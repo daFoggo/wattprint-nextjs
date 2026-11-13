@@ -2,6 +2,7 @@ import "server-only"
 
 import { cache } from "react"
 import { cacheLife, cacheTag } from "next/cache"
+import { getLocale } from "next-intl/server"
 import { forbidden, redirect } from "next/navigation"
 
 import { hasPermission, type Permission } from "@workspace/auth/permissions"
@@ -28,10 +29,15 @@ export async function getSession(): Promise<Session | null> {
   return provider.getSession()
 }
 
+/** The route that clears the session, told the page's language (it has no `[locale]`; see i18n/cookie-locale.ts). */
+export async function sessionExpiredPath() {
+  return `${SESSION_EXPIRED_PATH}?locale=${await getLocale()}`
+}
+
 /** Call close to the data (queries, actions), not in layouts. */
 export const verifySession = cache(async (): Promise<Session> => {
   const session = await getSession()
-  if (!session) redirect(SESSION_EXPIRED_PATH)
+  if (!session) redirect(await sessionExpiredPath())
   return session
 })
 
@@ -55,7 +61,7 @@ export const requirePermission = cache(
 export const verifySessionFresh = cache(async (): Promise<Session> => {
   const provider = await getAuthProvider()
   const session = await provider.verifySessionFresh()
-  if (!session) redirect(SESSION_EXPIRED_PATH)
+  if (!session) redirect(await sessionExpiredPath())
   return session
 })
 

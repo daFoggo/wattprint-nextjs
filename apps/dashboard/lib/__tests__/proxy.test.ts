@@ -28,10 +28,28 @@ describe("proxy", () => {
 
   it.each([
     "/dashboard",
+    "/%64ashboard",
+    "/vi/dashboard",
   ])("sends a signed-out visitor from %s to sign-in", async (path) => {
     const res = await run(path)
     expect(res.status).toBe(307)
-    expect(new URL(res.headers.get("location")!).pathname).toBe("/sign-in")
+    expect(new URL(res.headers.get("location")!).pathname).toMatch(/^(\/vi)?\/sign-in$/)
+  })
+
+  it("keeps the English prefix on its redirects", async () => {
+    const out = await run("/en/dashboard")
+    expect(new URL(out.headers.get("location")!).pathname).toBe("/en/sign-in")
+    auth.signedIn = true
+    const back = await run("/en/sign-in")
+    expect(new URL(back.headers.get("location")!).pathname).toBe("/en/dashboard")
+  })
+
+  it("serves unprefixed paths in Vietnamese and leaves /auth handlers alone", async () => {
+    auth.signedIn = true
+    const vi = await run("/dashboard")
+    expect(vi.headers.get("x-middleware-rewrite")).toMatch(/\/vi\/dashboard$/)
+    const callback = await run("/auth/callback")
+    expect(callback.headers.get("x-middleware-rewrite")).toBeNull()
   })
 
   it("does not treat a look-alike prefix as protected", async () => {

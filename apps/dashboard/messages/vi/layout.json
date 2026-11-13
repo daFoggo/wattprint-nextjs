@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "dashboard": "Bảng điều khiển",
+    "overview": "Tổng quan",
+    "bill": "Hóa đơn"
+  },
+  "roles": {
+    "customer": "Khách hàng",
+    "editor": "Biên tập viên",
+    "admin": "Quản trị viên"
+  },
+  "account": "Tài khoản",
+  "accountLabel": "Tài khoản: {name} [{role}]",
+  "theme": "Giao diện",
+  "toggleSidebar": "Ẩn/hiện thanh bên",
+  "resizeSheet": "Đổi kích thước bảng",
+  "close": "Đóng",
+  "overview": {
+    "title": "Tổng quan",
+    "description": "Chi phí kỳ này, điện năng so với các tuần trước và điện đi đâu.",
+    "noHomeTitle": "Chưa có nhà",
+    "noHomeDescription": "Tài khoản này chưa thuộc nhà nào. Hãy xin chủ nhà mã mời, hoặc ghép nối một công tơ."
+  },
+  "bill": {
+    "title": "Hóa đơn",
+    "description": "Kỳ hóa đơn này tính đến nay, tính theo từng bậc như công ty điện lực.",
+    "emptyTitle": "Chưa có hóa đơn",
+    "emptyDescription": "Tài khoản này chưa có nhà nào có biểu giá để tính tiền điện."
+  }
+}

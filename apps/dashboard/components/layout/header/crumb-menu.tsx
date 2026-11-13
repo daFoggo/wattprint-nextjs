@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/i18n/navigation"
 import { IconSelector } from "@tabler/icons-react"
 
 import { DropdownMenu } from "@workspace/ui/components/hairline/dropdown-menu"

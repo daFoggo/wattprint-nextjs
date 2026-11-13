@@ -5,10 +5,12 @@ How the dashboard (`apps/dashboard`; `apps/web` is a public landing page with no
 
 ## 1. Flow
 
-One provider: Keycloak (OIDC, authorization code + PKCE) with Google as the only identity provider.
+One provider: Keycloak (OIDC, authorization code + PKCE). Users sign in with email + password on Keycloak's login page
+(themed by `apps/keycloak-theme`, so it looks like the dashboard) or with Google.
 
 ```
-/sign-in "Continue with Google" ─ signInWithKeycloakAction ─▶ Keycloak (kc_idp_hint=google) ─▶ Google
+/sign-in "Continue with Google" ─ signInWithGoogleAction ─▶ Keycloak (kc_idp_hint=google) ─▶ Google
+/sign-in "Sign in with email"   ─ signInWithEmailAction  ─▶ Keycloak login page (WattPrint theme: email + password, Google)
         ◀─ /auth/callback?code&state ─ oauth.exchangeCode ─▶ cookies <name>.{access,refresh,id}
 
 Browser ─cookie─▶ proxy.ts ─▶ updateSession: verify access token (JWKS), refresh when < 60 s left

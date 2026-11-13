@@ -1,0 +1,133 @@
+{
+  "terms": {
+    "meta": {
+      "title": "Terms of Service",
+      "description": "Terms of Service and developer agreement for WattPrint."
+    },
+    "badge": "Legal Agreement",
+    "lastUpdated": "Last updated: {date, date, long}",
+    "title": "Terms of Service",
+    "intro": "These Terms of Service (“Terms”) govern your access to and use of WattPrint, including the web landing site, dashboard, and associated software packages. By creating an account or continuing to use our services, you agree to be bound by these Terms.",
+    "license": {
+      "title": "1. Open Source License and Codebase",
+      "body": "The underlying WattPrint repository and architecture starter code are licensed under the MIT License. You are free to use, modify, and distribute the template code for personal or commercial projects, subject to the inclusion of the original copyright notice and permission notice."
+    },
+    "accounts": {
+      "title": "2. User Accounts and Security",
+      "body": "When creating an account through our dashboard, you agree to:",
+      "items": {
+        "accurate": "Provide accurate, current, and complete registration information.",
+        "confidential": "Maintain the confidentiality and security of your authentication credentials.",
+        "notify": "Promptly notify us of any suspected breach of security or unauthorized access.",
+        "responsible": "Accept responsibility for all activities occurring under your account or credentials."
+      }
+    },
+    "acceptableUse": {
+      "title": "3. Acceptable Use Policy",
+      "body": "You agree not to misuse the platform or assist others in doing so. Specifically, you agree not to:",
+      "items": {
+        "laws": "Violate applicable local, national, or international regulations, including the Law on Cybersecurity and Personal Data Protection Law.",
+        "security": "Attempt to bypass authentication, reverse engineer rate limits, or probe security boundaries without explicit authorization.",
+        "abuse": "Engage in denial-of-service, automated credential scraping, or unauthorized cross-tenant data access."
+      }
+    },
+    "workspace": {
+      "title": "4. Multi-Tenant Workspace & Resources",
+      "body": "Organizations and projects created within the Dashboard are isolated per user token and organization tenant. You maintain ownership of all project configurations and data created within your workspace. We reserve the right to suspend or prune demo resources that remain inactive for extended durations."
+    },
+    "liability": {
+      "title": "5. Limitation of Liability and Disclaimers",
+      "body": "The software and services are provided “AS IS”, without warranty of any kind, express or implied. In no event shall WattPrint or its authors be liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use the software."
+    },
+    "termination": {
+      "title": "6. Termination and Account Erasure",
+      "body": "You may terminate these Terms at any time by requesting deletion of your account (see our Privacy Policy). We reserve the right to suspend or terminate accounts that breach these Terms. Upon termination, data erasure will be carried out in accordance with our Privacy Policy."
+    },
+    "law": {
+      "title": "7. Governing Law",
+      "body": "These Terms shall be governed by and construed in accordance with applicable laws, without giving effect to any principles of conflicts of law."
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy Policy",
+      "description": "Privacy Policy and personal data protection principles for WattPrint."
+    },
+    "badge": "Compliance Standard 2026",
+    "effective": "Effective: {date, date, long}",
+    "title": "Privacy Policy & Data Protection",
+    "intro": "This Privacy Policy explains how WattPrint (“we”, “us”, or “our”) collects, processes, protects, and retains your personal data in accordance with applicable data protection laws, including the Personal Data Protection Law (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP, as well as international standards (GDPR and CCPA).",
+    "controller": {
+      "title": "1. Data Controller and Contact Information",
+      "body": "WattPrint operates as the data controller for personal data processed through our website and dashboard. If you have any questions, requests, or concerns regarding your privacy or this policy, you may reach our Data Protection Officer (DPO) at:",
+      "organization": "Organization: WattPrint",
+      "email": "Email: privacy@wattprint.local",
+      "support": "Support: security@wattprint.local"
+    },
+    "collected": {
+      "title": "2. Categories of Personal Data Collected",
+      "body": "We collect only the minimum necessary data to provide secure authentication, workspace organization, and developer services:",
+      "items": {
+        "account": "<strong>Account & Profile Information:</strong> Full name, email address, and securely hashed passwords (argon2/bcrypt). We never store plaintext passwords.",
+        "session": "<strong>Authentication & Session Identifiers:</strong> Access tokens, session cookies (<code>nmb-dashboard-auth.access</code>, <code>SameSite=Lax</code>), and IP addresses required for session binding and defense against token theft.",
+        "workspace": "<strong>Workspace & Project Metadata:</strong> Organization slugs, project identifiers, and audit logs of configuration changes."
+      }
+    },
+    "bases": {
+      "title": "3. Purposes and Legal Bases for Processing",
+      "body": "In compliance with Article 9 of Law No. 91/2025/QH15 and GDPR Article 6, we process data only on clear legal grounds:",
+      "contract": {
+        "title": "Performance of Contract",
+        "body": "Provisioning user accounts, authenticating sessions through Keycloak, and managing workspace resources."
+      },
+      "consent": {
+        "title": "Explicit Consent",
+        "body": "Affirmatively provided when registering an account. Silence or pre-ticked checkboxes are never deemed consent."
+      },
+      "interests": {
+        "title": "Legitimate Interests",
+        "body": "Protecting systems from denial-of-service, enforcing rate limits, preventing CSRF attacks, and detecting security breaches."
+      },
+      "statutory": {
+        "title": "Statutory Compliance",
+        "body": "Adhering to cybersecurity recordkeeping, regulatory investigations, and lawful audit requirements."
+      }
+    },
+    "transfers": {
+      "title": "4. Cross-Border Data Transfers",
+      "body": "When utilizing cloud-hosted infrastructure (such as AWS, Vercel, or external OAuth providers), personal data may be transferred to or processed on secure servers located outside Vietnam. In accordance with Article 20 of Law No. 91/2025/QH15, we enforce strict standard contractual clauses (SCCs) and robust cryptographic safeguards ensuring transferred data receives the same level of legal protection as domestic processing."
+    },
+    "cookies": {
+      "title": "5. Cookies and Technical Tracking",
+      "body": "We do not employ invasive third-party advertising or behavioral profiling cookies. We only use strictly necessary technical cookies:",
+      "items": {
+        "session": "Session authentication cookies tagged with <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Lax</code>.",
+        "theme": "User theme preference stored in client-side storage (<code>theme</code>)."
+      }
+    },
+    "rights": {
+      "title": "6. Your Rights and Statutory Response Timelines",
+      "body": "Under Article 4 of Law No. 91/2025/QH15 and Decree No. 356/2025/ND-CP, you hold fundamental rights over your data. We commit to the following concrete response service-level agreements (SLAs):",
+      "items": {
+        "acknowledge": "Acknowledgement of Receipt",
+        "access": "Right to Access, Inspect & Correct Data",
+        "withdraw": "Withdrawal of Consent & Restriction of Processing",
+        "erasure": "Right to Erasure (Complete Account Deletion)"
+      },
+      "within": "Within {days} business days"
+    },
+    "deletion": {
+      "title": "7. Account Deletion and Data Retention",
+      "body": "You may request account deletion by submitting a written request to <code>privacy@wattprint.local</code>. Upon confirmation, all personal data, active tokens, and workspace associations will be irreversibly purged within 20 business days."
+    },
+    "ai": {
+      "title": "8. AI Transparency and Automated Processing",
+      "body": "In compliance with Vietnam's Law on Artificial Intelligence (Law No. 134/2025/QH15) and Decree No. 142/2026/ND-CP:",
+      "items": {
+        "disclosure": "<strong>AI Role & Disclosure:</strong> Any AI-powered telemetry analysis, code assistance, or automated reporting tools are explicitly labeled. Interactive AI features identify themselves as automated systems and not human operators.",
+        "human": "<strong>Human-in-the-Loop:</strong> Critical system administration, account lifecycle terminations, and security revocations always require explicit human operator confirmation and are never delegated to unmonitored autonomous models.",
+        "training": "<strong>Training Data Safeguards:</strong> Customer workspace telemetry and user credentials are never used for public AI model training or shared with external model vendors without explicit affirmative consent."
+      }
+    }
+  }
+}

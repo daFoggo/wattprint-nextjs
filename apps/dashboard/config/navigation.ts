@@ -9,6 +9,7 @@ import { BILL_PATH, DASHBOARD_PATH } from "@/config/routes"
 export type NavIconName = "overview" | "bill" | "settings"
 
 export type NavLink = {
+  /** Message key in `layout.nav`, translated at render; unknown keys show as is. */
   title: string
   /** May hold `:param` placeholders (see `NavScope.param`), filled from the URL. */
   href: string
@@ -25,7 +26,7 @@ export type NavLink = {
 /** A collapsible group inside a section; the tree stays at most two levels deep. */
 export type NavGroup = { title: string; items: NavLink[] }
 export type NavEntry = NavLink | NavGroup
-/** One labelled block of the sidebar. Add sections freely; empty ones are hidden. */
+/** One labelled block of the sidebar (`label` is a `layout.nav` key). Add sections freely; empty ones are hidden. */
 export type NavSection = { label: string; entries: NavEntry[] }
 
 /**
@@ -47,16 +48,16 @@ export const NAV_SCOPES: NavScope[] = [
     id: "global",
     sections: [
       {
-        label: "Dashboard",
+        label: "dashboard",
         entries: [
           {
-            title: "Overview",
+            title: "overview",
             href: DASHBOARD_PATH,
             icon: "overview",
             permission: "account:view",
           },
           {
-            title: "Bill",
+            title: "bill",
             href: BILL_PATH,
             icon: "bill",
             permission: "account:view",

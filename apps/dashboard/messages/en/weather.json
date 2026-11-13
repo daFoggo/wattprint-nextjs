@@ -1,0 +1,12 @@
+{
+  "title": "Weather",
+  "rainBy": "Rain {pct}% by {time}",
+  "open": "Weather: {temp}°C, {sky}. Open the next 24 hours.",
+  "feelsLike": "Feels like {temp}°C",
+  "next24": "Next 24 hours",
+  "tempChart": "Temperature over the next 24 hours",
+  "humidity": "Humidity",
+  "wind": "Wind",
+  "rainAt": "Rain {time}",
+  "updated": "Updated {time} · OpenWeather"
+}

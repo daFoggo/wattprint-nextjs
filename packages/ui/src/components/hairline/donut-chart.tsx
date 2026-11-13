@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -110,6 +111,7 @@ export function DonutChart({
   className = "",
   ...props
 }: DonutChartProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const gauge = variant === "gauge";
   const [ownHidden, setOwnHidden] = React.useState(defaultHiddenSlices);
@@ -271,7 +273,7 @@ export function DonutChart({
             {/* The centre: the total, or the slice being pointed at. */}
             <div className={`pointer-events-none absolute inset-x-0 flex flex-col items-center text-center ${gauge ? "bottom-0" : "inset-y-0 justify-center"}`}>
               <span className="max-w-[70%] truncate text-[11.5px] text-muted-foreground @md:text-[12px]">
-                <TextMorph>{total === 0 ? "No data" : current ? current.label : centerLabel}</TextMorph>
+                <TextMorph>{total === 0 ? t("No data") : current ? current.label : centerLabel}</TextMorph>
               </span>
               <span className={`font-semibold leading-tight tracking-[-0.03em] text-foreground tabular-nums ${figureSize}`}>
                 <NumberRoll value={visible ? (current ? current.amount : total) : 0} format={format} locales={locales} duration={900} />
@@ -298,13 +300,13 @@ export function DonutChart({
           </div>
 
           {legend && (
-            <ul className="w-full min-w-0 flex-1" aria-label="Slices">
+            <ul className="w-full min-w-0 flex-1" aria-label={t("Slices")}>
               {arcs.map((a) => (
                 <li key={a.id}>
                   <button
                     type="button"
                     aria-pressed={a.shown}
-                    aria-label={`${a.label}: ${fmt(a.amount)}${a.shown ? `, ${Math.round(a.share * 100)}%` : ", hidden"}`}
+                    aria-label={`${a.label}: ${fmt(a.amount)}${a.shown ? `, ${Math.round(a.share * 100)}%` : t(", hidden")}`}
                     onClick={() => toggle(a.id)}
                     onPointerEnter={(e) => e.pointerType === "mouse" && point(a.id)}
                     onPointerLeave={(e) => e.pointerType === "mouse" && point(null)}

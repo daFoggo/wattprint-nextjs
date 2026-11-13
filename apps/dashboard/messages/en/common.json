@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "description": "Your energy dashboard: track your home's electricity use in one place."
+  },
+  "language": "Language",
+  "tryAgain": "Try again",
+  "backToHome": "Back to home",
+  "error": {
+    "title": "Something went wrong",
+    "description": "The system hit an unexpected problem. Please try again later."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has moved."
+  },
+  "forbidden": {
+    "eyebrow": "403 · No access",
+    "title": "You do not have access to this page.",
+    "description": "Your account has not been granted access to this page. Contact an administrator if you think this is a mistake.",
+    "back": "Back to dashboard"
+  }
+}

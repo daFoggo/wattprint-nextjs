@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { MODAL_ROOT, SCRIM, useModal } from "./modal";
 import { EASE_OUT, INTERACTION_FOCUS, INTERACTION_PRESS, useInteractionReducedMotion } from "./ui-interaction-motion";
 
@@ -53,6 +54,7 @@ export function Dialog({
   dismissible = true,
   className = "",
 }: DialogProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const [own, setOwn] = React.useState(defaultOpen);
   const open = controlled ?? own;
@@ -114,7 +116,7 @@ export function Dialog({
                 </div>
                 <button
                   type="button"
-                  aria-label="Close"
+                  aria-label={t("Close")}
                   onClick={close}
                   className={`-mr-2 flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground ${INTERACTION_PRESS} ${INTERACTION_FOCUS}`}
                 >

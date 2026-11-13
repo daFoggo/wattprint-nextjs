@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { Eye, EyeOff } from "lucide-react";
 import { IconMorph } from "./icon-morph";
 import { Input, type InputProps } from "./input";
@@ -61,6 +62,7 @@ export function PasswordInput({
   onShownChange,
   ...props
 }: PasswordInputProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useInteractionReducedMotion();
   const [ownShown, setOwnShown] = React.useState(defaultShown);
   const shown = shownProp ?? ownShown;
@@ -79,7 +81,7 @@ export function PasswordInput({
         autoComplete={props.autoComplete ?? "current-password"}
         value={value}
         defaultValue={defaultValue}
-        hint={caps ? "Caps Lock is on" : hint}
+        hint={caps ? t("Caps Lock is on") : hint}
         onValueChange={(v) => {
           if (value === undefined) setText(v);
           onValueChange?.(v);
@@ -99,7 +101,7 @@ export function PasswordInput({
         trailing={
           <button
             type="button"
-            aria-label={shown ? "Hide password" : "Show password"}
+            aria-label={shown ? t("Hide password") : t("Show password")}
             aria-pressed={shown}
             // Keep focus (and the caret) in the field.
             onPointerDown={(e) => e.preventDefault()}
@@ -129,7 +131,7 @@ export function PasswordInput({
             ))}
           </div>
           <span className={`w-12 text-right text-[12px] font-medium ${score ? TEXT[score - 1] : "text-muted-foreground"}`}>
-            <TextMorph>{score ? strengthLabels[score - 1] : " "}</TextMorph>
+            <TextMorph>{score ? t(strengthLabels[score - 1]) : " "}</TextMorph>
           </span>
         </div>
       )}

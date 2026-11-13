@@ -1,0 +1,29 @@
+{
+  "title": "Hóa đơn kỳ này",
+  "tier": "Bậc {tier}",
+  "now": "Hiện tại",
+  "vat": "VAT {vat}%",
+  "billCard": {
+    "period": "{start} – {end} · giá điện sinh hoạt bậc thang",
+    "partial": "Thiếu dữ liệu",
+    "straddle": "Giá điện thay đổi trong kỳ",
+    "soFar": "Tính đến nay, gồm {vat}% VAT · <kwh></kwh>",
+    "today": "Hôm nay · <kwh></kwh>",
+    "meter": "Bậc {tier} · {price}/kWh",
+    "topTier": "Bậc cao nhất: mỗi kWh tiếp theo giá {price}, chưa gồm VAT.",
+    "caption": "Điện năng và thành tiền theo từng bậc trong kỳ này, chưa gồm VAT",
+    "colTier": "Bậc",
+    "colPrice": "Đơn giá",
+    "colUsed": "Đã dùng",
+    "colAmount": "Thành tiền",
+    "total": "Tổng cộng"
+  },
+  "billSummary": {
+    "caption": "Tính đến nay trong kỳ, {kwh} kWh",
+    "part": "Bậc {tier}, {kwh} kWh",
+    "nextTier": "Bậc {tier} từ {kwh} kWh",
+    "topTier": "Bậc {tier}, bậc cao nhất",
+    "today": "Hôm nay <amount></amount> · {kwh} kWh",
+    "viewDetails": "Xem chi tiết hóa đơn"
+  }
+}

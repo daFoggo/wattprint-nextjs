@@ -2,6 +2,7 @@
 
 import { createContext, use, useRef, useState } from "react"
 import { IconChevronsRight } from "@tabler/icons-react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@workspace/ui/components/ui/button"
 import { SheetClose, SheetContent } from "@workspace/ui/components/ui/sheet"
@@ -123,6 +124,7 @@ export function DetailSheetContent({
 /** The grab area on the sheet's left edge. Drives the width of its parent, the sheet popup. */
 function DetailSheetResizeHandle() {
   const { storageKey, width: committedWidth, onWidthCommit } = useDetailSheet()
+  const t = useTranslations("layout")
   const width = useRef<number | null>(null)
   const dragging = useRef(false)
 
@@ -144,7 +146,7 @@ function DetailSheetResizeHandle() {
     <div
       role="separator"
       aria-orientation="vertical"
-      aria-label="Resize sheet"
+      aria-label={t("resizeSheet")}
       aria-valuenow={committedWidth ?? DEFAULT_WIDTH_PX}
       aria-valuemin={MIN_WIDTH}
       aria-valuemax={window.innerWidth - 64}
@@ -205,10 +207,11 @@ export function DetailSheetHeader({
 
 /** `»` closes the sheet (it slides out to the right, like the sheet itself). */
 export function DetailSheetClose() {
+  const t = useTranslations("layout")
   return (
     <SheetClose render={<Button variant="ghost" size="icon-sm" />}>
       <IconChevronsRight />
-      <span className="sr-only">Close</span>
+      <span className="sr-only">{t("close")}</span>
     </SheetClose>
   )
 }

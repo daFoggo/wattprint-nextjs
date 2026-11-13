@@ -1,8 +1,10 @@
+import { useTranslations } from "next-intl"
+
 import { Button } from "@workspace/ui/components/hairline/button"
 import { Google } from "@workspace/ui/components/ui/svgs/google"
 
 /**
- * The only way in: the Server Action starts the Keycloak flow with `kc_idp_hint=google`.
+ * Google, one click: the Server Action starts the Keycloak flow with `kc_idp_hint=google`.
  * Neutral (`secondary`), not brand green: Google's multicolour mark belongs on a plain surface.
  */
 export function GoogleSignInButton({
@@ -10,6 +12,7 @@ export function GoogleSignInButton({
 }: {
   action: () => Promise<void>
 }) {
+  const t = useTranslations("auth.signIn")
   return (
     <form action={action}>
       <Button
@@ -19,7 +22,7 @@ export function GoogleSignInButton({
         className="w-full"
         icon={<Google aria-hidden className="size-4 shrink-0" />}
       >
-        Continue with Google
+        {t("google")}
       </Button>
     </form>
   )

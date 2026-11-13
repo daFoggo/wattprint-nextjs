@@ -1,0 +1,75 @@
+{
+  "today": "Hôm nay",
+  "week": "Tuần",
+  "last7Days": "7 ngày qua",
+  "dailyTrend": {
+    "title": "Điện năng",
+    "daily": "Điện năng theo ngày",
+    "average": "Trung bình 7 ngày"
+  },
+  "usageCompare": {
+    "title": "Điện năng tiêu thụ",
+    "compareBy": "So sánh theo",
+    "month": "Tháng",
+    "weekBefore": "Tuần trước đó",
+    "last4Weeks": "4 tuần qua",
+    "fourWeeksBefore": "4 tuần trước đó"
+  },
+  "deviceMix": {
+    "title": "Theo thiết bị",
+    "description": "Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động.",
+    "period": "Khoảng thời gian",
+    "todaySoFar": "Hôm nay đến giờ"
+  },
+  "deviceList": {
+    "label": "Thiết bị, dữ liệu mẫu",
+    "search": "Tìm thiết bị · dữ liệu mẫu",
+    "colDevice": "Thiết bị",
+    "colStatus": "Trạng thái",
+    "colNow": "Hiện tại",
+    "on": "Bật",
+    "off": "Tắt",
+    "nounOne": "thiết bị",
+    "nounOther": "thiết bị",
+    "viewDetails": "Xem chi tiết",
+    "comingSoon": "{device}: trang thiết bị sắp ra mắt"
+  },
+  "deviceTimeline": {
+    "title": "Hoạt động thiết bị, mẫu"
+  },
+  "demo": {
+    "devices": {
+      "alwaysOn": "Luôn bật",
+      "fridge": "Tủ lạnh",
+      "kettle": "Ấm siêu tốc",
+      "washer": "Máy giặt",
+      "tv": "Tivi",
+      "hifi": "Dàn âm thanh",
+      "dishwasher": "Máy rửa bát",
+      "microwave": "Lò vi sóng",
+      "toaster": "Máy nướng bánh mì",
+      "other": "Khác"
+    },
+    "rooms": {
+      "kitchen": "Bếp",
+      "livingRoom": "Phòng khách",
+      "utility": "Phòng giặt"
+    },
+    "notes": {
+      "fridge": "Bật 18 phút, khoảng 40 phút chạy một chu kỳ",
+      "tv": "Bật 41 phút",
+      "hifi": "Ở chế độ chờ từ sáng nay",
+      "kettle": "Tắt 4 phút, hôm nay đã đun 5 lần",
+      "washer": "Xong một chu kỳ 58 phút cách đây 1 giờ",
+      "dishwasher": "Hôm nay đã chạy 2 lần",
+      "microwave": "Tắt 1 giờ 35 phút",
+      "toaster": "Tắt 2 giờ"
+    },
+    "events": {
+      "offAfter": "{device} đã bật {min} phút, giờ đã tắt",
+      "turnedOn": "{device} đã bật",
+      "finishedCycle": "{device} đã xong một chu kỳ {min} phút",
+      "ranTimes": "{device} đã chạy {count} lần, giờ đã tắt"
+    }
+  }
+}

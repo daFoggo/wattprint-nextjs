@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -32,6 +33,8 @@ export interface UsageMeterProps extends React.HTMLAttributes<HTMLDivElement> {
   lowAt?: number;
   onUpgrade?: () => void;
   upgradeLabel?: string;
+  /** Locale for the numbers and the reset date (patched (hairline/patch.mjs)). */
+  locales?: string | string[];
 }
 
 const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40";
@@ -76,9 +79,11 @@ export function UsageMeter({
   lowAt = 0.2,
   onUpgrade,
   upgradeLabel = "Upgrade",
+  locales = "en-US", // patched (hairline/patch.mjs)
   className = "",
   ...props
 }: UsageMeterProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const left = Math.max(0, limit - used);
   const share = limit > 0 ? Math.min(1, used / limit) : 1;
@@ -86,9 +91,10 @@ export function UsageMeter({
   const low = !out && limit > 0 && left / limit <= lowAt;
   const tone = out ? "bg-red-500" : low ? "bg-amber-500" : "bg-foreground";
   const stroke = out ? "stroke-red-500" : low ? "stroke-amber-500" : "stroke-foreground";
+  const number = new Intl.NumberFormat(locales); // patched (hairline/patch.mjs)
   const resets =
-    resetAt !== undefined ? new Date(resetAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : undefined;
-  const summary = out ? `No ${unit} left` : `${number.format(left)} of ${number.format(limit)} ${unit} left`;
+    resetAt !== undefined ? new Date(resetAt).toLocaleDateString(locales, { month: "short", day: "numeric" }) : undefined;
+  const summary = out ? t("No {unit} left", { unit }) : t("{left} of {limit} {unit} left", { left: number.format(left), limit: number.format(limit), unit });
 
   if (variant === "ring") {
     const c = 2 * Math.PI * 8;
@@ -100,7 +106,7 @@ export function UsageMeter({
         aria-valuemax={limit}
         aria-valuenow={used}
         aria-valuetext={summary}
-        title={`${summary}${resets ? ` · resets ${resets}` : ""}`}
+        title={resets ? t("{summary} · resets {date}", { summary, date: resets }) : summary}
         className={`inline-flex items-center gap-1.5 text-[11.5px] text-muted-foreground ${className}`}
         {...props}
       >
@@ -133,13 +139,13 @@ export function UsageMeter({
         <span aria-hidden="true" className={`flex items-baseline font-mono text-[12px] tabular-nums transition-colors duration-300 ${out ? "text-red-500" : "text-muted-foreground"}`}>
           <Reveal show={!out} reduced={reduced}>
             <span className="inline-flex items-baseline">
-              <NumberRoll value={left} format={GROUPED} locales="en-US" duration={700} />
-              &nbsp;of&nbsp;
-              <NumberRoll value={limit} format={GROUPED} locales="en-US" duration={700} />
+              <NumberRoll value={left} format={GROUPED} locales={locales /* patched (hairline/patch.mjs) */} duration={700} />
+              &nbsp;{t("of")}&nbsp;
+              <NumberRoll value={limit} format={GROUPED} locales={locales} duration={700} />
               &nbsp;
             </span>
           </Reveal>
-          <TextMorph>{out ? `No ${unit} left` : `${unit} left`}</TextMorph>
+          <TextMorph>{out ? t("No {unit} left", { unit }) : t("{unit} left", { unit })}</TextMorph>
         </span>
       </div>
       <div
@@ -159,7 +165,7 @@ export function UsageMeter({
       {(resets || onUpgrade) && (
         <div className="mt-2 flex min-h-[18px] items-center justify-between gap-4 text-[12px] text-muted-foreground">
           <span className="min-w-0">
-            <TextMorph>{out ? `You’re out until ${resets ?? "the next reset"}.` : resets ? `Resets ${resets}` : ""}</TextMorph>
+            <TextMorph>{out ? t("You’re out until {date}.", { date: resets ?? t("the next reset") }) : resets ? t("Resets {date}", { date: resets }) : ""}</TextMorph>
           </span>
           {onUpgrade && (
             // Opens in once it matters: when it's low or out.

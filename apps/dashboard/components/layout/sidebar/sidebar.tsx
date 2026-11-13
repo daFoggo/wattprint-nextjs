@@ -2,6 +2,7 @@
 
 import { createContext, use, useEffect, useEffectEvent, useState } from "react"
 import { IconLayoutSidebar } from "@tabler/icons-react"
+import { useTranslations } from "next-intl"
 
 import { Sheet } from "@workspace/ui/components/hairline/sheet"
 import {
@@ -112,11 +113,12 @@ export function Sidebar({
 
 export function SidebarTrigger({ className }: { className?: string }) {
   const { toggle, iconRail, isMobile, openMobile } = useSidebar()
+  const t = useTranslations("layout")
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-label="Toggle sidebar"
+      aria-label={t("toggleSidebar")}
       aria-expanded={isMobile ? openMobile : !iconRail}
       className={cn(
         "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground",

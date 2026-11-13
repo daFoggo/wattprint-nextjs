@@ -10,6 +10,7 @@ import {
   IconSun,
   type Icon,
 } from "@tabler/icons-react"
+import { useLocale, useTranslations } from "next-intl"
 
 import { Popover } from "@workspace/ui/components/hairline/popover"
 import { Sparkline } from "@workspace/ui/components/hairline/sparkline"
@@ -38,10 +39,12 @@ function Sky({
   return <Glyph stroke={1.5} {...props} />
 }
 
-const hour = (dt: number) =>
-  new Date(dt * 1000).toLocaleTimeString("en-GB", {
+// 24-hour clock in both languages; the place is in Vietnam, so its own time.
+const clock = (locale: string) => (dt: number) =>
+  new Date(dt * 1000).toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
+    hourCycle: "h23",
     timeZone: "Asia/Ho_Chi_Minh",
   })
 
@@ -77,6 +80,8 @@ function Face({ weather, ink }: { weather: Weather; ink?: boolean }) {
   const { now, next } = weather
   const sky = now.weather[0]!
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
+  const t = useTranslations("weather")
+  const hour = clock(useLocale())
   const muted = ink ? "" : "text-muted-foreground"
   return (
     <div className="flex h-full flex-col justify-between p-4">
@@ -85,7 +90,7 @@ function Face({ weather, ink }: { weather: Weather; ink?: boolean }) {
       >
         <span className="flex items-center gap-1.5">
           <Sky code={sky.icon} aria-hidden className="size-4" />
-          Weather
+          {t("title")}
         </span>
         <span className="tabular-nums">{hour(now.dt)}</span>
       </div>
@@ -99,7 +104,10 @@ function Face({ weather, ink }: { weather: Weather; ink?: boolean }) {
         <div className="flex flex-col items-end gap-1 text-right text-sm">
           <span className="font-medium">{sentence(sky.description)}</span>
           <span className={`tabular-nums ${muted}`}>
-            Rain {Math.round(wettest.pop * 100)}% by {hour(wettest.dt)}
+            {t("rainBy", {
+              pct: Math.round(wettest.pop * 100),
+              time: hour(wettest.dt),
+            })}
           </span>
         </div>
       </div>
@@ -113,6 +121,9 @@ function Face({ weather, ink }: { weather: Weather; ink?: boolean }) {
  * drive fans, air conditioning and drying, so it sits beside the energy figures.
  */
 export function WeatherCard({ weather }: { weather: Weather }) {
+  const t = useTranslations("weather")
+  const locale = useLocale()
+  const hour = clock(locale)
   const { now, next } = weather
   const sky = now.weather[0]!
   const temps = next.map((slot) => slot.main.temp)
@@ -121,14 +132,17 @@ export function WeatherCard({ weather }: { weather: Weather }) {
   const level = levelFor(now.main.temp)
   return (
     <Popover
-      label="Weather"
+      label={t("title")}
       side="bottom"
       align="end"
       width={300}
       trigger={
         <button
           type="button"
-          aria-label={`Weather: ${Math.round(now.main.temp)}°C, ${sky.description}. Open the next 24 hours.`}
+          aria-label={t("open", {
+            temp: Math.round(now.main.temp),
+            sky: sky.description,
+          })}
           className="relative isolate h-32 w-80 cursor-pointer overflow-clip rounded-3xl border bg-background text-left text-foreground motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:active:scale-95"
         >
           <LiquidSky
@@ -160,7 +174,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
               <span className="text-sm text-muted-foreground">°C</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Feels like {Math.round(now.main.feels_like)}°C
+              {t("feelsLike", { temp: Math.round(now.main.feels_like) })}
             </p>
           </div>
           <Sky
@@ -172,7 +186,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
 
         <div className="flex flex-col gap-2 rounded-xl bg-card p-3">
           <div className="flex items-baseline justify-between gap-3 text-sm">
-            <span className="text-muted-foreground">Next 24 hours</span>
+            <span className="text-muted-foreground">{t("next24")}</span>
             <span className="font-medium tabular-nums">
               {Math.round(Math.min(...temps))}–{Math.round(Math.max(...temps))}
               °C
@@ -190,7 +204,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
             showScrubber
             format={{ maximumFractionDigits: 0 }}
             suffix="°C"
-            label="Temperature over the next 24 hours"
+            label={t("tempChart")}
           />
           {/* Only the ends: the points are spread evenly, so inner labels would sit off their point. */}
           <div
@@ -204,10 +218,17 @@ export function WeatherCard({ weather }: { weather: Weather }) {
 
         <dl className="grid grid-cols-3 gap-3">
           {[
-            ["Humidity", `${now.main.humidity}`, "%"],
-            ["Wind", now.wind.speed.toFixed(1), "m/s"],
+            [t("humidity"), `${now.main.humidity}`, "%"],
             [
-              `Rain ${hour(wettest.dt)}`,
+              t("wind"),
+              now.wind.speed.toLocaleString(locale, {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              }),
+              "m/s",
+            ],
+            [
+              t("rainAt", { time: hour(wettest.dt) }),
               `${Math.round(wettest.pop * 100)}`,
               "%",
             ],
@@ -226,7 +247,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           ))}
         </dl>
         <p className="text-xs text-muted-foreground">
-          Updated {hour(now.dt)} · OpenWeather
+          {t("updated", { time: hour(now.dt) })}
         </p>
       </div>
     </Popover>

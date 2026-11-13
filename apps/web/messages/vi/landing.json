@@ -1,0 +1,14 @@
+{
+  "home": {
+    "title": "Bảng điều khiển năng lượng của bạn",
+    "subtitle": "Theo dõi điện năng tiêu thụ của cả nhà ở một nơi.",
+    "openDashboard": "Mở bảng điều khiển",
+    "terms": "Điều khoản",
+    "privacy": "Quyền riêng tư"
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn đang tìm không tồn tại hoặc đã được chuyển đi.",
+    "backHome": "Về trang chủ"
+  }
+}

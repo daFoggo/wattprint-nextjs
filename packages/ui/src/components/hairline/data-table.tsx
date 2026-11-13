@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { PillSelect, type PillOption } from "./pill-select";
@@ -191,6 +192,7 @@ type RowProps<T> = {
 
 /** One row, memoised on plain values: a sort, a selection or a keystroke re-renders only the rows it changes. */
 function TableRowView<T>(p: RowProps<T>) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const { row, id, columns, reduced, actions: a } = p;
   const editable = (c: DataTableColumn<T>) => !!(c.editable && p.canEdit);
   const title = columns.find((c) => c.card === "title") ?? columns[0];
@@ -204,7 +206,7 @@ function TableRowView<T>(p: RowProps<T>) {
         <input
           autoFocus
           defaultValue={String(cellValue(col, row) ?? "")}
-          aria-label={`${col.header} for ${p.name}`}
+          aria-label={t("{column} for {row}", { column: col.header, row: p.name })}
           onFocus={(e) => e.currentTarget.select()}
           onKeyDown={(e) => {
             e.stopPropagation();
@@ -251,7 +253,7 @@ function TableRowView<T>(p: RowProps<T>) {
             <button
               type="button"
               tabIndex={-1}
-              aria-label={`Select ${p.name}`}
+              aria-label={t("Select {row}", { row: p.name })}
               aria-pressed={p.isSelected}
               onClick={(e) => a.current.toggle(id, e.shiftKey)}
               className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] hover:bg-accent"
@@ -279,7 +281,7 @@ function TableRowView<T>(p: RowProps<T>) {
             <button
               type="button"
               tabIndex={-1}
-              aria-label={`${p.isOpen ? "Close" : "Open"} ${p.name}`}
+              aria-label={p.isOpen ? t("Close {row}", { row: p.name }) : t("Open {row}", { row: p.name })}
               aria-expanded={p.isOpen}
               onClick={() => a.current.toggleOpen(id, row)}
               className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -293,7 +295,7 @@ function TableRowView<T>(p: RowProps<T>) {
       {/* One card, narrow */}
       <div className="hidden min-h-[60px] items-center gap-3 py-2.5 pr-3 @max-[34rem]:flex" style={{ paddingLeft: p.selectable ? 0 : 12 }}>
         {p.selectable && (
-          <button type="button" tabIndex={-1} aria-label={`Select ${p.name}`} aria-pressed={p.isSelected} onClick={(e) => a.current.toggle(id, e.shiftKey)} className="flex size-10 shrink-0 cursor-pointer items-center justify-center">
+          <button type="button" tabIndex={-1} aria-label={t("Select {row}", { row: p.name })} aria-pressed={p.isSelected} onClick={(e) => a.current.toggle(id, e.shiftKey)} className="flex size-10 shrink-0 cursor-pointer items-center justify-center">
             <Box state={p.isSelected ? "on" : "off"} reduced={reduced} delay={p.delay} />
           </button>
         )}
@@ -367,6 +369,7 @@ export function DataTable<T>({
   className = "",
   ...props
 }: DataTableProps<T>) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const uid = React.useId();
   const [sortOwn, setSortOwn] = React.useState<DataTableSort | null>(defaultSort);
@@ -473,7 +476,7 @@ export function DataTable<T>({
     motion.stagger();
     if (sortProp === undefined) setSortOwn(next);
     onSortChange?.(next);
-    say(`Sorted by ${col.header}, ${next.dir === "asc" ? "ascending" : "descending"}.`);
+    say(t(next.dir === "asc" ? "Sorted by {column}, ascending." : "Sorted by {column}, descending.", { column: col.header }));
   };
 
   // ── Selection ──────────────────────────────────────────
@@ -489,14 +492,14 @@ export function DataTable<T>({
       // Ticks run down the range one after another, from the anchor.
       setCascade({ ids: a <= b ? span : [...span].reverse(), key: ++seq.current });
       setSelected([...next]);
-      say(`${next.size} selected.`);
+      say(t("{n} selected.", { n: next.size }));
     } else {
       const next = new Set(selected);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       setCascade(null);
       setSelected([...next]);
-      say(`${next.size ? `${next.size} selected` : "Selection cleared"}.`);
+      say(next.size ? t("{n} selected.", { n: next.size }) : t("Selection cleared."));
     }
     anchor.current = id;
   };
@@ -505,7 +508,7 @@ export function DataTable<T>({
   const toggleAll = () => {
     setCascade(allState === "on" ? null : { ids: pageRows.map(getRowId), key: ++seq.current });
     setSelected(allState === "on" ? [] : allIds);
-    say(allState === "on" ? "Selection cleared." : `${allIds.length} selected.`);
+    say(allState === "on" ? t("Selection cleared.") : t("{n} selected.", { n: allIds.length }));
   };
 
   // ── Actions ────────────────────────────────────────────
@@ -519,17 +522,17 @@ export function DataTable<T>({
       setHidden((h) => new Set([...h, ...ids]));
       setSelected([]);
       setUndo({ key: ++seq.current, ids, rows: chosen, action });
-      say(`${ids.length} ${count(ids.length)} ${action.progress?.[1]?.toLowerCase() ?? "removed"}. Undo is available.`);
+      say(t("{n} {noun} {done}. Undo is available.", { n: ids.length, noun: count(ids.length), done: action.progress?.[1]?.toLowerCase() ?? t("removed") }));
       return;
     }
     setActionStatus((s) => ({ ...s, [action.id]: "pending" }));
     try {
       await action.run(chosen);
       setActionStatus((s) => ({ ...s, [action.id]: "success" }));
-      say(`${action.progress?.[1] ?? "Done"}: ${chosen.length} ${count(chosen.length)}.`);
+      say(`${action.progress?.[1] ?? t("Done")}: ${chosen.length} ${count(chosen.length)}.`);
     } catch {
       setActionStatus((s) => ({ ...s, [action.id]: "error" }));
-      say(`${action.label} failed.`);
+      say(t("{action} failed.", { action: action.label }));
     }
   };
 
@@ -543,8 +546,8 @@ export function DataTable<T>({
         u.ids.forEach((i) => n.delete(i));
         return n;
       });
-      flash(`Couldn't ${u.action.label.toLowerCase()} ${u.ids.length} ${count(u.ids.length)}. They're back.`);
-      say(`${u.action.label} failed. The rows are back.`);
+      flash(t("Couldn't {action} {n} {noun}. They're back.", { action: u.action.label.toLowerCase(), n: u.ids.length, noun: count(u.ids.length) }));
+      say(t("{action} failed. The rows are back.", { action: u.action.label }));
     }
   };
 
@@ -556,7 +559,7 @@ export function DataTable<T>({
       return n;
     });
     setUndo(null);
-    say(`Undone. ${undo.ids.length} ${count(undo.ids.length)} back.`);
+    say(t("Undone. {n} {noun} back.", { n: undo.ids.length, noun: count(undo.ids.length) }));
   };
 
   // ── Editing ────────────────────────────────────────────
@@ -572,7 +575,7 @@ export function DataTable<T>({
     try {
       await onEdit(row, key, value);
       setDrafts((d) => new Map(d).set(cellKey, { value, status: "done" }));
-      say(`Saved ${col.header.toLowerCase()}.`);
+      say(t("Saved {column}.", { column: col.header.toLowerCase() }));
       window.setTimeout(() => setDrafts((d) => {
         const n = new Map(d);
         if (n.get(cellKey)?.status === "done") n.delete(cellKey);
@@ -589,8 +592,8 @@ export function DataTable<T>({
           [{ transform: "none" }, { transform: "translateX(-4px)" }, { transform: "translateX(4px)" }, { transform: "translateX(-2px)" }, { transform: "none" }],
           { duration: 380, easing: "ease-out" },
         );
-      flash(`Couldn't save ${col.header.toLowerCase()} for ${name(row)}.`);
-      say(`Couldn't save. ${col.header} is back to what it was.`);
+      flash(t("Couldn't save {column} for {row}.", { column: col.header.toLowerCase(), row: name(row) }));
+      say(t("Couldn't save. {column} is back to what it was.", { column: col.header }));
     }
   };
 
@@ -601,7 +604,7 @@ export function DataTable<T>({
     setPageDir(dir);
     setPage(next);
     setCursor(null);
-    say(`Page ${next + 1} of ${pages}.`);
+    say(t("Page {page} of {pages}.", { page: next + 1, pages }));
   };
 
   // ── Keys: rows, then cells ─────────────────────────────
@@ -651,7 +654,7 @@ export function DataTable<T>({
       else n.add(id);
       return n;
     });
-    say(`${open.has(id) ? "Closed" : "Opened"} ${name(row)}.`);
+    say(t(open.has(id) ? "Closed {row}." : "Opened {row}.", { row: name(row) }));
   };
 
   // ── Render ─────────────────────────────────────────────
@@ -661,10 +664,10 @@ export function DataTable<T>({
   const to = Math.min(sorted.length, current * pageSize + pageSize);
   const sortable = columns.filter((c) => c.sortable);
   const sortOptions: PillOption[] = [
-    { value: "", label: "Unsorted" },
+    { value: "", label: t("Unsorted") },
     ...sortable.flatMap((c) => [
-      { value: `${c.key}:asc`, label: `${c.header}, ascending` },
-      { value: `${c.key}:desc`, label: `${c.header}, descending` },
+      { value: `${c.key}:asc`, label: t("{column}, ascending", { column: c.header }) },
+      { value: `${c.key}:desc`, label: t("{column}, descending", { column: c.header }) },
     ]),
   ];
 
@@ -709,7 +712,7 @@ export function DataTable<T>({
               />
               <button
                 type="button"
-                aria-label="Clear search"
+                aria-label={t("Clear search")}
                 onClick={() => setQuery("")}
                 className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 style={swap(!!query, reduced, 0)}
@@ -724,7 +727,7 @@ export function DataTable<T>({
           {sortable.length > 0 && (
             <span className="hidden shrink-0 @max-[34rem]:flex">
               <PillSelect
-                label="Sort by"
+                label={t("Sort by")}
                 align="end"
                 width={220}
                 options={sortOptions}
@@ -739,7 +742,7 @@ export function DataTable<T>({
                 // Plain text: this pill is hidden on wide tables, and a morph there would still measure every letter.
                 renderValue={() => (
                   <span className="inline-flex items-center text-muted-foreground">
-                    {sortCol ? sortCol.header : "Sort"}
+                    {sortCol ? sortCol.header : t("Sort")}
                     <ArrowUp className="ml-1 size-3" strokeWidth={2} aria-hidden="true" style={{ transform: sort?.dir === "desc" ? "rotate(180deg)" : "none", transition: reduced ? "none" : `transform 420ms ${THROW}` }} />
                   </span>
                 )}
@@ -752,11 +755,11 @@ export function DataTable<T>({
         </div>
 
         <div className="absolute inset-0 flex items-center gap-1 pl-1.5 pr-1.5" style={swap(mode === "selection", reduced, mode === "search" ? 8 : -8)} inert={mode !== "selection"}>
-          <button type="button" aria-label="Clear selection" onClick={() => setSelected([])} className={`flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground ${FOCUS}`}>
+          <button type="button" aria-label={t("Clear selection")} onClick={() => setSelected([])} className={`flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground ${FOCUS}`}>
             <X className="size-4" strokeWidth={1.75} />
           </button>
           <span className="mr-auto whitespace-nowrap text-[13px] font-medium tabular-nums">
-            <NumberRoll value={Math.max(1, selected.size)} /> selected
+            <NumberRoll value={Math.max(1, selected.size)} /> {t("selected")}
           </span>
           {actions.map((a) => (
             <StatusButton
@@ -764,7 +767,7 @@ export function DataTable<T>({
               variant="ghost"
               size="sm"
               status={actionStatus[a.id] ?? "idle"}
-              labels={{ idle: a.label, pending: a.progress?.[0] ?? a.label, success: a.progress?.[1] ?? "Done", error: "Try again" }}
+              labels={{ idle: a.label, pending: a.progress?.[0] ?? a.label, success: a.progress?.[1] ?? t("Done"), error: t("Try again") }}
               onClick={() => run(a)}
               onReset={() => setActionStatus((s) => ({ ...s, [a.id]: "idle" }))}
               className={a.tone === "destructive" && (actionStatus[a.id] ?? "idle") === "idle" ? "!text-red-600 hover:!bg-red-500/10 dark:!text-red-400" : ""}
@@ -776,12 +779,12 @@ export function DataTable<T>({
           <span className="mr-auto whitespace-nowrap text-[13px] tabular-nums">
             {undo && (
               <>
-                <NumberRoll value={undo.ids.length} /> {count(undo.ids.length)} {undo.action.progress?.[1]?.toLowerCase() ?? "removed"}
+                <NumberRoll value={undo.ids.length} /> {count(undo.ids.length)} {undo.action.progress?.[1]?.toLowerCase() ?? t("removed")}
               </>
             )}
           </span>
           <button type="button" onClick={takeBack} className={`inline-flex h-7 cursor-pointer items-center rounded-full px-3 text-[12px] font-medium hover:bg-accent ${FOCUS}`}>
-            Undo
+            {t("Undo")}
           </button>
           {undo && (
             // The chance to undo, as a hairline that drains; hovering holds it.
@@ -817,7 +820,7 @@ export function DataTable<T>({
         <div role="row" className="grid h-10 items-center border-b border-border text-[12px] text-muted-foreground @max-[34rem]:hidden" style={{ gridTemplateColumns: tracks }}>
           {selectable && (
             <span role="columnheader" className="flex items-center justify-center">
-              <button type="button" aria-label={allState === "on" ? "Clear selection" : "Select all"} onClick={toggleAll} className={`flex size-8 cursor-pointer items-center justify-center rounded-[8px] hover:bg-accent ${FOCUS}`}>
+              <button type="button" aria-label={allState === "on" ? t("Clear selection") : t("Select all")} onClick={toggleAll} className={`flex size-8 cursor-pointer items-center justify-center rounded-[8px] hover:bg-accent ${FOCUS}`}>
                 <Box state={allState} reduced={reduced} />
               </button>
             </span>
@@ -850,7 +853,7 @@ export function DataTable<T>({
               </span>
             );
           })}
-          {renderDetail && <span role="columnheader" aria-label="Details" />}
+          {renderDetail && <span role="columnheader" aria-label={t("Details")} />}
         </div>
 
         {/* Body: eases to its height; the page slides in from the side you went. */}
@@ -890,7 +893,7 @@ export function DataTable<T>({
             <div className="grid transition-[grid-template-rows,opacity] duration-300" style={{ gridTemplateRows: pageRows.length ? "0fr" : "1fr", opacity: pageRows.length ? 0 : 1, transitionTimingFunction: EASE }} aria-hidden={!!pageRows.length}>
               <div className="min-h-0 overflow-hidden">
                 <p className="px-4 py-6 text-center text-[13px] text-muted-foreground">
-                  <TextMorph animateWidth={false}>{q ? `No ${noun[1]} match “${query.trim()}”` : `No ${noun[1]} yet`}</TextMorph>
+                  <TextMorph animateWidth={false}>{q ? t("No {nouns} match “{query}”", { nouns: noun[1], query: query.trim() }) : t("No {nouns} yet", { nouns: noun[1] })}</TextMorph>
                 </p>
               </div>
             </div>
@@ -903,14 +906,14 @@ export function DataTable<T>({
         <div className="mt-2.5 flex items-center justify-between gap-2 px-1 text-[12px] tabular-nums text-muted-foreground">
           <span className="inline-flex items-baseline">
             <NumberRoll value={from} />–<NumberRoll value={to} />
-            &nbsp;of&nbsp;
+            &nbsp;{t("of")}&nbsp;
             <NumberRoll value={sorted.length} />
           </span>
           <span className="flex items-center gap-0.5">
-            <button type="button" aria-label="Previous page" disabled={current === 0} onClick={() => goPage(-1)} className={`flex size-7 cursor-pointer items-center justify-center rounded-full hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40 ${FOCUS}`}>
+            <button type="button" aria-label={t("Previous page")} disabled={current === 0} onClick={() => goPage(-1)} className={`flex size-7 cursor-pointer items-center justify-center rounded-full hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40 ${FOCUS}`}>
               <ChevronLeft className="size-4" strokeWidth={1.75} />
             </button>
-            <button type="button" aria-label="Next page" disabled={current >= pages - 1} onClick={() => goPage(1)} className={`flex size-7 cursor-pointer items-center justify-center rounded-full hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40 ${FOCUS}`}>
+            <button type="button" aria-label={t("Next page")} disabled={current >= pages - 1} onClick={() => goPage(1)} className={`flex size-7 cursor-pointer items-center justify-center rounded-full hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40 ${FOCUS}`}>
               <ChevronRight className="size-4" strokeWidth={1.75} />
             </button>
           </span>
