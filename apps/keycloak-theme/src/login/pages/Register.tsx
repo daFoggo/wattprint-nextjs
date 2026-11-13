@@ -4,11 +4,7 @@ import type { PageProps } from "keycloakify/login/pages/PageProps"
 
 import { Button } from "@workspace/ui/components/hairline/button"
 import { Input } from "@workspace/ui/components/hairline/input"
-import {
-  PasswordInput,
-  scorePassword,
-  type PasswordScore,
-} from "@workspace/ui/components/hairline/password-input"
+import { PasswordInput } from "@workspace/ui/components/hairline/password-input"
 
 import type { I18n } from "../i18n"
 import type { KcContext } from "../KcContext"
@@ -28,8 +24,8 @@ type Policies = RegisterContext["passwordPolicies"]
 type Msg = I18n["msgStr"]
 
 /**
- * The realm's password rules (the ones Keycloak exposes to the page), each with its line in the hint and its check.
- * The hint and the meter both come from this list, so they say what Keycloak enforces.
+ * The realm's password rules (the ones Keycloak exposes to the page), each with its checklist line and its check.
+ * The sign-up checklist is built from this list, so it says exactly what Keycloak enforces.
  */
 function passwordRules(policies: Policies, email: string, msgStr: Msg) {
   const count = (re: RegExp, v: string) => (v.match(re) ?? []).length
@@ -117,23 +113,6 @@ function PasswordChecklist({
       })}
     </ul>
   )
-}
-
-/** The meter fills with the checklist: "Strong" only once every rule passes (Keycloak accepts it). No rules: Hairline's heuristic. */
-function policyScore(rules: ReturnType<typeof passwordRules>) {
-  return (password: string): PasswordScore => {
-    if (!password) return 0
-    if (!rules.length) return scorePassword(password)
-    // Too short is weak, whatever else it has.
-    if (rules.some((rule) => rule.key === "length" && !rule.ok(password)))
-      return 1
-    const passed = rules.filter((rule) => rule.ok(password)).length
-    if (passed === rules.length) return 4
-    return Math.max(
-      1,
-      Math.min(3, Math.ceil((passed / rules.length) * 4))
-    ) as PasswordScore
-  }
 }
 
 /**
@@ -247,21 +226,14 @@ export default function Register(props: PageProps<RegisterContext, I18n>) {
             label={msg("password")}
             autoComplete="new-password"
             required
-            strength={policyScore(rules)}
             onValueChange={setPassword}
             aria-describedby="password-rules"
             error={error("password")}
           />
           <PasswordChecklist rules={rules} password={password} />
         </div>
-        <PasswordInput
-          id="password-confirm"
-          name="password-confirm"
-          label={msg("passwordConfirm")}
-          autoComplete="new-password"
-          required
-          error={error("password-confirm")}
-        />
+        {/* No confirm field (the eye shows what was typed); Keycloak's registration still expects one. */}
+        <input type="hidden" name="password-confirm" value={password} />
         <Button
           type="submit"
           size="lg"
