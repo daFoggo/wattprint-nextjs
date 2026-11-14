@@ -91,7 +91,7 @@ anchors use `scroll-mt-24`; the logo scrolls to `0`.
   with no rule between them. The sidebar is a floating plate (`p-2` frame, `rounded-3xl bg-sidebar`) with a `<ColumnHeader>`
   (logo + trigger) on top; the main column has no header bar, just an `h-8 text-sm` breadcrumb row above the page head.
   Theme is chosen in the account panel (Light / System / Dark), not by a header button. Body with `no-scrollbar overflow-y-auto`. No third column: a record opens in a
-  detail sheet from the page.
+  detail sheet from the page. Sole exception: the assistant Wappi's side panel (doc § Wappi, the assistant).
 - Logo lives in the sidebar header; below `md` (or with the sidebar collapsed) it shows in the main header next to the `SidebarTrigger`.
 - Sidebar body = labelled sections (`config/navigation.ts`), named by content (`Workspace`, `Settings`), never "Tree".
   Header = `SidebarTrigger` + path breadcrumb (no project name) + `ThemeToggle`; no header state, no bare-key shortcuts.
