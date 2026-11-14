@@ -24,9 +24,11 @@ next-mono-base/
 │   └── dashboard/                             # The dashboard: auth, the app shell, everything signed-in
 │       ├── app/                            # Routing & composition only (page.tsx, layout.tsx)
 │       │   ├── (auth)/                     # Route group: sign-in
-│       │   ├── (dashboard)/                # Route group: authenticated application shell
-│       │   │   └── dashboard/
-│       │   │       └── page.tsx            # Protected dashboard home
+│       │   ├── (dashboard)/                # Route group: authenticated application shell (sidebar, Wappi panel)
+│       │   │   ├── (pages)/                # Main column with the breadcrumb (layout.tsx)
+│       │   │   │   └── dashboard/
+│       │   │   │       └── page.tsx        # Protected dashboard home
+│       │   │   └── (chat)/dashboard/copilot/  # Wappi's full-height page, its own main column
 │       │   ├── api/                        # Route Handlers (webhooks, external integrations)
 │       │   ├── error.tsx                   # Route error boundary
 │       │   ├── global-error.tsx            # Root layout fatal error boundary

@@ -481,11 +481,12 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
 
 | View | Where | Look |
 | :--- | :--- | :--- |
-| Side panel | Any dashboard page. Opened by the "Hỏi Wappi" pill (logo + label) at the end of the breadcrumb row or Cmd/Ctrl+J; Escape closes it | The full page's conversation card on its own, no tray around it (`ConversationCard`, `rounded-3xl`, in the 8px frame: title row with a rule under it, chat, composer). Full screen on phones, a `w-96` column floating over the page's right edge from `sm`, a third column that pushes the page aside from `xl`; it eases between `w-0` and its width (300ms `EASE_OUT`). It names the page it sits beside ("Đang xem: Thống kê") and suggests questions for it |
-| Full page | `/dashboard/copilot`, the sidebar's top entry | Inside the shell, without a breadcrumb: `MainColumn` (`components/layout/main-column.tsx`) makes the page "bare" (the page renders `BareMain`, whose effect sets it), full height (only the chat scrolls) with plates on the sidebar's 8px frame. One tray (`rounded-3xl bg-card p-2`) holds the whole assistant: the history (Hairline `ChatHistory`) lies on the plate (a sheet below `lg`), the conversation is the card on it (`rounded-xl border bg-background`, corners concentric) with a title row and a `max-w-3xl` reading column |
+| Side panel | Any dashboard page. Opened by the "Hỏi Wappi" pill (logo + label) at the end of the breadcrumb row or Cmd/Ctrl+J (not on Wappi's page); Escape closes it. Opening focuses the composer, closing returns focus to the pill | The full page's conversation card on its own, no tray around it (`ConversationCard`, `rounded-3xl`, in the 8px frame: title row with a rule under it, chat, composer). Full screen and modal on phones (the rest of the shell inert, no page scroll behind), a `w-96` column floating over the page's right edge from `sm`, a third column that pushes the page aside from `2xl` (narrower, pushing would squeeze the pages' `lg` grids); the chat is mounted only while it shows. It eases between `w-0` and its width (300ms `EASE_OUT`). It names the page it sits beside ("Đang xem: Thống kê") and suggests questions for it |
+| Full page | `/dashboard/copilot`, the sidebar's top entry | Inside the shell, without a breadcrumb: the pages' main column with the breadcrumb is `app/[locale]/(dashboard)/(pages)/layout.tsx`, and Wappi's page sits outside it in `(chat)` with its own `<main>`, full height (only the chat scrolls) with plates on the sidebar's 8px frame. One tray (`rounded-3xl bg-card p-2`) holds the whole assistant: the history (Hairline `ChatHistory`) lies on the plate (a sheet below `lg`), the conversation is the card on it (`rounded-xl border bg-background`, corners concentric) with a title row and a `max-w-3xl` reading column |
 
 - The sidebar entry sits just above the page menu (`gap-4`): one row as tall as a menu row, a `bg-background` card with
-  the 16px logo in place of an icon and "Hỏi Wappi" (only the logo in the icon rail); no menu link is current on Wappi's page.
+  the 16px logo in place of an icon, then "Wappi" and its role, muted ("Trợ lý năng lượng"). The header pill says "Hỏi
+  Wappi", so the two never repeat. Only the logo stays in the icon rail; no menu link is current on Wappi's page.
 - Wappi's logo (`WappiLogo`) is pixel art, drawn twice so pixels stay whole: 8 cells at 16px (beside text, like a menu
   icon) and 12 cells from 24px: a small robot in `currentColor` whose antenna light and
   eyes are `chart-1`, like the WattPrint mark's device dots. It introduces Wappi (sidebar entry, panel and page title,
@@ -497,7 +498,8 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
   after it; off under reduced motion. The page must not suspend on arrival (no `<Suspense>` around the card) or no pair
   forms.
 - Never mark a page with a DOM attribute and style the shell with `:has()`: Cache Components keeps visited pages mounted
-  (hidden), so the marker outlives the visit. Use an effect, which is cleaned up when the page is hidden (`BareMain`).
+  (hidden), so the marker outlives the visit. A page that needs a different shell gets its own layout (a route group), as
+  `(chat)` does: rendered on the server, so nothing changes after hydration.
 - An answer follows the agent's work, all Hairline: `ThinkingIndicator` → `ThinkingTrace` (one step per tool call) →
   `StreamingText` with inline citations → `ToolCall` with the read-only SQL (`CodeBlock`) → data drawn with the
   dashboard's own charts (`DonutChart`, `CompareBars`, `BalanceMeter`, `UsageMeter`, `Sparkline`, `Plan` + `ApprovalCard`)
