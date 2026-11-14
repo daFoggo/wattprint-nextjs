@@ -218,6 +218,8 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     Yesterday: "Hôm qua",
     "Previous 7 days": "7 ngày trước",
     "Previous 30 days": "30 ngày trước",
+    // The locale ChatHistory names older months in (not shown as text).
+    "en-US": "vi-VN",
 
     // ChatScroll
     Conversation: "Cuộc trò chuyện",

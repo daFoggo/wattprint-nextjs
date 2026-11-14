@@ -342,7 +342,7 @@ export function PromptComposer({
             type={action === "send" ? "submit" : "button"}
             aria-label={action === "stop" ? t("Stop") : action === "wait" ? t("Sending") : t("Send")}
             disabled={action === "send" ? !canSend : action === "wait"}
-            onClick={action === "stop" ? onStop : undefined}
+            onClick={action === "stop" ? (e) => { e.preventDefault(); /* patched (hairline/patch.mjs) */ onStop?.(); } : undefined}
             className={`cursor-pointer disabled:cursor-default relative flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-[opacity,transform] duration-200 active:scale-95 disabled:opacity-35 ${FOCUS}`}
           >
             <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center" style={swap(action === "send", reduced)}>

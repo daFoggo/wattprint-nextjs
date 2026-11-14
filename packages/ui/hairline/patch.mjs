@@ -26,6 +26,12 @@ const hook = (file, line) =>
 
 export const PATCHES = [
   {
+    file: "prompt-composer.tsx",
+    why: "Stop re-renders the button into Send (type=submit) during its own click, so the click's default action then submitted the form: stopping an answer also sent whatever was typed.",
+    from: "onClick={action === \"stop\" ? onStop : undefined}",
+    to: "onClick={action === \"stop\" ? (e) => { e.preventDefault(); /* patched (hairline/patch.mjs) */ onStop?.(); } : undefined}",
+  },
+  {
     file: "text-morph.tsx",
     why: "A morph effect run twice on the same letters (Strict Mode reconnecting a page Cache Components revealed) queued its leaving letters twice: React warned of duplicate keys `out-N`.",
     from: "setLeaving((l) => [...l, ...glyphs.filter((g) => !kept.has(g.key)).map(",
@@ -1067,6 +1073,24 @@ export const PATCHES = [
   },
 
   imports("chat-history.tsx"),
+  {
+    file: "chat-history.tsx",
+    why: 'Groups older than 30 days were named by month in English ("October") whatever the app language.',
+    from: 'function bucket(date: Date, today: number) {',
+    to: 'function bucket(date: Date, today: number, locale = "en-US") { // patched (hairline/patch.mjs)',
+  },
+  {
+    file: "chat-history.tsx",
+    why: "The month name follows the locale passed in (above).",
+    from: 'return date.toLocaleDateString("en-US", {',
+    to: "return date.toLocaleDateString(locale, {",
+  },
+  {
+    file: "chat-history.tsx",
+    why: 'The locale comes from the text dictionary: t("en-US") is the BCP 47 tag of the app language.',
+    from: "bucket(new Date(chat.updatedAt), today)",
+    to: 'bucket(new Date(chat.updatedAt), today, t("en-US") /* patched (hairline/patch.mjs) */)',
+  },
   hook("chat-history.tsx", "  onUndo: () => void;\n}) {\n"),
   text(
     "chat-history.tsx",

@@ -101,13 +101,13 @@ function Arrive({ id, isFresh, reduced, children }: { id: string; isFresh: (id: 
 const DAY = 86_400_000;
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 
-function bucket(date: Date, today: number) {
+function bucket(date: Date, today: number, locale = "en-US") { // patched (hairline/patch.mjs)
   const days = Math.round((today - startOfDay(date)) / DAY);
   if (days <= 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return "Previous 7 days";
   if (days < 30) return "Previous 30 days";
-  return date.toLocaleDateString("en-US", { month: "long", year: new Date(today).getFullYear() === date.getFullYear() ? undefined : "numeric" });
+  return date.toLocaleDateString(locale, { month: "long", year: new Date(today).getFullYear() === date.getFullYear() ? undefined : "numeric" });
 }
 
 function Mark({ text, query }: { text: string; query: string }) {
@@ -452,7 +452,7 @@ export function ChatHistory({
   const visible = chats.filter((c) => !q || (c.title ?? "").toLowerCase().includes(q));
   const groups = new Map<string, ChatSummary[]>();
   for (const chat of [...visible].sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))) {
-    const name = chat.pinned ? "Pinned" : bucket(new Date(chat.updatedAt), today);
+    const name = chat.pinned ? "Pinned" : bucket(new Date(chat.updatedAt), today, t("en-US") /* patched (hairline/patch.mjs) */);
     groups.set(name, [...(groups.get(name) ?? []), chat]);
   }
   const ordered = [...groups.entries()].sort(([a], [b]) => (a === "Pinned" ? -1 : b === "Pinned" ? 1 : 0));
