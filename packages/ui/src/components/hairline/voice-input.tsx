@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { Mic, MicOff, RotateCcw, Square, X } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -233,6 +234,7 @@ export function VoiceInput({
   className = "",
   ...props
 }: VoiceInputProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const end = align === "end";
   const reduced = useReducedMotion();
   const listening = status === "listening";
@@ -302,7 +304,7 @@ export function VoiceInput({
         >
           <button
             type="button"
-            aria-label={status === "idle" ? "Dictate" : listening ? "Stop and transcribe" : transcribing ? "Transcribing" : blocked ? "Microphone blocked" : "Didn’t catch that"}
+            aria-label={t(status === "idle" ? "Dictate" : listening ? "Stop and transcribe" : transcribing ? "Transcribing" : blocked ? "Microphone blocked" : "Didn’t catch that")}
             aria-disabled={!press || undefined}
             onClick={() => press?.()}
             className={`relative flex size-8 shrink-0 items-center justify-center rounded-full transition-[background-color,color,transform] duration-300 ${FOCUS} ${
@@ -339,7 +341,7 @@ export function VoiceInput({
               className={`absolute inset-y-0 flex items-center text-[13px] font-medium ${end ? "right-1" : "left-1"} ${transcribing ? SHEEN : ""}`}
               style={appear(transcribing, reduced)}
             >
-              <TextMorph>{transcribing ? "Transcribing" : "Listening"}</TextMorph>
+              <TextMorph>{transcribing ? t("Transcribing") : t("Listening")}</TextMorph>
             </span>
           </span>
 
@@ -352,7 +354,7 @@ export function VoiceInput({
           {onCancel && (
             <button
               type="button"
-              aria-label="Cancel"
+              aria-label={t("Cancel")}
               inert={!listening}
               onClick={onCancel}
               className={`cursor-pointer ${end ? "mr-1" : "ml-1"} flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${FOCUS}`}
@@ -377,10 +379,10 @@ export function VoiceInput({
           <div className={`flex min-h-0 min-w-0 items-center gap-3 overflow-hidden ${end ? "pr-3" : "pl-3"}`}>
             <span className="min-w-0 flex-1 text-[12.5px] leading-5">
               <span className="block font-medium text-foreground">
-                <TextMorph animateWidth={false}>{blocked ? "Microphone blocked" : "Didn’t catch that"}</TextMorph>
+                <TextMorph animateWidth={false}>{blocked ? t("Microphone blocked") : t("Didn’t catch that")}</TextMorph>
               </span>
               <span className="block text-muted-foreground">
-                {errorText ?? (blocked ? "Allow the microphone in your browser’s site settings, then try again." : "Speak a little closer to the microphone.")}
+                {errorText ?? (blocked ? t("Allow the microphone in your browser’s site settings, then try again.") : t("Speak a little closer to the microphone."))}
               </span>
             </span>
             {onStart && (
@@ -391,14 +393,14 @@ export function VoiceInput({
                 className={`cursor-pointer flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium text-foreground shadow-[inset_0_0_0_1px_var(--border)] transition-colors hover:bg-accent ${FOCUS}`}
               >
                 <RotateCcw aria-hidden="true" className="size-3" />
-                Try again
+                {t("Try again")}
               </button>
             )}
           </div>
         </div>
       </div>
       <span className="sr-only" role="status">
-        {listening ? "Listening" : transcribing ? "Transcribing" : ""}
+        {listening ? t("Listening") : transcribing ? t("Transcribing") : ""}
       </span>
     </div>
   );

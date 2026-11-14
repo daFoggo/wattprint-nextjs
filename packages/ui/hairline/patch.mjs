@@ -26,6 +26,12 @@ const hook = (file, line) =>
 
 export const PATCHES = [
   {
+    file: "text-morph.tsx",
+    why: "A morph effect run twice on the same letters (Strict Mode reconnecting a page Cache Components revealed) queued its leaving letters twice: React warned of duplicate keys `out-N`.",
+    from: "setLeaving((l) => [...l, ...glyphs.filter((g) => !kept.has(g.key)).map(",
+    to: "setLeaving((l) => [...l, ...glyphs.filter((g) => !kept.has(g.key) && /* patched (hairline/patch.mjs) */ !l.some((o) => o.key === g.key)).map(",
+  },
+  {
     file: "combo-chart.tsx",
     why: 'The change chip ignored `locales`: it read "9.3%" beside Vietnamese figures with a decimal comma.',
     from: '<NumberRoll value={visible ? Math.abs(change) : 0} format={{ style: "percent", maximumFractionDigits: 1 }} duration={700} />',
@@ -1059,6 +1065,326 @@ export const PATCHES = [
     from: "          disabled={!p.hasDetail}\n          onClick={() => p.hasDetail && a.current.toggleOpen(id, row)}",
     to: "          disabled={!p.hasDetail && !p.clickable}\n          onClick={() => (p.hasDetail ? a.current.toggleOpen(id, row) : p.clickable && a.current.open(row))} // patched (hairline/patch.mjs)",
   },
+
+  imports("chat-history.tsx"),
+  hook("chat-history.tsx", "  onUndo: () => void;\n}) {\n"),
+  text(
+    "chat-history.tsx",
+    "<span className={SHIMMER}>New chat</span>",
+    '<span className={SHIMMER}>{t("New chat")}</span>'
+  ),
+  text(
+    "chat-history.tsx",
+    "aria-label={chat.pinned ? `Unpin ${chat.title}` : `Pin ${chat.title}`}",
+    'aria-label={t(chat.pinned ? "Unpin {title}" : "Pin {title}", { title: chat.title ?? "" })}'
+  ),
+  text(
+    "chat-history.tsx",
+    "aria-label={`Rename ${chat.title}`}",
+    'aria-label={t("Rename {title}", { title: chat.title ?? "" })}'
+  ),
+  text(
+    "chat-history.tsx",
+    "aria-label={`Delete ${chat.title}`}",
+    'aria-label={t("Delete {title}", { title: chat.title ?? "" })}'
+  ),
+  text("chat-history.tsx", 'aria-label="Chat title"', 'aria-label={t("Chat title")}'),
+  text("chat-history.tsx", 'aria-label="Save title"', 'aria-label={t("Save title")}'),
+  text(
+    "chat-history.tsx",
+    '{deleted ? "Chat deleted" : ""}',
+    '{deleted ? t("Chat deleted") : ""}'
+  ),
+  text(
+    "chat-history.tsx",
+    "hover:decoration-foreground ${FOCUS}`}>\n          Undo\n",
+    'hover:decoration-foreground ${FOCUS}`}>\n          {t("Undo")}\n'
+  ),
+  hook("chat-history.tsx", "}: ChatHistoryProps) {\n"),
+  text(
+    "chat-history.tsx",
+    '<nav aria-label="Chat history"',
+    '<nav aria-label={t("Chat history")}'
+  ),
+  text(
+    "chat-history.tsx",
+    'placeholder="Search chats"\n                aria-label="Search chats"',
+    'placeholder={t("Search chats")}\n                aria-label={t("Search chats")}'
+  ),
+  text("chat-history.tsx", 'aria-label="Clear search"', 'aria-label={t("Clear search")}'),
+  text("chat-history.tsx", 'aria-label="New chat"', 'aria-label={t("New chat")}'),
+  text(
+    "chat-history.tsx",
+    '{q ? `No chats match “${query.trim()}”` : "No chats yet"}',
+    '{q ? t("No chats match “{query}”", { query: query.trim() }) : t("No chats yet")}'
+  ),
+  // The group names stay English keys (the "Pinned" sort reads them); only what is shown is translated.
+  text(
+    "chat-history.tsx",
+    '<section key={name} aria-label={name} className="pb-2">\n            <h3 className="px-3 pb-1 pt-2 text-[11.5px] font-medium text-muted-foreground">{name}</h3>',
+    '<section key={name} aria-label={t(name)} className="pb-2">\n            <h3 className="px-3 pb-1 pt-2 text-[11.5px] font-medium text-muted-foreground">{t(name)}</h3>'
+  ),
+
+  imports("chat-scroll.tsx"),
+  hook("chat-scroll.tsx", "}: ChatScrollProps) {\n"),
+  text("chat-scroll.tsx", 'aria-label="Conversation"', 'aria-label={t("Conversation")}'),
+  text(
+    "chat-scroll.tsx",
+    'aria-label={unread ? `${streaming ? "Still writing" : "New reply"} below. Jump to latest` : "Jump to latest"}',
+    'aria-label={unread ? t(streaming ? "Still writing below. Jump to latest" : "New reply below. Jump to latest") : t("Jump to latest")}'
+  ),
+  text(
+    "chat-scroll.tsx",
+    '<TextMorph>{streaming ? "Writing" : "New reply"}</TextMorph>',
+    '<TextMorph>{streaming ? t("Writing") : t("New reply")}</TextMorph>'
+  ),
+
+  imports("streaming-answer.tsx"),
+  hook(
+    "streaming-answer.tsx",
+    'export function StreamingText({ content = [], status = "done", onRetry, children, className = "", ...props }: StreamingTextProps) {\n'
+  ),
+  text(
+    "streaming-answer.tsx",
+    'animate-[ui-fade-in_300ms_ease-out_both]">Stopped</p>',
+    'animate-[ui-fade-in_300ms_ease-out_both]">{t("Stopped")}</p>'
+  ),
+  text(
+    "streaming-answer.tsx",
+    "          The answer was interrupted.\n",
+    '          {t("The answer was interrupted.")}\n'
+  ),
+  text(
+    "streaming-answer.tsx",
+    "              Retry\n",
+    '              {t("Retry")}\n'
+  ),
+  hook("streaming-answer.tsx", "}: AnswerActionsProps) {\n"),
+  text(
+    "streaming-answer.tsx",
+    '{sources.length === 1 ? "source" : "sources"}',
+    '{sources.length === 1 ? t("source") : t("sources")}'
+  ),
+  text("streaming-answer.tsx", 'label="Copy answer"', 'label={t("Copy answer")}'),
+  text("streaming-answer.tsx", 'label="Regenerate"', 'label={t("Regenerate")}'),
+  text("streaming-answer.tsx", 'label="Helpful"', 'label={t("Helpful")}'),
+  text("streaming-answer.tsx", 'label="Not helpful"', 'label={t("Not helpful")}'),
+  text(
+    "streaming-answer.tsx",
+    '{copied ? "Copied" : ""}',
+    '{copied ? t("Copied") : ""}'
+  ),
+  hook(
+    "streaming-answer.tsx",
+    'export function FollowUps({ items, onSelect, label = "Follow-ups", className = "", ...props }: FollowUpsProps) {\n'
+  ),
+  text(
+    "streaming-answer.tsx",
+    'text-muted-foreground">{label}</p>',
+    'text-muted-foreground">{t(label)}</p>'
+  ),
+
+  imports("thinking-trace.tsx"),
+  hook("thinking-trace.tsx", "}: ThinkingTraceProps) {\n"),
+  text(
+    "thinking-trace.tsx",
+    '      ? "Couldn’t finish"\n      : status === "cancelled"\n        ? "Stopped"\n        : variant === "search"\n          ? "Searched the web"\n          : variant === "tools"\n            ? `Ran ${steps.length} ${steps.length === 1 ? "tool" : "tools"}`\n            : timed\n              ? "Thought for"\n              : "Thought it through";',
+    '      ? t("Couldn’t finish")\n      : status === "cancelled"\n        ? t("Stopped")\n        : variant === "search"\n          ? t("Searched the web")\n          : variant === "tools"\n            ? t(steps.length === 1 ? "Ran {n} tool" : "Ran {n} tools", { n: steps.length })\n            : timed\n              ? t("Thought for")\n              : t("Thought it through");'
+  ),
+  text(
+    "thinking-trace.tsx",
+    "(label ?? RUNNING_LABEL[variant])",
+    "(label ?? t(RUNNING_LABEL[variant]))"
+  ),
+  text("thinking-trace.tsx", ">+{more} more</li>", '>{t("+{n} more", { n: more })}</li>'),
+
+  imports("thinking-indicator.tsx"),
+  hook("thinking-indicator.tsx", "}: ThinkingIndicatorProps) {\n"),
+  text(
+    "thinking-indicator.tsx",
+    'const text = running ? label : (doneLabel ?? (elapsed !== undefined ? "Done in" : "Done"));',
+    'const text = running ? t(label) : (doneLabel ?? (elapsed !== undefined ? t("Done in") : t("Done")));'
+  ),
+  text(
+    "thinking-indicator.tsx",
+    "{running ? label : showTime",
+    "{running ? t(label) : showTime"
+  ),
+
+  imports("tool-call.tsx"),
+  hook("tool-call.tsx", "}: ToolCallProps) {\n"),
+  text(
+    "tool-call.tsx",
+    '<TextMorph>{showTime ? "" : LABELS[status]}</TextMorph>',
+    '<TextMorph>{showTime ? "" : t(LABELS[status])}</TextMorph>'
+  ),
+  text("tool-call.tsx", "<Label>Input</Label>", '<Label>{t("Input")}</Label>'),
+  text("tool-call.tsx", "<Label>Output</Label>", '<Label>{t("Output")}</Label>'),
+  text("tool-call.tsx", "                    Retry\n", '                    {t("Retry")}\n'),
+
+  imports("plan.tsx"),
+  hook("plan.tsx", "}: PlanProps) {\n"),
+  text(
+    "plan.tsx",
+    'text-foreground">{title}</span>',
+    'text-foreground">{t(title)}</span>'
+  ),
+  text("plan.tsx", "&nbsp;of&nbsp;", '&nbsp;{t("of")}&nbsp;'),
+  text("plan.tsx", "whitespace-nowrap\">&nbsp;done</span>", 'whitespace-nowrap">&nbsp;{t("done")}</span>'),
+  text(
+    "plan.tsx",
+    "{settled ? `${done} of ${tasks.length} done` : `${done} of ${tasks.length}`}",
+    '{t(settled ? "{done} of {total} done" : "{done} of {total}", { done, total: tasks.length })}'
+  ),
+  text("plan.tsx", "<ol aria-label={title}", "<ol aria-label={t(title)}"),
+  text(
+    "plan.tsx",
+    '<span className="sr-only">, {STATUS_TEXT[task.status]}</span>',
+    '<span className="sr-only">, {t(STATUS_TEXT[task.status])}</span>'
+  ),
+
+  imports("approval-card.tsx"),
+  hook("approval-card.tsx", "}: ApprovalCardProps) {\n"),
+  text(
+    "approval-card.tsx",
+    "aria-label={decided ? `${LABELS[current]}: ${title}` : `Approval needed: ${title}`}",
+    'aria-label={decided ? `${t(LABELS[current])}: ${title}` : t("Approval needed: {title}", { title })}'
+  ),
+  text(
+    "approval-card.tsx",
+    "<TextMorph>{LABELS[current]}</TextMorph>",
+    "<TextMorph>{t(LABELS[current])}</TextMorph>"
+  ),
+  text(
+    "approval-card.tsx",
+    '<span className="sr-only">Time left: </span>',
+    '<span className="sr-only">{t("Time left: ")}</span>'
+  ),
+  text("approval-card.tsx", "                {denyLabel}\n", "                {t(denyLabel)}\n"),
+  text("approval-card.tsx", "                {approveLabel}\n", "                {t(approveLabel)}\n"),
+  text(
+    "approval-card.tsx",
+    '{decided ? `${LABELS[current]}: ${title}` : ""}',
+    '{decided ? `${t(LABELS[current])}: ${title}` : ""}'
+  ),
+
+  imports("clarifying-question.tsx"),
+  hook("clarifying-question.tsx", "}: ClarifyingQuestionProps) {\n"),
+  text(
+    "clarifying-question.tsx",
+    "{ id: OTHER, label: otherLabel }",
+    "{ id: OTHER, label: t(otherLabel) }"
+  ),
+  text(
+    "clarifying-question.tsx",
+    "const receipt = isSkipped && !final ? `Skipped, ${skippedText}` : summary;",
+    'const receipt = isSkipped && !final ? t("Skipped, {reason}", { reason: t(skippedText) }) : summary;'
+  ),
+  text(
+    "clarifying-question.tsx",
+    '<TextMorph>{done ? "" : "Needs your answer"}</TextMorph>',
+    '<TextMorph>{done ? "" : t("Needs your answer")}</TextMorph>'
+  ),
+  text(
+    "clarifying-question.tsx",
+    'placeholder="Type your answer"\n                        aria-label={otherLabel}',
+    'placeholder={t("Type your answer")}\n                        aria-label={t(otherLabel)}'
+  ),
+  text("clarifying-question.tsx", 'aria-label="Send answer"', 'aria-label={t("Send answer")}'),
+  text("clarifying-question.tsx", "                    Skip\n", '                    {t("Skip")}\n'),
+  text("clarifying-question.tsx", "                    Continue\n", '                    {t("Continue")}\n'),
+
+  imports("prompt-composer.tsx"),
+  hook("prompt-composer.tsx", "}: PromptComposerProps) {\n"),
+  text(
+    "prompt-composer.tsx",
+    "placeholder={placeholder}\n          aria-label={placeholder}",
+    "placeholder={t(placeholder)}\n          aria-label={t(placeholder)}"
+  ),
+  text("prompt-composer.tsx", 'aria-label="Attach files"', 'aria-label={t("Attach files")}'),
+  text(
+    "prompt-composer.tsx",
+    'aria-label={action === "stop" ? "Stop" : action === "wait" ? "Sending" : "Send"}',
+    'aria-label={action === "stop" ? t("Stop") : action === "wait" ? t("Sending") : t("Send")}'
+  ),
+  text("prompt-composer.tsx", "        Drop files to attach\n", '        {t("Drop files to attach")}\n'),
+
+  imports("voice-input.tsx"),
+  hook("voice-input.tsx", "}: VoiceInputProps) {\n"),
+  text(
+    "voice-input.tsx",
+    'aria-label={status === "idle" ? "Dictate" : listening ? "Stop and transcribe" : transcribing ? "Transcribing" : blocked ? "Microphone blocked" : "Didn’t catch that"}',
+    'aria-label={t(status === "idle" ? "Dictate" : listening ? "Stop and transcribe" : transcribing ? "Transcribing" : blocked ? "Microphone blocked" : "Didn’t catch that")}'
+  ),
+  text(
+    "voice-input.tsx",
+    '<TextMorph>{transcribing ? "Transcribing" : "Listening"}</TextMorph>',
+    '<TextMorph>{transcribing ? t("Transcribing") : t("Listening")}</TextMorph>'
+  ),
+  text("voice-input.tsx", 'aria-label="Cancel"', 'aria-label={t("Cancel")}'),
+  text(
+    "voice-input.tsx",
+    '<TextMorph animateWidth={false}>{blocked ? "Microphone blocked" : "Didn’t catch that"}</TextMorph>',
+    '<TextMorph animateWidth={false}>{blocked ? t("Microphone blocked") : t("Didn’t catch that")}</TextMorph>'
+  ),
+  text(
+    "voice-input.tsx",
+    '{errorText ?? (blocked ? "Allow the microphone in your browser’s site settings, then try again." : "Speak a little closer to the microphone.")}',
+    '{errorText ?? (blocked ? t("Allow the microphone in your browser’s site settings, then try again.") : t("Speak a little closer to the microphone."))}'
+  ),
+  text("voice-input.tsx", "                Try again\n", '                {t("Try again")}\n'),
+  text(
+    "voice-input.tsx",
+    '{listening ? "Listening" : transcribing ? "Transcribing" : ""}',
+    '{listening ? t("Listening") : transcribing ? t("Transcribing") : ""}'
+  ),
+
+  // The error text comes from HELP here or from voice-session.ts's VoiceError messages; both are keys in the table.
+  imports("voice-talk.tsx"),
+  hook(
+    "voice-talk.tsx",
+    'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {\n'
+  ),
+  text(
+    "voice-talk.tsx",
+    '(HELP[error.kind] ?? error.message) : "";',
+    't(HELP[error.kind] ?? error.message) : "";'
+  ),
+  text(
+    "voice-talk.tsx",
+    'const say = phase === "error" ? (error?.message ?? "") :',
+    'const say = phase === "error" ? t(error?.message ?? "") :'
+  ),
+  text(
+    "voice-talk.tsx",
+    'phase === "thinking" ? l.thinking : "Speaking";',
+    'phase === "thinking" ? l.thinking : t("Speaking");'
+  ),
+
+  imports("code-block.tsx"),
+  hook("code-block.tsx", "}: CodeBlockProps) {\n"),
+  text("code-block.tsx", '            language ?? "code"\n', '            language ?? t("code")\n'),
+  text("code-block.tsx", 'aria-label="Wrap lines"', 'aria-label={t("Wrap lines")}'),
+  text(
+    "code-block.tsx",
+    "labels={COPY_LABELS}\n          aria-label=\"Copy code\"",
+    'labels={{ idle: t(COPY_LABELS.idle), success: t(COPY_LABELS.success), error: t(COPY_LABELS.error) }}\n          aria-label={t("Copy code")}'
+  ),
+  text(
+    "code-block.tsx",
+    'labels={{ idle: applyLabel, pending: "Applying", success: "Applied", error: "Try again" }}',
+    'labels={{ idle: t(applyLabel), pending: t("Applying"), success: t("Applied"), error: t("Try again") }}'
+  ),
+  text(
+    "code-block.tsx",
+    'aria-label={`${language ?? "Code"}${filename ? `, ${filename}` : ""}`}',
+    'aria-label={`${language ?? t("Code")}${filename ? `, ${filename}` : ""}`}'
+  ),
+  text(
+    "code-block.tsx",
+    '<TextMorph>{expanded ? "Show less" : `Show ${hidden} more line${hidden === 1 ? "" : "s"}`}</TextMorph>',
+    '<TextMorph>{expanded ? t("Show less") : t(hidden === 1 ? "Show {n} more line" : "Show {n} more lines", { n: hidden })}</TextMorph>'
+  ),
 ]
 
 export function apply(read, write, patches = PATCHES) {

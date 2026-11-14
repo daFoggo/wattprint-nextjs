@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ArrowUp } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -126,6 +127,7 @@ export function ClarifyingQuestion({
   className = "",
   ...props
 }: ClarifyingQuestionProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const id = React.useId();
   const reduced = useReducedMotion();
   const [own, setOwn] = React.useState<QuestionAnswer | null>(null);
@@ -143,7 +145,7 @@ export function ClarifyingQuestion({
   const final = answer ?? own;
   const isSkipped = skipped || ownSkipped;
   const done = Boolean(final) || isSkipped;
-  const rows = allowOther ? [...options, { id: OTHER, label: otherLabel }] : options;
+  const rows = allowOther ? [...options, { id: OTHER, label: t(otherLabel) }] : options;
 
   // The options are about to fold away: keep focus on the card instead of dropping it on the page.
   const fold = () => {
@@ -240,7 +242,7 @@ export function ClarifyingQuestion({
   };
 
   const summary = final ? [...final.labels, final.other].filter(Boolean).join(", ") : "";
-  const receipt = isSkipped && !final ? `Skipped, ${skippedText}` : summary;
+  const receipt = isSkipped && !final ? t("Skipped, {reason}", { reason: t(skippedText) }) : summary;
   const count = picked.length + (otherOpen && otherText.trim() ? 1 : 0);
   const canContinue = count > 0;
 
@@ -263,7 +265,7 @@ export function ClarifyingQuestion({
           </span>
         </span>
         <span aria-hidden={done || undefined} className="shrink-0 text-muted-foreground">
-          <TextMorph>{done ? "" : "Needs your answer"}</TextMorph>
+          <TextMorph>{done ? "" : t("Needs your answer")}</TextMorph>
         </span>
         <Reveal show={done} reduced={reduced} className="min-w-0">
           <span title={question} className="text-muted-foreground">
@@ -363,14 +365,14 @@ export function ClarifyingQuestion({
                             requestAnimationFrame(() => (rowRefs.current[i] as HTMLElement | null)?.focus());
                           }
                         }}
-                        placeholder="Type your answer"
-                        aria-label={otherLabel}
+                        placeholder={t("Type your answer")}
+                        aria-label={t(otherLabel)}
                         className="h-8 min-w-0 flex-1 bg-transparent text-[13.5px] text-foreground outline-none placeholder:text-muted-foreground animate-[ui-fade-in_200ms_ease-out_both] motion-reduce:animate-none"
                       />
                       {!multiple && (
                         <button
                           type="button"
-                          aria-label="Send answer"
+                          aria-label={t("Send answer")}
                           disabled={!otherText.trim()}
                           onClick={submitOther}
                           className={`cursor-pointer disabled:cursor-default flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-[opacity,transform] active:scale-[0.94] disabled:opacity-30 ${FOCUS}`}
@@ -415,7 +417,7 @@ export function ClarifyingQuestion({
                     onClick={skip}
                     className={`cursor-pointer h-8 rounded-full px-2.5 text-[12.5px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${FOCUS}`}
                   >
-                    Skip
+                    {t("Skip")}
                   </button>
                 ) : (
                   <span />
@@ -427,7 +429,7 @@ export function ClarifyingQuestion({
                     onClick={() => submit(picked, otherOpen && otherText.trim() ? otherText.trim() : undefined)}
                     className={`cursor-pointer disabled:cursor-default inline-flex h-8 items-center rounded-full bg-primary px-3.5 text-[12.5px] font-medium text-primary-foreground transition-[opacity,transform] duration-300 active:scale-[0.96] disabled:opacity-35 ${FOCUS}`}
                   >
-                    Continue
+                    {t("Continue")}
                     {/* " · 3" opens beside it with the first pick and rolls as you pick more. */}
                     <span
                       aria-hidden="true"

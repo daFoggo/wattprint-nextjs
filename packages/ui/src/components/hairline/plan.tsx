@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ChevronDown, ListChecks, X } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 
@@ -140,6 +141,7 @@ export function Plan({
   className = "",
   ...props
 }: PlanProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [ownOpen, setOwnOpen] = React.useState(defaultOpen);
   const [touched, setTouched] = React.useState(false);
@@ -174,10 +176,10 @@ export function Plan({
         className={`cursor-pointer -mx-1.5 flex w-[calc(100%+0.75rem)] items-center gap-2 rounded-lg px-1.5 py-1 text-left transition-colors hover:bg-accent ${FOCUS}`}
       >
         <ListChecks aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
-        <span className="text-[13px] font-medium text-foreground">{title}</span>
+        <span className="text-[13px] font-medium text-foreground">{t(title)}</span>
         <span aria-hidden="true" className="ml-auto flex items-baseline font-mono text-[11.5px] tabular-nums text-muted-foreground">
           <NumberRoll value={done} duration={600} />
-          &nbsp;of&nbsp;
+          &nbsp;{t("of")}&nbsp;
           <NumberRoll value={tasks.length} duration={600} />
           <span
             className="grid"
@@ -187,7 +189,7 @@ export function Plan({
               transition: reduced ? "none" : `grid-template-columns 420ms ${MORPH}, opacity 300ms ${MORPH}`,
             }}
           >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">&nbsp;done</span>
+            <span className="min-w-0 overflow-hidden whitespace-nowrap">&nbsp;{t("done")}</span>
           </span>
         </span>
         <ChevronDown
@@ -197,7 +199,7 @@ export function Plan({
       </button>
       {/* Outside the button, so its name stays the title. */}
       <span role="status" aria-live="polite" className="sr-only">
-        {settled ? `${done} of ${tasks.length} done` : `${done} of ${tasks.length}`}
+        {t(settled ? "{done} of {total} done" : "{done} of {total}", { done, total: tasks.length })}
       </span>
 
       <div aria-hidden="true" className="mt-1.5 h-px w-full overflow-hidden bg-border">
@@ -215,7 +217,7 @@ export function Plan({
         }`}
       >
         <div className="overflow-hidden">
-          <ol aria-label={title} className="flex flex-col gap-0.5 pt-2.5">
+          <ol aria-label={t(title)} className="flex flex-col gap-0.5 pt-2.5">
             {tasks.map((task, i) => {
               const quiet = task.status === "done" || task.status === "skipped";
               return (
@@ -237,7 +239,7 @@ export function Plan({
                       >
                         {task.label}
                       </span>
-                      <span className="sr-only">, {STATUS_TEXT[task.status]}</span>
+                      <span className="sr-only">, {t(STATUS_TEXT[task.status])}</span>
                     </span>
                     <Detail text={task.detail} failed={task.status === "failed"} reduced={reduced} />
                   </span>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { Check, Pencil, Pin, PinOff, Search, SquarePen, Trash2, X } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
@@ -171,6 +172,7 @@ function Row({
   onDelete?: () => void;
   onUndo: () => void;
 }) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const generating = Boolean(chat.generating || !chat.title);
   const title = useArrivingTitle(chat.title, generating, reduced);
   const [renaming, setRenaming] = React.useState(false);
@@ -263,14 +265,14 @@ function Row({
           className={`cursor-pointer flex h-9 min-w-0 flex-1 items-center rounded-xl pl-3 pr-2 text-left text-[13px] outline-none transition-[padding] duration-150 group-hover/row:pr-24 group-focus-within/row:pr-24 focus-visible:ring-2 focus-visible:ring-ring/40 ${active ? "font-medium text-foreground" : "text-foreground/80"}`}
         >
           <span className="min-w-0 flex-1 truncate">
-            {generating ? <span className={SHIMMER}>New chat</span> : <Mark text={title} query={query} />}
+            {generating ? <span className={SHIMMER}>{t("New chat")}</span> : <Mark text={title} query={query} />}
           </span>
         </button>
         {!generating && (onPin || onRename || onDelete) && (
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-end pl-8 pr-1.5 rounded-r-xl opacity-0 transition-opacity duration-150 group-focus-within/row:opacity-100 group-hover/row:opacity-100 [@media(hover:none)]:opacity-100 bg-gradient-to-l from-accent via-accent/80 to-transparent">
             <span className="pointer-events-auto flex items-center gap-0.5">
               {onPin && (
-                <button type="button" aria-label={chat.pinned ? `Unpin ${chat.title}` : `Pin ${chat.title}`} onClick={onPin} className={`cursor-pointer relative ${ICON}`}>
+                <button type="button" aria-label={t(chat.pinned ? "Unpin {title}" : "Pin {title}", { title: chat.title ?? "" })} onClick={onPin} className={`cursor-pointer relative ${ICON}`}>
                   <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center" style={swap(!chat.pinned, reduced)}>
                     <Pin />
                   </span>
@@ -282,7 +284,7 @@ function Row({
               {onRename && (
                 <button
                   type="button"
-                  aria-label={`Rename ${chat.title}`}
+                  aria-label={t("Rename {title}", { title: chat.title ?? "" })}
                   onClick={() => {
                     setDraft(chat.title ?? "");
                     setRenaming(true);
@@ -293,7 +295,7 @@ function Row({
                 </button>
               )}
               {onDelete && (
-                <button type="button" aria-label={`Delete ${chat.title}`} onClick={onDelete} className={`cursor-pointer ${ICON} hover:text-red-600`}>
+                <button type="button" aria-label={t("Delete {title}", { title: chat.title ?? "" })} onClick={onDelete} className={`cursor-pointer ${ICON} hover:text-red-600`}>
                   <Trash2 />
                 </button>
               )}
@@ -307,7 +309,7 @@ function Row({
           <input
             ref={fieldRef}
             value={draft}
-            aria-label="Chat title"
+            aria-label={t("Chat title")}
             tabIndex={mode === "renaming" ? 0 : -1}
             onChange={(e) => setDraft(e.target.value)}
             onBlur={() => mode === "renaming" && save()}
@@ -327,7 +329,7 @@ function Row({
           />
           <button
             type="button"
-            aria-label="Save title"
+            aria-label={t("Save title")}
             tabIndex={mode === "renaming" ? 0 : -1}
             onMouseDown={(e) => {
               // Prevent input from blurring before save click fires
@@ -349,10 +351,10 @@ function Row({
         style={layer(mode === "deleted", reduced)}
       >
         <span role="status" className="truncate">
-          {deleted ? "Chat deleted" : ""}
+          {deleted ? t("Chat deleted") : ""}
         </span>
         <button type="button" onClick={onUndo} className={`cursor-pointer rounded font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground ${FOCUS}`}>
-          Undo
+          {t("Undo")}
         </button>
       </div>
     </div>
@@ -373,6 +375,7 @@ export function ChatHistory({
   className = "",
   ...props
 }: ChatHistoryProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [query, setQuery] = React.useState(defaultQuery);
   const [deleted, setDeleted] = React.useState<Set<string>>(() => new Set());
@@ -467,7 +470,7 @@ export function ChatHistory({
   };
 
   return (
-    <nav aria-label="Chat history" onKeyDown={onKeyDown} className={`flex min-h-0 flex-col ${className}`} {...props}>
+    <nav aria-label={t("Chat history")} onKeyDown={onKeyDown} className={`flex min-h-0 flex-col ${className}`} {...props}>
       {(searchable || onNew) && (
         <div className="flex items-center gap-1.5 pb-2">
           {searchable && (
@@ -485,14 +488,14 @@ export function ChatHistory({
                   capture();
                   setQuery("");
                 }}
-                placeholder="Search chats"
-                aria-label="Search chats"
+                placeholder={t("Search chats")}
+                aria-label={t("Search chats")}
                 className="h-full min-w-0 flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
               />
               {query && (
                 <button
                   type="button"
-                  aria-label="Clear search"
+                  aria-label={t("Clear search")}
                   onClick={() => {
                     capture();
                     setQuery("");
@@ -507,7 +510,7 @@ export function ChatHistory({
           {onNew && (
             <button
               type="button"
-              aria-label="New chat"
+              aria-label={t("New chat")}
               onClick={onNew}
               className={`cursor-pointer flex size-9 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [&_svg]:size-4 ${FOCUS}`}
             >
@@ -520,12 +523,12 @@ export function ChatHistory({
       <div ref={listRef} className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]">
         {ordered.length === 0 && (
           <p role="status" className="px-3 py-6 text-center text-[12.5px] text-muted-foreground">
-            {q ? `No chats match “${query.trim()}”` : "No chats yet"}
+            {q ? t("No chats match “{query}”", { query: query.trim() }) : t("No chats yet")}
           </p>
         )}
         {ordered.map(([name, items]) => (
-          <section key={name} aria-label={name} className="pb-2">
-            <h3 className="px-3 pb-1 pt-2 text-[11.5px] font-medium text-muted-foreground">{name}</h3>
+          <section key={name} aria-label={t(name)} className="pb-2">
+            <h3 className="px-3 pb-1 pt-2 text-[11.5px] font-medium text-muted-foreground">{t(name)}</h3>
             <ul>
               {items.map((chat) => (
                 <li

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ChevronDown, Copy, CornerDownLeft, WrapText } from "lucide-react";
 import { StatusButton, type ActionStatus } from "./status-button";
 import { TextMorph } from "./text-morph";
@@ -106,6 +107,7 @@ export function CodeBlock({
   className = "",
   ...props
 }: CodeBlockProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [copy, setCopy] = React.useState<ActionStatus>("idle");
   const [wrap, setWrap] = React.useState(false);
@@ -193,12 +195,12 @@ export function CodeBlock({
               {language && <span className="ml-2 opacity-70">{language}</span>}
             </>
           ) : (
-            language ?? "code"
+            language ?? t("code")
           )}
         </span>
         <button
           type="button"
-          aria-label="Wrap lines"
+          aria-label={t("Wrap lines")}
           aria-pressed={wrap}
           onClick={() => {
             wrapFrom.current = bodyRef.current?.offsetHeight ?? null;
@@ -213,8 +215,8 @@ export function CodeBlock({
           size="sm"
           icon={<Copy />}
           status={copy}
-          labels={COPY_LABELS}
-          aria-label="Copy code"
+          labels={{ idle: t(COPY_LABELS.idle), success: t(COPY_LABELS.success), error: t(COPY_LABELS.error) }}
+          aria-label={t("Copy code")}
           onClick={copyCode}
           onReset={() => setCopy("idle")}
           resetAfter={1600}
@@ -228,7 +230,7 @@ export function CodeBlock({
               variant={apply === "success" ? "ghost" : "primary"}
               icon={<CornerDownLeft />}
               status={apply}
-              labels={{ idle: applyLabel, pending: "Applying", success: "Applied", error: "Try again" }}
+              labels={{ idle: t(applyLabel), pending: t("Applying"), success: t("Applied"), error: t("Try again") }}
               disabled={streaming}
               onClick={runApply}
               className="disabled:pointer-events-none"
@@ -250,7 +252,7 @@ export function CodeBlock({
           <pre
             className={`py-3 font-mono text-[12.5px] leading-[21px] text-foreground/90 [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] ${wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"}`}
             tabIndex={wrap ? undefined : 0}
-            aria-label={`${language ?? "Code"}${filename ? `, ${filename}` : ""}`}
+            aria-label={`${language ?? t("Code")}${filename ? `, ${filename}` : ""}`}
           >
             <code className="block min-w-fit">
               {rendered.map((tokens, i) => (
@@ -290,7 +292,7 @@ export function CodeBlock({
         <div className="flex justify-center border-t border-border/60 py-1.5">
           <button type="button" onClick={() => setExpanded((e) => !e)} aria-expanded={expanded} className={ACTION}>
             <ChevronDown className="transition-transform duration-300 motion-reduce:transition-none" style={{ transform: expanded ? "rotate(180deg)" : "none", transitionTimingFunction: EASE }} />
-            <TextMorph>{expanded ? "Show less" : `Show ${hidden} more line${hidden === 1 ? "" : "s"}`}</TextMorph>
+            <TextMorph>{expanded ? t("Show less") : t(hidden === 1 ? "Show {n} more line" : "Show {n} more lines", { n: hidden })}</TextMorph>
           </button>
         </div>
       )}

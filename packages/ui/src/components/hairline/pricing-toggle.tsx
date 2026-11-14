@@ -108,14 +108,14 @@ export function PricingToggle({
       role="radiogroup"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className={`relative inline-flex items-center rounded-full border border-border bg-muted/60 ${
+      className={`relative inline-flex items-center rounded-full border border-border bg-background ${
         isSm ? "p-0.5" : "p-0.5 sm:p-1"
       } ${className}`}
       {...props}
     >
       <span
         aria-hidden="true"
-        className={`absolute left-0 rounded-full bg-background shadow-[0_0_0_1px_var(--border)] ${
+        className={`absolute left-0 rounded-full bg-[color-mix(in_oklab,var(--foreground)_8%,var(--background))] ${
           isSm ? "inset-y-0.5" : "inset-y-0.5 sm:inset-y-1"
         }`}
         style={{

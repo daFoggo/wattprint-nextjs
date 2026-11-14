@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { AlertCircle, Ban, ChevronDown, RotateCcw, Wrench } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -163,6 +164,7 @@ export function ToolCall({
   className = "",
   ...props
 }: ToolCallProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [ownOpen, setOwnOpen] = React.useState(defaultOpen);
   const [errorSeen, setErrorSeen] = React.useState(false);
@@ -236,7 +238,7 @@ export function ToolCall({
         ))}
       </span>
       <span className={status === "preparing" ? SHEEN : ""}>
-        <TextMorph>{showTime ? "" : LABELS[status]}</TextMorph>
+        <TextMorph>{showTime ? "" : t(LABELS[status])}</TextMorph>
       </span>
       {duration !== undefined && (
         <span
@@ -292,14 +294,14 @@ export function ToolCall({
           <div className="flex flex-col gap-4 border-t border-border px-3 py-3">
             {input !== undefined && (
               <section>
-                <Label>Input</Label>
+                <Label>{t("Input")}</Label>
                 <Fields value={input} />
               </section>
             )}
 
             {status === "done" && output !== undefined && (
               <section className="animate-[ui-fade-up_300ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none">
-                <Label>Output</Label>
+                <Label>{t("Output")}</Label>
                 {renderOutput ? renderOutput(output) : <Fields value={output} />}
               </section>
             )}
@@ -314,7 +316,7 @@ export function ToolCall({
                     className={`cursor-pointer flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2 py-1 text-[12px] font-medium text-foreground transition-colors hover:bg-accent ${FOCUS}`}
                   >
                     <RotateCcw aria-hidden="true" className="size-3" />
-                    Retry
+                    {t("Retry")}
                   </button>
                 )}
               </section>

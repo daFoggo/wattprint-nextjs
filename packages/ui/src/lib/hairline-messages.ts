@@ -199,5 +199,144 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     "No {nouns} yet": "Chưa có {nouns} nào",
     "Previous page": "Trang trước",
     "Next page": "Trang sau",
+
+    // ChatHistory
+    "New chat": "Cuộc trò chuyện mới",
+    "Pin {title}": "Ghim {title}",
+    "Unpin {title}": "Bỏ ghim {title}",
+    "Rename {title}": "Đổi tên {title}",
+    "Delete {title}": "Xóa {title}",
+    "Chat title": "Tên cuộc trò chuyện",
+    "Save title": "Lưu tên",
+    "Chat deleted": "Đã xóa cuộc trò chuyện",
+    "Chat history": "Lịch sử trò chuyện",
+    "Search chats": "Tìm cuộc trò chuyện",
+    "No chats match “{query}”": "Không có cuộc trò chuyện nào khớp “{query}”",
+    "No chats yet": "Chưa có cuộc trò chuyện nào",
+    Pinned: "Đã ghim",
+    Today: "Hôm nay",
+    Yesterday: "Hôm qua",
+    "Previous 7 days": "7 ngày trước",
+    "Previous 30 days": "30 ngày trước",
+
+    // ChatScroll
+    Conversation: "Cuộc trò chuyện",
+    "Still writing below. Jump to latest": "Đang viết tiếp bên dưới. Xuống tin mới nhất",
+    "New reply below. Jump to latest": "Có câu trả lời mới bên dưới. Xuống tin mới nhất",
+    "Jump to latest": "Xuống tin mới nhất",
+    Writing: "Đang viết",
+    "New reply": "Câu trả lời mới",
+
+    // StreamingAnswer
+    Stopped: "Đã dừng",
+    "The answer was interrupted.": "Câu trả lời bị gián đoạn.",
+    Retry: "Thử lại",
+    source: "nguồn",
+    sources: "nguồn",
+    "Copy answer": "Sao chép câu trả lời",
+    Regenerate: "Tạo lại",
+    Helpful: "Hữu ích",
+    "Not helpful": "Chưa hữu ích",
+    "Follow-ups": "Hỏi tiếp",
+
+    // ThinkingTrace, ThinkingIndicator
+    Thinking: "Đang suy nghĩ",
+    "Searching the web": "Đang tìm trên web",
+    "Running tools": "Đang chạy công cụ",
+    "Couldn’t finish": "Chưa hoàn thành được",
+    "Searched the web": "Đã tìm trên web",
+    "Ran {n} tool": "Đã chạy {n} công cụ",
+    "Ran {n} tools": "Đã chạy {n} công cụ",
+    "Thought for": "Đã suy nghĩ trong",
+    "Thought it through": "Đã suy nghĩ xong",
+    "+{n} more": "+{n} mục khác",
+    "Done in": "Xong trong",
+
+    // ToolCall
+    Preparing: "Đang chuẩn bị",
+    Running: "Đang chạy",
+    Failed: "Lỗi",
+    Denied: "Bị từ chối",
+    Input: "Đầu vào",
+    Output: "Kết quả",
+
+    // Plan
+    Plan: "Kế hoạch",
+    done: "xong",
+    "{done} of {total}": "{done}/{total}",
+    "{done} of {total} done": "Xong {done}/{total}",
+    "Not started": "Chưa bắt đầu",
+    "In progress": "Đang làm",
+    Skipped: "Bỏ qua",
+
+    // ApprovalCard
+    "Needs your approval": "Cần bạn duyệt",
+    Approved: "Đã duyệt",
+    Expired: "Hết hạn",
+    "Approval needed: {title}": "Cần duyệt: {title}",
+    "Time left: ": "Thời gian còn lại: ",
+    Approve: "Duyệt",
+    Deny: "Từ chối",
+
+    // ClarifyingQuestion
+    "Something else": "Ý khác",
+    "the agent will decide": "trợ lý sẽ tự quyết định",
+    "Skipped, {reason}": "Đã bỏ qua, {reason}",
+    "Needs your answer": "Cần bạn trả lời",
+    "Type your answer": "Nhập câu trả lời",
+    "Send answer": "Gửi câu trả lời",
+    Skip: "Bỏ qua",
+    Continue: "Tiếp tục",
+
+    // PromptComposer
+    "Ask anything": "Hỏi bất cứ điều gì",
+    "Attach files": "Đính kèm tệp",
+    Stop: "Dừng",
+    Sending: "Đang gửi",
+    Send: "Gửi",
+    "Drop files to attach": "Thả tệp để đính kèm",
+
+    // VoiceInput
+    Dictate: "Đọc để nhập",
+    "Stop and transcribe": "Dừng và chuyển thành chữ",
+    Transcribing: "Đang chuyển thành chữ",
+    Listening: "Đang nghe",
+    "Microphone blocked": "Micro bị chặn",
+    "Didn’t catch that": "Chưa nghe rõ",
+    Cancel: "Hủy",
+    "Allow the microphone in your browser’s site settings, then try again.":
+      "Hãy cho phép micro trong cài đặt trang web của trình duyệt, rồi thử lại.",
+    "Speak a little closer to the microphone.": "Hãy nói gần micro hơn một chút.",
+
+    // VoiceTalk (and the VoiceError messages of voice-session)
+    "Microphone access is blocked. Allow it from the icon in the address bar, then try again.":
+      "Quyền dùng micro đang bị chặn. Hãy cho phép từ biểu tượng trên thanh địa chỉ, rồi thử lại.",
+    "No microphone was found. Plug one in or pick one in your system settings.":
+      "Không tìm thấy micro. Hãy cắm micro hoặc chọn micro trong cài đặt hệ thống.",
+    "This browser can't record audio on this page. It needs a secure (https) page and a recent browser.":
+      "Trình duyệt này không ghi âm được trên trang này. Cần trang bảo mật (https) và trình duyệt mới.",
+    "Microphone access was blocked.": "Quyền dùng micro đã bị chặn.",
+    "No microphone was found.": "Không tìm thấy micro.",
+    "This browser can't record audio here.": "Trình duyệt này không ghi âm được ở đây.",
+    "Recording needs a secure (https) page.": "Cần trang bảo mật (https) để ghi âm.",
+    "This browser can't record audio.": "Trình duyệt này không ghi âm được.",
+    "Didn't hear anything.": "Chưa nghe thấy gì.",
+    "Couldn't play the reply.": "Không phát được câu trả lời.",
+    "The assistant didn't answer.": "Trợ lý chưa trả lời.",
+    "Couldn't connect.": "Không kết nối được.",
+    Speaking: "Đang nói",
+
+    // CodeBlock
+    code: "mã",
+    Code: "Mã",
+    "Wrap lines": "Xuống dòng",
+    "Couldn’t copy": "Không sao chép được",
+    "Copy code": "Sao chép mã",
+    Apply: "Áp dụng",
+    Applying: "Đang áp dụng",
+    Applied: "Đã áp dụng",
+    "Show less": "Thu gọn",
+    "Show {n} more line": "Hiện thêm {n} dòng",
+    "Show {n} more lines": "Hiện thêm {n} dòng",
   },
 }

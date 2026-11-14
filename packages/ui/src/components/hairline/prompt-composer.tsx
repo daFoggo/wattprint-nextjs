@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ArrowUp, Paperclip, Square } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 
@@ -110,6 +111,7 @@ export function PromptComposer({
   className = "",
   ...props
 }: PromptComposerProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [own, setOwn] = React.useState(defaultValue);
   const [dragging, setDragging] = React.useState(false);
@@ -235,8 +237,8 @@ export function PromptComposer({
           value={text}
           autoFocus={autoFocus}
           disabled={disabled}
-          placeholder={placeholder}
-          aria-label={placeholder}
+          placeholder={t(placeholder)}
+          aria-label={t(placeholder)}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={onKeyDown}
           onPaste={(e) => {
@@ -289,7 +291,7 @@ export function PromptComposer({
           <>
             <button
               type="button"
-              aria-label="Attach files"
+              aria-label={t("Attach files")}
               disabled={disabled}
               onClick={() => fileRef.current?.click()}
               className={`cursor-pointer disabled:cursor-default flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 ${FOCUS}`}
@@ -338,7 +340,7 @@ export function PromptComposer({
           )}
           <button
             type={action === "send" ? "submit" : "button"}
-            aria-label={action === "stop" ? "Stop" : action === "wait" ? "Sending" : "Send"}
+            aria-label={action === "stop" ? t("Stop") : action === "wait" ? t("Sending") : t("Send")}
             disabled={action === "send" ? !canSend : action === "wait"}
             onClick={action === "stop" ? onStop : undefined}
             className={`cursor-pointer disabled:cursor-default relative flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-[opacity,transform] duration-200 active:scale-95 disabled:opacity-35 ${FOCUS}`}
@@ -362,7 +364,7 @@ export function PromptComposer({
         className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-2xl bg-background/85 text-[13px] font-medium text-foreground"
         style={{ opacity: dragging ? 1 : 0, transition: reduced ? "none" : `opacity 200ms ${MORPH}` }}
       >
-        Drop files to attach
+        {t("Drop files to attach")}
       </div>
     </form>
   );

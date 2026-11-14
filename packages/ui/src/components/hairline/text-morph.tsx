@@ -125,7 +125,7 @@ export function TextMorph({ children: text, duration = 460, direction = "up", an
     before.current = { at, width: box.width };
     const next = morph(glyphs, text, nextKey);
     const kept = new Set(next.map((g) => g.key));
-    setLeaving((l) => [...l, ...glyphs.filter((g) => !kept.has(g.key)).map((g) => ({ ...g, ...(at.get(g.key) ?? { x: 0, y: 0 }) }))]);
+    setLeaving((l) => [...l, ...glyphs.filter((g) => !kept.has(g.key) && /* patched (hairline/patch.mjs) */ !l.some((o) => o.key === g.key)).map((g) => ({ ...g, ...(at.get(g.key) ?? { x: 0, y: 0 }) }))]);
     setGlyphs(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, reduced]);

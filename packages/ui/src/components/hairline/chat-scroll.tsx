@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { ArrowDown } from "lucide-react";
 import { TextMorph } from "./text-morph";
 
@@ -56,6 +57,7 @@ export function ChatScroll({
   contentClassName = "",
   ...props
 }: ChatScrollProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -168,7 +170,7 @@ export function ChatScroll({
       <div
         ref={scrollerRef}
         tabIndex={0}
-        aria-label="Conversation"
+        aria-label={t("Conversation")}
         onScroll={onScroll}
         // Let go the moment someone reaches for the scroll, before the next frame of text pulls them down.
         onWheel={(e) => {
@@ -201,7 +203,7 @@ export function ChatScroll({
           type="button"
           inert={!away}
           onClick={() => toBottom(true)}
-          aria-label={unread ? `${streaming ? "Still writing" : "New reply"} below. Jump to latest` : "Jump to latest"}
+          aria-label={unread ? t(streaming ? "Still writing below. Jump to latest" : "New reply below. Jump to latest") : t("Jump to latest")}
           className="cursor-pointer pointer-events-auto flex h-8 items-center rounded-full border border-border bg-background px-2 text-[12.5px] font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-[0.96]"
           style={{
             opacity: away ? 1 : 0,
@@ -226,7 +228,7 @@ export function ChatScroll({
                   <span className="relative size-1.5 rounded-full bg-primary" />
                 </span>
                 <span className={`transition-colors duration-300 ${streaming ? SHEEN : ""}`}>
-                  <TextMorph>{streaming ? "Writing" : "New reply"}</TextMorph>
+                  <TextMorph>{streaming ? t("Writing") : t("New reply")}</TextMorph>
                 </span>
               </span>
             </span>

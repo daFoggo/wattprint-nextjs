@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
 
@@ -126,6 +127,7 @@ export function ThinkingIndicator({
   className = "",
   ...props
 }: ThinkingIndicatorProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const running = status === "running";
   const [now, setNow] = React.useState(startedAt ?? 0);
@@ -156,7 +158,7 @@ export function ThinkingIndicator({
   const settled = !running && endedAt !== undefined;
   const elapsed = startedAt === undefined ? undefined : Math.max(0, (settled ? endedAt : now) - startedAt);
   const showTime = elapsed !== undefined && (running || doneLabel === undefined);
-  const text = running ? label : (doneLabel ?? (elapsed !== undefined ? "Done in" : "Done"));
+  const text = running ? t(label) : (doneLabel ?? (elapsed !== undefined ? t("Done in") : t("Done")));
 
   return (
     <div className={`inline-flex items-center gap-2.5 text-[13px] ${className}`} {...props}>
@@ -197,7 +199,7 @@ export function ThinkingIndicator({
       </span>
       {/* What it's doing, for screen readers: the label while it works, then the outcome. Never the ticking timer. */}
       <span role="status" aria-live="polite" className="sr-only">
-        {running ? label : showTime && elapsed !== undefined ? `${text} ${formatElapsed(elapsed)}` : text}
+        {running ? t(label) : showTime && elapsed !== undefined ? `${text} ${formatElapsed(elapsed)}` : text}
       </span>
     </div>
   );

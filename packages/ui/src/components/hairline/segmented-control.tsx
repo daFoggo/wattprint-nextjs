@@ -125,13 +125,13 @@ export function SegmentedControl({
       role="radiogroup"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className={`relative isolate select-none items-center ${rootHeight} ${rootRadius} ${rootPadding} border border-black/[0.04] dark:border-white/[0.06] bg-[#f4f4f6] dark:bg-zinc-900/50 ${
+      className={`relative isolate select-none items-center ${rootHeight} ${rootRadius} ${rootPadding} border border-border bg-background ${
         block ? "flex w-full" : "inline-flex"
       } ${className}`}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute left-0 ${indicatorInset} ${itemRadius} bg-white dark:bg-zinc-800 border border-black/[0.05] dark:border-white/[0.1] shadow-[0_1px_2px_rgba(0,0,0,0.04)]`}
+        className={`pointer-events-none absolute left-0 ${indicatorInset} ${itemRadius} bg-[color-mix(in_oklab,var(--foreground)_8%,var(--background))]`}
         style={{
           transform: `translate3d(${mark?.x ?? 0}px, 0, 0) scale(${pressing && !reduced ? 0.97 : 1})`,
           width: mark?.w ?? 0,
@@ -157,7 +157,7 @@ export function SegmentedControl({
             onPointerLeave={() => setPressing(false)}
             className={`relative z-10 inline-flex items-center justify-center gap-1.5 whitespace-nowrap ${itemRadius} font-medium cursor-pointer transition-colors duration-200 disabled:cursor-default disabled:opacity-40 [&_svg]:size-3.5 ${itemHeightClass} ${
               block ? "flex-1" : ""
-            } ${on ? "text-zinc-950 font-semibold dark:text-white" : "text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100"} ${INTERACTION_FOCUS}`}
+            } ${on ? "text-foreground font-semibold" : "text-muted-foreground hover:text-foreground"} ${INTERACTION_FOCUS}`}
           >
             {option.icon}
             {option.label}

@@ -407,3 +407,44 @@
     cursor: pointer;
   }
 }
+/*
+ * Shared-element morph for React <ViewTransition share="morph">: the dashboard's Wappi conversation card between its
+ * side panel and its page. The group eases its size and place on Hairline's EASE_OUT; the snapshots keep their own
+ * size (no stretched text), clipped to the moving frame: the old one fades out fast and the new one in after it, so
+ * the eye follows one card instead of two overlapping pictures.
+ */
+::view-transition-group(.morph) {
+  overflow: clip;
+  border-radius: var(--radius-3xl);
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(.morph),
+::view-transition-new(.morph) {
+  height: 100%;
+  object-fit: none;
+  object-position: left top;
+}
+::view-transition-old(.morph) {
+  animation: morph-out 150ms ease-in both;
+}
+::view-transition-new(.morph) {
+  animation: morph-in 300ms ease-out 150ms both;
+}
+@keyframes morph-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes morph-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(.morph),
+  ::view-transition-old(.morph),
+  ::view-transition-new(.morph) {
+    animation-duration: 0s;
+  }
+}

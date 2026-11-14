@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { Ban, Clock, ShieldQuestion } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -106,6 +107,7 @@ export function ApprovalCard({
   className = "",
   ...props
 }: ApprovalCardProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [ownStatus, setOwnStatus] = React.useState<ApprovalStatus>(defaultStatus);
   const current = status ?? ownStatus;
@@ -163,7 +165,7 @@ export function ApprovalCard({
       ref={cardRef}
       tabIndex={-1}
       role="group"
-      aria-label={decided ? `${LABELS[current]}: ${title}` : `Approval needed: ${title}`}
+      aria-label={decided ? `${t(LABELS[current])}: ${title}` : t("Approval needed: {title}", { title })}
       className={`rounded-xl border border-border bg-background outline-none animate-[ui-fade-up_320ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none ${className}`}
       style={{
         padding: decided ? "10px 12px" : 16,
@@ -181,7 +183,7 @@ export function ApprovalCard({
           ))}
         </span>
         <span className={`shrink-0 transition-colors duration-300 ${decided ? "text-foreground" : "text-muted-foreground"}`}>
-          <TextMorph>{LABELS[current]}</TextMorph>
+          <TextMorph>{t(LABELS[current])}</TextMorph>
         </span>
         {/* The action slides into the line as the card folds. */}
         <span
@@ -202,7 +204,7 @@ export function ApprovalCard({
             style={{ gridTemplateColumns: decided ? "0fr" : "1fr", ...fade(!decided), transition: reduced ? "none" : `grid-template-columns 480ms ${MORPH}, opacity 160ms ease-out, filter 160ms ease-out` }}
           >
             <span className="flex min-w-0 overflow-hidden font-mono font-normal tabular-nums text-muted-foreground">
-              <span className="sr-only">Time left: </span>
+              <span className="sr-only">{t("Time left: ")}</span>
               <NumberRoll value={Math.floor(left / 60)} duration={600} />
               <span aria-hidden="true">:</span>
               <NumberRoll value={left % 60} format={{ minimumIntegerDigits: 2 }} direction="down" duration={600} />
@@ -237,7 +239,7 @@ export function ApprovalCard({
                 onClick={() => decide("denied")}
                 className={`cursor-pointer h-8 rounded-lg border border-border px-3 text-[12.5px] font-medium text-foreground transition-colors hover:bg-accent ${FOCUS}`}
               >
-                {denyLabel}
+                {t(denyLabel)}
               </button>
               <button
                 type="button"
@@ -246,7 +248,7 @@ export function ApprovalCard({
                   destructive ? "bg-red-600 text-white hover:bg-red-700" : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
-                {approveLabel}
+                {t(approveLabel)}
               </button>
             </div>
           </div>
@@ -255,7 +257,7 @@ export function ApprovalCard({
 
       {/* Announces the answer; outside the buttons so their names stay their labels. */}
       <span role="status" className="sr-only">
-        {decided ? `${LABELS[current]}: ${title}` : ""}
+        {decided ? `${t(LABELS[current])}: ${title}` : ""}
       </span>
     </div>
   );

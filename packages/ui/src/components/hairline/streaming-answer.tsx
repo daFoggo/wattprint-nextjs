@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { AlertCircle, Copy, RotateCcw, ThumbsDown, ThumbsUp } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 
@@ -139,6 +140,7 @@ const Paragraph = React.memo(
 );
 
 export function StreamingText({ content = [], status = "done", onRetry, children, className = "", ...props }: StreamingTextProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const streaming = status === "streaming";
   const paragraphs = children === undefined ? toParagraphs(content) : [];
 
@@ -154,19 +156,19 @@ export function StreamingText({ content = [], status = "done", onRetry, children
           />
         ))}
 
-      {status === "stopped" && <p className="text-xs text-muted-foreground animate-[ui-fade-in_300ms_ease-out_both]">Stopped</p>}
+      {status === "stopped" && <p className="text-xs text-muted-foreground animate-[ui-fade-in_300ms_ease-out_both]">{t("Stopped")}</p>}
 
       {status === "error" && (
         <p className="flex items-center gap-1.5 text-xs text-muted-foreground animate-[ui-fade-in_300ms_ease-out_both]">
           <AlertCircle aria-hidden="true" className="size-3.5 shrink-0 text-red-500" />
-          The answer was interrupted.
+          {t("The answer was interrupted.")}
           {onRetry && (
             <button
               type="button"
               onClick={onRetry}
               className={`cursor-pointer rounded px-1 font-medium text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground ${FOCUS}`}
             >
-              Retry
+              {t("Retry")}
             </button>
           )}
         </p>
@@ -240,6 +242,7 @@ export function AnswerActions({
   className = "",
   ...props
 }: AnswerActionsProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const [copied, setCopied] = React.useState(false);
   const [ownFeedback, setOwnFeedback] = React.useState<AnswerFeedback>(defaultFeedback);
@@ -282,7 +285,7 @@ export function AnswerActions({
       </span>
       <span className="inline-flex items-baseline gap-[0.3em] tabular-nums">
         <NumberRoll value={sources.length} duration={600} />
-        {sources.length === 1 ? "source" : "sources"}
+        {sources.length === 1 ? t("source") : t("sources")}
       </span>
     </>
   );
@@ -291,7 +294,7 @@ export function AnswerActions({
     <div className={`flex items-center justify-between gap-4 ${className}`} {...props}>
       <div className="flex items-center gap-1">
         {copyText !== undefined && (
-          <IconButton label="Copy answer" disabled={disabled} onClick={copy}>
+          <IconButton label={t("Copy answer")} disabled={disabled} onClick={copy}>
             <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center" style={swap(!copied, reduced)}>
               <Copy className="size-3.5" />
             </span>
@@ -312,20 +315,20 @@ export function AnswerActions({
           </IconButton>
         )}
         {onRegenerate && (
-          <IconButton label="Regenerate" disabled={disabled} onClick={onRegenerate}>
+          <IconButton label={t("Regenerate")} disabled={disabled} onClick={onRegenerate}>
             <RotateCcw className="size-3.5" />
           </IconButton>
         )}
-        <IconButton label="Helpful" pressed={current === "up"} disabled={disabled} onClick={() => rate("up")}>
+        <IconButton label={t("Helpful")} pressed={current === "up"} disabled={disabled} onClick={() => rate("up")}>
           <Thumb filled={current === "up"} reduced={reduced} />
         </IconButton>
-        <IconButton label="Not helpful" pressed={current === "down"} disabled={disabled} onClick={() => rate("down")}>
+        <IconButton label={t("Not helpful")} pressed={current === "down"} disabled={disabled} onClick={() => rate("down")}>
           <Thumb down filled={current === "down"} reduced={reduced} />
         </IconButton>
       </div>
       {/* Outside the buttons, so their names stay their labels. */}
       <span role="status" className="sr-only">
-        {copied ? "Copied" : ""}
+        {copied ? t("Copied") : ""}
       </span>
 
       {stack &&
@@ -353,9 +356,10 @@ export interface FollowUpsProps extends Omit<React.HTMLAttributes<HTMLDivElement
 }
 
 export function FollowUps({ items, onSelect, label = "Follow-ups", className = "", ...props }: FollowUpsProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   return (
     <div className={`border-t border-border pt-3 ${className}`} {...props}>
-      <p className="mb-1 text-[11.5px] font-medium text-muted-foreground">{label}</p>
+      <p className="mb-1 text-[11.5px] font-medium text-muted-foreground">{t(label)}</p>
       <ul className="flex flex-col">
         {items.map((item) => (
           <li key={item}>

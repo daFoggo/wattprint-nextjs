@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.mjs)
 import { AlertCircle, ChevronDown, CircleSlash, Globe, Search, Sparkle, X } from "lucide-react";
 import { NumberRoll } from "./number-roll";
 import { TextMorph } from "./text-morph";
@@ -191,6 +192,7 @@ export function ThinkingTrace({
   className = "",
   ...props
 }: ThinkingTraceProps) {
+  const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const running = status === "running";
   const [autoOpen, setAutoOpen] = React.useState(running);
@@ -252,17 +254,17 @@ export function ThinkingTrace({
   const timed = status === "done" && !doneLabel && (variant === "steps" || variant === "reasoning") && took !== undefined;
   const settledLabel =
     status === "error"
-      ? "Couldn’t finish"
+      ? t("Couldn’t finish")
       : status === "cancelled"
-        ? "Stopped"
+        ? t("Stopped")
         : variant === "search"
-          ? "Searched the web"
+          ? t("Searched the web")
           : variant === "tools"
-            ? `Ran ${steps.length} ${steps.length === 1 ? "tool" : "tools"}`
+            ? t(steps.length === 1 ? "Ran {n} tool" : "Ran {n} tools", { n: steps.length })
             : timed
-              ? "Thought for"
-              : "Thought it through";
-  const text = running ? (label ?? RUNNING_LABEL[variant]) : (doneLabel ?? settledLabel);
+              ? t("Thought for")
+              : t("Thought it through");
+  const text = running ? (label ?? t(RUNNING_LABEL[variant])) : (doneLabel ?? settledLabel);
   const showTime = (running && startedAt !== undefined) || timed;
   const time = running ? now - (startedAt ?? now) : (took ?? 0);
   const spoken = running ? text : timed ? `${text} ${formatDuration(time)}` : text;
@@ -447,7 +449,7 @@ export function ThinkingTrace({
               })}
 
               {more ? (
-                <li className="px-1.5 pt-0.5 text-xs text-muted-foreground animate-[ui-fade-in_300ms_ease-out_both] motion-reduce:animate-none">+{more} more</li>
+                <li className="px-1.5 pt-0.5 text-xs text-muted-foreground animate-[ui-fade-in_300ms_ease-out_both] motion-reduce:animate-none">{t("+{n} more", { n: more })}</li>
               ) : null}
             </ul>
           </div>
