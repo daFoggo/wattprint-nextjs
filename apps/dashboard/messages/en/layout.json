@@ -5,7 +5,8 @@
     "statistics": "Statistics",
     "devices": "Devices",
     "bill": "Bill",
-    "settings": "Settings"
+    "settings": "Settings",
+    "copilot": "Wappi"
   },
   "roles": {
     "customer": "Customer",

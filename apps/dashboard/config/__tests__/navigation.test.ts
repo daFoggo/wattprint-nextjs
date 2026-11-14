@@ -75,6 +75,9 @@ describe("currentHref", () => {
   it("does not match a path that only shares the start of a word", () => {
     expect(currentHref(sections, "/dashboard/billing")).toBe("/dashboard")
   })
+  it("marks nothing on Wappi's page, which has its own entry", () => {
+    expect(currentHref(sections, "/dashboard/copilot")).toBeUndefined()
+  })
 })
 
 describe("filterNav", () => {

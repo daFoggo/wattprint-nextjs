@@ -55,6 +55,7 @@ test.describe("Smoke", () => {
     "/dashboard/devices/fridge",
     "/dashboard/bill",
     "/dashboard/settings",
+    "/dashboard/copilot",
   ]) {
     test(`${path} redirects to sign-in without a session`, async ({ page }) => {
       await page.goto(path)

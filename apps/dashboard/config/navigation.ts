@@ -2,6 +2,7 @@ import type { Permission } from "@workspace/auth/permissions"
 
 import {
   BILL_PATH,
+  onCopilotPage,
   DASHBOARD_PATH,
   DEVICES_PATH,
   SETTINGS_PATH,
@@ -128,6 +129,8 @@ export function fillHref(href: string, params: Record<string, string>) {
  * Devices (and not Overview, which every dashboard path starts with).
  */
 export function currentHref(sections: NavSection[], pathname: string) {
+  // Wappi has its own entry above the menu (CopilotNavLink), so no menu link is current on its page.
+  if (onCopilotPage(pathname)) return undefined
   const hrefs = sections.flatMap((s) =>
     s.entries.flatMap((e) => ("items" in e ? e.items : [e]).map((l) => l.href))
   )

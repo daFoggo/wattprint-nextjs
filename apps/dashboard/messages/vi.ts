@@ -6,6 +6,17 @@ import energy from "./vi/energy.json"
 import home from "./vi/home.json"
 import insight from "./vi/insight.json"
 import weather from "./vi/weather.json"
+import copilot from "./vi/copilot.json"
 
 // One file per namespace, so features are translated without touching each other.
-export default { common, layout, auth, billing, energy, home, insight, weather }
+export default {
+  common,
+  layout,
+  auth,
+  billing,
+  energy,
+  home,
+  insight,
+  weather,
+  copilot,
+}

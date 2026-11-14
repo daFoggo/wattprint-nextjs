@@ -6,6 +6,7 @@ import energy from "./en/energy.json"
 import home from "./en/home.json"
 import insight from "./en/insight.json"
 import weather from "./en/weather.json"
+import copilot from "./en/copilot.json"
 
 import type vi from "./vi"
 
@@ -19,4 +20,5 @@ export default {
   home,
   insight,
   weather,
+  copilot,
 } satisfies typeof vi

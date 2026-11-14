@@ -1,0 +1,225 @@
+{
+  "name": "Wappi",
+  "previewHint": "Answers are scripted with illustrative figures, not yet connected to your home's data.",
+  "ask": "Ask Wappi",
+  "openPanel": "Open Wappi alongside",
+  "closePanel": "Close Wappi",
+  "expand": "Open full page",
+  "collapse": "Back to the side panel",
+  "newChat": "New chat",
+  "history": "Chat history",
+  "placeholder": "Ask about your home's power…",
+  "viewing": "Viewing: {page}",
+  "pages": {
+    "overview": "Overview",
+    "statistics": "Statistics",
+    "devices": "Devices",
+    "bill": "Bill",
+    "settings": "Settings"
+  },
+  "empty": {
+    "title": "Hi, I'm Wappi",
+    "description": "Ask about devices, your bill, the weather or a savings plan. Every figure is computed by tools from your home's data; I only explain it.",
+    "noticed": "Wappi noticed",
+    "insights": {
+      "standby": "Background load rose 14% in 2 weeks, about 219,000 ₫ a month.",
+      "forecast": "32 kWh to go before the next price tier, likely before the 24th."
+    },
+    "suggested": "Suggested for this page",
+    "start": "Start with"
+  },
+  "message": {
+    "thinking": "Wappi is reading your home's data",
+    "working": "Using tools",
+    "worked": "Used {count} tools",
+    "sql": "Read-only query",
+    "speak": "Read the answer aloud",
+    "stopSpeaking": "Stop reading",
+    "followUps": "Ask next",
+    "tiers": {
+      "measured": "Measured",
+      "estimated": "NILM estimate",
+      "inferred": "Inferred from context"
+    }
+  },
+  "widgets": {
+    "devices": "Energy by device, last 30 days",
+    "devicesCenter": "30 days",
+    "compare": "This cycle against the last, by week",
+    "forecast": {
+      "title": "End-of-cycle forecast",
+      "meter": "To the next price tier",
+      "kwh": "Energy at cycle end",
+      "vnd": "Cost at cycle end"
+    },
+    "weather": {
+      "title": "Today's weather",
+      "temp": "Temperature",
+      "feels": "Feels like",
+      "humidity": "Humidity",
+      "tips": "Worth doing"
+    },
+    "plan": {
+      "title": "Balanced savings plan",
+      "approval": "Start a 7-day trial",
+      "description": "Wappi takes the 7 days before as the baseline and compares the 7 days on the plan, adjusted for weather.",
+      "saving": "Expected saving",
+      "savingValue": "{kwh} kWh · {vnd} a month",
+      "length": "Length",
+      "lengthValue": "7 days",
+      "approve": "Start",
+      "deny": "Later",
+      "started": "7-day trial started"
+    },
+    "peers": {
+      "title": "Against {homes} similar homes, last {days} days",
+      "you": "Your home",
+      "median": "Median home"
+    },
+    "standby": {
+      "title": "Background load each day, last 14 days",
+      "label": "Background load",
+      "kwh": "Per month",
+      "vnd": "Cost"
+    }
+  },
+  "voice": {
+    "start": "Talk by voice",
+    "back": "Back to the chat",
+    "title": "Talk to Wappi",
+    "hint": "Tap to talk; Wappi sends when you stop. Preview: Wappi answers with the browser's voice.",
+    "dictate": "Dictate",
+    "unsupported": "This browser can't recognise speech yet. Try Chrome or Edge.",
+    "labels": {
+      "idle": "Talk",
+      "hold": "Hold to talk",
+      "starting": "Starting",
+      "listening": "Send",
+      "holding": "Release to send",
+      "thinking": "Thinking",
+      "speaking": "Interrupt",
+      "live": "Listening",
+      "end": "End",
+      "retry": "Try again",
+      "permission": "Allow the microphone",
+      "noMicrophone": "No microphone",
+      "noSpeech": "Didn't hear you"
+    }
+  },
+  "demo": {
+    "names": {
+      "fridge": "Fridge",
+      "alwaysOn": "Always on",
+      "dishwasher": "Dishwasher",
+      "washer": "Washing machine",
+      "kettle": "Kettle",
+      "tv": "TV",
+      "other": "Other"
+    },
+    "links": {
+      "devices": "See each device",
+      "bill": "See the bill",
+      "statistics": "See statistics",
+      "settings": "Edit home details"
+    },
+    "labels": {
+      "thisCycle": "This cycle",
+      "lastCycle": "Last cycle",
+      "week": "Week {n}"
+    },
+    "steps": {
+      "sql": "Query the home's energy",
+      "nilm": "Split energy by device",
+      "tariff": "Price it on the tiered tariff",
+      "weather": "Get the weather at home",
+      "forecast": "Forecast to the cycle's end",
+      "cohort": "Compare with similar homes",
+      "rag": "Look up saving guidance"
+    },
+    "ask": {
+      "devices": "Which device uses the most power?",
+      "bill": "Why is this cycle's bill higher than the last?",
+      "forecast": "How much will I pay at the cycle's end?",
+      "weather": "It's hot today. How should I use power?",
+      "plan": "Make me a savings plan",
+      "peers": "Compare my home with others",
+      "standby": "What is background load, and is mine high?",
+      "clarify": "Help me understand my bill"
+    },
+    "devices": {
+      "text": "Over the last 30 days the fridge used the most: 38.2 kWh, 24% of the home, about 106,000 ₫ [1]. Second is the always-on background load, 31.5 kWh: you can cut it without changing habits. The dishwasher and washing machine together took 43.4 kWh, mostly to heat water. Money is split on the same tiers the whole home pays [2].",
+      "followUps": [
+        "What makes up the background load?",
+        "Make me a savings plan"
+      ]
+    },
+    "bill": {
+      "text": "This cycle your home used 267.9 kWh, 25% more than the last, mostly in weeks 3 and 4. Two main reasons: it ran 2.8 °C hotter than usual, so the fridge ran longer [2], and the washing machine ran 5 extra times. Because the price is tiered, the extra 54 kWh fell on the higher tiers, so the cost rose 31%, about 172,000 ₫ [1].",
+      "followUps": [
+        "How much will I pay at the cycle's end?",
+        "Which device uses the most power?"
+      ]
+    },
+    "forecast": {
+      "text": "So far your home has used 168 kWh. At the pace of the last 7 days the cycle ends near 236 kWh, or 712,000 ₫. 32 kWh more reaches the next price tier, likely before the 24th; each kWh after that costs about 26% more [1].",
+      "followUps": [
+        "Make me a savings plan",
+        "Why is this cycle's bill higher than the last?"
+      ]
+    },
+    "weather": {
+      "text": "Today is 34 °C, feels like 39 °C, humidity 68% [1]. Before 10 am it is still cool: open the windows instead of turning on the air conditioner. If you use it, set 27–28 °C with a fan; each degree lower costs about 5–7% more. Drink enough water and stay in between 11 am and 3 pm.",
+      "followUps": ["Make me a savings plan"],
+      "tips": [
+        "Open windows before 10 am",
+        "AC at 27–28 °C with a fan",
+        "Close west curtains after 2 pm",
+        "Line-dry instead of tumble-dry"
+      ]
+    },
+    "plan": {
+      "text": "I picked four small changes from your home's last 30 days; none costs you comfort. Together they should save 22.3 kWh, about 64,700 ₫ a month [2]. Vietnamese households shown feedback on their power cut use by 4–7% [1]. Start a 7-day trial and Wappi will measure the real result.",
+      "followUps": ["What makes up the background load?"],
+      "tasks": {
+        "standby": {
+          "label": "Switch the TV and speakers off at the wall",
+          "detail": "About 12 W less background load · 8.6 kWh/month"
+        },
+        "dishwasher": {
+          "label": "Run the dishwasher on eco, skip heated drying",
+          "detail": "6.2 kWh/month"
+        },
+        "washer": {
+          "label": "Wash cold, with full loads",
+          "detail": "5.4 kWh/month"
+        },
+        "kettle": {
+          "label": "Boil only the water you need",
+          "detail": "2.1 kWh/month"
+        }
+      }
+    },
+    "peers": {
+      "text": "Over the last 30 days your home used 312 kWh, 16% more than the median of 1,240 homes with the same floor area and household size. 62% of similar homes use less. The biggest gap is the background load and the dishwasher. The more accurate your home details, the closer the comparison [1].",
+      "followUps": [
+        "What is background load, and is mine high?",
+        "Make me a savings plan"
+      ]
+    },
+    "standby": {
+      "text": "Background load is the power drawn when nobody is using anything: the router, chargers, a TV on standby, the fridge at rest. Yours is about 112 W, up 14% in 2 weeks, which is 75.6 kWh and 219,000 ₫ a month [1]. The rise began on day 8; usually a new device plugged in or left on standby. Each 10 W less saves about 88 kWh a year.",
+      "followUps": ["Make me a savings plan", "Compare my home with others"]
+    },
+    "clarify": {
+      "text": "I'm not sure which side you want to look at. Pick one so I compute the right thing.",
+      "question": "What should Wappi look at?",
+      "options": {
+        "bill": "Why the bill changed",
+        "devices": "Which devices use power",
+        "plan": "A savings plan",
+        "weather": "Power use for the weather"
+      }
+    },
+    "voiceReply": "The fridge uses the most power in your home, about 38 kWh in 30 days. I've put the details in the chat."
+  }
+}

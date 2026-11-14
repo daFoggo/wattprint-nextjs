@@ -1,0 +1,228 @@
+{
+  "name": "Wappi",
+  "previewHint": "Câu trả lời là kịch bản mẫu với số liệu minh họa, chưa nối với dữ liệu nhà bạn.",
+  "ask": "Hỏi Wappi",
+  "openPanel": "Mở Wappi bên cạnh",
+  "closePanel": "Đóng Wappi",
+  "expand": "Mở toàn trang",
+  "collapse": "Thu về khung bên",
+  "newChat": "Cuộc trò chuyện mới",
+  "history": "Lịch sử trò chuyện",
+  "placeholder": "Hỏi về điện nhà bạn…",
+  "viewing": "Đang xem: {page}",
+  "pages": {
+    "overview": "Tổng quan",
+    "statistics": "Thống kê",
+    "devices": "Thiết bị",
+    "bill": "Hóa đơn",
+    "settings": "Cài đặt"
+  },
+  "empty": {
+    "title": "Chào bạn, mình là Wappi",
+    "description": "Hỏi về thiết bị, hóa đơn, thời tiết hay kế hoạch tiết kiệm. Mọi con số do công cụ tính từ dữ liệu nhà bạn, mình chỉ giải thích.",
+    "noticed": "Wappi nhận thấy",
+    "insights": {
+      "standby": "Điện nền tăng 14% trong 2 tuần, khoảng 219.000 ₫ mỗi tháng.",
+      "forecast": "Còn 32 kWh nữa là chạm bậc giá kế tiếp, dự kiến trước ngày 24."
+    },
+    "suggested": "Gợi ý cho trang này",
+    "start": "Bắt đầu với"
+  },
+  "message": {
+    "thinking": "Wappi đang đọc dữ liệu nhà bạn",
+    "working": "Đang dùng công cụ",
+    "worked": "Đã dùng {count} công cụ",
+    "sql": "Truy vấn chỉ đọc",
+    "speak": "Đọc to câu trả lời",
+    "stopSpeaking": "Dừng đọc",
+    "followUps": "Hỏi tiếp",
+    "tiers": {
+      "measured": "Đo trực tiếp",
+      "estimated": "NILM ước tính",
+      "inferred": "Suy luận bối cảnh"
+    }
+  },
+  "widgets": {
+    "devices": "Điện theo thiết bị, 30 ngày qua",
+    "devicesCenter": "30 ngày",
+    "compare": "Kỳ này so với kỳ trước, theo tuần",
+    "forecast": {
+      "title": "Dự báo cuối kỳ",
+      "meter": "Đến bậc giá kế tiếp",
+      "kwh": "Điện cuối kỳ",
+      "vnd": "Tiền cuối kỳ"
+    },
+    "weather": {
+      "title": "Thời tiết hôm nay",
+      "temp": "Nhiệt độ",
+      "feels": "Cảm giác như",
+      "humidity": "Độ ẩm",
+      "tips": "Nên làm"
+    },
+    "plan": {
+      "title": "Gói tiết kiệm cân bằng",
+      "approval": "Bắt đầu thử nghiệm 7 ngày",
+      "description": "Wappi đo mức nền 7 ngày trước, rồi so với 7 ngày làm theo kế hoạch, có hiệu chỉnh thời tiết.",
+      "saving": "Dự kiến tiết kiệm",
+      "savingValue": "{kwh} kWh · {vnd} mỗi tháng",
+      "length": "Thời gian",
+      "lengthValue": "7 ngày",
+      "approve": "Bắt đầu",
+      "deny": "Để sau",
+      "started": "Đã bắt đầu thử nghiệm 7 ngày"
+    },
+    "peers": {
+      "title": "So với {homes} hộ tương tự, {days} ngày qua",
+      "you": "Nhà bạn",
+      "median": "Hộ ở giữa"
+    },
+    "standby": {
+      "title": "Điện nền mỗi ngày, 14 ngày qua",
+      "label": "Điện nền",
+      "kwh": "Mỗi tháng",
+      "vnd": "Thành tiền"
+    }
+  },
+  "voice": {
+    "start": "Nói chuyện bằng giọng nói",
+    "back": "Quay lại khung chat",
+    "title": "Nói chuyện với Wappi",
+    "hint": "Chạm để nói, Wappi tự gửi khi bạn ngừng. Bản xem trước: Wappi trả lời bằng giọng đọc của trình duyệt.",
+    "dictate": "Đọc để nhập",
+    "unsupported": "Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Hãy thử Chrome hoặc Edge.",
+    "labels": {
+      "idle": "Nói",
+      "hold": "Giữ để nói",
+      "starting": "Đang mở",
+      "listening": "Gửi",
+      "holding": "Thả để gửi",
+      "thinking": "Đang nghĩ",
+      "speaking": "Ngắt lời",
+      "live": "Đang nghe",
+      "end": "Kết thúc",
+      "retry": "Thử lại",
+      "permission": "Cho phép micro",
+      "noMicrophone": "Không có micro",
+      "noSpeech": "Chưa nghe thấy"
+    }
+  },
+  "demo": {
+    "names": {
+      "fridge": "Tủ lạnh",
+      "alwaysOn": "Luôn bật",
+      "dishwasher": "Máy rửa bát",
+      "washer": "Máy giặt",
+      "kettle": "Ấm siêu tốc",
+      "tv": "Tivi",
+      "other": "Khác"
+    },
+    "links": {
+      "devices": "Xem từng thiết bị",
+      "bill": "Xem hóa đơn",
+      "statistics": "Xem thống kê",
+      "settings": "Sửa thông tin nhà"
+    },
+    "labels": {
+      "thisCycle": "Kỳ này",
+      "lastCycle": "Kỳ trước",
+      "week": "Tuần {n}"
+    },
+    "steps": {
+      "sql": "Truy vấn điện năng của nhà",
+      "nilm": "Tách điện theo thiết bị",
+      "tariff": "Tính tiền theo biểu giá bậc thang",
+      "weather": "Lấy thời tiết tại nhà",
+      "forecast": "Dự báo điện đến cuối kỳ",
+      "cohort": "So với các hộ tương tự",
+      "rag": "Tra hướng dẫn tiết kiệm"
+    },
+    "ask": {
+      "devices": "Thiết bị nào tốn điện nhất?",
+      "bill": "Vì sao tiền điện kỳ này cao hơn kỳ trước?",
+      "forecast": "Cuối kỳ mình sẽ trả bao nhiêu?",
+      "weather": "Hôm nay nóng, dùng điện thế nào cho hợp lý?",
+      "plan": "Lập giúp mình kế hoạch tiết kiệm",
+      "peers": "So sánh nhà mình với các hộ khác",
+      "standby": "Điện nền là gì, nhà mình có cao không?",
+      "clarify": "Giúp mình hiểu tiền điện"
+    },
+    "devices": {
+      "text": "Trong 30 ngày qua, tủ lạnh dùng nhiều điện nhất: 38,2 kWh, chiếm 24% cả nhà, khoảng 106.000 ₫ [1]. Đứng thứ hai là điện nền luôn bật, 31,5 kWh: phần này giảm được mà không cần đổi thói quen. Máy rửa bát và máy giặt cộng lại 43,4 kWh, phần lớn là để làm nóng nước. Tiền được chia theo đúng bậc giá mà cả nhà đang chịu [2].",
+      "followUps": [
+        "Điện nền gồm những gì?",
+        "Lập giúp mình kế hoạch tiết kiệm"
+      ]
+    },
+    "bill": {
+      "text": "Kỳ này nhà bạn dùng 267,9 kWh, tăng 25% so với kỳ trước, chủ yếu ở tuần 3 và 4. Hai lý do chính: trời nóng hơn trung bình 2,8 °C nên tủ lạnh chạy nhiều hơn [2], và máy giặt chạy thêm 5 lượt. Vì giá tính lũy tiến, 54 kWh tăng thêm rơi vào bậc cao nên tiền tăng tới 31%, khoảng 172.000 ₫ [1].",
+      "followUps": [
+        "Cuối kỳ mình sẽ trả bao nhiêu?",
+        "Thiết bị nào tốn điện nhất?"
+      ]
+    },
+    "forecast": {
+      "text": "Đến hôm nay nhà bạn đã dùng 168 kWh. Theo nhịp dùng 7 ngày gần nhất, cuối kỳ sẽ khoảng 236 kWh, tức 712.000 ₫. Còn 32 kWh nữa là sang bậc giá kế tiếp, dự kiến trước ngày 24; mỗi kWh sau đó đắt hơn khoảng 26% [1].",
+      "followUps": [
+        "Lập giúp mình kế hoạch tiết kiệm",
+        "Vì sao tiền điện kỳ này cao hơn kỳ trước?"
+      ]
+    },
+    "weather": {
+      "text": "Hôm nay 34 °C, cảm giác như 39 °C, độ ẩm 68% [1]. Buổi sáng trước 10 giờ còn mát: mở cửa sổ đón gió thay vì bật điều hòa. Nếu bật điều hòa, đặt 27–28 °C kèm quạt; mỗi độ hạ thêm tốn thêm khoảng 5–7% điện. Uống đủ nước và tránh ra ngoài từ 11 đến 15 giờ.",
+      "followUps": ["Lập giúp mình kế hoạch tiết kiệm"],
+      "tips": [
+        "Mở cửa sổ trước 10 giờ",
+        "Điều hòa 27–28 °C kèm quạt",
+        "Kéo rèm phía tây sau 14 giờ",
+        "Phơi đồ thay vì sấy"
+      ]
+    },
+    "plan": {
+      "text": "Mình chọn bốn việc nhỏ từ thói quen 30 ngày của nhà bạn, không việc nào làm bạn thiếu tiện nghi. Cộng lại dự kiến bớt 22,3 kWh, khoảng 64.700 ₫ mỗi tháng [2]. Các hộ ở Việt Nam được xem phản hồi về điện đã giảm 4–7% [1]. Bắt đầu thử 7 ngày, Wappi sẽ đo kết quả thật và báo lại.",
+      "followUps": ["Điện nền gồm những gì?"],
+      "tasks": {
+        "standby": {
+          "label": "Tắt hẳn tivi và dàn âm thanh ở ổ cắm",
+          "detail": "Bớt khoảng 12 W điện nền · 8,6 kWh/tháng"
+        },
+        "dishwasher": {
+          "label": "Máy rửa bát chạy chế độ eco, bỏ sấy nóng",
+          "detail": "6,2 kWh/tháng"
+        },
+        "washer": {
+          "label": "Giặt nước lạnh, đủ tải",
+          "detail": "5,4 kWh/tháng"
+        },
+        "kettle": {
+          "label": "Chỉ đun lượng nước cần dùng",
+          "detail": "2,1 kWh/tháng"
+        }
+      }
+    },
+    "peers": {
+      "text": "30 ngày qua nhà bạn dùng 312 kWh, nhiều hơn 16% so với hộ ở giữa trong 1.240 hộ có cùng diện tích và số người. 62% hộ tương tự dùng ít hơn bạn. Khoảng cách lớn nhất nằm ở điện nền và máy rửa bát. Thông tin nhà càng đúng thì nhóm so sánh càng sát [1].",
+      "followUps": [
+        "Điện nền là gì, nhà mình có cao không?",
+        "Lập giúp mình kế hoạch tiết kiệm"
+      ]
+    },
+    "standby": {
+      "text": "Điện nền là phần điện chạy cả khi không ai dùng: modem, bộ sạc, tivi chờ, tủ lạnh nghỉ. Nhà bạn đang ở khoảng 112 W, tăng 14% trong 2 tuần, tương đương 75,6 kWh và 219.000 ₫ mỗi tháng [1]. Mức tăng bắt đầu từ ngày thứ 8; thường là một thiết bị mới cắm điện hoặc để chờ. Mỗi 10 W bớt được tiết kiệm khoảng 88 kWh mỗi năm.",
+      "followUps": [
+        "Lập giúp mình kế hoạch tiết kiệm",
+        "So sánh nhà mình với các hộ khác"
+      ]
+    },
+    "clarify": {
+      "text": "Mình chưa chắc bạn muốn xem khía cạnh nào. Chọn một hướng để mình tính đúng chỗ nhé.",
+      "question": "Bạn muốn Wappi xem gì?",
+      "options": {
+        "bill": "Vì sao tiền điện thay đổi",
+        "devices": "Thiết bị nào tốn điện",
+        "plan": "Kế hoạch tiết kiệm",
+        "weather": "Dùng điện theo thời tiết"
+      }
+    },
+    "voiceReply": "Tủ lạnh đang dùng nhiều điện nhất nhà bạn, khoảng 38 kWh trong 30 ngày. Mình đã ghi chi tiết vào khung chat."
+  }
+}
