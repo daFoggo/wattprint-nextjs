@@ -22,7 +22,7 @@ import { WeatherCard } from "@/features/weather/components/weather-card"
 import { getWeather } from "@/features/weather/queries"
 import { requirePermission } from "@/lib/dal"
 
-import { NoHome } from "../_components/no-home"
+import { NoHome } from "../../_components/no-home"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("layout.overview")

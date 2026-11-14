@@ -22,7 +22,7 @@ import { getDashboard, getDevices, getPower } from "@/features/energy/queries"
 import { PeerCompare } from "@/features/insight/components/peer-compare"
 import { getCohort } from "@/features/insight/queries"
 
-import { NoHome } from "../../_components/no-home"
+import { NoHome } from "../../../_components/no-home"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("layout.statistics")

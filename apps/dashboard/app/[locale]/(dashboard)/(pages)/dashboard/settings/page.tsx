@@ -11,7 +11,7 @@ import { HomeSettingsForm } from "@/features/home/components/home-settings"
 import { getHomeSettings } from "@/features/home/queries"
 import { ThresholdTry } from "@/features/insight/components/threshold-try"
 
-import { NoHome } from "../../_components/no-home"
+import { NoHome } from "../../../_components/no-home"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("layout.settings")

@@ -9,7 +9,7 @@ import { DeviceListSkeleton } from "@/features/energy/components/skeletons"
 import { getCurrentBill } from "@/features/billing/queries"
 import { getDashboard, getDevices } from "@/features/energy/queries"
 
-import { NoHome } from "../../_components/no-home"
+import { NoHome } from "../../../_components/no-home"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("layout.devices")
