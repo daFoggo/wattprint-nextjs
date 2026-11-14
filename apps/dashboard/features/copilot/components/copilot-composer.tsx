@@ -122,7 +122,8 @@ export function CopilotComposer({
 
   return (
     <PromptComposer
-      status={status}
+      // Hairline offers Stop only while streaming; Wappi's answers can be stopped while it still works too.
+      status={status === "ready" ? "ready" : "streaming"}
       value={text}
       onValueChange={setText}
       onSubmit={(value) => {

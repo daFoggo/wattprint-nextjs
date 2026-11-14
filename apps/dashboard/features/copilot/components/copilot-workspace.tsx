@@ -11,7 +11,7 @@ import { Sheet } from "@workspace/ui/components/hairline/sheet"
 import { useRouter } from "@/i18n/navigation"
 
 import { ConversationCard, IconAction } from "./copilot-panel"
-import { useCopilot } from "./copilot-provider"
+import { useCopilot, usePanel } from "./copilot-provider"
 
 // Demo threads carry an age, counted from when the app loaded. Read once on the client; never on the server, so the
 // page needs no <Suspense> and its card is there in the same commit as the navigation (the panel morph needs that).
@@ -58,7 +58,8 @@ function History({ onPicked }: { onPicked?: () => void }) {
  */
 export function CopilotWorkspace() {
   const t = useTranslations("copilot")
-  const { select, setPanelOpen, returnToRef } = useCopilot()
+  const { select } = useCopilot()
+  const { setPanelOpen, returnToRef } = usePanel()
   const router = useRouter()
   return (
     // One tray for the whole assistant (design system, Surfaces): the history lies on the plate, the conversation is

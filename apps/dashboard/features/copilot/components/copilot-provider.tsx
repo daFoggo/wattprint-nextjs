@@ -7,9 +7,14 @@ import { DASHBOARD_PATH } from "@/config/routes"
 
 import { demoReply, detectIntent, type Copy } from "../demo"
 import { advance, playLength, type AssistantMessage } from "../playback"
-import type { Intent, Message, Thread } from "../schemas"
-
-type Status = "ready" | "submitted" | "streaming"
+import type { Intent, Thread } from "../schemas"
+import {
+  addTurn,
+  statusOf,
+  stopLive,
+  updateMessage,
+  type Status,
+} from "../threads"
 
 type CopilotState = {
   threads: Thread[]
@@ -24,15 +29,21 @@ type CopilotState = {
   rename: (id: string, title: string) => void
   remove: (id: string) => void
   pin: (id: string, pinned: boolean) => void
+}
+
+/** The side panel's state, apart from the chat's: what reads only this (the sidebar entry, the header button) does
+ * not re-render with every word of a streaming answer. */
+type PanelState = {
   panelOpen: boolean
   setPanelOpen: (open: boolean) => void
-  /** The last dashboard page the panel sat beside: where "Open alongside" returns from Wappi's page. */
+  /** The last dashboard page the panel sat beside: where "Back to the side panel" returns from Wappi's page. */
   returnToRef: React.RefObject<string>
   /** The header's "Ask Wappi" button: focus goes back to it when the panel closes. */
   toggleRef: React.RefObject<HTMLButtonElement | null>
 }
 
 const CopilotContext = createContext<CopilotState | null>(null)
+const PanelContext = createContext<PanelState | null>(null)
 
 export function useCopilot() {
   const state = use(CopilotContext)
@@ -40,7 +51,11 @@ export function useCopilot() {
   return state
 }
 
-const LIVE = new Set(["thinking", "working", "streaming"])
+export function usePanel() {
+  const state = use(PanelContext)
+  if (!state) throw new Error("usePanel must sit inside CopilotProvider")
+  return state
+}
 
 const id = () => crypto.randomUUID()
 
@@ -101,16 +116,6 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
   const toggleRef = useRef<HTMLButtonElement>(null)
   const timer = useRef<number>(undefined)
 
-  const update = (
-    threadId: string,
-    change: (messages: Message[]) => Message[]
-  ) =>
-    setThreads((all) =>
-      all.map((th) =>
-        th.id === threadId ? { ...th, messages: change(th.messages) } : th
-      )
-    )
-
   const halt = () => window.clearInterval(timer.current)
 
   /** Plays one assistant message from the start; the interval stops itself once the reply is shown in full. */
@@ -120,11 +125,9 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
     const length = playLength(message.reply)
     const tick = () => {
       const elapsed = Date.now() - started
-      update(threadId, (messages) =>
-        messages.map((m) =>
-          m.id === message.id && m.role === "assistant"
-            ? advance(m, elapsed)
-            : m
+      setThreads((all) =>
+        updateMessage(all, threadId, message.id, (m) =>
+          m.role === "assistant" ? advance(m, elapsed) : m
         )
       )
       if (elapsed >= length) halt()
@@ -133,76 +136,45 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
   }
 
   const active = threads.find((th) => th.id === activeId)
-  const live = active?.messages.find(
-    (m) => m.role === "assistant" && LIVE.has(m.phase)
-  )
-  const status: Status =
-    !live || live.role !== "assistant"
-      ? "ready"
-      : live.phase === "streaming"
-        ? "streaming"
-        : "submitted"
+  const status = statusOf(active)
 
   const stopAll = () => {
     halt()
-    setThreads((all) =>
-      all.map((th) => ({
-        ...th,
-        messages: th.messages.map((m) =>
-          m.role === "assistant" && LIVE.has(m.phase)
-            ? { ...m, phase: "stopped" }
-            : m
-        ),
-      }))
-    )
+    setThreads(stopLive)
   }
 
   useEffect(() => halt, [])
+
+  const panel = useMemo<PanelState>(
+    () => ({ panelOpen, setPanelOpen, returnToRef, toggleRef }),
+    [panelOpen]
+  )
 
   const value: CopilotState = {
     threads,
     active,
     status,
     copy,
-    panelOpen,
-    setPanelOpen,
-    returnToRef,
-    toggleRef,
     // A question while an answer plays (a follow-up, a voice turn) stops that answer rather than being dropped.
     send: (text, intent) => {
-      if (status !== "ready") stopAll()
-      const reply = demoReply(intent ?? detectIntent(text), copy)
+      halt()
       const answer: AssistantMessage = {
         id: id(),
         role: "assistant",
-        reply,
+        reply: demoReply(intent ?? detectIntent(text), copy),
         phase: "thinking",
         steps: 0,
         words: 0,
         startedAt: Date.now(),
       }
-      const question: Message = { id: id(), role: "user", text }
       const threadId = active?.id ?? id()
       setThreads((all) =>
-        active
-          ? all.map((th) =>
-              th.id === threadId
-                ? {
-                    ...th,
-                    updatedAt: Date.now(),
-                    messages: [...th.messages, question, answer],
-                  }
-                : th
-            )
-          : [
-              {
-                id: threadId,
-                title: text,
-                updatedAt: Date.now(),
-                messages: [question, answer],
-              },
-              ...all,
-            ]
+        addTurn(
+          stopLive(all),
+          threadId,
+          [{ id: id(), role: "user", text }, answer],
+          Date.now()
+        )
       )
       setActiveId(threadId)
       play(threadId, answer)
@@ -218,9 +190,7 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
         words: 0,
         startedAt: Date.now(),
       }
-      update(active.id, (messages) =>
-        messages.map((m) => (m.id === messageId ? fresh : m))
-      )
+      setThreads((all) => updateMessage(all, active.id, messageId, () => fresh))
       play(active.id, fresh)
     },
     select: (threadId) => {
@@ -231,9 +201,13 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       setThreads((all) =>
         all.map((th) => (th.id === threadId ? { ...th, title } : th))
       ),
+    // Only the open thread can be playing, so deleting it also stops the playback.
     remove: (threadId) => {
       setThreads((all) => all.filter((th) => th.id !== threadId))
-      if (threadId === activeId) setActiveId(undefined)
+      if (threadId === activeId) {
+        halt()
+        setActiveId(undefined)
+      }
     },
     pin: (threadId, pinned) =>
       setThreads((all) =>
@@ -241,5 +215,9 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       ),
   }
 
-  return <CopilotContext value={value}>{children}</CopilotContext>
+  return (
+    <PanelContext value={panel}>
+      <CopilotContext value={value}>{children}</CopilotContext>
+    </PanelContext>
+  )
 }

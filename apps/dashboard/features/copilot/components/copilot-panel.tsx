@@ -6,6 +6,7 @@ import {
   useEffect,
   useEffectEvent,
   useRef,
+  useState,
   ViewTransition,
 } from "react"
 import { useTranslations } from "next-intl"
@@ -16,9 +17,10 @@ import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { COPILOT_PATH, onCopilotPage } from "@/config/routes"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { usePathname, useRouter } from "@/i18n/navigation"
 
-import { useCopilot } from "./copilot-provider"
+import { useCopilot, usePanel } from "./copilot-provider"
 import { CopilotThread } from "./copilot-thread"
 import { WappiLogo } from "./wappi-logo"
 
@@ -53,7 +55,8 @@ function Title() {
 /** New chat and Open full page: the chat carries over, since both views read the same provider. */
 function Actions() {
   const t = useTranslations("copilot")
-  const { select, setPanelOpen } = useCopilot()
+  const { select } = useCopilot()
+  const { setPanelOpen } = usePanel()
   const router = useRouter()
   return (
     <>
@@ -115,18 +118,29 @@ export function ConversationCard({
 }
 
 /**
- * Wappi beside the page: the conversation card of Wappi's page, on its own. Full screen on phones,
- * a 384px column floating over the page's right edge from sm, and from xl a third column that pushes the page aside
- * (below xl pushing would squeeze the dashboard's lg grids). Eases between 0 and its width; Escape closes it.
- * Hidden on Wappi's own page, which is the full-size version.
+ * Wappi beside the page: the conversation card of Wappi's page, on its own. Full screen on phones (modal there: the
+ * rest of the shell is inert and the page does not scroll behind it), a 384px column floating over the page's right
+ * edge from sm, and from 2xl a third column that pushes the page aside (narrower, pushing would squeeze the dashboard's
+ * lg grids). Eases between 0 and its width; Escape closes it. Hidden on Wappi's own page, the full-size version.
  */
 export function CopilotPanel() {
   const t = useTranslations("copilot")
-  const { panelOpen, setPanelOpen, returnToRef, toggleRef } = useCopilot()
+  const { panelOpen, setPanelOpen, returnToRef, toggleRef } = usePanel()
   const pathname = usePathname()
   const onPage = onCopilotPage(pathname)
   const ref = useRef<HTMLElement>(null)
   const wasOpen = useRef(panelOpen)
+  const modal = useMediaQuery("(width < 40rem)") && panelOpen && !onPage
+  // The chat is mounted only while the panel shows (and for its closing ease): a closed panel keeps no conversation
+  // re-rendering behind it, and voice mode's microphone goes off with it.
+  const [shown, setShown] = useState(panelOpen)
+  if (panelOpen && !shown) setShown(true)
+  useEffect(() => {
+    if (panelOpen) return
+    const timer = window.setTimeout(() => setShown(false), 300)
+    return () => window.clearTimeout(timer)
+  }, [panelOpen])
+
   useEffect(() => {
     if (!onPage) returnToRef.current = pathname
   }, [onPage, pathname, returnToRef])
@@ -141,6 +155,23 @@ export function CopilotPanel() {
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [])
+
+  // On phones the panel covers the screen: what lies under it can be neither tabbed to nor scrolled.
+  useEffect(() => {
+    const parent = ref.current?.parentElement
+    if (!modal || !parent) return
+    const others = [...parent.children].filter(
+      (el): el is HTMLElement =>
+        el instanceof HTMLElement && el !== ref.current && !el.inert
+    )
+    for (const el of others) el.inert = true
+    const root = document.documentElement
+    root.style.overflow = "hidden"
+    return () => {
+      for (const el of others) el.inert = false
+      root.style.overflow = ""
+    }
+  }, [modal])
 
   // Opening puts the cursor in the composer (so Escape works at once); closing makes the panel inert, which drops
   // focus (to the body, a moment later), so it goes back to the header's button. Only on a change, not on mount.
@@ -161,6 +192,8 @@ export function CopilotPanel() {
     <aside
       ref={ref}
       aria-label={t("name")}
+      role={modal ? "dialog" : undefined}
+      aria-modal={modal || undefined}
       data-state={panelOpen ? "open" : "closed"}
       inert={!panelOpen}
       onKeyDown={(event) => {
@@ -168,26 +201,28 @@ export function CopilotPanel() {
           setPanelOpen(false)
       }}
       style={{ transitionTimingFunction: EASE_OUT }}
-      className="fixed inset-y-0 right-0 z-40 h-svh w-0 overflow-hidden transition-[width] duration-300 data-[state=open]:w-full motion-reduce:transition-none sm:data-[state=open]:w-96 xl:sticky xl:top-0 xl:z-auto xl:shrink-0"
+      className="fixed inset-y-0 right-0 z-40 h-svh w-0 overflow-hidden transition-[width] duration-300 data-[state=open]:w-full motion-reduce:transition-none sm:data-[state=open]:w-96 2xl:sticky 2xl:top-0 2xl:z-auto 2xl:shrink-0"
     >
       {/* No tray: the card alone, in the sidebar's 8px frame and with its radius, so the panel spends no space on a rim. */}
-      <div className="flex h-full w-screen bg-background p-2 sm:w-96">
-        <ConversationCard
-          variant="panel"
-          className="rounded-3xl"
-          end={
-            <>
-              <Actions />
-              <IconAction
-                label={t("closePanel")}
-                onClick={() => setPanelOpen(false)}
-              >
-                <IconX aria-hidden className="size-4" />
-              </IconAction>
-            </>
-          }
-        />
-      </div>
+      {shown ? (
+        <div className="flex h-full w-screen bg-background p-2 sm:w-96">
+          <ConversationCard
+            variant="panel"
+            className="rounded-3xl"
+            end={
+              <>
+                <Actions />
+                <IconAction
+                  label={t("closePanel")}
+                  onClick={() => setPanelOpen(false)}
+                >
+                  <IconX aria-hidden className="size-4" />
+                </IconAction>
+              </>
+            }
+          />
+        </div>
+      ) : null}
     </aside>
   )
 }

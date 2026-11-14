@@ -1,5 +1,6 @@
 {
   "name": "Wappi",
+  "role": "Trợ lý năng lượng",
   "previewHint": "Câu trả lời là kịch bản mẫu với số liệu minh họa, chưa nối với dữ liệu nhà bạn.",
   "ask": "Hỏi Wappi",
   "openPanel": "Mở Wappi bên cạnh",

@@ -130,7 +130,7 @@ export function AssistantMessageView({
             phase === "stopped" ? undefined : <IconTool className="size-4" />
           }
           label={t("working")}
-          doneLabel={t("worked", { count: reply.steps.length })}
+          doneLabel={t("worked", { count: shownSteps.length })}
           startedAt={working ? message.startedAt : undefined}
           duration={message.duration}
           steps={shownSteps.map((step, i) => ({
@@ -140,9 +140,7 @@ export function AssistantMessageView({
         />
       ) : null}
 
-      {phase === "streaming" ||
-      settled ||
-      (phase === "stopped" && message.words > 0) ? (
+      {phase === "streaming" || settled || phase === "stopped" ? (
         <StreamingText
           content={segments(
             reply,
@@ -197,7 +195,10 @@ export function AssistantMessageView({
             copyText={plain}
             onRegenerate={
               last && status === "ready"
-                ? () => regenerate(message.id)
+                ? () => {
+                    setFeedback(null)
+                    regenerate(message.id)
+                  }
                 : undefined
             }
             feedback={feedback}

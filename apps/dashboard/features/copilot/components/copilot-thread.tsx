@@ -170,12 +170,10 @@ function EmptyState({ page, wide }: { page?: Page; wide: boolean }) {
  */
 export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
   const t = useTranslations("copilot")
-  const { active, status, panelOpen } = useCopilot()
+  const { active, status } = useCopilot()
   const [voice, setVoice] = useState(false)
   const pathname = usePathname()
   const wide = variant === "page"
-  // Closing the panel ends voice mode: the closed panel stays mounted, and its microphone must not.
-  if (voice && !wide && !panelOpen) setVoice(false)
   const page = wide ? undefined : pageOf(pathname)
   const messages = active?.messages ?? []
   const lastUser = messages.filter((m) => m.role === "user").at(-1)

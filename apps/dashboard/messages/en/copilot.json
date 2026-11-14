@@ -1,5 +1,6 @@
 {
   "name": "Wappi",
+  "role": "Energy Copilot",
   "previewHint": "Answers are scripted with illustrative figures, not yet connected to your home's data.",
   "ask": "Ask Wappi",
   "openPanel": "Open Wappi alongside",
