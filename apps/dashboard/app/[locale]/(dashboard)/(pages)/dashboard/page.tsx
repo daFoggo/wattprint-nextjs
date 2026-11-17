@@ -64,7 +64,8 @@ async function Tiles() {
   // of that type until the insight backend raises alerts on real device ids.
   const linked = alerts.map((a) => {
     const real = a.device && devices.find((d) => d.type === a.device!.type)
-    return real && a.device ? { ...a, device: { ...a.device, id: real.id } } : a
+    // No device of that type in this home: drop the link rather than point at a page that 404s.
+    return { ...a, device: real && a.device ? { ...a.device, id: real.id } : null }
   })
   return (
     <>

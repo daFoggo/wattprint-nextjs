@@ -7,7 +7,8 @@ import { getDevices } from "@/features/energy/queries"
  * per-request read as the pages (docs/routing-and-layouts.md §6.4). Without a home there are no names.
  */
 export async function DashboardCrumbs() {
-  const devices = (await getDevices()) ?? []
+  // A failed device read costs the crumb its device name, not every page under this layout.
+  const devices = (await getDevices().catch(() => null)) ?? []
   return (
     <DashboardBreadcrumb
       scopes={NAV_SCOPES}
