@@ -161,6 +161,8 @@ export const getDevices = cache(async (bill?: number) => {
   return rows.map((d) => ({
     ...d,
     watts: Math.round(d.watts), // NILM estimates carry decimals no one reads
+    // The sparkline's screen-reader summary prints raw values, ignoring its `format`.
+    week_kwh: d.week_kwh.map((v) => Math.round(v * 100) / 100),
     month_amount: d.month_kwh * price,
   }))
 })
