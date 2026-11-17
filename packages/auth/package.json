@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "jose": "^6.2.13",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "server-only": "^0.0.1",
     "zod": "^4.6.5"
   },
