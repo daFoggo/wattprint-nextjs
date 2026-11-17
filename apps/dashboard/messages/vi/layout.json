@@ -33,7 +33,7 @@
   },
   "devices": {
     "title": "Thiết bị",
-    "description": "Từng thiết bị trong nhà: đang bật hay tắt, dùng bao nhiêu điện và tốn bao nhiêu tiền. Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động."
+    "description": "Từng thiết bị trong nhà: đang bật hay tắt, dùng bao nhiêu điện và tốn bao nhiêu tiền, ước tính từ công tơ tổng."
   },
   "device": {
     "title": "Thiết bị",

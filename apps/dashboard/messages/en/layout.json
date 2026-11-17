@@ -33,7 +33,7 @@
   },
   "devices": {
     "title": "Devices",
-    "description": "Every device in the home: whether it is on, how much energy it uses and what it costs. Sample data until device detection runs."
+    "description": "Every device in the home: whether it is on, how much energy it uses and what it costs, estimated from the main meter."
   },
   "device": {
     "title": "Device",

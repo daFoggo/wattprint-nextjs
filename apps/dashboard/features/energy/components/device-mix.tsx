@@ -58,7 +58,7 @@ export function DeviceMix({
       title={t("deviceMix.title")}
       description={
         <>
-          {t("sample")}{" "}
+          {t("estimated")}{" "}
           <CardLink href={STATISTICS_PATH} className="text-foreground">
             {t("deviceMix.more")}
           </CardLink>

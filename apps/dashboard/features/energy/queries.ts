@@ -8,18 +8,16 @@ import { z } from "zod"
 import { requirePermission } from "@/lib/dal"
 import { ApiError } from "@/lib/errors"
 
-import { backgroundLoad, DAY, localDate, localMidnight } from "./days"
+import type messages from "@/messages/vi/energy.json"
+
+import { DAY, dateStart, localDate, localMidnight } from "./days"
 import {
-  demoActivity,
-  demoDevice,
-  demoDevices,
-  isDeviceKey,
-  type DeviceKey,
-  type Meter,
-  type RoomKey,
-} from "./demo"
-import { ActivitySchema, DeviceDetailSchema, DeviceSchema } from "./schemas"
-import { fetchOverview, fetchSeries } from "./server"
+  fetchActivity,
+  fetchDevice,
+  fetchDevices,
+  fetchOverview,
+  fetchSeries,
+} from "./server"
 
 const isNoHome = (error: unknown) =>
   error instanceof ApiError &&
@@ -115,89 +113,86 @@ export const getPower = cache(async () => {
   }
 })
 
-// shortcut: the device reads below come from demo.ts until the NILM endpoints exist; they already
-// return the API's shape (schemas.ts), so only these functions change when it lands.
-
 /** VND per kWh with VAT, for a home without a tariff (about the 2025 tariff's average). */
 const PRICE = 2_700
 
-/** The real meter the sample hangs off (see `Meter`). Null without a home. */
-const getMeter = cache(async () => {
-  const data = await getDashboard()
-  if (!data) return null
-  const meter: Meter = {
-    kwh: new Map(data.days.map((d) => [d.date, d.value])),
-    baseline: backgroundLoad(data.baseline, data.now) ?? 0,
-    live: data.live,
-  }
-  return { now: data.now, meter }
-})
+type DeviceKey = keyof (typeof messages)["demo"]["devices"]
 
-async function names() {
+/** cat_device_type code -> its tip in the messages (energy.demo.tips.*). */
+const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
+  always_on: "alwaysOn",
+  fridge_freezer: "fridge",
+  freezer: "fridge",
+  kettle: "kettle",
+  washing_machine: "washer",
+  television: "tv",
+  hifi: "hifi",
+  dishwasher: "dishwasher",
+  microwave: "microwave",
+  toaster: "toaster",
+  other: "other",
+}
+
+/** A device's tip in the page's language; the backend's English text for types without one. */
+async function tips() {
   const t = await getTranslations("energy.demo")
-  return {
-    device: (key: DeviceKey) => t(`devices.${key}`),
-    room: (key: RoomKey | null) => (key ? t(`rooms.${key}`) : null),
-    tip: (key: DeviceKey) => t(`tips.${key}`),
+  return (d: { type: string; tip: string | null }) => {
+    const key = TYPE_KEYS[d.type]
+    return key ? t(`tips.${key}`) : d.tip
   }
+}
+
+/** VND per kWh of this month: the bill so far split by the devices' kWh, else the average rate. */
+function pricePerKwh(devices: { month_kwh: number }[], bill?: number) {
+  const total = devices.reduce((s, d) => s + d.month_kwh, 0)
+  return bill !== undefined && total > 0 ? bill / total : PRICE
 }
 
 /**
  * Every device in the home with its state now. With `bill` (this cycle's amount so far, VND) each device gets its
- * share of it by kWh, as the backend will split the real bill, so the devices add up to the bill on the page; without
- * it they are priced at an average rate. Null without a home.
+ * share of it by kWh, so the devices add up to the bill on the page; without it they are priced at an average rate.
+ * Null without a home.
  */
 export const getDevices = cache(async (bill?: number) => {
-  const real = await getMeter()
-  if (!real) return null
-  const name = await names()
-  const rows = demoDevices(real.now, real.meter)
-  const total = rows.reduce((s, d) => s + d.month_kwh, 0)
-  const price = bill !== undefined && total > 0 ? bill / total : PRICE
-  return z.array(DeviceSchema).parse(
-    rows.map(({ key, ...d }) => ({
-      ...d,
-      id: key,
-      name: name.device(key),
-      room: name.room(d.room),
-      month_amount: d.month_kwh * price,
-    }))
-  )
+  const overview = await getOverview()
+  if (!overview) return null
+  const rows = await fetchDevices(overview.accessToken)
+  const price = pricePerKwh(rows, bill)
+  return rows.map((d) => ({
+    ...d,
+    watts: Math.round(d.watts), // NILM estimates carry decimals no one reads
+    month_amount: d.month_kwh * price,
+  }))
 })
 
 /** One device's page, priced like `getDevices`; null when the home has no such device (or there is no home). */
 export const getDevice = cache(async (id: string, bill?: number) => {
-  const real = await getMeter()
-  if (!real || !isDeviceKey(id)) return null
-  const name = await names()
-  const { key, year_kwh, ...d } = demoDevice(id, real.now, real.meter)
-  const total = demoDevices(real.now, real.meter).reduce(
-    (s, r) => s + r.month_kwh,
-    0
-  )
-  const price = bill !== undefined && total > 0 ? bill / total : PRICE
-  return DeviceDetailSchema.parse({
+  const overview = await getOverview()
+  if (!overview || !z.uuid().safeParse(id).success) return null
+  const [d, all, tip] = await Promise.all([
+    fetchDevice(overview.accessToken, id),
+    fetchDevices(overview.accessToken),
+    tips(),
+  ])
+  if (!d) return null
+  const price = pricePerKwh(all, bill)
+  const today = localDate(overview.now)
+  const elapsed = (overview.now - dateStart(`${today.slice(0, 8)}01`)) / DAY
+  return {
     ...d,
-    id: key,
-    name: name.device(key),
-    room: name.room(d.room),
-    tip: name.tip(key),
+    tip: tip(d),
+    watts: Math.round(d.watts),
+    avg_on_w: Math.round(d.avg_on_w),
+    peak_w: Math.round(d.peak_w),
     month_amount: d.month_kwh * price,
-    year_amount: year_kwh * price,
-  })
+    // This month's pace over a whole year.
+    year_amount: elapsed > 0 ? (d.month_kwh / elapsed) * 365 * price : 0,
+  }
 })
 
-/** The last 24 hours' runs of the devices shown on the timeline, oldest first. */
+/** The last 24 hours' runs of the devices shown on the timeline, oldest first. Null without a home. */
 export const getActivity = cache(async () => {
-  const real = await getMeter()
-  if (!real) return null
-  const name = await names()
-  return z.array(ActivitySchema).parse(
-    demoActivity(real.now, real.meter).map(({ key, ...run }) => ({
-      ...run,
-      device: key,
-      name: name.device(key),
-      room: name.room(run.room),
-    }))
-  )
+  const overview = await getOverview()
+  if (!overview) return null
+  return fetchActivity(overview.accessToken)
 })

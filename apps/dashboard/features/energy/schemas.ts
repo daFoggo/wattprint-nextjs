@@ -20,9 +20,9 @@ export const SeriesPointSchema = z.object({
   energy_wh: z.number(),
 })
 
-// Devices are what NILM finds (tb_device + cat_device_type), their cycles tb_device_cycle.
-// No endpoint serves them yet: queries.ts fills these shapes from demo.ts, and parses the API
-// response with the same schemas once it exists.
+// Devices are what NILM finds (tb_device + cat_device_type); their runs come from its estimates.
+// GET /energy/devices, /energy/devices/{id} and /energy/activity serve them (the *Api schemas);
+// queries.ts adds the money, which is the home's bill split by kWh.
 
 /** One on/off run of a device; `end` is null while it is still running. */
 export const CycleSchema = z.object({
@@ -75,3 +75,12 @@ export const ActivitySchema = CycleSchema.extend({
   room: z.string().nullable(),
 })
 export type Activity = z.infer<typeof ActivitySchema>
+
+/** GET /energy/devices: everything but the money, which queries.ts prices from the bill. */
+export const DeviceApiSchema = DeviceSchema.omit({ month_amount: true })
+
+/** GET /energy/devices/{id}. */
+export const DeviceDetailApiSchema = DeviceDetailSchema.omit({
+  month_amount: true,
+  year_amount: true,
+})

@@ -23,7 +23,7 @@
     "rest": "{count} thiết bị khác"
   },
   "deviceList": {
-    "label": "Thiết bị, dữ liệu mẫu",
+    "label": "Thiết bị",
     "search": "Tìm thiết bị",
     "colDevice": "Thiết bị",
     "colStatus": "Trạng thái",
@@ -67,7 +67,7 @@
       "other": "Phần điện chưa gán được cho thiết bị nào. Con số này nhỏ dần khi hệ thống nhận ra thêm thiết bị trong nhà."
     }
   },
-  "sample": "Dữ liệu mẫu cho đến khi tính năng nhận diện thiết bị hoạt động.",
+  "estimated": "Ước tính từ công tơ tổng bằng nhận diện thiết bị (NILM).",
   "timeline": {
     "title": "Nhật ký thiết bị, 24 giờ qua",
     "running": "{device} đang bật",
@@ -75,7 +75,7 @@
     "deviceTitle": "Nhật ký 24 giờ qua",
     "runningSelf": "Đang bật",
     "ranSelf": "Chạy {h, plural, =0 {} other {# giờ }}{m} phút · {kwh} kWh",
-    "description": "Thiết bị nào đã chạy, chạy bao lâu và tốn bao nhiêu điện · dữ liệu mẫu",
+    "description": "Thiết bị nào đã chạy, chạy bao lâu và tốn bao nhiêu điện · ước tính",
     "deviceDescription": "Chạy {count} lần · mỗi dòng là một lần bật đến lúc tắt"
   },
   "power": {
@@ -85,7 +85,8 @@
     "month": "30 ngày",
     "quarter": "90 ngày",
     "deviceTitle": "Công suất thiết bị, 24 giờ qua",
-    "title": "Công suất cả nhà theo thời gian"
+    "title": "Công suất cả nhà theo thời gian",
+    "deviceDescription": "Công suất ước tính theo bước 5 phút"
   },
   "deviceStats": {
     "avgOn": "Trung bình khi bật",
@@ -106,11 +107,11 @@
   },
   "roomSpending": {
     "title": "Tiền điện tháng này theo phòng",
-    "hint": "Chạm vào một phòng để xem từng thiết bị · dữ liệu mẫu",
+    "hint": "Chạm vào một phòng để xem từng thiết bị · ước tính",
     "label": "Tháng này",
     "allDevices": "Tất cả thiết bị",
     "roomTitle": "Tiền điện tháng này · {room}",
-    "roomHint": "Từng thiết bị trong phòng · dữ liệu mẫu"
+    "roomHint": "Từng thiết bị trong phòng · ước tính"
   },
   "cycleCompare": {
     "title": "Điện năng cộng dồn: kỳ này so với kỳ trước",

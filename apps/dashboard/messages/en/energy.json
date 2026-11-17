@@ -23,7 +23,7 @@
     "rest": "{count} more devices"
   },
   "deviceList": {
-    "label": "Devices, sample data",
+    "label": "Devices",
     "search": "Search devices",
     "colDevice": "Device",
     "colStatus": "Status",
@@ -67,7 +67,7 @@
       "other": "Energy not yet put down to a device. It shrinks as the system learns more of the home's devices."
     }
   },
-  "sample": "Sample data until device detection runs.",
+  "estimated": "Estimated from the main meter by device detection (NILM).",
   "timeline": {
     "title": "Device log, last 24 hours",
     "running": "{device} is on",
@@ -75,7 +75,7 @@
     "deviceTitle": "Log, last 24 hours",
     "runningSelf": "On now",
     "ranSelf": "Ran {h, plural, =0 {} other {#h }}{m} min · {kwh} kWh",
-    "description": "Which devices ran, for how long and what they used · sample data",
+    "description": "Which devices ran, for how long and what they used · estimated",
     "deviceDescription": "Ran {count, plural, one {# time} other {# times}} · each line is one run, on to off"
   },
   "power": {
@@ -85,7 +85,8 @@
     "month": "30 days",
     "quarter": "90 days",
     "deviceTitle": "Device power, last 24 hours",
-    "title": "Whole-home power over time"
+    "title": "Whole-home power over time",
+    "deviceDescription": "Estimated draw in 5-minute steps"
   },
   "deviceStats": {
     "avgOn": "Average when on",
@@ -106,11 +107,11 @@
   },
   "roomSpending": {
     "title": "This month’s cost by room",
-    "hint": "Tap a room to see its devices · sample data",
+    "hint": "Tap a room to see its devices · estimated",
     "label": "This month",
     "allDevices": "All devices",
     "roomTitle": "This month’s cost · {room}",
-    "roomHint": "Each device in the room · sample data"
+    "roomHint": "Each device in the room · estimated"
   },
   "cycleCompare": {
     "title": "Running total: this cycle against the last",

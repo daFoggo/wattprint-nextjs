@@ -60,6 +60,12 @@ async function Tiles() {
   // The devices' money is the bill's, split by their kWh.
   const devices = await getDevices(bill?.amount_total)
   if (!data || !devices || !activity) return <NoHome />
+  // shortcut: the alerts are still a sample naming devices by type; link each to this home's device
+  // of that type until the insight backend raises alerts on real device ids.
+  const linked = alerts.map((a) => {
+    const real = a.device && devices.find((d) => d.type === a.device!.type)
+    return real && a.device ? { ...a, device: { ...a.device, id: real.id } } : a
+  })
   return (
     <>
       {/* No tariff on the home: nothing to price, so the device mix takes the row. */}
@@ -69,7 +75,7 @@ async function Tiles() {
       />
       {bill ? <BillSummary bill={bill} className={TILE.bill} /> : null}
       <AlertList
-        alerts={alerts}
+        alerts={linked}
         now={data.now}
         brief
         className={data.latest ? TILE.alerts : "lg:col-span-12"}
