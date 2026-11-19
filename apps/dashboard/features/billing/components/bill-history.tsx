@@ -4,39 +4,48 @@ import { RevenueChart } from "@workspace/ui/components/hairline/revenue-chart"
 
 import type { PastBill } from "../schemas"
 
-const monthName = (month: number, locale: string) =>
-  new Date(Date.UTC(2026, month - 1, 15)).toLocaleDateString(locale, {
+const monthTitle = (month: string, locale: string) =>
+  new Date(`${month}-15T00:00:00Z`).toLocaleDateString(locale, {
     month: "long",
+    year: "numeric",
     timeZone: "UTC",
   })
 
-/** Month by month, this year against last year, in VND or kWh (the comparison between months). */
+/** The same month a year before ("2026-09" -> "2025-09"). */
+const yearBefore = (month: string) =>
+  `${Number(month.slice(0, 4)) - 1}${month.slice(4)}`
+
+/**
+ * The last 12 cycles in VND or kWh, each against the same month a year before when every one of them has one. The
+ * axis holds only months with a bill: a home's history starts the month its meter did.
+ */
 export function BillHistory({
   bills,
   className,
 }: {
+  /** Oldest first. */
   bills: PastBill[]
   className?: string
 }) {
   const t = useTranslations("billing.history")
   const locale = useLocale()
-  const year = Math.max(...bills.map((b) => Number(b.month.slice(0, 4))))
-  const of = (y: number) => bills.filter((b) => b.month.startsWith(`${y}-`))
-  const [now, before] = [of(year), of(year - 1)]
-  const months = Array.from({ length: 12 }, (_, i) => i + 1)
+  const shown = bills.slice(-12)
+  const byMonth = new Map(bills.map((b) => [b.month, b]))
+  const before = shown.map((b) => byMonth.get(yearBefore(b.month)))
+  const previous = before.every((b) => b !== undefined) ? before : undefined
   return (
     <RevenueChart
       className={className}
-      // Numbers under the plot ("Tháng 12" did not fit twelve times); the readout names the month.
-      labels={months.map(String)}
-      titles={months.map((m) => monthName(m, locale))}
+      // Month numbers under the plot ("Tháng 12" did not fit twelve times); the readout names the month.
+      labels={shown.map((b) => String(Number(b.month.slice(5))))}
+      titles={shown.map((b) => monthTitle(b.month, locale))}
       series={[t("thisYear"), t("lastYear")]}
       metrics={[
         {
           id: "amount",
           label: t("amount"),
-          current: now.map((b) => b.amount),
-          previous: before.map((b) => b.amount),
+          current: shown.map((b) => b.amount),
+          previous: previous?.map((b) => b.amount),
           format: {
             style: "currency",
             currency: "VND",
@@ -46,8 +55,8 @@ export function BillHistory({
         {
           id: "kwh",
           label: t("kwh"),
-          current: now.map((b) => b.kwh),
-          previous: before.map((b) => b.kwh),
+          current: shown.map((b) => b.kwh),
+          previous: previous?.map((b) => b.kwh),
           format: { maximumFractionDigits: 0 },
         },
       ]}

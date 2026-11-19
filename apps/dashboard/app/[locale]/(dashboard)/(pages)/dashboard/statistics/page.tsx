@@ -10,7 +10,11 @@ import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillForecast } from "@/features/billing/components/bill-forecast"
 import { BillHistory } from "@/features/billing/components/bill-history"
 import { averagePrice } from "@/features/billing/forecast"
-import { getBillHistory, getCurrentBill } from "@/features/billing/queries"
+import {
+  getBillHistory,
+  getCurrentBill,
+  getForecast,
+} from "@/features/billing/queries"
 import { CycleCompare } from "@/features/energy/components/cycle-compare"
 import { DailyTrend } from "@/features/energy/components/daily-trend"
 import { PowerChart } from "@/features/energy/components/power-chart"
@@ -53,16 +57,16 @@ async function Power({ className }: Props) {
 }
 
 async function Forecast({ className }: Props) {
-  const [bill, data, history] = await Promise.all([
+  const [bill, forecast, history] = await Promise.all([
     getCurrentBill(),
-    getDashboard(),
+    getForecast(),
     getBillHistory(),
   ])
-  if (!bill || !data) return null
+  if (!bill) return null
   return (
     <BillForecast
       bill={bill}
-      now={data.now}
+      forecast={forecast}
       lastMonth={history?.at(-1)}
       className={className}
     />

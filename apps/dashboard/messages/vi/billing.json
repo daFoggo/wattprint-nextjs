@@ -12,22 +12,23 @@
     "viewDetails": "Xem chi tiết hóa đơn"
   },
   "history": {
-    "thisYear": "Năm nay (mẫu)",
-    "lastYear": "Năm ngoái (mẫu)",
+    "thisYear": "Các kỳ gần đây",
+    "lastYear": "Cùng kỳ năm trước",
     "amount": "Tiền điện từng tháng",
     "kwh": "Điện năng từng tháng (kWh)"
   },
   "forecast": {
     "title": "Dự báo hóa đơn cuối kỳ",
-    "description": "Nếu cứ dùng như từ đầu kỳ đến nay, tính đến hết ngày {end}.",
+    "description": "Theo thói quen dùng điện từng ngày trong tuần của 4 tuần gần nhất, tính đến hết ngày {end}.",
     "amount": "Hóa đơn dự kiến",
     "kwh": "Điện năng dự kiến",
     "tier": "Kết thúc ở",
     "tierValue": "Bậc {tier}",
-    "higher": "Cao hơn {pct} so với tháng trước ({amount}, mẫu).",
-    "lower": "Thấp hơn {pct} so với tháng trước ({amount}, mẫu).",
+    "higher": "Cao hơn {pct} so với kỳ trước ({amount}).",
+    "lower": "Thấp hơn {pct} so với kỳ trước ({amount}).",
     "nextTitle": "Ngày {date} sang bậc {tier}",
-    "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn."
+    "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn.",
+    "unavailable": "Cần ít nhất 7 ngày có đủ số đo để dự báo; quay lại sau ít hôm nữa."
   },
   "overview": {
     "title": "Hóa đơn kỳ này, {start} – {end}",
@@ -37,10 +38,10 @@
     "forecast": "Dự kiến cuối kỳ",
     "kwh": "{kwh} kWh",
     "forecastNote": "{kwh} kWh · kết thúc ở bậc {tier}",
-    "change": "Dự kiến so với tháng trước",
+    "change": "Dự kiến so với kỳ trước",
     "more": "Nhiều hơn",
     "less": "Ít hơn",
-    "lastMonth": "Tháng trước {amount} (mẫu)",
+    "lastMonth": "Kỳ trước {amount}",
     "partial": "Thiếu dữ liệu",
     "straddle": "Giá điện thay đổi trong kỳ"
   },
@@ -59,11 +60,12 @@
     "total": "Tổng cộng"
   },
   "past": {
-    "title": "Hóa đơn 6 tháng trước",
-    "description": "Dữ liệu mẫu, tính theo biểu giá hiện tại",
+    "title": "Hóa đơn các kỳ trước",
+    "description": "Từ công tơ, theo biểu giá áp dụng ở từng kỳ",
     "chart": "Biểu đồ 12 tháng",
-    "colMonth": "Tháng",
+    "colMonth": "Kỳ",
     "colKwh": "kWh",
-    "colAmount": "Tiền điện, so với tháng trước"
+    "colAmount": "Tiền điện, so với kỳ trước",
+    "missing": "Thiếu {pct} dữ liệu"
   }
 }

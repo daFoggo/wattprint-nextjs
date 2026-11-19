@@ -4,27 +4,26 @@ import { Alert } from "@workspace/ui/components/hairline/alert"
 
 import { Tile } from "@/components/shared/tile"
 
-import { projectBill } from "../forecast"
-import type { CurrentBill, PastBill } from "../schemas"
+import type { CurrentBill, Forecast, PastBill } from "../schemas"
 
 /**
- * The cycle's bill at the pace so far (the pitch's forecast): amount and kWh at the end, the tier it ends in,
+ * The cycle's bill at its end if the home keeps its weekday pattern (the pitch's forecast): amount and kWh at the end, the tier it ends in,
  * against last month, and when the next, dearer tier starts.
  */
 export function BillForecast({
   bill,
-  now,
+  forecast: p,
   lastMonth,
   className,
 }: {
   bill: CurrentBill
-  now: number
+  /** Null before the home has a week of full days. */
+  forecast: Forecast | null
   lastMonth?: PastBill
   className?: string
 }) {
   const t = useTranslations("billing.forecast")
   const locale = useLocale()
-  const p = projectBill(bill, now)
   const vnd = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "VND",
@@ -35,6 +34,12 @@ export function BillForecast({
     style: "percent",
     maximumFractionDigits: 0,
   })
+  if (!p)
+    return (
+      <Tile title={t("title")} className={className}>
+        <p className="text-sm text-muted-foreground">{t("unavailable")}</p>
+      </Tile>
+    )
   const change = lastMonth ? p.amount / lastMonth.amount - 1 : null
   const date = (ms: number) =>
     new Date(ms).toLocaleDateString(locale, {

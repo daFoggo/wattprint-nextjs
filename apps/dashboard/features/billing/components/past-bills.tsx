@@ -8,11 +8,11 @@ import { Tile } from "@/components/shared/tile"
 import { STATISTICS_PATH } from "@/config/routes"
 import { Link } from "@/i18n/navigation"
 
-import type { PastBill } from "../schemas"
+import { FULL_COVERAGE, type PastBill } from "../schemas"
 
 const SHOWN = 6
 
-/** The last few bills, newest first, each against the month before; the year's chart is on the statistics page. */
+/** The last few bills, newest first, each against the cycle before; the year's chart is on the statistics page. */
 export function PastBills({
   bills,
   className,
@@ -33,12 +33,16 @@ export function PastBills({
     maximumFractionDigits: 0,
     signDisplay: "exceptZero",
   })
-  const month = (m: string) =>
-    new Date(`${m}-15T00:00:00Z`).toLocaleDateString(locale, {
+  const day = (d: string) =>
+    new Date(`${d}T00:00:00Z`).toLocaleDateString(locale, {
+      day: "numeric",
       month: "numeric",
-      year: "numeric",
       timeZone: "UTC",
     })
+  const missing = new Intl.NumberFormat(locale, {
+    style: "percent",
+    maximumFractionDigits: 0,
+  })
   const rows = bills
     .map((b, i) => ({ ...b, before: bills[i - 1] }))
     .slice(-SHOWN)
@@ -87,8 +91,17 @@ export function PastBills({
           {rows.map((b) => {
             const change = b.before ? b.amount / b.before.amount - 1 : null
             return (
-              <tr key={b.month} className="h-14">
-                <td>{month(b.month)}</td>
+              <tr key={b.period_start} className="h-14">
+                <td>
+                  <span className="block">
+                    {day(b.period_start)} – {day(b.period_end)}
+                  </span>
+                  {b.coverage < FULL_COVERAGE ? (
+                    <span className="block text-xs text-muted-foreground">
+                      {t("missing", { pct: missing.format(1 - b.coverage) })}
+                    </span>
+                  ) : null}
+                </td>
                 <td className="text-right text-muted-foreground">
                   {kwh.format(b.kwh)}
                 </td>

@@ -6,8 +6,7 @@ import { NumberRoll } from "@workspace/ui/components/hairline/number-roll"
 
 import { Tile } from "@/components/shared/tile"
 
-import { projectBill } from "../forecast"
-import type { CurrentBill, PastBill } from "../schemas"
+import type { CurrentBill, Forecast, PastBill } from "../schemas"
 
 const DAY = 86_400_000
 const VND = {
@@ -25,18 +24,20 @@ const dayStart = (date: string) => Date.parse(`${date}T00:00:00+07:00`)
  */
 export function BillOverview({
   bill,
+  forecast: p,
   now,
   lastMonth,
   className,
 }: {
   bill: CurrentBill
+  /** Null before the home has a week of full days. */
+  forecast: Forecast | null
   now: number
   lastMonth?: PastBill
   className?: string
 }) {
   const t = useTranslations("billing")
   const locale = useLocale()
-  const p = projectBill(bill, now)
   const vnd = new Intl.NumberFormat(locale, VND)
   const kwh = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 })
   const date = (ms: number) =>
@@ -47,7 +48,7 @@ export function BillOverview({
     })
   const end = dayStart(bill.period_end) + DAY
   const daysLeft = Math.max(0, Math.round((end - now) / DAY))
-  const change = lastMonth ? p.amount / lastMonth.amount - 1 : null
+  const change = lastMonth && p ? p.amount / lastMonth.amount - 1 : null
   const stats = [
     {
       label: t("overview.soFar"),
@@ -59,14 +60,18 @@ export function BillOverview({
       value: bill.today_amount,
       note: t("overview.kwh", { kwh: kwh.format(bill.today_kwh) }),
     },
-    {
-      label: t("overview.forecast"),
-      value: p.amount,
-      note: t("overview.forecastNote", {
-        kwh: kwh.format(Math.round(p.kwh)),
-        tier: p.tier,
-      }),
-    },
+    ...(p
+      ? [
+          {
+            label: t("overview.forecast"),
+            value: p.amount,
+            note: t("overview.forecastNote", {
+              kwh: kwh.format(Math.round(p.kwh)),
+              tier: p.tier,
+            }),
+          },
+        ]
+      : []),
   ]
   return (
     <Tile
@@ -85,7 +90,7 @@ export function BillOverview({
               </Badge>
             )}
             {bill.tariff_straddle && (
-              // The backend prices the whole cycle at the tariff valid on its first day.
+              // The backend splits the cycle by days between the two tariffs, as EVN does.
               <Badge tone="warning" size="sm">
                 {t("overview.straddle")}
               </Badge>
@@ -133,7 +138,7 @@ export function BillOverview({
           </div>
         ) : null}
       </dl>
-      {p.next ? (
+      {p?.next ? (
         <Alert
           tone="warning"
           title={t("forecast.nextTitle", {

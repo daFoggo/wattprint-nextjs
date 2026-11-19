@@ -8,7 +8,11 @@ import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillOverview } from "@/features/billing/components/bill-overview"
 import { PastBills } from "@/features/billing/components/past-bills"
 import { TierLadder } from "@/features/billing/components/tier-ladder"
-import { getBillHistory, getCurrentBill } from "@/features/billing/queries"
+import {
+  getBillHistory,
+  getCurrentBill,
+  getForecast,
+} from "@/features/billing/queries"
 import { getDashboard } from "@/features/energy/queries"
 import { requirePermission } from "@/lib/dal"
 
@@ -24,9 +28,10 @@ async function Guard() {
 
 /** The cycle at a glance; without a home or a tariff there is nothing to price, and it says so. */
 async function Overview() {
-  const [bill, history, data, t] = await Promise.all([
+  const [bill, history, forecast, data, t] = await Promise.all([
     getCurrentBill(),
     getBillHistory(),
+    getForecast(),
     getDashboard(),
     getTranslations("layout.bill"),
   ])
@@ -41,6 +46,7 @@ async function Overview() {
   return (
     <BillOverview
       bill={bill}
+      forecast={forecast}
       now={data.now}
       lastMonth={history?.at(-1)}
       className="lg:col-span-12"

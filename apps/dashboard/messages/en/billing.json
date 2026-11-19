@@ -12,22 +12,23 @@
     "viewDetails": "View bill details"
   },
   "history": {
-    "thisYear": "This year (sample)",
-    "lastYear": "Last year (sample)",
+    "thisYear": "Recent cycles",
+    "lastYear": "Same months a year before",
     "amount": "Cost each month",
     "kwh": "Energy each month (kWh)"
   },
   "forecast": {
     "title": "Bill forecast for the end of the cycle",
-    "description": "If the rest of the cycle goes like it has so far, up to the end of {end}.",
+    "description": "From the home's day-of-week pattern over the last 4 weeks, to the end of {end}.",
     "amount": "Expected bill",
     "kwh": "Expected energy",
     "tier": "Ends in",
     "tierValue": "Tier {tier}",
-    "higher": "{pct} more than last month ({amount}, sample).",
-    "lower": "{pct} less than last month ({amount}, sample).",
+    "higher": "{pct} more than the last cycle ({amount}).",
+    "lower": "{pct} less than the last cycle ({amount}).",
     "nextTitle": "Tier {tier} starts on {date}",
-    "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer."
+    "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer.",
+    "unavailable": "At least 7 days with full readings are needed to forecast; check back in a few days."
   },
   "overview": {
     "title": "This bill, {start} – {end}",
@@ -37,10 +38,10 @@
     "forecast": "Expected at the end",
     "kwh": "{kwh} kWh",
     "forecastNote": "{kwh} kWh · ends in tier {tier}",
-    "change": "Expected against last month",
+    "change": "Forecast against the last cycle",
     "more": "More",
     "less": "Less",
-    "lastMonth": "Last month {amount} (sample)",
+    "lastMonth": "Last cycle {amount}",
     "partial": "Missing data",
     "straddle": "Tariff changed this cycle"
   },
@@ -59,11 +60,12 @@
     "total": "Total"
   },
   "past": {
-    "title": "The last 6 bills",
-    "description": "Sample data, priced with the current tariff",
+    "title": "Past bills",
+    "description": "From the meter, at the tariff of each cycle",
     "chart": "12-month chart",
-    "colMonth": "Month",
+    "colMonth": "Cycle",
     "colKwh": "kWh",
-    "colAmount": "Amount, against the month before"
+    "colAmount": "Bill, against the cycle before",
+    "missing": "{pct} of readings missing"
   }
 }
