@@ -13,6 +13,8 @@ import {
 } from "@tabler/icons-react"
 import { useTranslations } from "next-intl"
 
+import { Alert } from "@workspace/ui/components/hairline/alert"
+import { Button } from "@workspace/ui/components/hairline/button"
 import { ChatScroll } from "@workspace/ui/components/hairline/chat-scroll"
 import { INTERACTION_FOCUS } from "@workspace/ui/components/hairline/motion"
 import { cn } from "@workspace/ui/lib/utils"
@@ -156,7 +158,7 @@ function EmptyState({ page, wide }: { page?: Page; wide: boolean }) {
  */
 export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
   const t = useTranslations("copilot")
-  const { active, status } = useCopilot()
+  const { active, status, select } = useCopilot()
   const [voice, setVoice] = useState(false)
   const pathname = usePathname()
   const wide = variant === "page"
@@ -170,6 +172,25 @@ export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {active?.failed ? (
+        <div className={cn(column, "py-6")}>
+          <Alert
+            tone="warning"
+            title={t("loadFailed.title")}
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => select(active.id)}
+              >
+                {t("loadFailed.retry")}
+              </Button>
+            }
+          >
+            {t("loadFailed.body")}
+          </Alert>
+        </div>
+      ) : null}
       {messages.length ? (
         <ChatScroll
           streaming={status !== "ready"}

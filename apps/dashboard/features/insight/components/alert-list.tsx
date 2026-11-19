@@ -55,15 +55,14 @@ export function AlertList({
           const props = {
             tone: a.status === "resolved" ? "success" : TONE[a.severity],
             title: t(`${a.kind}.title`, values),
-            action:
-                a.device ? (
-                  // The device itself is the link: its icon and name say where it goes.
-                  <DeviceChip
-                    href={`${DEVICES_PATH}/${encodeURIComponent(a.device.id)}`}
-                    type={a.device.type}
-                    name={a.device.name}
-                  />
-                ) : undefined,
+            action: a.device ? (
+              // The device itself is the link: its icon and name say where it goes.
+              <DeviceChip
+                href={`${DEVICES_PATH}/${encodeURIComponent(a.device.id)}`}
+                type={a.device.type}
+                name={a.device.name}
+              />
+            ) : undefined,
             children: (
               <>
                 {brief ? null : `${t(`${a.kind}.body`, values)} `}

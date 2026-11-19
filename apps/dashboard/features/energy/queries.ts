@@ -116,9 +116,9 @@ export const getPower = cache(async () => {
 /** VND per kWh with VAT, for a home without a tariff (about the 2025 tariff's average). */
 const PRICE = 2_700
 
-type DeviceKey = keyof (typeof messages)["demo"]["devices"]
+type DeviceKey = keyof (typeof messages)["tips"]
 
-/** cat_device_type code -> its tip in the messages (energy.demo.tips.*). */
+/** cat_device_type code -> its tip in the messages (energy.tips.*). */
 const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
   always_on: "alwaysOn",
   fridge_freezer: "fridge",
@@ -135,10 +135,10 @@ const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
 
 /** A device's tip in the page's language; the backend's English text for types without one. */
 async function tips() {
-  const t = await getTranslations("energy.demo")
+  const t = await getTranslations("energy.tips")
   return (d: { type: string; tip: string | null }) => {
     const key = TYPE_KEYS[d.type]
-    return key ? t(`tips.${key}`) : d.tip
+    return key ? t(key) : d.tip
   }
 }
 

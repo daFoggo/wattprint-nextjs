@@ -84,7 +84,9 @@ describe("threads", () => {
     expect(statusOf(thread([answer("thinking")]))).toBe("submitted")
     expect(statusOf(thread([answer("streaming")]))).toBe("streaming")
     expect(statusOf(thread([answer("done")]))).toBe("ready")
-    expect(statusOf({ id: "t", updatedAt: 0 })).toBe("ready") // not fetched yet
+    // Being fetched: busy, so a question cannot be overwritten when the messages land.
+    expect(statusOf({ id: "t", updatedAt: 0 })).toBe("submitted")
+    expect(statusOf({ id: "t", updatedAt: 0, failed: true })).toBe("ready")
   })
 
   it("stops live answers where they stand", () => {

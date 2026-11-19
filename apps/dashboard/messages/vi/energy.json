@@ -36,37 +36,6 @@
     "weekLabel": "{device}, điện năng 7 ngày qua",
     "onAt": "Đang bật · {watts} W"
   },
-  "demo": {
-    "devices": {
-      "alwaysOn": "Luôn bật",
-      "fridge": "Tủ lạnh",
-      "kettle": "Ấm siêu tốc",
-      "washer": "Máy giặt",
-      "tv": "Tivi",
-      "hifi": "Dàn âm thanh",
-      "dishwasher": "Máy rửa bát",
-      "microwave": "Lò vi sóng",
-      "toaster": "Máy nướng bánh mì",
-      "other": "Khác"
-    },
-    "rooms": {
-      "kitchen": "Bếp",
-      "livingRoom": "Phòng khách",
-      "utility": "Phòng giặt"
-    },
-    "tips": {
-      "alwaysOn": "Điện nền là phần điện tiêu thụ cả khi không ai dùng: modem, bộ sạc, thiết bị ở chế độ chờ. Mỗi 10 W chạy suốt năm tốn khoảng 88 kWh.",
-      "fridge": "Để tủ cách tường 10 cm, giữ gioăng cửa sạch và đặt ngăn mát 3–5 °C. Tủ chạy lâu hơn thường lệ thường do gioăng hở hoặc dàn nóng bám bụi.",
-      "kettle": "Chỉ đun lượng nước cần dùng: đun đầy ấm tốn gấp đôi thời gian và điện so với nửa ấm.",
-      "washer": "Giặt đủ tải bằng nước lạnh; phần lớn điện của máy giặt là để làm nóng nước.",
-      "tv": "Giảm độ sáng màn hình và tắt hẳn khi không xem: chế độ chờ vẫn tốn điện.",
-      "hifi": "Bộ khuếch đại vẫn tốn điện khi để chờ; tắt ở ổ cắm khi không dùng.",
-      "dishwasher": "Chỉ chạy khi đầy và dùng chế độ tiết kiệm (eco); bỏ bước sấy nóng nếu có thể.",
-      "microwave": "Hâm phần ăn nhỏ bằng lò vi sóng tốn ít điện hơn bếp hoặc lò nướng.",
-      "toaster": "Công suất cao nhưng chạy ngắn; rút phích khi không dùng.",
-      "other": "Phần điện chưa gán được cho thiết bị nào. Con số này nhỏ dần khi hệ thống nhận ra thêm thiết bị trong nhà."
-    }
-  },
   "estimated": "Ước tính từ công tơ tổng bằng nhận diện thiết bị (NILM).",
   "timeline": {
     "title": "Nhật ký thiết bị, 24 giờ qua",
@@ -127,5 +96,17 @@
     "year": "Mỗi năm",
     "cost": "Tiền mỗi năm",
     "chart": "Điện nền mỗi ngày, 30 ngày qua"
+  },
+  "tips": {
+    "alwaysOn": "Điện nền là phần điện tiêu thụ cả khi không ai dùng: modem, bộ sạc, thiết bị ở chế độ chờ. Mỗi 10 W chạy suốt năm tốn khoảng 88 kWh.",
+    "fridge": "Để tủ cách tường 10 cm, giữ gioăng cửa sạch và đặt ngăn mát 3–5 °C. Tủ chạy lâu hơn thường lệ thường do gioăng hở hoặc dàn nóng bám bụi.",
+    "kettle": "Chỉ đun lượng nước cần dùng: đun đầy ấm tốn gấp đôi thời gian và điện so với nửa ấm.",
+    "washer": "Giặt đủ tải bằng nước lạnh; phần lớn điện của máy giặt là để làm nóng nước.",
+    "tv": "Giảm độ sáng màn hình và tắt hẳn khi không xem: chế độ chờ vẫn tốn điện.",
+    "hifi": "Bộ khuếch đại vẫn tốn điện khi để chờ; tắt ở ổ cắm khi không dùng.",
+    "dishwasher": "Chỉ chạy khi đầy và dùng chế độ tiết kiệm (eco); bỏ bước sấy nóng nếu có thể.",
+    "microwave": "Hâm phần ăn nhỏ bằng lò vi sóng tốn ít điện hơn bếp hoặc lò nướng.",
+    "toaster": "Công suất cao nhưng chạy ngắn; rút phích khi không dùng.",
+    "other": "Phần điện chưa gán được cho thiết bị nào. Con số này nhỏ dần khi hệ thống nhận ra thêm thiết bị trong nhà."
   }
 }

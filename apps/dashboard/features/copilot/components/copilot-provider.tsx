@@ -41,8 +41,8 @@ export type Reaction = Extract<
 
 type CopilotState = {
   threads: Thread[]
-  /** False until the history has been fetched. */
-  loaded: boolean
+  /** False until the history has been fetched; "failed" when it could not be. */
+  loaded: boolean | "failed"
   /** The open conversation; undefined is a new, empty one. */
   active?: Thread
   status: Status
@@ -102,7 +102,8 @@ async function codeOf(res: Response) {
 export function CopilotProvider({ children }: { children: React.ReactNode }) {
   const locale = useLocale()
   const [threads, setThreads] = useState<Thread[]>([])
-  const [loaded, setLoaded] = useState(false)
+  /** false until fetched; "failed" when the history could not be read. */
+  const [loaded, setLoaded] = useState<boolean | "failed">(false)
   const [activeId, setActiveId] = useState<string>()
   const [panelOpen, setPanelOpen] = useState(false)
   const [reaction, setReaction] = useState<Reaction>()
@@ -142,6 +143,10 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
           })),
         ])
         setLoaded(true)
+      })
+      .catch((error) => {
+        console.error(error)
+        setLoaded("failed")
       })
       .finally(() => (loadingRef.current = false))
   }, [])
@@ -194,12 +199,17 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
         }),
         signal: controller.signal,
       })
-      if (!res.ok || !res.body) {
-        const code = await codeOf(res)
+      // A session that expired is redirected to an HTML page: not a stream either.
+      const stream = res.headers
+        .get("content-type")
+        ?.startsWith("text/event-stream")
+      if (!res.ok || !res.body || !stream) {
+        const code = res.ok ? "session" : await codeOf(res)
         change((m) => ({ ...m, phase: "error", error: code }))
         return null
       }
       let final: string | null = null
+      let ended = false
       for await (const event of chatEvents(res.body)) {
         if (event.event === "meta") {
           // The backend names the conversation and the answer: follow its ids from here on.
@@ -223,7 +233,10 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
           final = event.data.reply.text
           react("answered")
         }
+        if (event.event === "done" || event.event === "error") ended = true
       }
+      // The stream closed without its last word (the server went away): say so, never spin.
+      if (!ended) change((m) => ({ ...m, phase: "error", error: "network" }))
       return final
     } catch (error) {
       if (controller.signal.aborted) return null // stopped: stopLive marked it
@@ -264,13 +277,17 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       if (status !== "ready") stop()
       setActiveId(threadId)
       const th = threads.find((t) => t.id === threadId)
-      if (threadId && !th?.messages)
+      if (threadId && !th?.messages) {
+        setThread(threadId, { failed: false })
         loadConversationAction(threadId)
-          .then((messages: Message[]) => setThread(threadId, { messages }))
+          .then((messages: Message[]) =>
+            setThread(threadId, { messages, failed: false })
+          )
           .catch((error) => {
             console.error(error)
-            setThread(threadId, { messages: [] })
+            setThread(threadId, { failed: true })
           })
+      }
     },
     rename: (threadId, title) => {
       setThread(threadId, { title })

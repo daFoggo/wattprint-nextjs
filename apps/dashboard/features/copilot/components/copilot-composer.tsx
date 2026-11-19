@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { IconEye, IconWaveSine } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -23,6 +23,8 @@ function useDictation(onText: (text: string) => void) {
   const [startedAt, setStartedAt] = useState<number>()
   const [failed, setFailed] = useState<string>()
   const recorder = useRef<Awaited<ReturnType<typeof record>>>(null)
+  // Closing the panel mid-dictation lets go of the microphone (the browser's recording light goes off).
+  useEffect(() => () => recorder.current?.cancel(), [])
 
   const start = async () => {
     setFailed(undefined)

@@ -4,7 +4,7 @@ import { z } from "zod"
 import { streamChat } from "@/features/copilot/server"
 import { requirePermission } from "@/lib/dal"
 
-import { failure } from "../respond"
+import { failure, jsonOf, readLimited, tooLarge } from "../respond"
 
 const Body = z
   .object({
@@ -18,7 +18,9 @@ const Body = z
 export async function POST(request: Request) {
   await connection()
   const { accessToken } = await requirePermission("account:view")
-  const body = Body.safeParse(await request.json().catch(() => null))
+  const raw = await readLimited(request, 16_384) // a question is at most 2000 characters
+  if (!raw) return tooLarge()
+  const body = Body.safeParse(jsonOf(raw))
   if (!body.success)
     return Response.json(
       { code: "invalid", detail: "Bad question" },

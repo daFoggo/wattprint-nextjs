@@ -37,6 +37,7 @@ const ERRORS = [
   "copilot_unavailable",
   "copilot_rate_limited",
   "conversation_not_found",
+  "session",
 ] as const
 type ErrorKey = (typeof ERRORS)[number] | "other"
 
@@ -44,7 +45,7 @@ const errorKey = (code: string): ErrorKey =>
   (ERRORS as readonly string[]).includes(code) ? (code as ErrorKey) : "other"
 
 /** The text with each `[n]` as a citation chip for `sources[n - 1]`; without sources yet (streaming), the marks go. */
-export function segments(
+function segments(
   text: string,
   sources: Reply["sources"] = []
 ): AnswerSegment[] {
@@ -71,16 +72,16 @@ function SpeakButton({ text }: { text: string }) {
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle")
   const audio = useRef<HTMLAudioElement>(null)
   const abort = useRef<AbortController>(null)
-  useEffect(
-    () => () => {
-      abort.current?.abort()
-      audio.current?.pause()
-    },
-    []
-  )
-  const stop = () => {
+  const url = useRef<string>(null)
+  const release = () => {
     abort.current?.abort()
     audio.current?.pause()
+    if (url.current) URL.revokeObjectURL(url.current)
+    url.current = null
+  }
+  useEffect(() => release, [])
+  const stop = () => {
+    release()
     setState("idle")
   }
   const play = async () => {
@@ -89,13 +90,12 @@ function SpeakButton({ text }: { text: string }) {
     setState("loading")
     try {
       const res = await speechOf(text, controller.signal)
-      const url = URL.createObjectURL(await res.blob())
-      const player = new Audio(url)
+      const blob = await res.blob()
+      if (controller.signal.aborted) return // stopped while it loaded
+      url.current = URL.createObjectURL(blob)
+      const player = new Audio(url.current)
       audio.current = player
-      player.onended = player.onerror = () => {
-        URL.revokeObjectURL(url)
-        setState("idle")
-      }
+      player.onended = player.onerror = stop
       await player.play()
       setState("playing")
     } catch {

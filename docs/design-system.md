@@ -487,10 +487,13 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
 - The sidebar entry sits just above the page menu (`gap-4`): one row as tall as a menu row, a `bg-background` card with
   the 16px logo in place of an icon, then "Wappi" and its role, muted ("Trợ lý năng lượng"). The header pill says "Hỏi
   Wappi", so the two never repeat. Only the logo stays in the icon rail; no menu link is current on Wappi's page.
-- Wappi's logo (`WappiLogo`) is pixel art, drawn twice so pixels stay whole: 8 cells at 16px (beside text, like a menu
-  icon) and 12 cells from 24px: a small robot in `currentColor` whose antenna light and
-  eyes are `chart-1`, like the WattPrint mark's device dots. It introduces Wappi (sidebar entry, panel and page title,
-  opening screen) and is not repeated per message. No sparkles, glows or green tints for "AI".
+- Wappi is an animated character (`WappiAvatar`, `@bible-strong/avatar-react`, MIT): a plug-headed sphere in the brand
+  green (`features/copilot/wappi.avatar.json`, lowercase hex). It shows in the sidebar entry and header pill (16px,
+  settles still), the panel and page title (24px, live), beside each answer (32px, live on the last answer only) and on
+  the opening screen (72px, its head follows the pointer). Which state it plays is `features/copilot/moods.ts`'s
+  choice alone: `MOODS` names app events (thinking, writing, liked, celebrating…), `TOOL_STATES` what each backend
+  tool does; add a mood there, never a raw state in a component. Its test rejects states outside the catalogue and
+  the catalogue's "Spinners" (they shrink to a dot at these sizes). No sparkles, glows or green tints for "AI".
 - Panel ↔ page is one morph: `ConversationCard` sits in `<ViewTransition name="wappi-conversation" share="morph"
   default="none">`, and "Open full page" / "Back to the side panel" change the panel state and the route in one
   `startTransition`, so the card grows from the right column into the page (and back). The `.morph` rules in

@@ -52,6 +52,10 @@
       "other": {
         "title": "Có lỗi khi trả lời",
         "body": "Thử hỏi lại; nếu vẫn lỗi, tải lại trang."
+      },
+      "session": {
+        "title": "Phiên đăng nhập đã hết",
+        "body": "Tải lại trang để đăng nhập lại rồi hỏi tiếp."
       }
     }
   },
@@ -147,5 +151,11 @@
     "plan": "Lập giúp mình kế hoạch tiết kiệm",
     "peers": "So sánh nhà mình với các hộ khác",
     "standby": "Điện nền là gì, nhà mình có cao không?"
-  }
+  },
+  "loadFailed": {
+    "title": "Không mở được cuộc trò chuyện này",
+    "body": "Có thể mạng chập chờn hoặc máy chủ đang bận.",
+    "retry": "Thử lại"
+  },
+  "historyFailed": "Không tải được lịch sử trò chuyện."
 }

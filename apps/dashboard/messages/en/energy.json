@@ -36,37 +36,6 @@
     "weekLabel": "{device}, energy over the last 7 days",
     "onAt": "On · {watts} W"
   },
-  "demo": {
-    "devices": {
-      "alwaysOn": "Always on",
-      "fridge": "Fridge-freezer",
-      "kettle": "Kettle",
-      "washer": "Washing machine",
-      "tv": "Television",
-      "hifi": "Hi-fi",
-      "dishwasher": "Dishwasher",
-      "microwave": "Microwave",
-      "toaster": "Toaster",
-      "other": "Other"
-    },
-    "rooms": {
-      "kitchen": "Kitchen",
-      "livingRoom": "Living room",
-      "utility": "Utility"
-    },
-    "tips": {
-      "alwaysOn": "Background load is what the home draws when nobody is using anything: router, chargers, devices on standby. Every 10 W running all year costs about 88 kWh.",
-      "fridge": "Keep it 10 cm from the wall, keep the door seals clean and set the fridge to 3–5 °C. Longer runs than usual often mean a leaking seal or a dusty condenser.",
-      "kettle": "Boil only the water you need: a full kettle takes twice the time and energy of half a kettle.",
-      "washer": "Wash full loads in cold water; most of a washing machine's energy heats the water.",
-      "tv": "Lower the screen brightness and switch it off when nobody watches: standby still draws power.",
-      "hifi": "Amplifiers draw power even when idle; switch them off at the socket.",
-      "dishwasher": "Run only full loads on the eco programme, and skip heated drying when you can.",
-      "microwave": "For small portions a microwave uses less energy than the hob or the oven.",
-      "toaster": "High power in short bursts; unplug it when not in use.",
-      "other": "Energy not yet put down to a device. It shrinks as the system learns more of the home's devices."
-    }
-  },
   "estimated": "Estimated from the main meter by device detection (NILM).",
   "timeline": {
     "title": "Device log, last 24 hours",
@@ -127,5 +96,17 @@
     "year": "A year",
     "cost": "Cost a year",
     "chart": "Background load each day, last 30 days"
+  },
+  "tips": {
+    "alwaysOn": "Background load is what the home draws when nobody is using anything: router, chargers, devices on standby. Every 10 W running all year costs about 88 kWh.",
+    "fridge": "Keep it 10 cm from the wall, keep the door seals clean and set the fridge to 3–5 °C. Longer runs than usual often mean a leaking seal or a dusty condenser.",
+    "kettle": "Boil only the water you need: a full kettle takes twice the time and energy of half a kettle.",
+    "washer": "Wash full loads in cold water; most of a washing machine's energy heats the water.",
+    "tv": "Lower the screen brightness and switch it off when nobody watches: standby still draws power.",
+    "hifi": "Amplifiers draw power even when idle; switch them off at the socket.",
+    "dishwasher": "Run only full loads on the eco programme, and skip heated drying when you can.",
+    "microwave": "For small portions a microwave uses less energy than the hob or the oven.",
+    "toaster": "High power in short bursts; unplug it when not in use.",
+    "other": "Energy not yet put down to a device. It shrinks as the system learns more of the home's devices."
   }
 }

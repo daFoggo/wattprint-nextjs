@@ -52,6 +52,10 @@
       "other": {
         "title": "Something went wrong",
         "body": "Ask again; if it keeps failing, reload the page."
+      },
+      "session": {
+        "title": "Your session has ended",
+        "body": "Reload the page to sign in again, then ask again."
       }
     }
   },
@@ -147,5 +151,11 @@
     "plan": "Make me a savings plan",
     "peers": "Compare my home with others",
     "standby": "What is background load, and is mine high?"
-  }
+  },
+  "loadFailed": {
+    "title": "Couldn't open this conversation",
+    "body": "The network or the server may be busy.",
+    "retry": "Try again"
+  },
+  "historyFailed": "Couldn't load the conversation history."
 }

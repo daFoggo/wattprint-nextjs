@@ -9,6 +9,8 @@ const isLive = (m: Message) => m.role === "assistant" && LIVE.has(m.phase)
 
 /** Whether the thread's last answer is still being worked out (submitted), written (streaming), or neither (ready). */
 export function statusOf(thread?: Thread): Status {
+  // Still fetching its messages: a question now would be overwritten when they land.
+  if (thread && !thread.messages && !thread.failed) return "submitted"
   const live = thread?.messages?.find(isLive)
   if (live?.role !== "assistant") return "ready"
   return live.phase === "streaming" ? "streaming" : "submitted"

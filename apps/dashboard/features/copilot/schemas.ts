@@ -4,7 +4,7 @@ import { z } from "zod"
 // parsed with these on the client too, so a change on either side fails loudly.
 
 /** Data tiering (hồ sơ §4.2): every answer says how its figures were obtained. */
-export const DataTierSchema = z.enum(["measured", "estimated", "inferred"])
+const DataTierSchema = z.enum(["measured", "estimated", "inferred"])
 export type DataTier = z.infer<typeof DataTierSchema>
 
 const StepSchema = z.object({
@@ -13,12 +13,16 @@ const StepSchema = z.object({
   label: z.string(),
   detail: z.string(),
 })
-export type Step = z.infer<typeof StepSchema>
+type Step = z.infer<typeof StepSchema>
 
-const SourceSchema = z.object({ title: z.string(), url: z.string() })
+/** A citation: an http(s) page or one of the app's own paths, nothing a link could run. */
+const SourceSchema = z.object({
+  title: z.string(),
+  url: z.string().regex(/^(https?:\/\/|\/(?!\/))/),
+})
 
 /** Charts under an answer, built by the backend from the tools' results (never written by the model). */
-export const WidgetSchema = z.discriminatedUnion("kind", [
+const WidgetSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("devices"),
     slices: z.array(
@@ -80,7 +84,7 @@ export const WidgetSchema = z.discriminatedUnion("kind", [
 ])
 export type Widget = z.infer<typeof WidgetSchema>
 
-export const ReplySchema = z.object({
+const ReplySchema = z.object({
   intent: z.string(),
   tier: DataTierSchema,
   steps: z.array(StepSchema),
@@ -178,9 +182,11 @@ export type Thread = {
   pinned?: boolean
   /** Undefined until the conversation is opened and fetched. */
   messages?: Message[]
+  /** Its messages could not be fetched. */
+  failed?: boolean
 }
 
-export type Conversation = z.infer<typeof ConversationSchema>
+type Conversation = z.infer<typeof ConversationSchema>
 
 /** A stored conversation as the chat shows it. */
 export function toMessages(c: Conversation): Message[] {

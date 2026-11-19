@@ -21,6 +21,7 @@ const subscribeNever = () => () => {}
 function History({ onPicked }: { onPicked?: () => void }) {
   const { threads, loaded, loadThreads, active, select, rename, remove, pin } =
     useCopilot()
+  const t = useTranslations("copilot")
   const client = useSyncExternalStore(
     subscribeNever,
     () => true,
@@ -30,6 +31,15 @@ function History({ onPicked }: { onPicked?: () => void }) {
     if (!loaded) loadThreads()
   }, [loaded, loadThreads])
   if (!client) return null
+  if (loaded === "failed")
+    return (
+      <div className="flex flex-col items-start gap-2 p-3 text-sm text-muted-foreground">
+        {t("historyFailed")}
+        <Button variant="outline" size="sm" onClick={loadThreads}>
+          {t("loadFailed.retry")}
+        </Button>
+      </div>
+    )
   return (
     <ChatHistory
       chats={threads.map((th) => ({
