@@ -13,7 +13,10 @@ const answer = {
 
 describe("Wappi's moods", () => {
   it("only name states the catalogue has, and that keep a face", () => {
-    const spinners = stateGroups.find((g) => g.label === "Spinners")!.states
+    const spinners = [
+      ...stateGroups.find((g) => g.label === "Spinners")!.states,
+      "thinking",
+    ]
     for (const state of [
       ...Object.values(MOODS),
       ...Object.values(TOOL_STATES),

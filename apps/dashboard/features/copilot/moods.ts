@@ -4,13 +4,15 @@ import type { Message } from "./schemas"
  * Every face Wappi shows, named by what happens in the app. This is the one place that picks avatar states
  * (@bible-strong/avatar-core's catalogue: `stateNames`); components ask for a mood or a message's state, never a raw
  * state. A new reaction is one line here. The test checks each state exists and keeps a face: the catalogue's
- * "Spinners" turn the body into a dot, unreadable at 16-32 px (only `thinking`'s three dots are kept).
+ * "Spinners" (and `thinking`, three dots) turn the body into dots, unreadable at 16-32 px and doubling the loading
+ * dots the answer already shows beside it.
  */
 export const MOODS = {
   idle: "idle",
   /** The opening screen, waiting for a first question. */
-  greeting: "curious",
-  thinking: "thinking",
+  greeting: "playful",
+  /** Read the question, before the first tool: the answer's own indicator shows the dots. */
+  thinking: "curious",
   /** A tool without its own mood below. */
   working: "working",
   writing: "streaming",

@@ -13,7 +13,8 @@ import { useCopilot } from "./copilot-provider"
 // animated by @bible-strong/avatar-react (MIT). Which state it plays is moods.ts's choice.
 const Wappi = createAvatar(character)
 
-const SIZE = { sm: 16, md: 24, lg: 32, xl: 72 } as const
+// The character fills about 60 % of its box: a box reads as a glyph about two thirds its size.
+const SIZE = { sm: 16, md: 24, lg: 32, card: 40, xl: 72 } as const
 
 const subscribeNever = () => () => {}
 

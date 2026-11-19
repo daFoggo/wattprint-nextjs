@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { useTranslations } from "next-intl"
 
 import {
@@ -13,13 +14,15 @@ import { useSidebar } from "@/components/layout/sidebar/sidebar"
 import { COPILOT_PATH, onCopilotPage } from "@/config/routes"
 import { Link, usePathname } from "@/i18n/navigation"
 
+import { MOODS } from "../moods"
 import { usePanel } from "./copilot-provider"
 import { WappiAvatar } from "./wappi-avatar"
 
 /**
- * Wappi's entry at the top of the sidebar, apart from the page menu: a menu row (16px logo where the icon goes) as a
- * card on the sidebar plate, so it is told apart from the pages at a glance. It names Wappi and its role, where the
- * header's pill says "Ask Wappi", so the two read differently. In the icon rail only the logo stays, named by a tooltip.
+ * Wappi's entry at the top of the sidebar, apart from the page menu: a small card on the sidebar plate (Wappi at 32px,
+ * its name over its role), so it is told apart from the pages at a glance; hovering it makes Wappi look up. The
+ * header's pill says "Ask Wappi", so the two read differently. In the icon rail only Wappi stays (24px, the rail's
+ * width), named by a tooltip.
  */
 export function CopilotNavLink() {
   const t = useTranslations("copilot")
@@ -27,6 +30,7 @@ export function CopilotNavLink() {
   const { setPanelOpen } = usePanel()
   const current = onCopilotPage(usePathname())
   const name = `${t("name")} · ${t("role")}`
+  const [hover, setHover] = useState(false)
   const link = (
     <Link
       href={COPILOT_PATH}
@@ -37,16 +41,22 @@ export function CopilotNavLink() {
         setOpenMobile(false)
         setPanelOpen(false)
       }}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
       className={cn(
-        "flex w-full items-center gap-2 rounded-xl border bg-background px-1.5 py-1.5 text-sm font-medium transition-colors duration-150 hover:bg-accent",
+        "flex w-full items-center gap-2.5 rounded-xl border bg-background p-2 text-sm font-medium transition-colors duration-150 hover:bg-accent",
+        "group-data-[collapsible=icon]:p-1",
         "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-transparent group-data-[collapsible=icon]:bg-transparent",
         INTERACTION_FOCUS
       )}
     >
-      <WappiAvatar size="sm" />
-      <span className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap group-data-[collapsible=icon]:hidden">
+      <WappiAvatar
+        size={iconRail ? "lg" : "card"}
+        state={hover ? MOODS.greeting : MOODS.idle}
+      />
+      <span className="flex min-w-0 flex-col whitespace-nowrap group-data-[collapsible=icon]:hidden">
         {t("name")}
-        <span className="truncate font-normal text-muted-foreground">
+        <span className="truncate text-xs font-normal text-muted-foreground">
           {t("role")}
         </span>
       </span>
@@ -76,12 +86,12 @@ export function CopilotToggle() {
         type="button"
         onClick={() => setPanelOpen(true)}
         className={cn(
-          "inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-full border bg-background px-3 text-sm font-medium transition-colors duration-150 hover:bg-accent",
+          "inline-flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-full border bg-background pr-3.5 pl-2 text-sm font-medium transition-colors duration-150 hover:bg-accent",
           INTERACTION_PRESS,
           INTERACTION_FOCUS
         )}
       >
-        <WappiAvatar size="sm" />
+        <WappiAvatar size="lg" className="-my-1" />
         {t("ask")}
       </button>
     </Tooltip>
