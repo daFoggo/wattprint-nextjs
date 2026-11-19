@@ -28,7 +28,8 @@
     "lower": "{pct} less than the last cycle ({amount}).",
     "nextTitle": "Tier {tier} starts on {date}",
     "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer.",
-    "unavailable": "At least 7 days with full readings are needed to forecast; check back in a few days."
+    "unavailable": "At least 7 days with full readings are needed to forecast; check back in a few days.",
+    "why": "Learnt from {days} days with full readings; {pct} of the cycle has passed."
   },
   "overview": {
     "title": "This bill, {start} – {end}",

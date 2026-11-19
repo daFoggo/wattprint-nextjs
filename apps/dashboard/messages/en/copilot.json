@@ -57,7 +57,8 @@
         "title": "Your session has ended",
         "body": "Reload the page to sign in again, then ask again."
       }
-    }
+    },
+    "aiNote": "AI-generated from your home's data; it may be inaccurate."
   },
   "widgets": {
     "devices": "Energy by device (estimated)",

@@ -20,7 +20,8 @@
     "period": "Khoảng thời gian",
     "todaySoFar": "Hôm nay đến giờ",
     "more": "Xem thống kê",
-    "rest": "{count} thiết bị khác"
+    "rest": "{count} thiết bị khác",
+    "why": "{pct} điện năng hệ thống chưa nhận ra thuộc thiết bị nào (mục Khác)."
   },
   "deviceList": {
     "label": "Thiết bị",

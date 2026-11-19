@@ -55,7 +55,7 @@ export function CopilotNavLink() {
         state={hover ? MOODS.greeting : MOODS.idle}
       />
       <span className="flex min-w-0 flex-col whitespace-nowrap group-data-[collapsible=icon]:hidden">
-        {t("name")}
+        <span className="font-pixel-square">{t("name")}</span>
         <span className="truncate text-xs font-normal text-muted-foreground">
           {t("role")}
         </span>

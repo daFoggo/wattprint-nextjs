@@ -20,7 +20,8 @@
     "period": "Period",
     "todaySoFar": "Today so far",
     "more": "See statistics",
-    "rest": "{count} more devices"
+    "rest": "{count} more devices",
+    "why": "{pct} of the energy is not matched to a device yet (Other)."
   },
   "deviceList": {
     "label": "Devices",

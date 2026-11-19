@@ -6,9 +6,11 @@ import { useState } from "react"
 import { DonutChart } from "@workspace/ui/components/hairline/donut-chart"
 import { SegmentedControl } from "@workspace/ui/components/hairline/segmented-control"
 
+import { ModelBadge } from "@/components/shared/model-badge"
 import { CardLink } from "@/components/shared/nav-links"
 import { STATISTICS_PATH } from "@/config/routes"
 
+import { mixConfidence, otherShare } from "../confidence"
 import type { Device } from "../schemas"
 
 const TOP = 5
@@ -40,6 +42,11 @@ export function DeviceMix({
     .map((d) => ({ id: d.id, label: d.name, value: kwh(d) }))
     .filter((d) => d.value > 0)
     .sort((a, b) => b.value - a.value)
+  const other = otherShare(devices.map((d) => ({ type: d.type, kwh: kwh(d) })))
+  const pct = new Intl.NumberFormat(locale, {
+    style: "percent",
+    maximumFractionDigits: 0,
+  })
   const rest = ranked.slice(TOP)
   const slices =
     rest.length > 1
@@ -57,12 +64,15 @@ export function DeviceMix({
       className={className}
       title={t("deviceMix.title")}
       description={
-        <>
-          {t("estimated")}{" "}
-          <CardLink href={STATISTICS_PATH} className="text-foreground">
-            {t("deviceMix.more")}
-          </CardLink>
-        </>
+        <span className="flex flex-col items-start gap-1.5">
+          <ModelBadge kind="estimate" confidence={mixConfidence(other)} />
+          <span>
+            {t("estimated")} {t("deviceMix.why", { pct: pct.format(other) })}{" "}
+            <CardLink href={STATISTICS_PATH} className="text-foreground">
+              {t("deviceMix.more")}
+            </CardLink>
+          </span>
+        </span>
       }
       action={
         <SegmentedControl

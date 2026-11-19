@@ -142,7 +142,7 @@ export function AssistantMessageView({
       {/* Who speaks, with its face doing what the answer does (moods.ts); the tier says how the figures were got. */}
       <div className="flex items-center gap-2">
         <WappiAvatar size="lg" state={answerState(message)} live={last} />
-        <span className="text-sm font-medium">{name}</span>
+        <span className="font-pixel-square text-sm">{name}</span>
         {reply?.steps.length ? (
           <Badge tone={TIER_TONE[reply.tier]} dot size="sm">
             {t(`tiers.${reply.tier}`)}
@@ -227,6 +227,10 @@ export function AssistantMessageView({
           />
           {plain ? <SpeakButton messageId={message.id} /> : null}
         </div>
+      ) : null}
+
+      {settled && reply ? (
+        <p className="text-xs text-muted-foreground">{t("aiNote")}</p>
       ) : null}
 
       {settled && last && reply?.followUps.length ? (

@@ -51,6 +51,8 @@ export const FULL_COVERAGE = 0.95
  */
 export const ForecastSchema = z
   .object({
+    period_start: z.iso.date(),
+    period_end: z.iso.date(),
     kwh: z.number(),
     amount: z.number(),
     tier_no: z.number(),
@@ -63,6 +65,8 @@ export const ForecastSchema = z
       })
       .nullable(),
     basis_days: z.number(),
+    /** The local day it was made on. */
+    as_of: z.iso.date(),
   })
   .transform(({ next, tier_no, ...f }) => ({
     ...f,

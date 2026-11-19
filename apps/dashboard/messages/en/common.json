@@ -18,5 +18,14 @@
     "title": "You do not have access to this page.",
     "description": "Your account has not been granted access to this page. Contact an administrator if you think this is a mistake.",
     "back": "Back to dashboard"
+  },
+  "model": {
+    "forecast": "Forecast",
+    "estimate": "Estimate",
+    "confidence": {
+      "high": "high confidence",
+      "medium": "medium confidence",
+      "low": "low confidence"
+    }
   }
 }

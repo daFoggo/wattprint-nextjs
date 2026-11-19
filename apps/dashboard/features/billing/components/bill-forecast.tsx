@@ -2,7 +2,10 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { Alert } from "@workspace/ui/components/hairline/alert"
 
+import { ModelBadge } from "@/components/shared/model-badge"
 import { Tile } from "@/components/shared/tile"
+
+import { cyclePassed, forecastConfidence } from "../forecast"
 
 import type { CurrentBill, Forecast, PastBill } from "../schemas"
 
@@ -58,6 +61,7 @@ export function BillForecast({
       description={t("description", {
         end: date(Date.parse(`${bill.period_end}T12:00:00+07:00`)),
       })}
+      action={<ModelBadge kind="forecast" confidence={forecastConfidence(p)} />}
       className={className}
     >
       <dl className="flex flex-wrap gap-x-8 gap-y-4">
@@ -90,6 +94,12 @@ export function BillForecast({
           })}
         </Alert>
       ) : null}
+      <p className="text-xs text-muted-foreground">
+        {t("why", {
+          days: p.basis_days,
+          pct: pct.format(cyclePassed(p)),
+        })}
+      </p>
     </Tile>
   )
 }

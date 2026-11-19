@@ -22,7 +22,6 @@ import { usePathname, useRouter } from "@/i18n/navigation"
 
 import { useCopilot, usePanel } from "./copilot-provider"
 import { CopilotThread } from "./copilot-thread"
-import { WappiAvatar, useWappiState } from "./wappi-avatar"
 
 export function IconAction({
   label,
@@ -42,15 +41,10 @@ export function IconAction({
   )
 }
 
-/** Wappi's name, with its face showing what it is doing (thinking, reading the data, writing, reacting). */
+/** Wappi's name alone: its face is already on each answer below and on the button that opened it. */
 function Title() {
   const t = useTranslations("copilot")
-  return (
-    <span className="flex min-w-0 items-center gap-2">
-      <WappiAvatar size="md" state={useWappiState()} live />
-      <span className="text-sm font-medium">{t("name")}</span>
-    </span>
-  )
+  return <span className="font-pixel-square text-sm">{t("name")}</span>
 }
 
 /** New chat and Open full page: the chat carries over, since both views read the same provider. */

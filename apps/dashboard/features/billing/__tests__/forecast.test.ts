@@ -17,6 +17,7 @@ describe("ForecastSchema", () => {
         on: "2026-11-14",
       },
       basis_days: 21,
+      as_of: "2026-11-10",
     })
     expect(f.tier).toBe(5)
     expect(f.next?.tier.tier_no).toBe(4)
@@ -25,11 +26,14 @@ describe("ForecastSchema", () => {
 
   it("keeps a cycle that stays in its tier without a crossing", () => {
     const f = ForecastSchema.parse({
+      period_start: "2026-11-01",
+      period_end: "2026-11-30",
       kwh: 40,
       amount: 90_000,
       tier_no: 1,
       next: null,
       basis_days: 7,
+      as_of: "2026-11-10",
     })
     expect(f.next).toBeNull()
   })

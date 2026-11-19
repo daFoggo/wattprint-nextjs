@@ -87,7 +87,7 @@ outer border:
 | Geist | `font-sans` | UI, headings, body, prose |
 | Geist Mono | `font-mono` | Code, keys, env values and short technical values. Not for headings, nav or labels |
 | Geist Serif | `font-serif` | Registered only. No component uses it by default |
-| Geist Pixel (square, grid) | `font-pixel-square`, `font-pixel-grid` | Registered only; opt-in for a pixel accent |
+| Geist Pixel (square, grid) | `font-pixel-square`, `font-pixel-grid` | A pixel accent: Wappi's name (`font-pixel-square`), nothing else yet |
 
 The whole Geist family is loaded once in `@workspace/ui/lib/fonts` (`fontClassName` on `<html>`, `fontStyle` as its `style`);
 both apps use it, so type never drifts between them. Do not load fonts per app.
@@ -488,9 +488,10 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
   the 16px logo in place of an icon, then "Wappi" and its role, muted ("Trợ lý năng lượng"). The header pill says "Hỏi
   Wappi", so the two never repeat. Only the logo stays in the icon rail; no menu link is current on Wappi's page.
 - Wappi is an animated character (`WappiAvatar`, `@bible-strong/avatar-react`, MIT): a plug-headed sphere in the brand
-  green (`features/copilot/wappi.avatar.json`, lowercase hex). It shows in the sidebar entry and header pill (16px,
-  settles still), the panel and page title (24px, live), beside each answer (32px, live on the last answer only) and on
-  the opening screen (72px, its head follows the pointer). Which state it plays is `features/copilot/moods.ts`'s
+  green (`features/copilot/wappi.avatar.json`, lowercase hex). It shows on what opens Wappi, the sidebar card (40px,
+  32px in the icon rail) and the header pill (32px), beside each answer (32px, live on the last answer only) and on the
+  opening screen (72px, its head follows the pointer); not in the panel or page title, where the answers already show
+  it. Its name is set in Geist Pixel (`font-pixel-square`) wherever it labels Wappi (sidebar card, title, answers). Which state it plays is `features/copilot/moods.ts`'s
   choice alone: `MOODS` names app events (thinking, writing, liked, celebrating…), `TOOL_STATES` what each backend
   tool does; add a mood there, never a raw state in a component. Its test rejects states outside the catalogue and
   the catalogue's "Spinners" (they shrink to a dot at these sizes). No sparkles, glows or green tints for "AI".

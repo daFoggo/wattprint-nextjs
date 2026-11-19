@@ -28,7 +28,8 @@
     "lower": "Thấp hơn {pct} so với kỳ trước ({amount}).",
     "nextTitle": "Ngày {date} sang bậc {tier}",
     "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn.",
-    "unavailable": "Cần ít nhất 7 ngày có đủ số đo để dự báo; quay lại sau ít hôm nữa."
+    "unavailable": "Cần ít nhất 7 ngày có đủ số đo để dự báo; quay lại sau ít hôm nữa.",
+    "why": "Học từ {days} ngày có đủ số đo; kỳ đã qua {pct}."
   },
   "overview": {
     "title": "Hóa đơn kỳ này, {start} – {end}",

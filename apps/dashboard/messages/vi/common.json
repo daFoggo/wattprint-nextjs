@@ -18,5 +18,14 @@
     "title": "Bạn không có quyền truy cập trang này",
     "description": "Tài khoản của bạn chưa được cấp quyền vào trang này. Hãy liên hệ quản trị viên nếu bạn nghĩ đây là nhầm lẫn.",
     "back": "Về bảng điều khiển"
+  },
+  "model": {
+    "forecast": "Dự đoán",
+    "estimate": "Ước tính",
+    "confidence": {
+      "high": "tin cậy cao",
+      "medium": "tin cậy vừa",
+      "low": "tin cậy thấp"
+    }
   }
 }
