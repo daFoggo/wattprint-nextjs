@@ -21,6 +21,8 @@ function contentSecurityPolicy(): string {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data:",
     "font-src 'self'",
+    // Wappi's voice plays from a blob: URL; data: is the silent clip that unlocks playback inside the first click.
+    "media-src 'self' blob: data:",
     `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
     "object-src 'none'",
     "base-uri 'self'",
