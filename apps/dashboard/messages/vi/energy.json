@@ -36,7 +36,7 @@
     "weekLabel": "{device}, điện năng 7 ngày qua",
     "onAt": "Đang bật · {watts} W"
   },
-  "estimated": "Ước tính từ công tơ tổng bằng nhận diện thiết bị (NILM).",
+  "estimated": "Ước tính từ công tơ tổng bằng mô hình nhận diện thiết bị của hệ thống.",
   "timeline": {
     "title": "Nhật ký thiết bị, 24 giờ qua",
     "running": "{device} đang bật",

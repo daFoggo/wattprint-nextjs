@@ -22,7 +22,7 @@ import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
 import { answerState } from "../moods"
 import type { DataTier, Reply } from "../schemas"
 import type { AssistantMessage } from "../threads"
-import { speechOf } from "../voice"
+import { speechUrl } from "../voice"
 import { useCopilot } from "./copilot-provider"
 import { WappiAvatar } from "./wappi-avatar"
 import { CopilotWidget } from "./widgets"
@@ -66,41 +66,33 @@ export function UserMessage({ text }: { text: string }) {
   )
 }
 
-/** Reads the answer aloud in Wappi's voice (backend text to speech), and stops it on a second press. */
-function SpeakButton({ text }: { text: string }) {
+/** Reads the answer aloud in Wappi's voice (backend text to speech, streamed), and stops it on a second press. */
+function SpeakButton({ messageId }: { messageId: string }) {
   const t = useTranslations("copilot.message")
+  const locale = useLocale()
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle")
   const audio = useRef<HTMLAudioElement>(null)
-  const abort = useRef<AbortController>(null)
-  const url = useRef<string>(null)
   const release = () => {
-    abort.current?.abort()
-    audio.current?.pause()
-    if (url.current) URL.revokeObjectURL(url.current)
-    url.current = null
+    const player = audio.current
+    audio.current = null
+    if (!player) return
+    player.onplaying = player.onended = player.onerror = null // a later reading keeps its own state
+    player.pause()
+    player.removeAttribute("src") // ends the download, so the backend stops voicing the rest
+    player.load()
   }
   useEffect(() => release, [])
   const stop = () => {
     release()
     setState("idle")
   }
-  const play = async () => {
-    const controller = new AbortController()
-    abort.current = controller
+  const play = () => {
+    const player = new Audio(speechUrl(messageId, locale))
+    audio.current = player
+    player.onplaying = () => setState("playing")
+    player.onended = player.onerror = stop
     setState("loading")
-    try {
-      const res = await speechOf(text, controller.signal)
-      const blob = await res.blob()
-      if (controller.signal.aborted) return // stopped while it loaded
-      url.current = URL.createObjectURL(blob)
-      const player = new Audio(url.current)
-      audio.current = player
-      player.onended = player.onerror = stop
-      await player.play()
-      setState("playing")
-    } catch {
-      if (!controller.signal.aborted) setState("idle")
-    }
+    player.play().catch(() => audio.current === player && stop())
   }
   const busy = state !== "idle"
   const label = busy ? t("stopSpeaking") : t("speak")
@@ -111,7 +103,7 @@ function SpeakButton({ text }: { text: string }) {
         size="icon"
         aria-label={label}
         aria-pressed={busy}
-        onClick={busy ? stop : () => void play()}
+        onClick={busy ? stop : play}
       >
         {busy ? (
           <IconPlayerStopFilled aria-hidden className="size-4" />
@@ -233,7 +225,7 @@ export function AssistantMessageView({
             onFeedback={(value) => rate(message.id, value)}
             sources={reply.sources.map((s) => ({ name: s.title, href: s.url }))}
           />
-          {plain ? <SpeakButton text={plain} /> : null}
+          {plain ? <SpeakButton messageId={message.id} /> : null}
         </div>
       ) : null}
 

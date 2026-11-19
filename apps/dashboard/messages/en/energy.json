@@ -36,7 +36,7 @@
     "weekLabel": "{device}, energy over the last 7 days",
     "onAt": "On · {watts} W"
   },
-  "estimated": "Estimated from the main meter by device detection (NILM).",
+  "estimated": "Estimated from the main meter by the system's device recognition model.",
   "timeline": {
     "title": "Device log, last 24 hours",
     "running": "{device} is on",

@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/hairline/voice-session"
 import { VoiceTalk } from "@workspace/ui/components/hairline/voice-talk"
 
-import { speechOf, transcribeAudio } from "../voice"
+import { speechUrl, transcribeAudio } from "../voice"
 import { useCopilot } from "./copilot-provider"
 import { MOODS } from "../moods"
 import { WappiAvatar, useWappiState } from "./wappi-avatar"
@@ -31,14 +31,14 @@ export function VoiceMode({
   const { send } = useCopilot()
   const chat = useWappiState()
   // One turn: the recording to text (backend), the question through the chat (so it stays in the history), the
-  // answer read in Wappi's voice. VoiceTalk plays the returned audio and stops it on Interrupt.
+  // answer read in Wappi's voice. VoiceTalk plays the voice as it streams in and stops it on Interrupt.
   const session = useVoiceSession({
     onTurn: async (audio, { signal }) => {
       const question = await transcribeAudio(audio, locale, signal)
       if (!question || signal.aborted) return
       const answer = await send(question)
       if (!answer || signal.aborted) return
-      return speechOf(answer, signal)
+      return speechUrl(answer, locale) // played as it streams in
     },
   })
   const faces: Record<VoicePhase, string> = {

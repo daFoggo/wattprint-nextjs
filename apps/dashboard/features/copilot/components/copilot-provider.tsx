@@ -47,7 +47,7 @@ type CopilotState = {
   active?: Thread
   status: Status
   reaction?: Reaction
-  /** Ask; resolves with the answer's text once it is done (null if it failed or was stopped). */
+  /** Ask; resolves with the stored answer's id once it is done (null if it failed or was stopped). */
   send: (text: string) => Promise<string | null>
   stop: () => void
   select: (id?: string) => void
@@ -230,7 +230,7 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
           )
         )
         if (event.event === "done") {
-          final = event.data.reply.text
+          final = event.data.message_id
           react("answered")
         }
         if (event.event === "done" || event.event === "error") ended = true

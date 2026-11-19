@@ -39,24 +39,9 @@ export async function transcribeAudio(
   return TranscriptSchema.parse(await res.json()).text
 }
 
-/** Wappi's voice reading `text` (the citation marks taken out), as the Response VoiceTalk or an <audio> plays. */
-export async function speechOf(text: string, signal?: AbortSignal) {
-  const res = await fetch("/api/copilot/voice/speech", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      text: text.replace(/\s*\[\d+\]/g, "").slice(0, 1500),
-    }),
-    signal,
-  })
-  if (!res.ok) {
-    const body = (await res.json().catch(() => null)) as {
-      code?: string
-    } | null
-    throw new VoiceError(body?.code ?? "error")
-  }
-  return res
-}
+/** Where Wappi's voice reads a stored answer: an MP3 stream an <audio> plays as it arrives, sentence by sentence. */
+export const speechUrl = (messageId: string, lang: string) =>
+  `/api/copilot/voice/speech?${new URLSearchParams({ message: messageId, lang: lang === "en" ? "en" : "vi" })}`
 
 /** A microphone recorder: start, then stop for the recording; cancel drops it. */
 export async function record() {

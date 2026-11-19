@@ -96,11 +96,15 @@ export async function transcribe(
   )
 }
 
-/** Wappi's voice reading `text`, MP3. */
-export async function speech(token: string, text: string) {
-  return apiResponse("/copilot/voice/speech", {
+/** One of Wappi's answers read aloud: an MP3 stream, stopped when `signal` aborts. */
+export async function speech(
+  token: string,
+  messageId: string,
+  lang: "vi" | "en",
+  signal: AbortSignal
+) {
+  return apiResponse(`/copilot/messages/${messageId}/speech?lang=${lang}`, {
     token,
-    method: "POST",
-    ...json({ text }),
+    signal,
   })
 }
