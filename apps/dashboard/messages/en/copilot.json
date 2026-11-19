@@ -157,5 +157,25 @@
     "body": "The network or the server may be busy.",
     "retry": "Try again"
   },
-  "historyFailed": "Couldn't load the conversation history."
+  "historyFailed": "Couldn't load the conversation history.",
+  "privacy": {
+    "title": "Your message has personal details",
+    "body": "It seems to include {kinds}. Wappi does not need them to answer. If you send it, they are replaced by labels such as [phone number] before it is stored or sent to the AI.",
+    "send": "Send it hidden",
+    "edit": "Edit",
+    "kinds": {
+      "email": "an email",
+      "card": "a card number",
+      "id": "an ID number",
+      "phone": "a phone number",
+      "account": "an account number"
+    },
+    "labels": {
+      "email": "[email]",
+      "card": "[card number]",
+      "id": "[ID number]",
+      "phone": "[phone number]",
+      "account": "[account number]"
+    }
+  }
 }

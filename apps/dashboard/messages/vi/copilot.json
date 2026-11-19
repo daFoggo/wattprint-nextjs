@@ -157,5 +157,25 @@
     "body": "Có thể mạng chập chờn hoặc máy chủ đang bận.",
     "retry": "Thử lại"
   },
-  "historyFailed": "Không tải được lịch sử trò chuyện."
+  "historyFailed": "Không tải được lịch sử trò chuyện.",
+  "privacy": {
+    "title": "Tin nhắn có thông tin cá nhân",
+    "body": "Có vẻ bạn đã nhập {kinds}. Wappi không cần những thông tin này để trả lời. Nếu gửi, chúng được thay bằng nhãn như [số điện thoại] trước khi lưu hay gửi cho AI.",
+    "send": "Gửi bản đã ẩn",
+    "edit": "Sửa lại",
+    "kinds": {
+      "email": "email",
+      "card": "số thẻ ngân hàng",
+      "id": "số giấy tờ tùy thân",
+      "phone": "số điện thoại",
+      "account": "số tài khoản"
+    },
+    "labels": {
+      "email": "[email]",
+      "card": "[số thẻ]",
+      "id": "[số giấy tờ]",
+      "phone": "[số điện thoại]",
+      "account": "[số tài khoản]"
+    }
+  }
 }
