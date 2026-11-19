@@ -2,7 +2,17 @@ import { describe, expect, it } from "vitest"
 
 import { shareBelow } from "../cohort"
 
-const cohort = { homes: 35, days: 30, p10: 130, p33: 187, p66: 274, p90: 403 }
+const cohort = {
+  cohort_key: "all",
+  period: "2026-11-09",
+  homes: 35,
+  days: 30,
+  p10: 130,
+  p33: 187,
+  p66: 274,
+  p90: 403,
+  kwh: 200,
+}
 
 describe("shareBelow", () => {
   it("is the percentile at each published point", () => {

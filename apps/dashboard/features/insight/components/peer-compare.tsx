@@ -11,14 +11,12 @@ import type { Cohort } from "../schemas"
  */
 export function PeerCompare({
   cohort,
-  kwh,
   className,
 }: {
-  cohort: Cohort
-  /** This home's energy over the cohort's `days`. */
-  kwh: number
+  cohort: Cohort & { kwh: number }
   className?: string
 }) {
+  const { kwh } = cohort
   const t = useTranslations("insight.peers")
   const share = shareBelow(kwh, cohort)
   const more = share >= 0.5

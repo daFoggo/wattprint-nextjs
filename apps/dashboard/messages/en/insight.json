@@ -19,8 +19,8 @@
     "allDevices": "All devices"
   },
   "peers": {
-    "more": "Against the median home · more than {pct} of similar homes (sample)",
-    "less": "Against the median home · less than {pct} of similar homes (sample)",
+    "more": "Against the median home · more than {pct} of similar homes",
+    "less": "Against the median home · less than {pct} of similar homes",
     "median": "Median of {homes} homes",
     "you": "Your home, {days} days"
   },

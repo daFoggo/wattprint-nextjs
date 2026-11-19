@@ -108,17 +108,8 @@ async function Cycle({ className }: Props) {
 }
 
 async function Peers({ className }: Props) {
-  const [data, cohort] = await Promise.all([getDashboard(), getCohort()])
-  if (!data) return null
-  const recent = data.days.slice(0, -1).slice(-cohort.days) // whole days only
-  if (recent.length < cohort.days) return null
-  return (
-    <PeerCompare
-      cohort={cohort}
-      kwh={recent.reduce((s, d) => s + d.value, 0)}
-      className={className}
-    />
-  )
+  const cohort = await getCohort()
+  return cohort && <PeerCompare cohort={cohort} className={className} />
 }
 
 async function Months({ className }: Props) {

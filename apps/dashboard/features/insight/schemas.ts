@@ -1,19 +1,23 @@
 import { z } from "zod"
 
-// Shapes of tb_cohort_stat and tb_alert as the dashboard reads them. No endpoint serves them yet: queries.ts
-// fills them from demo.ts and will parse the API's response with the same schemas.
-
-/** Similar homes over the last `days` days: how many, and their energy at the 10th…90th percentile (kWh). */
+/**
+ * GET /insights/cohort: similar homes over the `days` whole days ending `period`, how many, their energy at the
+ * 10th…90th percentile and this home's over the same days (kWh; null when its meter missed over 10 %).
+ */
 export const CohortSchema = z.object({
+  cohort_key: z.string(),
+  period: z.string(),
   homes: z.number(),
   days: z.number(),
   p10: z.number(),
   p33: z.number(),
   p66: z.number(),
   p90: z.number(),
+  kwh: z.number().nullable(),
 })
 export type Cohort = z.infer<typeof CohortSchema>
 
+// tb_alert as the dashboard reads it; queries.ts still fills it from demo.ts.
 export const AlertSchema = z.object({
   id: z.string(),
   /** What happened; the message and its figures come from `kind` and `payload`. */

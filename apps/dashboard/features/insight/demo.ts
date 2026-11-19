@@ -1,16 +1,6 @@
-// shortcut: sample cohort and alerts in the shape of tb_cohort_stat and tb_alert; replace with the insight
-// endpoints when the backend computes them. The alerts match the energy sample (the fridge's longer runs
-// these last three days), and their device ids are the sample devices', so the links land on them.
-
-/** 35 similar homes over 30 days: the stats store average watts, here as kWh for the period. */
-const COHORT_W = { p10: 180, p33: 260, p66: 380, p90: 560 }
-export const demoCohort = (days: number) => ({
-  homes: 35,
-  days,
-  ...Object.fromEntries(
-    Object.entries(COHORT_W).map(([k, w]) => [k, (w * 24 * days) / 1000])
-  ),
-})
+// shortcut: sample alerts in the shape of tb_alert; replace with the insight endpoint when the backend
+// raises them. They match the energy sample (the fridge's longer runs these last three days), and their device
+// ids are the sample devices', so the links land on them.
 
 const HOUR = 3_600_000
 

@@ -19,8 +19,8 @@
     "allDevices": "Tất cả thiết bị"
   },
   "peers": {
-    "more": "So với hộ trung vị · nhiều hơn {pct} số hộ tương tự (mẫu)",
-    "less": "So với hộ trung vị · ít hơn {pct} số hộ tương tự (mẫu)",
+    "more": "So với hộ trung vị · nhiều hơn {pct} số hộ tương tự",
+    "less": "So với hộ trung vị · ít hơn {pct} số hộ tương tự",
     "median": "Trung vị {homes} hộ",
     "you": "Nhà bạn, {days} ngày"
   },

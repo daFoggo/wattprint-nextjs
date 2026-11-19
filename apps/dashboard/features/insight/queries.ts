@@ -6,17 +6,25 @@ import { cache } from "react"
 import { z } from "zod"
 
 import { requirePermission } from "@/lib/dal"
+import { ApiError } from "@/lib/errors"
 
-import { demoAlerts, demoCohort } from "./demo"
-import { AlertSchema, CohortSchema } from "./schemas"
+import { demoAlerts } from "./demo"
+import { AlertSchema } from "./schemas"
+import { fetchCohort } from "./server"
 
-// shortcut: both reads come from demo.ts until the backend serves the cohort and the alerts; they already
-// return the API's shape (schemas.ts), so only these functions change.
+// shortcut: the alerts come from demo.ts until the backend serves them; they already have the API's shape.
 
-/** Similar homes over the last 30 days. */
+/**
+ * This home against similar homes over the last 30 whole days. Null while fewer than 10 homes can be compared
+ * (the backend's 404) or this home's meter missed too much of the window to compare fairly.
+ */
 export const getCohort = cache(async () => {
-  await requirePermission("account:view")
-  return CohortSchema.parse(demoCohort(30))
+  const { accessToken } = await requirePermission("account:view")
+  const cohort = await fetchCohort(accessToken).catch((error: unknown) => {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  })
+  return cohort?.kwh == null ? null : { ...cohort, kwh: cohort.kwh }
 })
 
 /** The home's alerts, newest first. */
