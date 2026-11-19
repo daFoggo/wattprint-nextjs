@@ -17,14 +17,19 @@ export const CohortSchema = z.object({
 })
 export type Cohort = z.infer<typeof CohortSchema>
 
-// tb_alert as the dashboard reads it; queries.ts still fills it from demo.ts.
+/** GET /insights/alerts: what a detector found; the text comes from `kind`, its figures from `payload`. */
 export const AlertSchema = z.object({
   id: z.string(),
-  /** What happened; the message and its figures come from `kind` and `payload`. */
-  kind: z.enum(["longer_than_usual", "new_device", "repeated_cycle"]),
+  kind: z.enum([
+    "longer_than_usual",
+    "standby_high",
+    "tier_near",
+    "unexplained_load",
+  ]),
   severity: z.enum(["info", "warning", "critical"]),
+  /** acknowledged: seen, off the Overview; resolved: the detector found the cause gone. */
   status: z.enum(["open", "acknowledged", "resolved"]),
-  ts: z.number(),
+  ts: z.iso.datetime({ offset: true }).transform((v) => Date.parse(v)),
   /** `type` is cat_device_type.code, for its icon. */
   device: z
     .object({ id: z.string(), name: z.string(), type: z.string() })

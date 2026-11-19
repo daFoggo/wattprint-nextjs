@@ -1,22 +1,26 @@
 {
   "alerts": {
-    "title": "Thiết bị chạy bất thường",
-    "open": "{count} cảnh báo cần xem · dữ liệu mẫu",
-    "none": "Không có gì bất thường · dữ liệu mẫu",
+    "title": "Cảnh báo: thiết bị, điện nền, bậc giá",
+    "open": "{count} cảnh báo cần xem",
+    "none": "Không có gì cần xem",
     "resolved": "đã tự hết",
     "longer_than_usual": {
       "title": "{device} chạy lâu hơn thường lệ",
       "body": "{days} ngày qua mỗi lần chạy khoảng {recent_min} phút, thường lệ {usual_min} phút. Kiểm tra gioăng cửa và dàn nóng."
     },
-    "new_device": {
-      "title": "Phát hiện một thiết bị mới khoảng {watts, number} W",
-      "body": "Chạy {minutes} phút. Nếu nhà bạn vừa dùng một thiết bị mới, hãy đặt tên để theo dõi riêng."
+    "allDevices": "Tất cả thiết bị",
+    "standby_high": {
+      "title": "Điện nền ban đêm tăng lên {recent_w, number} W",
+      "body": "{nights} đêm qua, từ 0 đến 5 giờ nhà dùng khoảng {recent_w, number} W, thường lệ {usual_w, number} W. Có thể một thiết bị mới cắm thường trực, hoặc một thiết bị không tắt hẳn."
     },
-    "repeated_cycle": {
-      "title": "{device} chạy {count} chu kỳ liền nhau",
-      "body": "Có thể do chọn chương trình kép hoặc máy chưa vắt xong."
+    "unexplained_load": {
+      "title": "Có tải lạ khoảng {watts, number} W đang chạy",
+      "body": "{minutes} phút qua, phần điện chưa nhận ra thiết bị cao hơn hẳn mức thường gặp ({usual_w, number} W). Kiểm tra xem có thiết bị nào bị quên bật."
     },
-    "allDevices": "Tất cả thiết bị"
+    "tier_near": {
+      "title": "{days, plural, =0 {Kỳ này đã sang bậc {tier_no}} other {Khoảng # ngày nữa sang bậc {tier_no}}}",
+      "body": "Từ {from_kwh, number} kWh, mỗi kWh giá {price_per_kwh, number} đ chưa VAT."
+    }
   },
   "peers": {
     "more": "So với hộ trung vị · nhiều hơn {pct} số hộ tương tự",

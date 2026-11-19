@@ -17,6 +17,7 @@ import {
   getDashboard,
   getDevices,
 } from "@/features/energy/queries"
+import { acknowledgeAlertAction } from "@/features/insight/actions"
 import { AlertList } from "@/features/insight/components/alert-list"
 import { getAlerts } from "@/features/insight/queries"
 import { WeatherCard } from "@/features/weather/components/weather-card"
@@ -60,17 +61,7 @@ async function Tiles() {
   ])
   // The devices' money is the bill's, split by their kWh.
   const devices = await getDevices(bill?.amount_total)
-  if (!data || !devices || !activity) return <NoHome />
-  // shortcut: the alerts are still a sample naming devices by type; link each to this home's device
-  // of that type until the insight backend raises alerts on real device ids.
-  const linked = alerts.map((a) => {
-    const real = a.device && devices.find((d) => d.type === a.device!.type)
-    // No device of that type in this home: drop the link rather than point at a page that 404s.
-    return {
-      ...a,
-      device: real && a.device ? { ...a.device, id: real.id } : null,
-    }
-  })
+  if (!data || !devices || !activity || !alerts) return <NoHome />
   return (
     <>
       {/* No tariff on the home: nothing to price, so the device mix takes the row. */}
@@ -80,9 +71,10 @@ async function Tiles() {
       />
       {bill ? <BillSummary bill={bill} className={TILE.bill} /> : null}
       <AlertList
-        alerts={linked}
+        alerts={alerts}
         now={data.now}
         brief
+        onSeen={acknowledgeAlertAction}
         className={data.latest ? TILE.alerts : "lg:col-span-12"}
       />
       {/* No meter data yet: the activity sample would pretend otherwise. */}
