@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useSyncExternalStore } from "react"
+import { startTransition, useEffect, useSyncExternalStore } from "react"
 import { IconArrowsMinimize, IconHistory, IconPlus } from "@tabler/icons-react"
 import { useTranslations } from "next-intl"
 
@@ -13,28 +13,30 @@ import { useRouter } from "@/i18n/navigation"
 import { ConversationCard, IconAction } from "./copilot-panel"
 import { useCopilot, usePanel } from "./copilot-provider"
 
-// Demo threads carry an age, counted from when the app loaded. Read once on the client; never on the server, so the
-// page needs no <Suspense> and its card is there in the same commit as the navigation (the panel morph needs that).
-const LOADED_AT = typeof window === "undefined" ? 0 : Date.now()
+// ChatHistory groups by day against the clock: rendered on the client only, so the page needs no <Suspense> and its
+// card is there in the same commit as the navigation (the panel morph needs that).
 const subscribeNever = () => () => {}
 
 /** Hairline's ChatHistory over Wappi's threads: grouped by day, searchable, rename, pin, delete with Undo. */
 function History({ onPicked }: { onPicked?: () => void }) {
-  const { threads, active, select, rename, remove, pin } = useCopilot()
-  const now = useSyncExternalStore(
+  const { threads, loaded, loadThreads, active, select, rename, remove, pin } =
+    useCopilot()
+  const client = useSyncExternalStore(
     subscribeNever,
-    () => LOADED_AT,
-    () => 0
+    () => true,
+    () => false
   )
-  // Not while prerendering: the day groups need the clock, which the static shell cannot read.
-  if (!now) return null
+  useEffect(() => {
+    if (!loaded) loadThreads()
+  }, [loaded, loadThreads])
+  if (!client) return null
   return (
     <ChatHistory
       chats={threads.map((th) => ({
         id: th.id,
         title: th.title,
         pinned: th.pinned,
-        updatedAt: th.updatedAt ?? now - (th.ago ?? 0),
+        updatedAt: th.updatedAt,
       }))}
       activeId={active?.id}
       onSelect={(id) => {

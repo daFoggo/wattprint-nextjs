@@ -1,103 +1,111 @@
 import { describe, expect, it } from "vitest"
 
-import type { Message, Phase, Reply, Thread } from "../schemas"
-import { addTurn, statusOf, stopLive, updateMessage } from "../threads"
+import type { Reply, Thread } from "../schemas"
+import {
+  addTurn,
+  applyEvent,
+  statusOf,
+  stopLive,
+  type AssistantMessage,
+} from "../threads"
+
+const answer = (phase: AssistantMessage["phase"]): AssistantMessage => ({
+  id: "a",
+  role: "assistant",
+  phase,
+  steps: [],
+  text: "",
+  feedback: null,
+  startedAt: 1000,
+})
 
 const reply: Reply = {
   intent: "bill",
   tier: "measured",
-  steps: [],
-  text: "x",
-  sources: [],
+  steps: [{ label: "Tính hoá đơn", detail: "tb_bill" }],
+  sql: null,
+  text: "Kỳ này 10 kWh [1].",
+  sources: [{ title: "EVN", url: "https://evn.com.vn" }],
   widgets: [],
   followUps: [],
 }
-const answer = (id: string, phase: Phase): Message => ({
-  id,
-  role: "assistant",
-  reply,
-  phase,
-  steps: 0,
-  words: 0,
-})
-const question = (id: string, text = "q") =>
-  ({ id, role: "user", text }) as const
-const thread = (id: string, ...messages: Message[]): Thread => ({
-  id,
-  messages,
-})
 
-describe("statusOf", () => {
-  it("is ready with no thread, or once the answer is done or stopped", () => {
-    expect(statusOf()).toBe("ready")
-    expect(statusOf(thread("t", answer("a", "done")))).toBe("ready")
-    expect(statusOf(thread("t", answer("a", "stopped")))).toBe("ready")
-  })
-  it("is submitted while thinking or using tools, streaming while writing", () => {
-    expect(statusOf(thread("t", answer("a", "thinking")))).toBe("submitted")
-    expect(statusOf(thread("t", answer("a", "working")))).toBe("submitted")
-    expect(statusOf(thread("t", answer("a", "streaming")))).toBe("streaming")
-  })
-})
-
-describe("stopLive", () => {
-  it("stops only the answers still playing and keeps untouched threads as they were", () => {
-    const quiet = thread("q", answer("a", "done"))
-    const busy = thread("b", answer("a", "done"), answer("c", "streaming"))
-    const [q, b] = stopLive([quiet, busy])
-    expect(q).toBe(quiet)
-    expect(b?.messages.map((m) => m.role === "assistant" && m.phase)).toEqual([
+describe("applyEvent", () => {
+  it("follows a stream from the first step to the stored reply", () => {
+    let m = answer("thinking")
+    m = applyEvent(
+      m,
+      { event: "meta", data: { conversation_id: "c", message_id: "m1" } },
+      1100
+    )
+    m = applyEvent(m, { event: "step", data: reply.steps[0]! }, 1200)
+    expect([m.id, m.phase, m.steps.length]).toEqual(["m1", "working", 1])
+    m = applyEvent(m, { event: "token", data: { text: "Kỳ này " } }, 1300)
+    m = applyEvent(m, { event: "token", data: { text: "10 kWh" } }, 1400)
+    expect([m.phase, m.text]).toEqual(["streaming", "Kỳ này 10 kWh"])
+    m = applyEvent(
+      m,
+      { event: "done", data: { message_id: "m1", reply } },
+      3000
+    )
+    expect([m.phase, m.text, m.duration, m.reply]).toEqual([
       "done",
-      "stopped",
+      reply.text,
+      2000,
+      reply,
+    ])
+  })
+
+  it("keeps what the tools found when the answer fails", () => {
+    const m = applyEvent(
+      answer("working"),
+      {
+        event: "error",
+        data: { code: "copilot_unavailable", message: "x", reply },
+      },
+      2000
+    )
+    expect([m.phase, m.error, m.reply]).toEqual([
+      "error",
+      "copilot_unavailable",
+      reply,
     ])
   })
 })
 
-describe("addTurn", () => {
-  it("starts a new thread first, titled by the question", () => {
-    const old = thread("old")
-    const [first, second] = addTurn(
+describe("threads", () => {
+  const thread = (messages: AssistantMessage[]): Thread => ({
+    id: "t",
+    updatedAt: 0,
+    messages,
+  })
+
+  it("is busy while an answer is live", () => {
+    expect(statusOf(thread([answer("thinking")]))).toBe("submitted")
+    expect(statusOf(thread([answer("streaming")]))).toBe("streaming")
+    expect(statusOf(thread([answer("done")]))).toBe("ready")
+    expect(statusOf({ id: "t", updatedAt: 0 })).toBe("ready") // not fetched yet
+  })
+
+  it("stops live answers where they stand", () => {
+    const [t] = stopLive([thread([answer("streaming"), answer("done")])])
+    expect(t!.messages!.map((m) => (m as AssistantMessage).phase)).toEqual([
+      "stopped",
+      "done",
+    ])
+  })
+
+  it("puts a new conversation first, titled by its question", () => {
+    const old: Thread = { id: "old", updatedAt: 0, messages: [] }
+    const next = addTurn(
       [old],
       "new",
-      [question("q", "Vì sao?"), answer("a", "thinking")],
+      [{ id: "q", role: "user", text: "Hỏi" }, answer("thinking")],
       5
     )
-    expect(first).toMatchObject({ id: "new", title: "Vì sao?", updatedAt: 5 })
-    expect(first?.messages).toHaveLength(2)
-    expect(second).toBe(old)
-  })
-  it("appends to an existing thread and bumps its time", () => {
-    const [t] = addTurn(
-      [thread("t", question("q0"))],
-      "t",
-      [question("q1"), answer("a1", "thinking")],
-      9
-    )
-    expect(t?.updatedAt).toBe(9)
-    expect(t?.messages.map((m) => m.id)).toEqual(["q0", "q1", "a1"])
-  })
-  it("after stopLive, a question asked mid-answer stops that answer and still lands", () => {
-    const busy = [thread("t", question("q0"), answer("a0", "working"))]
-    const [t] = addTurn(
-      stopLive(busy),
-      "t",
-      [question("q1"), answer("a1", "thinking")],
-      1
-    )
-    expect(statusOf(t)).toBe("submitted")
-    expect(t?.messages[1]).toMatchObject({ id: "a0", phase: "stopped" })
-  })
-})
-
-describe("updateMessage", () => {
-  it("changes one message of one thread", () => {
-    const [a, b] = updateMessage(
-      [thread("a", question("m", "x")), thread("b", question("m", "x"))],
-      "b",
-      "m",
-      (m) => ({ ...m, text: "y" }) as Message
-    )
-    expect(a?.messages[0]).toMatchObject({ text: "x" })
-    expect(b?.messages[0]).toMatchObject({ text: "y" })
+    expect(next.map((t) => [t.id, t.title, t.updatedAt])).toEqual([
+      ["new", "Hỏi", 5],
+      ["old", undefined, 0],
+    ])
   })
 })

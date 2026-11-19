@@ -4,7 +4,6 @@ import { useState } from "react"
 import {
   IconChartLine,
   IconDevices,
-  IconHelp,
   IconPlugConnected,
   IconReceipt,
   IconSun,
@@ -27,12 +26,15 @@ import {
 } from "@/config/routes"
 import { usePathname } from "@/i18n/navigation"
 
-import type { Intent } from "../schemas"
+/** What a suggested question is about: its icon, and its words in copilot.suggestions. */
+type Topic =
+  "devices" | "bill" | "forecast" | "weather" | "plan" | "peers" | "standby"
 import { CopilotComposer } from "./copilot-composer"
 import { AssistantMessageView, UserMessage } from "./copilot-message"
 import { useCopilot } from "./copilot-provider"
 import { VoiceMode } from "./voice-mode"
-import { WappiLogo } from "./wappi-logo"
+import { MOODS } from "../moods"
+import { WappiAvatar } from "./wappi-avatar"
 
 type Page = "overview" | "statistics" | "devices" | "bill" | "settings"
 
@@ -51,7 +53,7 @@ function pageOf(pathname: string): Page | undefined {
   )?.[0]
 }
 
-const SUGGESTIONS: Record<Page | "page", Intent[]> = {
+const SUGGESTIONS: Record<Page | "page", Topic[]> = {
   page: ["devices", "bill", "plan", "weather"],
   overview: ["bill", "devices", "standby", "weather"],
   statistics: ["peers", "forecast", "bill"],
@@ -60,7 +62,7 @@ const SUGGESTIONS: Record<Page | "page", Intent[]> = {
   settings: ["peers", "plan"],
 }
 
-const ICONS: Record<Intent, Icon> = {
+const ICONS: Record<Topic, Icon> = {
   devices: IconDevices,
   bill: IconReceipt,
   forecast: IconChartLine,
@@ -68,23 +70,16 @@ const ICONS: Record<Intent, Icon> = {
   plan: IconTargetArrow,
   peers: IconUsersGroup,
   standby: IconPlugConnected,
-  clarify: IconHelp,
 }
 
 /** A question to send in one tap: an icon in a round well and the question, as a card on the plate or the page. */
-function Suggestion({
-  intent,
-  children,
-}: {
-  intent: Intent
-  children: string
-}) {
+function Suggestion({ topic, children }: { topic: Topic; children: string }) {
   const { send } = useCopilot()
-  const Glyph = ICONS[intent]
+  const Glyph = ICONS[topic]
   return (
     <button
       type="button"
-      onClick={() => send(children, intent)}
+      onClick={() => void send(children)}
       className={cn(
         "flex cursor-pointer items-center gap-3 rounded-xl border bg-background p-3 text-left text-sm transition-colors duration-150 hover:bg-accent",
         INTERACTION_FOCUS
@@ -101,14 +96,10 @@ function Suggestion({
   )
 }
 
-/**
- * The opening screen: who Wappi is, what it noticed on its own (the copilot speaks first, hồ sơ "two-way"), and
- * questions that fit the page beside it.
- */
+/** The opening screen: who Wappi is, and questions that fit the page beside it. */
 function EmptyState({ page, wide }: { page?: Page; wide: boolean }) {
-  const t = useTranslations("copilot.empty")
-  const { copy } = useCopilot()
-  const insights: Intent[] = ["standby", "forecast"]
+  const t = useTranslations("copilot")
+  const { reaction } = useCopilot()
   return (
     <div className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto">
       <div
@@ -123,37 +114,32 @@ function EmptyState({ page, wide }: { page?: Page; wide: boolean }) {
             wide && "items-center text-center"
           )}
         >
-          <WappiLogo size="xl" />
+          <WappiAvatar
+            size="xl"
+            state={reaction ? MOODS[reaction] : MOODS.greeting}
+            live
+            follow
+          />
           <h2
             className={cn(
               "font-medium tracking-tight",
               wide ? "text-2xl md:text-3xl" : "text-xl"
             )}
           >
-            {t("title")}
+            {t("empty.title")}
           </h2>
           <p className="max-w-xl text-base text-muted-foreground">
-            {t("description")}
+            {t("empty.description")}
           </p>
         </div>
         <section className="flex flex-col gap-3">
-          <h3 className="text-sm text-muted-foreground">{t("noticed")}</h3>
-          <div className={cn("grid gap-2", wide && "sm:grid-cols-2")}>
-            {insights.map((intent) => (
-              <Suggestion key={intent} intent={intent}>
-                {t(`insights.${intent as "standby" | "forecast"}`)}
-              </Suggestion>
-            ))}
-          </div>
-        </section>
-        <section className="flex flex-col gap-3">
           <h3 className="text-sm text-muted-foreground">
-            {t(wide ? "start" : "suggested")}
+            {t(wide ? "empty.start" : "empty.suggested")}
           </h3>
           <div className={cn("grid gap-2", wide && "sm:grid-cols-2")}>
-            {SUGGESTIONS[wide ? "page" : (page ?? "overview")].map((intent) => (
-              <Suggestion key={intent} intent={intent}>
-                {copy(`ask.${intent}`)}
+            {SUGGESTIONS[wide ? "page" : (page ?? "overview")].map((topic) => (
+              <Suggestion key={topic} topic={topic}>
+                {t(`suggestions.${topic}`)}
               </Suggestion>
             ))}
           </div>
@@ -211,9 +197,6 @@ export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
           context={page && t(`pages.${page}`)}
           onVoice={() => setVoice(true)}
         />
-        <p className="text-center text-xs text-muted-foreground">
-          {t("previewHint")}
-        </p>
       </div>
     </div>
   )

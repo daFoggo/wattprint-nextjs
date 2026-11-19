@@ -1,6 +1,7 @@
 "use client"
 
-import { IconArrowRight, IconCheck } from "@tabler/icons-react"
+import { useState } from "react"
+import { IconArrowRight } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { ApprovalCard } from "@workspace/ui/components/hairline/approval-card"
@@ -16,7 +17,9 @@ import { linkButton } from "@workspace/ui-patterns/link-button"
 import { Tile } from "@/components/shared/tile"
 import { Link } from "@/i18n/navigation"
 
+import { acceptPlanAction } from "../actions"
 import type { Widget } from "../schemas"
+import { useCopilot } from "./copilot-provider"
 
 /** Figures as the dashboard shows them: a muted label under a large value (design system, Metrics). */
 function Stats({ items }: { items: { label: string; value: string }[] }) {
@@ -30,6 +33,76 @@ function Stats({ items }: { items: { label: string; value: string }[] }) {
       ))}
     </dl>
   )
+}
+
+/** A plan Wappi saved: its tasks, and Start, which begins the 14-day trial on the backend. */
+function PlanWidget({ widget }: { widget: Extract<Widget, { kind: "plan" }> }) {
+  const t = useTranslations("copilot.widgets")
+  const locale = useLocale()
+  const { react } = useCopilot()
+  const [status, setStatus] = useState(widget.status)
+  const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 })
+  const vnd = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "VND",
+  })
+  const kwh = `${number.format(widget.kwh)} kWh`
+  return (
+    <div className="flex flex-col gap-3">
+      <Plan
+        title={t("plan.title")}
+        tasks={widget.tasks.map((task) => ({
+          ...task,
+          status: "pending", // the user's to do; the trial is measured, not ticked off
+        }))}
+        defaultOpen
+      />
+      {status === "accepted" ? (
+        <p className="text-sm text-muted-foreground">{t("plan.running")}</p>
+      ) : (
+        <ApprovalCard
+          title={t("plan.approval")}
+          description={t("plan.description")}
+          details={[
+            {
+              label: t("plan.saving"),
+              value:
+                widget.vnd === null
+                  ? t("plan.savingKwh", { kwh })
+                  : t("plan.savingValue", { kwh, vnd: vnd.format(widget.vnd) }),
+            },
+            { label: t("plan.length"), value: t("plan.lengthValue") },
+          ]}
+          approveLabel={t("plan.approve")}
+          denyLabel={t("plan.deny")}
+          onApprove={async () => {
+            try {
+              setStatus(await acceptPlanAction(widget.id))
+              react("celebrating")
+              toast.success(t("plan.started"))
+            } catch {
+              toast.error(t("plan.failed"))
+            }
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+/** "12/11" or "Wed": the day of a compared period, as its bar is labelled. */
+function dayLabel(key: string, period: "week" | "cycle", locale: string) {
+  const day = new Date(`${key}T00:00:00+07:00`)
+  return period === "week"
+    ? new Intl.DateTimeFormat(locale, {
+        weekday: "short",
+        timeZone: "Asia/Ho_Chi_Minh",
+      }).format(day)
+    : new Intl.DateTimeFormat(locale, {
+        day: "numeric",
+        month: "numeric",
+        timeZone: "Asia/Ho_Chi_Minh",
+      }).format(day)
 }
 
 /**
@@ -61,10 +134,13 @@ export function CopilotWidget({ widget }: { widget: Widget }) {
     case "compare":
       return (
         <CompareBars
-          title={t("compare")}
-          data={widget.data}
-          currentLabel={widget.currentLabel}
-          previousLabel={widget.previousLabel}
+          title={t(`compare.${widget.period}.title`)}
+          data={widget.data.map((d) => ({
+            ...d,
+            label: dayLabel(d.key, widget.period, locale),
+          }))}
+          currentLabel={t(`compare.${widget.period}.current`)}
+          previousLabel={t(`compare.${widget.period}.previous`)}
           defaultCompared
           unit="kWh"
           format={{ maximumFractionDigits: 1 }}
@@ -83,13 +159,15 @@ export function CopilotWidget({ widget }: { widget: Widget }) {
               { label: t("forecast.vnd"), value: vnd.format(widget.vnd) },
             ]}
           />
-          <UsageMeter
-            used={widget.used}
-            limit={widget.limit}
-            unit="kWh"
-            label={t("forecast.meter")}
-            locales={locale}
-          />
+          {widget.limit ? (
+            <UsageMeter
+              used={widget.used}
+              limit={widget.limit}
+              unit="kWh"
+              label={t("forecast.meter")}
+              locales={locale}
+            />
+          ) : null}
         </Tile>
       )
     case "weather":
@@ -102,52 +180,10 @@ export function CopilotWidget({ widget }: { widget: Widget }) {
               { label: t("weather.humidity"), value: `${widget.humidity}%` },
             ]}
           />
-          <div className="flex flex-col gap-2">
-            <h3 className="text-sm text-muted-foreground">
-              {t("weather.tips")}
-            </h3>
-            <ul className="flex flex-col gap-2">
-              {widget.tips.map((tip) => (
-                <li key={tip} className="flex items-center gap-2 text-sm">
-                  <IconCheck
-                    aria-hidden
-                    className="size-4 shrink-0 text-primary"
-                  />
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </div>
         </Tile>
       )
     case "plan":
-      return (
-        <div className="flex flex-col gap-3">
-          <Plan
-            title={t("plan.title")}
-            tasks={widget.tasks.map((task) => ({ ...task, status: "pending" }))}
-            defaultOpen
-          />
-          <ApprovalCard
-            title={t("plan.approval")}
-            description={t("plan.description")}
-            details={[
-              {
-                label: t("plan.saving"),
-                value: t("plan.savingValue", {
-                  kwh: number.format(widget.kwh),
-                  vnd: vnd.format(widget.vnd),
-                }),
-              },
-              { label: t("plan.length"), value: t("plan.lengthValue") },
-            ]}
-            approveLabel={t("plan.approve")}
-            denyLabel={t("plan.deny")}
-            // shortcut: no experiment engine yet; starting a trial becomes a Server Action when it lands.
-            onApprove={() => toast.success(t("plan.started"))}
-          />
-        </div>
-      )
+      return <PlanWidget widget={widget} />
     case "peers":
       return (
         <BalanceMeter
@@ -172,7 +208,9 @@ export function CopilotWidget({ widget }: { widget: Widget }) {
                 label: t("standby.kwh"),
                 value: `${number.format(widget.kwh)} kWh`,
               },
-              { label: t("standby.vnd"), value: vnd.format(widget.vnd) },
+              ...(widget.vnd === null
+                ? []
+                : [{ label: t("standby.vnd"), value: vnd.format(widget.vnd) }]),
             ]}
           />
           <Sparkline
@@ -201,7 +239,7 @@ export function CopilotWidget({ widget }: { widget: Widget }) {
                 className: "group",
               })}
             >
-              {l.label}
+              {t(`links.${l.key}`)}
               <IconArrowRight
                 aria-hidden
                 className="size-4 group-hover:translate-x-1 motion-safe:transition-transform motion-safe:duration-200"

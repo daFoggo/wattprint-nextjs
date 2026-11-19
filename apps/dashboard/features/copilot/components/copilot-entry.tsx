@@ -14,7 +14,7 @@ import { COPILOT_PATH, onCopilotPage } from "@/config/routes"
 import { Link, usePathname } from "@/i18n/navigation"
 
 import { usePanel } from "./copilot-provider"
-import { WappiLogo } from "./wappi-logo"
+import { WappiAvatar } from "./wappi-avatar"
 
 /**
  * Wappi's entry at the top of the sidebar, apart from the page menu: a menu row (16px logo where the icon goes) as a
@@ -43,7 +43,7 @@ export function CopilotNavLink() {
         INTERACTION_FOCUS
       )}
     >
-      <WappiLogo size="sm" />
+      <WappiAvatar size="sm" />
       <span className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap group-data-[collapsible=icon]:hidden">
         {t("name")}
         <span className="truncate font-normal text-muted-foreground">
@@ -81,7 +81,7 @@ export function CopilotToggle() {
           INTERACTION_FOCUS
         )}
       >
-        <WappiLogo size="sm" />
+        <WappiAvatar size="sm" />
         {t("ask")}
       </button>
     </Tooltip>

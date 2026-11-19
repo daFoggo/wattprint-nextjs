@@ -13,90 +13,49 @@ import {
   type VoiceStatus,
 } from "@workspace/ui/components/hairline/voice-input"
 
+import { record, transcribeAudio, VoiceError } from "../voice"
 import { useCopilot } from "./copilot-provider"
 
-/** The slice of the Web Speech API dictation uses (Chrome and Edge ship it prefixed). */
-type Recognition = {
-  lang: string
-  interimResults: boolean
-  continuous: boolean
-  start: () => void
-  stop: () => void
-  abort: () => void
-  onresult:
-    | ((event: {
-        results: ArrayLike<ArrayLike<{ transcript: string }>>
-      }) => void)
-    | null
-  onerror: ((event: { error: string }) => void) | null
-  onend: (() => void) | null
-}
-type RecognitionWindow = {
-  SpeechRecognition?: new () => Recognition
-  webkitSpeechRecognition?: new () => Recognition
-}
-
-/** Speech to text in the browser: the words show live, and land in the field when the speaker stops. */
+/** Dictation: the recording goes to the backend's speech to text, and its words land in the field. */
 function useDictation(onText: (text: string) => void) {
   const locale = useLocale()
   const [status, setStatus] = useState<VoiceStatus>("idle")
-  const [transcript, setTranscript] = useState("")
   const [startedAt, setStartedAt] = useState<number>()
-  const [unsupported, setUnsupported] = useState(false)
-  const recognition = useRef<Recognition>(null)
-  const cancelled = useRef(false)
+  const [failed, setFailed] = useState<string>()
+  const recorder = useRef<Awaited<ReturnType<typeof record>>>(null)
 
-  const start = () => {
-    const speech = window as unknown as RecognitionWindow
-    const Speech = speech.SpeechRecognition ?? speech.webkitSpeechRecognition
-    setUnsupported(!Speech)
-    if (!Speech) return setStatus("error")
-    const r = new Speech()
-    r.lang = locale === "vi" ? "vi-VN" : "en-US"
-    r.interimResults = true
-    r.continuous = true
-    let heard = ""
-    r.onresult = (event) => {
-      heard = Array.from(
-        event.results,
-        (result) => result[0]?.transcript ?? ""
-      ).join("")
-      setTranscript(heard)
+  const start = async () => {
+    setFailed(undefined)
+    try {
+      recorder.current = await record()
+    } catch (error) {
+      const denied =
+        error instanceof DOMException && error.name === "NotAllowedError"
+      return setStatus(denied ? "blocked" : "error")
     }
-    r.onerror = (event) => {
-      cancelled.current = true
-      setStatus(
-        event.error === "not-allowed" || event.error === "service-not-allowed"
-          ? "blocked"
-          : "error"
-      )
-    }
-    r.onend = () => {
-      if (!cancelled.current && heard.trim()) onText(heard.trim())
-      setStatus((s) => (s === "blocked" || s === "error" ? s : "idle"))
-      setTranscript("")
-    }
-    cancelled.current = false
-    recognition.current = r
-    r.start()
-    setTranscript("")
     setStartedAt(Date.now())
     setStatus("listening")
   }
-
   return {
     status,
-    transcript,
     startedAt,
-    unsupported,
-    start,
-    stop: () => {
+    failed,
+    start: () => void start(),
+    stop: async () => {
+      const r = recorder.current
+      if (!r) return
       setStatus("transcribing")
-      recognition.current?.stop()
+      try {
+        const text = await transcribeAudio(await r.stop(), locale)
+        if (text) onText(text)
+        setStatus("idle")
+      } catch (error) {
+        setFailed(error instanceof VoiceError ? error.code : "error")
+        setStatus("error")
+      }
     },
     cancel: () => {
-      cancelled.current = true
-      recognition.current?.abort()
+      recorder.current?.cancel()
       setStatus("idle")
     },
   }
@@ -161,13 +120,16 @@ export function CopilotComposer({
             aria-label={t("voice.dictate")}
             className="w-48"
             status={dictation.status}
-            transcript={dictation.transcript}
             startedAt={dictation.startedAt}
             onStart={dictation.start}
             onStop={dictation.stop}
             onCancel={dictation.cancel}
             errorText={
-              dictation.unsupported ? t("voice.unsupported") : undefined
+              dictation.failed === "voice_unavailable"
+                ? t("voice.unavailable")
+                : dictation.failed
+                  ? t("voice.failed")
+                  : undefined
             }
           />
         </div>

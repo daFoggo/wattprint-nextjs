@@ -1,34 +1,62 @@
 "use client"
 
-import { createContext, use, useEffect, useMemo, useRef, useState } from "react"
-import { useTranslations } from "next-intl"
+import {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
+import { useLocale } from "next-intl"
 
 import { DASHBOARD_PATH } from "@/config/routes"
 
-import { demoReply, detectIntent, type Copy } from "../demo"
-import { advance, playLength, type AssistantMessage } from "../playback"
-import type { Intent, Thread } from "../schemas"
+import {
+  deleteConversationAction,
+  listConversationsAction,
+  loadConversationAction,
+  rateAnswerAction,
+  updateConversationAction,
+} from "../actions"
+import type { Mood } from "../moods"
+import type { Message, Thread } from "../schemas"
+import { chatEvents } from "../stream"
 import {
   addTurn,
+  applyEvent,
   statusOf,
   stopLive,
   updateMessage,
+  type AssistantMessage,
   type Status,
 } from "../threads"
 
+/** A short reaction of Wappi's avatar to something that just happened. */
+export type Reaction = Extract<
+  Mood,
+  "answered" | "liked" | "disliked" | "celebrating"
+>
+
 type CopilotState = {
   threads: Thread[]
+  /** False until the history has been fetched. */
+  loaded: boolean
   /** The open conversation; undefined is a new, empty one. */
   active?: Thread
   status: Status
-  copy: Copy
-  send: (text: string, intent?: Intent) => void
+  reaction?: Reaction
+  /** Ask; resolves with the answer's text once it is done (null if it failed or was stopped). */
+  send: (text: string) => Promise<string | null>
   stop: () => void
-  regenerate: (messageId: string) => void
   select: (id?: string) => void
+  loadThreads: () => void
   rename: (id: string, title: string) => void
   remove: (id: string) => void
   pin: (id: string, pinned: boolean) => void
+  rate: (messageId: string, value: "up" | "down" | null) => void
+  react: (reaction: Reaction) => void
 }
 
 /** The side panel's state, apart from the chat's: what reads only this (the sidebar entry, the header button) does
@@ -58,161 +86,219 @@ export function usePanel() {
 }
 
 const id = () => crypto.randomUUID()
+const NEW = "new:" // a conversation the backend has not named yet
 
-/** Conversations from earlier days, so the history is not empty in the preview. */
-function seedThreads(copy: Copy): Thread[] {
-  const ask = (intent: Intent, ago: number, pinned?: boolean): Thread => {
-    const reply = demoReply(intent, copy)
-    return {
-      id: `demo-${intent}`,
-      title: copy(`ask.${intent}`),
-      ago,
-      pinned,
-      messages: [
-        { id: `${intent}-q`, role: "user", text: copy(`ask.${intent}`) },
-        advance(
-          {
-            id: `${intent}-a`,
-            role: "assistant",
-            reply,
-            phase: "thinking",
-            steps: 0,
-            words: 0,
-          },
-          playLength(reply)
-        ),
-      ],
-    }
-  }
-  return [
-    ask("plan", 26 * 3_600_000, true),
-    ask("bill", 2 * 3_600_000),
-    ask("standby", 3 * 86_400_000),
-  ]
+/** The backend's error code of a failed request ({ code } from the route handler). */
+async function codeOf(res: Response) {
+  const body = (await res.json().catch(() => null)) as { code?: string } | null
+  return body?.code ?? "error"
 }
 
 /**
  * Wappi's conversations, shared by the side panel, the full page and their triggers (one provider in the dashboard
- * layout, so a chat continues when the panel expands into the page). Plays the scripted replies as a stream would.
+ * layout, so a chat continues when the panel expands into the page). Answers stream from the backend through
+ * /api/copilot/chat; history, names and pins are Server Actions.
  */
 export function CopilotProvider({ children }: { children: React.ReactNode }) {
-  const t = useTranslations("copilot.demo")
-  type Key = Parameters<typeof t>[0]
-  const copy = useMemo<Copy>(
-    () =>
-      Object.assign(
-        (key: string, values?: Record<string, string | number>) =>
-          t(key as Key, values),
-        {
-          list: (key: string) => t.raw(key as Key) as string[],
-        }
-      ),
-    [t]
-  )
-  const [threads, setThreads] = useState(() => seedThreads(copy))
+  const locale = useLocale()
+  const [threads, setThreads] = useState<Thread[]>([])
+  const [loaded, setLoaded] = useState(false)
   const [activeId, setActiveId] = useState<string>()
   const [panelOpen, setPanelOpen] = useState(false)
+  const [reaction, setReaction] = useState<Reaction>()
   const returnToRef = useRef(DASHBOARD_PATH)
   const toggleRef = useRef<HTMLButtonElement>(null)
-  const timer = useRef<number>(undefined)
-
-  const halt = () => window.clearInterval(timer.current)
-
-  /** Plays one assistant message from the start; the interval stops itself once the reply is shown in full. */
-  const play = (threadId: string, message: AssistantMessage) => {
-    halt()
-    const started = Date.now()
-    const length = playLength(message.reply)
-    const tick = () => {
-      const elapsed = Date.now() - started
-      setThreads((all) =>
-        updateMessage(all, threadId, message.id, (m) =>
-          m.role === "assistant" ? advance(m, elapsed) : m
-        )
-      )
-      if (elapsed >= length) halt()
-    }
-    timer.current = window.setInterval(tick, 40)
-  }
+  const abortRef = useRef<AbortController>(undefined)
+  const loadingRef = useRef(false)
+  const reactTimer = useRef<number>(undefined)
 
   const active = threads.find((th) => th.id === activeId)
   const status = statusOf(active)
 
-  const stopAll = () => {
-    halt()
+  const stop = useCallback(() => {
+    abortRef.current?.abort()
     setThreads(stopLive)
-  }
+  }, [])
 
-  useEffect(() => halt, [])
+  useEffect(
+    () => () => {
+      abortRef.current?.abort()
+      window.clearTimeout(reactTimer.current)
+    },
+    []
+  )
+
+  const loadThreads = useCallback(() => {
+    if (loadingRef.current) return
+    loadingRef.current = true
+    listConversationsAction()
+      .then((list) => {
+        // Keep what this session already holds (a conversation open or just asked).
+        setThreads((held) => [
+          ...held.filter((h) => !list.some((l) => l.id === h.id)),
+          ...list.map((l) => ({
+            ...l,
+            messages: held.find((h) => h.id === l.id)?.messages,
+          })),
+        ])
+        setLoaded(true)
+      })
+      .finally(() => (loadingRef.current = false))
+  }, [])
+
+  const react = useCallback((r: Reaction) => {
+    window.clearTimeout(reactTimer.current)
+    setReaction(r)
+    reactTimer.current = window.setTimeout(() => setReaction(undefined), 2600)
+  }, [])
+
+  const send = async (text: string): Promise<string | null> => {
+    // A question while an answer comes (a follow-up, a voice turn) stops that answer rather than being dropped.
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+    let threadId = active?.id ?? `${NEW}${id()}`
+    let answerId = id()
+    const answer: AssistantMessage = {
+      id: answerId,
+      role: "assistant",
+      phase: "thinking",
+      steps: [],
+      text: "",
+      feedback: null,
+      startedAt: Date.now(),
+    }
+    setThreads((all) =>
+      addTurn(
+        stopLive(all),
+        threadId,
+        [{ id: id(), role: "user", text }, answer],
+        Date.now()
+      )
+    )
+    setActiveId(threadId)
+    const change = (fn: (m: AssistantMessage) => AssistantMessage) =>
+      setThreads((all) =>
+        updateMessage(all, threadId, answerId, (m) =>
+          m.role === "assistant" ? fn(m) : m
+        )
+      )
+    try {
+      const res = await fetch("/api/copilot/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: threadId.startsWith(NEW) ? undefined : threadId,
+          question: text,
+          lang: locale === "en" ? "en" : "vi",
+        }),
+        signal: controller.signal,
+      })
+      if (!res.ok || !res.body) {
+        const code = await codeOf(res)
+        change((m) => ({ ...m, phase: "error", error: code }))
+        return null
+      }
+      let final: string | null = null
+      for await (const event of chatEvents(res.body)) {
+        if (event.event === "meta") {
+          // The backend names the conversation and the answer: follow its ids from here on.
+          const was = threadId
+          const named = event.data.conversation_id
+          setThreads((all) =>
+            all.map((th) => (th.id === was ? { ...th, id: named } : th))
+          )
+          setActiveId((current) => (current === was ? named : current))
+          threadId = named
+        }
+        const before = answerId
+        if (event.event === "meta" || event.event === "done")
+          answerId = event.data.message_id
+        setThreads((all) =>
+          updateMessage(all, threadId, before, (m) =>
+            m.role === "assistant" ? applyEvent(m, event, Date.now()) : m
+          )
+        )
+        if (event.event === "done") {
+          final = event.data.reply.text
+          react("answered")
+        }
+      }
+      return final
+    } catch (error) {
+      if (controller.signal.aborted) return null // stopped: stopLive marked it
+      console.error(error)
+      change((m) => ({ ...m, phase: "error", error: "network" }))
+      return null
+    }
+  }
 
   const panel = useMemo<PanelState>(
     () => ({ panelOpen, setPanelOpen, returnToRef, toggleRef }),
     [panelOpen]
   )
 
+  const setThread = (threadId: string, patch: Partial<Thread>) =>
+    setThreads((all) =>
+      all.map((th) => (th.id === threadId ? { ...th, ...patch } : th))
+    )
+
+  /** A history change the backend refused: show its list again rather than one it does not hold. */
+  const resync = (error: unknown) => {
+    console.error(error)
+    loadingRef.current = false
+    loadThreads()
+  }
+
   const value: CopilotState = {
     threads,
+    loaded,
     active,
     status,
-    copy,
-    // A question while an answer plays (a follow-up, a voice turn) stops that answer rather than being dropped.
-    send: (text, intent) => {
-      halt()
-      const answer: AssistantMessage = {
-        id: id(),
-        role: "assistant",
-        reply: demoReply(intent ?? detectIntent(text), copy),
-        phase: "thinking",
-        steps: 0,
-        words: 0,
-        startedAt: Date.now(),
-      }
-      const threadId = active?.id ?? id()
-      setThreads((all) =>
-        addTurn(
-          stopLive(all),
-          threadId,
-          [{ id: id(), role: "user", text }, answer],
-          Date.now()
-        )
-      )
-      setActiveId(threadId)
-      play(threadId, answer)
-    },
-    stop: stopAll,
-    regenerate: (messageId) => {
-      const message = active?.messages.find((m) => m.id === messageId)
-      if (!active || status !== "ready" || message?.role !== "assistant") return
-      const fresh: AssistantMessage = {
-        ...message,
-        phase: "thinking",
-        steps: 0,
-        words: 0,
-        startedAt: Date.now(),
-      }
-      setThreads((all) => updateMessage(all, active.id, messageId, () => fresh))
-      play(active.id, fresh)
-    },
+    reaction,
+    send,
+    stop,
+    loadThreads,
+    react,
     select: (threadId) => {
-      if (status !== "ready") stopAll()
+      if (status !== "ready") stop()
       setActiveId(threadId)
+      const th = threads.find((t) => t.id === threadId)
+      if (threadId && !th?.messages)
+        loadConversationAction(threadId)
+          .then((messages: Message[]) => setThread(threadId, { messages }))
+          .catch((error) => {
+            console.error(error)
+            setThread(threadId, { messages: [] })
+          })
     },
-    rename: (threadId, title) =>
-      setThreads((all) =>
-        all.map((th) => (th.id === threadId ? { ...th, title } : th))
-      ),
-    // Only the open thread can be playing, so deleting it also stops the playback.
+    rename: (threadId, title) => {
+      setThread(threadId, { title })
+      updateConversationAction(threadId, { title }).catch(resync)
+    },
     remove: (threadId) => {
       setThreads((all) => all.filter((th) => th.id !== threadId))
       if (threadId === activeId) {
-        halt()
+        abortRef.current?.abort()
         setActiveId(undefined)
       }
+      if (!threadId.startsWith(NEW))
+        deleteConversationAction(threadId).catch(resync)
     },
-    pin: (threadId, pinned) =>
+    pin: (threadId, pinned) => {
+      setThread(threadId, { pinned })
+      updateConversationAction(threadId, { pinned }).catch(resync)
+    },
+    rate: (messageId, feedback) => {
+      if (!activeId) return
       setThreads((all) =>
-        all.map((th) => (th.id === threadId ? { ...th, pinned } : th))
-      ),
+        updateMessage(all, activeId, messageId, (m) =>
+          m.role === "assistant" ? { ...m, feedback } : m
+        )
+      )
+      if (feedback) react(feedback === "up" ? "liked" : "disliked")
+      rateAnswerAction(messageId, feedback).catch(console.error)
+    },
   }
 
   return (

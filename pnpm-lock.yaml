@@ -29,6 +29,12 @@ importers:
 
   apps/dashboard:
     dependencies:
+      '@bible-strong/avatar-core':
+        specifier: 1.2.1
+        version: 1.2.1
+      '@bible-strong/avatar-react':
+        specifier: 1.2.1
+        version: 1.2.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@tabler/icons-react':
         specifier: ^3.49.0
         version: 3.49.0(react@19.3.0)
@@ -617,6 +623,17 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@bible-strong/avatar-core@1.2.1':
+    resolution: {integrity: sha512-LkSCd4XSueDaRwyoEIKvoyvnfaXDE5hrGUOywcee7wTB6uCIh45Du/+tr2i0Lfk6sRMv45lPnc189cMGsLGlAA==}
+    engines: {node: '>=22.12.0'}
+
+  '@bible-strong/avatar-react@1.2.1':
+    resolution: {integrity: sha512-4H/e3yWgM4zQJTmP0kK/Lo/MeQIschEC7sbntYM5PdNq8rceBUtAgW8OQugsRSQttwErq/BndrkrTw3Ctx6hXw==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      react: ^19.0.0
+      react-dom: ^19.0.0
 
   '@cacheable/memory@2.2.0':
     resolution: {integrity: sha512-CTLKqLItRCEixEAewD3/j9DB3/o96gpTPD4eJ1v+DGOlxZRZncRQkGYqqnAGCscYd6RNeXfGeiuCphsPtqyIfQ==}
@@ -4670,6 +4687,16 @@ snapshots:
       use-sync-external-store: 1.7.0(react@19.3.0)
     optionalDependencies:
       '@types/react': 19.3.0
+
+  '@bible-strong/avatar-core@1.2.1':
+    dependencies:
+      ajv: 8.20.0
+
+  '@bible-strong/avatar-react@1.2.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      '@bible-strong/avatar-core': 1.2.1
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
 
   '@cacheable/memory@2.2.0':
     dependencies:

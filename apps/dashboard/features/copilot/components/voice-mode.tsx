@@ -1,13 +1,19 @@
 "use client"
 
-import { useEffect } from "react"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { Button } from "@workspace/ui/components/hairline/button"
+import {
+  useVoiceSession,
+  type VoicePhase,
+} from "@workspace/ui/components/hairline/voice-session"
 import { VoiceTalk } from "@workspace/ui/components/hairline/voice-talk"
 
+import { speechOf, transcribeAudio } from "../voice"
 import { useCopilot } from "./copilot-provider"
+import { MOODS } from "../moods"
+import { WappiAvatar, useWappiState } from "./wappi-avatar"
 
 /**
  * Voice mode: Hairline's VoiceTalk, the fluid orb with its one morphing button (Talk, Send, Thinking, Interrupt),
@@ -22,7 +28,27 @@ export function VoiceMode({
 }) {
   const t = useTranslations("copilot")
   const locale = useLocale()
-  const { send, copy } = useCopilot()
+  const { send } = useCopilot()
+  const chat = useWappiState()
+  // One turn: the recording to text (backend), the question through the chat (so it stays in the history), the
+  // answer read in Wappi's voice. VoiceTalk plays the returned audio and stops it on Interrupt.
+  const session = useVoiceSession({
+    onTurn: async (audio, { signal }) => {
+      const question = await transcribeAudio(audio, locale, signal)
+      if (!question || signal.aborted) return
+      const answer = await send(question)
+      if (!answer || signal.aborted) return
+      return speechOf(answer, signal)
+    },
+  })
+  const faces: Record<VoicePhase, string> = {
+    idle: chat,
+    starting: MOODS.listening,
+    listening: MOODS.listening,
+    thinking: chat === MOODS.idle ? MOODS.transcribing : chat, // the words, then the answer's own face
+    speaking: MOODS.speaking,
+    error: MOODS.failed,
+  }
   type LabelKey = Parameters<typeof t>[0]
   const keys = [
     "idle",
@@ -39,15 +65,14 @@ export function VoiceMode({
     "noMicrophone",
     "noSpeech",
   ] as const
-  // Leaving voice mode (or hiding the page) silences Wappi's spoken reply.
-  useEffect(() => () => speechSynthesis.cancel(), [])
   const labels = Object.fromEntries(
     keys.map((k) => [k, t(`voice.labels.${k}` as LabelKey)])
   )
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8 text-center">
-      <div className="flex max-w-sm flex-col gap-2">
+      <div className="flex max-w-sm flex-col items-center gap-2">
+        <WappiAvatar size="xl" state={faces[session.phase]} live />
         <h2 className="text-lg font-medium">{t("voice.title")}</h2>
         <p className="text-sm text-muted-foreground">{t("voice.hint")}</p>
       </div>
@@ -55,16 +80,7 @@ export function VoiceMode({
         size={size}
         label={t("name")}
         labels={labels}
-        // shortcut: no speech backend yet. The turn's audio is dropped; Wappi answers a scripted question in the chat
-        // and reads the summary with the browser's voice. Return the backend's audio Response here when it lands.
-        onTurn={async (_audio, { signal }) => {
-          await new Promise((resolve) => setTimeout(resolve, 1200))
-          if (signal.aborted) return
-          send(copy("ask.devices"), "devices")
-          const utterance = new SpeechSynthesisUtterance(copy("voiceReply"))
-          utterance.lang = locale === "vi" ? "vi-VN" : "en-US"
-          speechSynthesis.speak(utterance)
-        }}
+        session={session}
       />
       <Button
         variant="ghost"

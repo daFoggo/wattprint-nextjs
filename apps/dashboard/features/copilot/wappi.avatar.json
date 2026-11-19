@@ -1,0 +1,53 @@
+{
+  "name": "Wappi",
+  "body": {
+    "primary": {
+      "type": "sphere",
+      "width": 150,
+      "height": 138,
+      "depth": 130,
+      "roundness": 1
+    },
+    "nodes": [
+      {
+        "followsHead": true,
+        "color": "#a7b4ad",
+        "surface": {
+          "type": "capsule",
+          "width": 14,
+          "height": 40,
+          "depth": 14,
+          "roundness": 1
+        },
+        "position": [-26, -80, 0],
+        "rotation": [0, 0, 0]
+      },
+      {
+        "followsHead": true,
+        "color": "#a7b4ad",
+        "surface": {
+          "type": "capsule",
+          "width": 14,
+          "height": 40,
+          "depth": 14,
+          "roundness": 1
+        },
+        "position": [26, -80, 0],
+        "rotation": [0, 0, 0]
+      }
+    ]
+  },
+  "colors": { "body": "#1fa36b", "eyes": "#0b1410" },
+  "style": {
+    "outline": {
+      "enabled": false,
+      "color": "#0b1410",
+      "width": 0,
+      "opacity": 0
+    }
+  },
+  "face": {
+    "eyes": { "width": 1, "height": 1, "gap": 1, "shiftY": 0 },
+    "perspective": 1
+  }
+}

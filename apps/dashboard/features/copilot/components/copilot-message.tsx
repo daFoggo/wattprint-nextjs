@@ -1,32 +1,60 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { IconPlayerStopFilled, IconTool, IconVolume } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import { Alert } from "@workspace/ui/components/hairline/alert"
 import { Badge } from "@workspace/ui/components/hairline/badge"
 import { Button } from "@workspace/ui/components/hairline/button"
-import { ClarifyingQuestion } from "@workspace/ui/components/hairline/clarifying-question"
 import { CodeBlock } from "@workspace/ui/components/hairline/code-block"
 import {
   AnswerActions,
   FollowUps,
   StreamingText,
+  type AnswerSegment,
 } from "@workspace/ui/components/hairline/streaming-answer"
 import { ThinkingIndicator } from "@workspace/ui/components/hairline/thinking-indicator"
 import { ThinkingTrace } from "@workspace/ui/components/hairline/thinking-trace"
 import { ToolCall } from "@workspace/ui/components/hairline/tool-call"
 import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
 
-import { segments, tokens, type AssistantMessage } from "../playback"
-import type { DataTier } from "../schemas"
+import { answerState } from "../moods"
+import type { DataTier, Reply } from "../schemas"
+import type { AssistantMessage } from "../threads"
+import { speechOf } from "../voice"
 import { useCopilot } from "./copilot-provider"
+import { WappiAvatar } from "./wappi-avatar"
 import { CopilotWidget } from "./widgets"
 
 const TIER_TONE: Record<DataTier, "success" | "primary" | "warning"> = {
   measured: "success",
   estimated: "primary",
   inferred: "warning",
+}
+
+const ERRORS = [
+  "copilot_unavailable",
+  "copilot_rate_limited",
+  "conversation_not_found",
+] as const
+type ErrorKey = (typeof ERRORS)[number] | "other"
+
+const errorKey = (code: string): ErrorKey =>
+  (ERRORS as readonly string[]).includes(code) ? (code as ErrorKey) : "other"
+
+/** The text with each `[n]` as a citation chip for `sources[n - 1]`; without sources yet (streaming), the marks go. */
+export function segments(
+  text: string,
+  sources: Reply["sources"] = []
+): AnswerSegment[] {
+  return text.split(/\[(\d+)\]/).flatMap((part, i): AnswerSegment[] => {
+    if (i % 2 === 0) return part ? [part] : []
+    const source = sources[Number(part) - 1]
+    return source
+      ? [{ type: "citation", label: source.title, href: source.url }]
+      : []
+  })
 }
 
 export function UserMessage({ text }: { text: string }) {
@@ -37,33 +65,55 @@ export function UserMessage({ text }: { text: string }) {
   )
 }
 
-/** Reads the answer aloud with the browser's own voice (text to speech), and stops it on a second press. */
+/** Reads the answer aloud in Wappi's voice (backend text to speech), and stops it on a second press. */
 function SpeakButton({ text }: { text: string }) {
   const t = useTranslations("copilot.message")
-  const locale = useLocale()
-  const [speaking, setSpeaking] = useState(false)
-  if (typeof window !== "undefined" && !("speechSynthesis" in window))
-    return null
-  const toggle = () => {
-    speechSynthesis.cancel()
-    if (speaking) return setSpeaking(false)
-    const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = locale === "vi" ? "vi-VN" : "en-US"
-    utterance.onend = utterance.onerror = () => setSpeaking(false)
-    speechSynthesis.speak(utterance)
-    setSpeaking(true)
+  const [state, setState] = useState<"idle" | "loading" | "playing">("idle")
+  const audio = useRef<HTMLAudioElement>(null)
+  const abort = useRef<AbortController>(null)
+  useEffect(
+    () => () => {
+      abort.current?.abort()
+      audio.current?.pause()
+    },
+    []
+  )
+  const stop = () => {
+    abort.current?.abort()
+    audio.current?.pause()
+    setState("idle")
   }
-  const label = speaking ? t("stopSpeaking") : t("speak")
+  const play = async () => {
+    const controller = new AbortController()
+    abort.current = controller
+    setState("loading")
+    try {
+      const res = await speechOf(text, controller.signal)
+      const url = URL.createObjectURL(await res.blob())
+      const player = new Audio(url)
+      audio.current = player
+      player.onended = player.onerror = () => {
+        URL.revokeObjectURL(url)
+        setState("idle")
+      }
+      await player.play()
+      setState("playing")
+    } catch {
+      if (!controller.signal.aborted) setState("idle")
+    }
+  }
+  const busy = state !== "idle"
+  const label = busy ? t("stopSpeaking") : t("speak")
   return (
     <Tooltip content={label}>
       <Button
         variant="ghost"
         size="icon"
         aria-label={label}
-        aria-pressed={speaking}
-        onClick={toggle}
+        aria-pressed={busy}
+        onClick={busy ? stop : () => void play()}
       >
-        {speaking ? (
+        {busy ? (
           <IconPlayerStopFilled aria-hidden className="size-4" />
         ) : (
           <IconVolume aria-hidden className="size-4" />
@@ -86,30 +136,27 @@ export function AssistantMessageView({
   last: boolean
 }) {
   const t = useTranslations("copilot.message")
-  const { send, regenerate, status } = useCopilot()
-  const [feedback, setFeedback] = useState<"up" | "down" | null>(null)
+  const name = useTranslations("copilot")("name")
+  const locale = useLocale()
+  const { send, rate } = useCopilot()
   const { reply, phase } = message
   const settled = phase === "done"
-  const plain = reply.text.replace(/\s*\[\d+\]/g, "")
   const working = phase === "working"
-  const shownSteps = reply.steps.slice(
-    0,
-    working ? message.steps + 1 : message.steps
-  )
+  const plain = message.text.replace(/\s*\[\d+\]/g, "")
+  const error = message.error ? errorKey(message.error) : undefined
 
   return (
-    <article className="flex flex-col gap-3">
-      {/* No avatar per message: the logo introduces Wappi once (title, opening screen); answers are the unboxed text. */}
-      {reply.steps.length ? (
-        <Badge
-          tone={TIER_TONE[reply.tier]}
-          dot
-          size="sm"
-          className="self-start"
-        >
-          {t(`tiers.${reply.tier}`)}
-        </Badge>
-      ) : null}
+    <article className="flex flex-col gap-3" lang={locale}>
+      {/* Who speaks, with its face doing what the answer does (moods.ts); the tier says how the figures were got. */}
+      <div className="flex items-center gap-2">
+        <WappiAvatar size="lg" state={answerState(message)} live={last} />
+        <span className="text-sm font-medium">{name}</span>
+        {reply?.steps.length ? (
+          <Badge tone={TIER_TONE[reply.tier]} dot size="sm">
+            {t(`tiers.${reply.tier}`)}
+          </Badge>
+        ) : null}
+      </div>
 
       {phase === "thinking" ? (
         <ThinkingIndicator
@@ -119,7 +166,7 @@ export function AssistantMessageView({
         />
       ) : null}
 
-      {shownSteps.length ? (
+      {message.steps.length ? (
         <ThinkingTrace
           variant="tools"
           status={
@@ -130,22 +177,20 @@ export function AssistantMessageView({
             phase === "stopped" ? undefined : <IconTool className="size-4" />
           }
           label={t("working")}
-          doneLabel={t("worked", { count: shownSteps.length })}
+          doneLabel={t("worked", { count: message.steps.length })}
           startedAt={working ? message.startedAt : undefined}
           duration={message.duration}
-          steps={shownSteps.map((step, i) => ({
+          steps={message.steps.map((step, i) => ({
             ...step,
-            status: working && i === message.steps ? "running" : "done",
+            status:
+              working && i === message.steps.length - 1 ? "running" : "done",
           }))}
         />
       ) : null}
 
-      {phase === "streaming" || settled || phase === "stopped" ? (
+      {message.text ? (
         <StreamingText
-          content={segments(
-            reply,
-            settled ? tokens(reply.text).length : message.words
-          )}
+          content={segments(message.text, reply?.sources)}
           status={
             phase === "streaming"
               ? "streaming"
@@ -157,7 +202,13 @@ export function AssistantMessageView({
         />
       ) : null}
 
-      {settled && reply.sql ? (
+      {error ? (
+        <Alert tone="warning" title={t(`errors.${error}.title`)}>
+          {t(`errors.${error}.body`)}
+        </Alert>
+      ) : null}
+
+      {reply?.sql ? (
         <ToolCall
           name="text2sql"
           title={t("sql")}
@@ -170,50 +221,27 @@ export function AssistantMessageView({
         />
       ) : null}
 
-      {settled
-        ? reply.widgets.map((widget, i) => (
-            <CopilotWidget key={`${widget.kind}-${i}`} widget={widget} />
-          ))
-        : null}
+      {reply?.widgets.map((widget, i) => (
+        <CopilotWidget key={`${widget.kind}-${i}`} widget={widget} />
+      ))}
 
-      {settled && reply.question ? (
-        <ClarifyingQuestion
-          question={reply.question.text}
-          options={reply.question.options}
-          onAnswer={(answer) => {
-            const option = reply.question?.options.find(
-              (o) => o.id === answer.ids[0]
-            )
-            if (option) send(option.label, option.id)
-          }}
-        />
-      ) : null}
-
-      {settled && reply.steps.length ? (
+      {settled && reply ? (
         <div className="flex items-center gap-1">
           <AnswerActions
             copyText={plain}
-            onRegenerate={
-              last && status === "ready"
-                ? () => {
-                    setFeedback(null)
-                    regenerate(message.id)
-                  }
-                : undefined
-            }
-            feedback={feedback}
-            onFeedback={setFeedback}
+            feedback={message.feedback}
+            onFeedback={(value) => rate(message.id, value)}
             sources={reply.sources.map((s) => ({ name: s.title, href: s.url }))}
           />
-          <SpeakButton text={plain} />
+          {plain ? <SpeakButton text={plain} /> : null}
         </div>
       ) : null}
 
-      {settled && last && reply.followUps.length ? (
+      {settled && last && reply?.followUps.length ? (
         <FollowUps
           label={t("followUps")}
           items={reply.followUps}
-          onSelect={(item) => send(item)}
+          onSelect={(item) => void send(item)}
         />
       ) : null}
     </article>

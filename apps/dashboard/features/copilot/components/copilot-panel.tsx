@@ -22,7 +22,7 @@ import { usePathname, useRouter } from "@/i18n/navigation"
 
 import { useCopilot, usePanel } from "./copilot-provider"
 import { CopilotThread } from "./copilot-thread"
-import { WappiLogo } from "./wappi-logo"
+import { WappiAvatar, useWappiState } from "./wappi-avatar"
 
 export function IconAction({
   label,
@@ -42,11 +42,12 @@ export function IconAction({
   )
 }
 
+/** Wappi's name, with its face showing what it is doing (thinking, reading the data, writing, reacting). */
 function Title() {
   const t = useTranslations("copilot")
   return (
     <span className="flex min-w-0 items-center gap-2">
-      <WappiLogo size="sm" />
+      <WappiAvatar size="md" state={useWappiState()} live />
       <span className="text-sm font-medium">{t("name")}</span>
     </span>
   )

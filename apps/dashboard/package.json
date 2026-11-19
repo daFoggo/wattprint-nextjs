@@ -15,6 +15,8 @@
     "test:e2e:instant": "playwright test e2e/instant.spec.ts --workers=1"
   },
   "dependencies": {
+    "@bible-strong/avatar-core": "1.2.1",
+    "@bible-strong/avatar-react": "1.2.1",
     "@tabler/icons-react": "^3.49.0",
     "@workspace/auth": "workspace:*",
     "@workspace/ui": "workspace:*",

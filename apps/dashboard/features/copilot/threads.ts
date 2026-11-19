@@ -1,6 +1,7 @@
-import type { Message, Phase, Thread } from "./schemas"
+import type { ChatEvent, Message, Phase, Thread } from "./schemas"
 
 export type Status = "ready" | "submitted" | "streaming"
+export type AssistantMessage = Extract<Message, { role: "assistant" }>
 
 const LIVE = new Set<Phase>(["thinking", "working", "streaming"])
 
@@ -8,15 +9,15 @@ const isLive = (m: Message) => m.role === "assistant" && LIVE.has(m.phase)
 
 /** Whether the thread's last answer is still being worked out (submitted), written (streaming), or neither (ready). */
 export function statusOf(thread?: Thread): Status {
-  const live = thread?.messages.find(isLive)
+  const live = thread?.messages?.find(isLive)
   if (live?.role !== "assistant") return "ready"
   return live.phase === "streaming" ? "streaming" : "submitted"
 }
 
-/** Every answer still playing, in any thread, marked stopped where it stands. */
+/** Every answer still coming, in any thread, marked stopped where it stands. */
 export const stopLive = (threads: Thread[]): Thread[] =>
   threads.map((th) =>
-    th.messages.some(isLive)
+    th.messages?.some(isLive)
       ? {
           ...th,
           messages: th.messages.map((m) =>
@@ -40,7 +41,7 @@ export function addTurn(
     ]
   return threads.map((th) =>
     th.id === threadId
-      ? { ...th, updatedAt: now, messages: [...th.messages, ...turn] }
+      ? { ...th, updatedAt: now, messages: [...(th.messages ?? []), ...turn] }
       : th
   )
 }
@@ -56,9 +57,44 @@ export const updateMessage = (
     th.id === threadId
       ? {
           ...th,
-          messages: th.messages.map((m) =>
+          messages: th.messages?.map((m) =>
             m.id === messageId ? change(m) : m
           ),
         }
       : th
   )
+
+/** The answer after one event of its stream (`meta` names the thread and is handled by the caller). */
+export function applyEvent(
+  m: AssistantMessage,
+  e: ChatEvent,
+  now: number
+): AssistantMessage {
+  const took = m.startedAt ? now - m.startedAt : undefined
+  switch (e.event) {
+    case "meta":
+      return { ...m, id: e.data.message_id }
+    case "step":
+      return { ...m, phase: "working", steps: [...m.steps, e.data] }
+    case "token":
+      return { ...m, phase: "streaming", text: m.text + e.data.text }
+    case "done":
+      return {
+        ...m,
+        id: e.data.message_id,
+        phase: "done",
+        reply: e.data.reply,
+        text: e.data.reply.text,
+        steps: e.data.reply.steps,
+        duration: took,
+      }
+    case "error":
+      return {
+        ...m,
+        phase: "error",
+        error: e.data.code,
+        reply: e.data.reply ?? undefined,
+        duration: took,
+      }
+  }
+}

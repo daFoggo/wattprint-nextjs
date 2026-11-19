@@ -26,14 +26,35 @@ type ApiFetchOptions = Omit<RequestInit, "headers"> & {
  */
 export async function apiFetch<T>(
   path: string,
-  { token, headers, ...init }: ApiFetchOptions = {}
+  options: ApiFetchOptions = {}
 ): Promise<T> {
+  const res = await apiResponse(path, {
+    ...options,
+    headers: { Accept: "application/json", ...options.headers },
+  })
+  if (res.status === 204) {
+    return undefined as T
+  }
+  const text = await res.text()
+  if (!text) {
+    return undefined as T
+  }
+  return JSON.parse(text) as T
+}
+
+/**
+ * The backend's response as it comes (a stream, audio), for a Route Handler to pass on; a failure
+ * throws `ApiError` as `apiFetch` does.
+ */
+export async function apiResponse(
+  path: string,
+  { token, headers, ...init }: ApiFetchOptions = {}
+): Promise<Response> {
   let res: Response
   try {
     res = await fetch(apiUrl(env.API_BASE_URL, path), {
       ...init,
       headers: {
-        Accept: "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
@@ -65,14 +86,7 @@ export async function apiFetch<T>(
     )
   }
 
-  if (res.status === 204) {
-    return undefined as T
-  }
-  const text = await res.text()
-  if (!text) {
-    return undefined as T
-  }
-  return JSON.parse(text) as T
+  return res
 }
 
 /**
