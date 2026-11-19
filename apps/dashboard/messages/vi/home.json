@@ -17,12 +17,19 @@
     "cycleDay": "Ngày chốt chỉ số",
     "cycleDayHint": "Ngày điện lực ghi chỉ số công tơ mỗi tháng.",
     "cycleDayInvalid": "Nhập một ngày từ 1 đến 28.",
-    "showCost": "Hiện tiền điện",
-    "showCostHint": "Kèm số tiền bên cạnh điện năng ở mọi nơi.",
     "notify": "Thông báo",
     "notifyHint": "Những gì WattPrint báo cho bạn.",
     "anomaly": "Thiết bị chạy bất thường",
     "tier": "Trước khi sang bậc giá mới",
-    "weekly": "Tóm tắt hằng tuần qua email"
+    "weekly": "Tóm tắt hằng tuần qua email",
+    "location": "Vị trí",
+    "locationHint": "Tỉnh/thành của ngôi nhà, để lấy thời tiết đúng nơi.",
+    "provincePlaceholder": "Chọn tỉnh/thành",
+    "provinceSearch": "Tìm tỉnh/thành",
+    "provinceInvalid": "Không có tỉnh/thành này.",
+    "ownerOnly": "Chỉ chủ nhà mới đổi được thông tin nhà.",
+    "invalid": "Giá trị không hợp lệ.",
+    "memberNote": "Thông tin của {name} do chủ nhà quản lý. Ở đây bạn chọn những gì WattPrint báo cho mình.",
+    "unset": "Chưa chọn"
   }
 }

@@ -8,7 +8,7 @@ import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { getDashboard } from "@/features/energy/queries"
 import { saveHomeSettingsAction } from "@/features/home/actions"
 import { HomeSettingsForm } from "@/features/home/components/home-settings"
-import { getHomeSettings } from "@/features/home/queries"
+import { getHomeSettings, getProvinces } from "@/features/home/queries"
 import { ThresholdTry } from "@/features/insight/components/threshold-try"
 
 import { NoHome } from "../../../_components/no-home"
@@ -20,13 +20,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** The home's settings; without a home there is nothing to set. */
 async function Settings() {
-  const [data, settings] = await Promise.all([
-    getDashboard(),
+  const [settings, provinces] = await Promise.all([
     getHomeSettings(),
+    getProvinces(),
   ])
-  if (!data) return <NoHome />
+  if (!settings) return <NoHome />
   return (
-    <HomeSettingsForm settings={settings} action={saveHomeSettingsAction} />
+    <HomeSettingsForm
+      {...settings}
+      provinces={provinces}
+      action={saveHomeSettingsAction}
+    />
   )
 }
 

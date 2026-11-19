@@ -1,21 +1,31 @@
 import "server-only"
 
-import { cacheLife } from "next/cache"
+import { cache } from "react"
 
-import { env } from "@/lib/env"
+import { requirePermission } from "@/lib/dal"
+import { ApiError } from "@/lib/errors"
 
 import type { Weather } from "./schemas"
-import { fetchCurrent, fetchForecast } from "./server"
+import { fetchWeather } from "./server"
 
-/** Weather at the configured place in `lang`, shared by every user (it holds nothing private). Null without a key. */
-export async function getWeather(lang: string): Promise<Weather | null> {
-  "use cache"
-  cacheLife({ stale: 300, revalidate: 600, expire: 3600 }) // OpenWeather updates about every 10 min
-  const key = env.OPENWEATHER_API_KEY
-  if (!key) return null
-  const [now, forecast] = await Promise.all([
-    fetchCurrent(key, lang),
-    fetchForecast(key, lang),
-  ])
-  return { now, next: forecast.list.slice(0, 8) }
-}
+const code = (error: unknown) =>
+  error instanceof ApiError && error.status === 404
+    ? (error.body as { code?: string } | undefined)?.code
+    : undefined
+
+/**
+ * The weather at the home's province in `lang` (the backend caches it 10 minutes per place).
+ * "unset" when the home has no province yet, null without a home; a weather outage throws.
+ */
+export const getWeather = cache(
+  async (lang: string): Promise<Weather | "unset" | null> => {
+    const { accessToken } = await requirePermission("account:view")
+    try {
+      return await fetchWeather(accessToken, lang === "en" ? "en" : "vi")
+    } catch (error) {
+      if (code(error) === "home_location_unset") return "unset"
+      if (code(error) === "home_not_found") return null
+      throw error
+    }
+  }
+)

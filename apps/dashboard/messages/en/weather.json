@@ -8,5 +8,6 @@
   "humidity": "Humidity",
   "wind": "Wind",
   "rainAt": "Rain {time}",
-  "updated": "Updated {time} · OpenWeather"
+  "updated": "Updated {time} · {place} · OpenWeather",
+  "unset": "Choose a province to see the weather"
 }

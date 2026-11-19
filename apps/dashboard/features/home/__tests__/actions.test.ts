@@ -1,0 +1,80 @@
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
+import { ApiError } from "@/lib/errors"
+
+vi.mock("server-only", () => ({}))
+vi.mock("@/lib/dal", () => ({
+  requirePermission: vi.fn(async () => ({ accessToken: "token" })),
+}))
+vi.mock("next-intl/server", () => ({
+  getTranslations: vi.fn(async () => (key: string) => key),
+}))
+const patchHome = vi.fn()
+const patchPreferences = vi.fn()
+vi.mock("../server", () => ({
+  patchHome: (...a: unknown[]) => patchHome(...a),
+  patchPreferences: (...a: unknown[]) => patchPreferences(...a),
+}))
+
+const { saveHomeSettingsAction } = await import("../actions")
+
+describe("saveHomeSettingsAction", () => {
+  beforeEach(() => {
+    patchHome.mockReset()
+    patchPreferences.mockReset()
+  })
+
+  it("sends home fields to the home and choices to the account, as typed values", async () => {
+    const result = await saveHomeSettingsAction({
+      occupants: "3",
+      floor_area_m2: "",
+      weekly_summary: true,
+    })
+    expect(result).toEqual({ ok: true })
+    expect(patchHome).toHaveBeenCalledWith("token", {
+      occupants: 3,
+      floor_area_m2: null,
+    })
+    expect(patchPreferences).toHaveBeenCalledWith("token", {
+      weekly_summary: true,
+    })
+  })
+
+  it("clears the home type with the empty choice", async () => {
+    await saveHomeSettingsAction({ home_type: "" })
+    expect(patchHome).toHaveBeenCalledWith("token", { home_type: null })
+  })
+
+  it("only calls the side that changed", async () => {
+    await saveHomeSettingsAction({ notify_tier: false })
+    expect(patchHome).not.toHaveBeenCalled()
+    expect(patchPreferences).toHaveBeenCalledOnce()
+  })
+
+  it("refuses invalid or unknown fields before calling the backend", async () => {
+    for (const patch of <Record<string, string>[]>[
+      { billing_cycle_day: "29" },
+      { occupants: "0" },
+      { home_type: "castle" },
+      { timezone: "UTC" },
+    ]) {
+      expect(await saveHomeSettingsAction(patch)).toEqual({
+        ok: false,
+        error: "invalid",
+      })
+    }
+    expect(patchHome).not.toHaveBeenCalled()
+  })
+
+  it("says why the backend refused, and rethrows what it did not expect", async () => {
+    patchHome.mockRejectedValueOnce(
+      new ApiError(403, "no", { code: "home_owner_required" })
+    )
+    expect(await saveHomeSettingsAction({ name: "x" })).toEqual({
+      ok: false,
+      error: "ownerOnly",
+    })
+    patchHome.mockRejectedValueOnce(new ApiError(503, "down"))
+    await expect(saveHomeSettingsAction({ name: "x" })).rejects.toThrow("down")
+  })
+})

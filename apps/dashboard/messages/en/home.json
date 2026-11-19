@@ -17,12 +17,19 @@
     "cycleDay": "Meter reading day",
     "cycleDayHint": "The day the utility reads the meter each month.",
     "cycleDayInvalid": "Enter a day from 1 to 28.",
-    "showCost": "Show the cost",
-    "showCostHint": "Put the amount next to the energy everywhere.",
     "notify": "Notifications",
     "notifyHint": "What WattPrint tells you about.",
     "anomaly": "Devices running out of the ordinary",
     "tier": "Before a new price tier starts",
-    "weekly": "A weekly summary by email"
+    "weekly": "A weekly summary by email",
+    "location": "Location",
+    "locationHint": "The home's province, so the weather is read for the right place.",
+    "provincePlaceholder": "Choose a province",
+    "provinceSearch": "Search provinces",
+    "provinceInvalid": "No such province.",
+    "ownerOnly": "Only the home's owner can change it.",
+    "invalid": "That value isn't valid.",
+    "memberNote": "{name} is managed by its owner. Here you choose what WattPrint tells you.",
+    "unset": "Not set"
   }
 }

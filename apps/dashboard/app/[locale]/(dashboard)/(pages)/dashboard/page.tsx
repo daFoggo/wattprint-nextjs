@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server"
 
 import { PageHead } from "@/components/layout/page-head"
 import { HideOnError } from "@/components/shared/hide-on-error"
+import { PillLink } from "@/components/shared/nav-links"
 import { Stagger } from "@/components/shared/stagger"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillSummary } from "@/features/billing/components/bill-summary"
@@ -65,7 +66,10 @@ async function Tiles() {
   const linked = alerts.map((a) => {
     const real = a.device && devices.find((d) => d.type === a.device!.type)
     // No device of that type in this home: drop the link rather than point at a page that 404s.
-    return { ...a, device: real && a.device ? { ...a.device, id: real.id } : null }
+    return {
+      ...a,
+      device: real && a.device ? { ...a.device, id: real.id } : null,
+    }
   })
   return (
     <>
@@ -94,9 +98,14 @@ async function Tiles() {
   )
 }
 
-/** Without a key there is no weather card; with OpenWeather down, HideOnError hides it. */
+/** The weather at the home's province; with none set, a link to set it. With the weather down, HideOnError hides it. */
 async function Weather() {
-  const weather = await getWeather(await getLocale())
+  const [weather, t] = await Promise.all([
+    getWeather(await getLocale()),
+    getTranslations("weather"),
+  ])
+  if (weather === "unset")
+    return <PillLink href="/dashboard/settings">{t("unset")}</PillLink>
   return weather ? <WeatherCard weather={weather} /> : null
 }
 

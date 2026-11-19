@@ -81,7 +81,7 @@ const levelFor = (celsius: number) =>
 /** The card's face: the words sit at the top, clear of the liquid below. */
 function Face({ weather }: { weather: Weather }) {
   const { now, next } = weather
-  const sky = now.weather[0]!
+  const sky = now.sky
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
   const t = useTranslations("weather")
   const hour = clock(useLocale())
@@ -94,7 +94,7 @@ function Face({ weather }: { weather: Weather }) {
           className="size-5 text-muted-foreground"
         />
         <span className="text-2xl font-medium tracking-tight tabular-nums">
-          {Math.round(now.main.temp)}
+          {Math.round(now.temp)}
         </span>
         <span className="text-xs text-muted-foreground">°C</span>
       </p>
@@ -123,11 +123,11 @@ export function WeatherCard({ weather }: { weather: Weather }) {
   const locale = useLocale()
   const hour = clock(locale)
   const { now, next } = weather
-  const sky = now.weather[0]!
-  const temps = next.map((slot) => slot.main.temp)
+  const sky = now.sky
+  const temps = next.map((slot) => slot.temp)
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
   const liquid = PALETTE[mood(sky.icon)]
-  const level = levelFor(now.main.temp)
+  const level = levelFor(now.temp)
   return (
     <Popover
       label={t("title")}
@@ -138,12 +138,12 @@ export function WeatherCard({ weather }: { weather: Weather }) {
         <button
           type="button"
           aria-label={t("open", {
-            temp: Math.round(now.main.temp),
+            temp: Math.round(now.temp),
             sky: sky.description,
           })}
           className="relative isolate h-18 w-64 cursor-pointer overflow-clip rounded-2xl border bg-background text-left text-foreground motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:active:scale-95"
         >
-          <LiquidSky level={level} wind={now.wind.speed} colorClass={liquid} />
+          <LiquidSky level={level} wind={now.wind_speed} colorClass={liquid} />
           <div className="relative">
             <Face weather={weather} />
           </div>
@@ -155,12 +155,12 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           <div className="flex flex-col">
             <p className="flex items-baseline gap-1">
               <span className="text-2xl font-medium tracking-tight tabular-nums">
-                {Math.round(now.main.temp)}
+                {Math.round(now.temp)}
               </span>
               <span className="text-sm text-muted-foreground">°C</span>
             </p>
             <p className="text-xs text-muted-foreground">
-              {t("feelsLike", { temp: Math.round(now.main.feels_like) })}
+              {t("feelsLike", { temp: Math.round(now.feels_like) })}
             </p>
           </div>
           <Sky
@@ -180,7 +180,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           </div>
           <Sparkline
             data={next.map((slot) => ({
-              value: slot.main.temp,
+              value: slot.temp,
               label: hour(slot.dt),
             }))}
             variant="area"
@@ -204,10 +204,10 @@ export function WeatherCard({ weather }: { weather: Weather }) {
 
         <dl className="grid grid-cols-3 gap-2">
           {[
-            [t("humidity"), `${now.main.humidity}`, "%"],
+            [t("humidity"), `${now.humidity}`, "%"],
             [
               t("wind"),
-              now.wind.speed.toLocaleString(locale, {
+              now.wind_speed.toLocaleString(locale, {
                 minimumFractionDigits: 1,
                 maximumFractionDigits: 1,
               }),
@@ -233,7 +233,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           ))}
         </dl>
         <p className="text-xs text-muted-foreground">
-          {t("updated", { time: hour(now.dt) })}
+          {t("updated", { time: hour(now.dt), place: weather.province })}
         </p>
       </div>
     </Popover>

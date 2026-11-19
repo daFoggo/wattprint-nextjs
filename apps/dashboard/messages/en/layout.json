@@ -45,6 +45,6 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Your home, its tariff and what WattPrint tells you about. A preview: changes are not saved to the server yet."
+    "description": "Your home, its bill and what WattPrint tells you about."
   }
 }
