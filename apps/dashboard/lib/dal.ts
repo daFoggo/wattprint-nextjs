@@ -3,6 +3,7 @@ import "server-only"
 import { cache } from "react"
 import { cacheLife, cacheTag } from "next/cache"
 import { getLocale } from "next-intl/server"
+// eslint-disable-next-line no-restricted-imports -- redirects to /auth/expired, a route handler outside [locale] (docs/internationalization.md)
 import { forbidden, redirect } from "next/navigation"
 
 import { hasPermission, type Permission } from "@workspace/auth/permissions"

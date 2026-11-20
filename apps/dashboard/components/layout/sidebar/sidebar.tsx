@@ -99,6 +99,7 @@ export function Sidebar({
       data-collapsible={iconRail ? "icon" : undefined}
       style={{ transitionTimingFunction: EASE_OUT }}
       // A section plate floating on the page (docs/design-system.md, Surfaces): the 8px frame keeps the 48px rail.
+      // eslint-disable-next-line no-restricted-syntax -- the rail eases its width by design (docs/design-system.md §9, Sidebar)
       className="group sticky top-0 hidden h-svh w-64 shrink-0 p-2 transition-[width] duration-300 motion-reduce:transition-none data-[collapsible=icon]:w-16 md:block"
     >
       <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-sidebar text-sidebar-foreground">

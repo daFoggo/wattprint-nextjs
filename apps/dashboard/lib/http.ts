@@ -2,6 +2,7 @@ import "server-only"
 
 import { getLocale } from "next-intl/server"
 import { headers } from "next/headers"
+// eslint-disable-next-line no-restricted-imports -- redirects to getPathname({ locale }) or /auth/expired (outside [locale]) (docs/internationalization.md)
 import { redirect } from "next/navigation"
 
 import { SIGN_IN_PATH } from "@/config/routes"

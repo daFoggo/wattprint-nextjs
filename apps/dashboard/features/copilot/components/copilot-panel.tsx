@@ -196,6 +196,7 @@ export function CopilotPanel() {
           setPanelOpen(false)
       }}
       style={{ transitionTimingFunction: EASE_OUT }}
+      // eslint-disable-next-line no-restricted-syntax -- the panel eases between w-0 and its width (docs/design-system.md, Wappi side panel)
       className="fixed inset-y-0 right-0 z-40 h-svh w-0 overflow-hidden transition-[width] duration-300 data-[state=open]:w-full motion-reduce:transition-none sm:data-[state=open]:w-96 2xl:sticky 2xl:top-0 2xl:z-auto 2xl:shrink-0"
     >
       {/* No tray: the card alone, in the sidebar's 8px frame and with its radius, so the panel spends no space on a rim. */}

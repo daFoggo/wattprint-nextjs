@@ -69,6 +69,7 @@ export function AppLogo({
       {variant === "mark" ? null : (
         <span
           className={cn(
+            // eslint-disable-next-line no-restricted-syntax -- the wordmark is mono font-semibold (docs/design-system.md, Logo)
             "font-mono font-semibold tracking-tight",
             TEXT[size],
             textClassName

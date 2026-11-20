@@ -1,3 +1,7 @@
+import {
+  appImportBans,
+  designSyntaxRule,
+} from "@workspace/eslint-config/design-system"
 import { nextJsConfig } from "@workspace/eslint-config/next-js"
 
 const layerRestrictions = [
@@ -25,9 +29,18 @@ const authRestrictedGroup = [
 export default [
   ...nextJsConfig,
   {
+    rules: {
+      "no-restricted-syntax": designSyntaxRule,
+      "no-restricted-imports": ["error", { paths: appImportBans }],
+    },
+  },
+  {
     files: ["features/**/*.{ts,tsx}"],
     rules: {
-      "no-restricted-imports": ["error", { patterns: featureRestrictions }],
+      "no-restricted-imports": [
+        "error",
+        { paths: appImportBans, patterns: featureRestrictions },
+      ],
     },
   },
   {
@@ -37,6 +50,7 @@ export default [
       "no-restricted-imports": [
         "error",
         {
+          paths: appImportBans,
           patterns: [
             ...featureRestrictions,
             {
@@ -63,13 +77,10 @@ export default [
       "no-restricted-imports": [
         "error",
         {
+          paths: appImportBans,
           patterns: [
             {
-              group: [
-                "@/lib/dal",
-                "@/lib/http",
-                ...authRestrictedGroup,
-              ],
+              group: ["@/lib/dal", "@/lib/http", ...authRestrictedGroup],
               message:
                 "Shared components must not import server-only modules (dal, http, auth).",
             },

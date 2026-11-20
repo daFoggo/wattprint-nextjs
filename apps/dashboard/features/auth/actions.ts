@@ -3,6 +3,7 @@
 import { updateTag } from "next/cache"
 import { cookies } from "next/headers"
 import { getLocale } from "next-intl/server"
+// eslint-disable-next-line no-restricted-imports -- redirects to Keycloak (external) or a getPathname({ locale }) path (docs/internationalization.md)
 import { redirect } from "next/navigation"
 
 import { OAUTH_CALLBACK_PATH, SIGN_IN_PATH } from "@/config/routes"

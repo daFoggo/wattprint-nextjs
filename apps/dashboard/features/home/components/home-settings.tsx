@@ -120,7 +120,7 @@ export function HomeSettingsForm({
       {owner ? (
         <HomeLocation home={home} provinces={provinces} action={action} />
       ) : (
-        <p className="rounded-[22px] border border-border px-4 py-3 text-[13px] text-muted-foreground md:px-5">
+        <p className="rounded-3xl border border-border px-4 py-3 text-sm text-muted-foreground md:px-5">
           {t("memberNote", { name: home.name })}
         </p>
       )}
@@ -153,12 +153,10 @@ function HomeLocation({
   const [error, setError] = useState<string | null>(null)
   const [pending, start] = useTransition()
   return (
-    <section className="@container grid gap-3 rounded-[22px] border border-border px-4 py-4 md:px-5 md:py-5 @xl:grid-cols-[minmax(0,180px)_1fr] @xl:gap-8">
+    <section className="grid gap-3 rounded-3xl border border-border px-4 py-4 md:px-5 md:py-5">
       <div className="min-w-0">
-        <h3 className="text-[14px] font-medium tracking-[-0.01em]">
-          {t("location")}
-        </h3>
-        <p className="mt-0.5 text-[12px] leading-[1.45] text-muted-foreground">
+        <h3 className="text-sm font-medium">{t("location")}</h3>
+        <p className="mt-0.5 text-xs leading-normal text-muted-foreground">
           {t("locationHint")}
         </p>
       </div>
@@ -187,7 +185,7 @@ function HomeLocation({
           clearable
         />
         {error && (
-          <p role="alert" className="mt-1.5 text-[12px] text-destructive">
+          <p role="alert" className="mt-1.5 text-xs text-destructive">
             {error}
           </p>
         )}

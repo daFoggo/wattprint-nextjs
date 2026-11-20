@@ -16,7 +16,7 @@ export function linkButton({
   return cn(
     "inline-flex items-center justify-center rounded-full text-sm font-medium whitespace-nowrap select-none",
     size === "lg" ? "h-10 gap-2 px-5" : "h-9 gap-1.5 px-4",
-    "transition-[background-color,color,box-shadow,scale] duration-200 active:scale-97 motion-reduce:transition-none motion-reduce:active:scale-100",
+    "transition duration-200 active:scale-97 motion-reduce:transition-none motion-reduce:active:scale-100",
     "focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
     variant === "primary"
       ? "bg-primary text-primary-foreground hover:bg-primary/90"
