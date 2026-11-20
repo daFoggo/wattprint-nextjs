@@ -10,10 +10,10 @@ const CLASS_SCOPE =
   ":matches(JSXAttribute[name.name=/[cC]lassName$/], CallExpression[callee.name=/^(cn|cva|clsx)$/])"
 
 const CLASS_BANS = [
-  // `-[...]` not followed by `:` or `/` is a value (`mt-[54px]`); `data-[state=open]:` and the named-group form
-  // `group-data-[state=open]/item:` are variants and stay allowed.
+  // `-[...]` is a value (`mt-[54px]`, `bg-[#123]/50`) unless a variant follows: `data-[state=open]:` or the
+  // named-group form `group-data-[state=open]/item:`.
   [
-    /-\[[^\]]*\](?![:/])/,
+    /-\[[^\]]*\](?!:|\/[\w-]+:)/,
     "No arbitrary Tailwind values: use the nearest default step (docs/design-system.md §1).",
   ],
   [
