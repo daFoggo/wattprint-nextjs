@@ -1,0 +1,11 @@
+{
+  "extraKnownMarketplaces": {
+    "ai-native-sdlc": { "source": { "source": "github", "repo": "daFoggo/ai-native-sdlc" } },
+    "hallmark": { "source": { "source": "github", "repo": "Nutlope/hallmark" } }
+  },
+  "enabledPlugins": {
+    "sdlc@ai-native-sdlc": true,
+    "superpowers@claude-plugins-official": true,
+    "hallmark@hallmark": true
+  }
+}
