@@ -10,9 +10,10 @@ const CLASS_SCOPE =
   ":matches(JSXAttribute[name.name=/[cC]lassName$/], CallExpression[callee.name=/^(cn|cva|clsx)$/])"
 
 const CLASS_BANS = [
-  // `-[...]` not followed by `:` is a value (`mt-[54px]`); `data-[state=open]:` is a variant and stays allowed.
+  // `-[...]` not followed by `:` or `/` is a value (`mt-[54px]`); `data-[state=open]:` and the named-group form
+  // `group-data-[state=open]/item:` are variants and stay allowed.
   [
-    /-\[[^\]]*\](?!:)/,
+    /-\[[^\]]*\](?![:/])/,
     "No arbitrary Tailwind values: use the nearest default step (docs/design-system.md §1).",
   ],
   [
@@ -20,7 +21,7 @@ const CLASS_BANS = [
     "Weights are font-normal and font-medium only (docs/design-system.md §1).",
   ],
   [
-    /(^|[\s:])(shadow-(?!none)|backdrop-blur)/,
+    /(^|[\s:])(shadow(?!-none)(?=-|\s|$)|drop-shadow|backdrop-blur)/,
     "The design is flat: no shadows or blur (docs/design-system.md §1).",
   ],
 ]
