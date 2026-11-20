@@ -26,6 +26,12 @@ Adapted from the four principles in [andrej-karpathy-skills](https://github.com/
 - "Done" means `pnpm check` and `pnpm build` pass; UI/auth changes are also exercised against a running app.
 - Report what was and was not verified. Never claim a flow works if only its error path was tried.
 
+## Process (sdlc plugin)
+- Every change goes through the `sdlc` skill: pick lane S/M/L; lane L artifacts live in `docs/work/<date>-<slug>/`.
+- Standards are enforced, not remembered: `.claude/rules/` loads per path, ESLint holds the checkable design and i18n rules,
+  and `.claude/sdlc.json` makes the hooks lint each edit, guard vendored UI and run `pnpm check` before you stop.
+- Review: the `reviewer` agent with `REVIEW.md`, three rounds at most. Debt (shortcuts, deferred findings) goes to `docs/debt.md`.
+
 ## Git
 - Conventional Commits (commitlint enforces it). Do not add co-author or "generated with" lines to commits or PRs.
 - Commit or push only when asked.

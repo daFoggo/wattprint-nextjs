@@ -1,0 +1,23 @@
+{
+  "verify": "pnpm check && diff -rq --strip-trailing-cr .agents/skills .claude/skills",
+  "verifyTimeout": 540,
+  "check": [
+    { "glob": "apps/dashboard/**/*.{ts,tsx,js,mjs}", "cwd": "apps/dashboard", "run": "pnpm exec eslint --max-warnings 0 --no-warn-ignored {file}" },
+    { "glob": "apps/web/**/*.{ts,tsx,js,mjs}", "cwd": "apps/web", "run": "pnpm exec eslint --max-warnings 0 --no-warn-ignored {file}" },
+    { "glob": "packages/ui-patterns/**/*.{ts,tsx}", "cwd": "packages/ui-patterns", "run": "pnpm exec eslint --max-warnings 0 --no-warn-ignored {file}" },
+    { "glob": "packages/ui/src/**/*.{ts,tsx}", "cwd": "packages/ui", "run": "pnpm exec eslint --max-warnings 0 --no-warn-ignored {file}" }
+  ],
+  "protect": [
+    { "glob": "packages/ui/src/components/hairline/**", "reason": "vendored Hairline UI. Restyle with tokens in globals.css, props or an app wrapper; a real bug goes into packages/ui/hairline/patch.mjs (hairline-ui skill)." },
+    { "glob": "packages/ui/src/components/ui/**", "reason": "vendored shadcn, kept byte-identical for `shadcn add --diff`. Change a token or pick a variant/size (docs/design-system.md, Updating shadcn and Hairline UI)." }
+  ],
+  "denyBash": [
+    { "pattern": "shadcn(@\\S+)?\\s+add\\s+\\S*hairlineui", "reason": "a bare shadcn add of Hairline overwrites shadcn's files. Add it to packages/ui/hairline/items.json and run `pnpm --filter @workspace/ui hairline`." },
+    { "pattern": "prettier\\b[^|;&]*(\\.md\\b|\\*\\*/\\*[^.]|\\s\\.(\\s|$)|patch\\.mjs)", "reason": "Markdown files and packages/ui/hairline/patch.mjs do not follow prettier; format only the TS/TSX/JSON you changed." }
+  ],
+  "tests": ["**/__tests__/**", "**/*.test.{ts,tsx,mjs}", "apps/dashboard/e2e/**"],
+  "riskyPaths": ["packages/auth/**", "apps/dashboard/proxy.ts", "apps/dashboard/lib/{dal,http,auth}.ts", "apps/dashboard/features/auth/**", "apps/keycloak-theme/**"],
+  "artifacts": "docs/work",
+  "debt": "docs/debt.md",
+  "providers": {}
+}

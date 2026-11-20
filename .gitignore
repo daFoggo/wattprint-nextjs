@@ -58,3 +58,6 @@ next-env.d.ts
 apps/admin/e2e/.auth/
 
 .vercel
+
+# sdlc plugin: machine-only overrides
+.claude/sdlc.local.json
