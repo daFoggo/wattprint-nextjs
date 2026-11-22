@@ -9,7 +9,7 @@ continues from here.
 |---|---|---|---|
 | `wattprint-web` (Next.js monorepo, dashboard + landing + Keycloak theme) | github.com/daFoggo/wattprint-nextjs | `main` | pushed 2026-11-22 |
 | `wattprint-backend` (FastAPI, TimescaleDB, NILM, insight, copilot) | github.com/daFoggo/wattprint-backend | `main` | pushed 2026-11-22 |
-| `wattprint-text2sql-mcp` (text2sql agent used by Wappi's `query_data`) | github.com/nguyenddat/ai-agent-superset-standalone | `feat/copilot-scope-token-v2` | **local only**: push refused (403, the `daFoggo` account has no write access). One commit ahead of `origin/main`: scope token and service key for server callers. Push it from an account with access (or a fork) before leaving this machine, or the backend's `query_data` loses its scope token on the new one. |
+| `wattprint-text2sql-mcp` (text2sql agent used by Wappi's `query_data`) | github.com/nguyenddat/ai-agent-superset-standalone | `feat/copilot-scope-token-v2` | pushed 2026-11-22, one commit ahead of `origin/main` (scope token and service key for server callers); not merged, open a PR to `main` |
 
 Everything up to 2026-11-22 went in one commit per repo (the changes overlap in files, so they were not split).
 The per-change specs, plans and review ledgers say which part is which (below).
