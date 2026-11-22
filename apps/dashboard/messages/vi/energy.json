@@ -56,7 +56,8 @@
     "quarter": "90 ngày",
     "deviceTitle": "Công suất thiết bị, 24 giờ qua",
     "title": "Công suất cả nhà theo thời gian",
-    "deviceDescription": "Công suất ước tính theo bước 5 phút"
+    "deviceDescription": "Công suất ước tính theo bước 5 phút",
+    "usual": "Thường lệ"
   },
   "deviceStats": {
     "avgOn": "Trung bình khi bật",

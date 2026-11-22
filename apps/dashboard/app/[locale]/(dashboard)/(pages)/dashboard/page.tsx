@@ -16,10 +16,14 @@ import {
   getActivity,
   getDashboard,
   getDevices,
+  getTodayUsual,
 } from "@/features/energy/queries"
-import { acknowledgeAlertAction } from "@/features/insight/actions"
+import {
+  acknowledgeAlertAction,
+  sendAlertFeedbackAction,
+} from "@/features/insight/actions"
 import { AlertList } from "@/features/insight/components/alert-list"
-import { getAlerts } from "@/features/insight/queries"
+import { getAlerts, getWatches } from "@/features/insight/queries"
 import { WeatherCard } from "@/features/weather/components/weather-card"
 import { getWeather } from "@/features/weather/queries"
 import { requirePermission } from "@/lib/dal"
@@ -52,11 +56,13 @@ async function Guard() {
  * live or sampled is shown: it would describe a home the account does not have.
  */
 async function Tiles() {
-  const [data, bill, activity, alerts, t] = await Promise.all([
+  const [data, bill, activity, alerts, watches, usual, t] = await Promise.all([
     getDashboard(),
     getCurrentBill(),
     getActivity(),
     getAlerts(),
+    getWatches().catch(() => null), // only decides a link: never take the tiles down
+    getTodayUsual().catch(() => null), // only adds a sentence: never take the tiles down
     getTranslations("energy"),
   ])
   // The devices' money is the bill's, split by their kWh.
@@ -69,12 +75,16 @@ async function Tiles() {
         devices={devices}
         className={bill ? TILE.mix : "lg:col-span-12"}
       />
-      {bill ? <BillSummary bill={bill} className={TILE.bill} /> : null}
+      {bill ? (
+        <BillSummary bill={bill} usual={usual} className={TILE.bill} />
+      ) : null}
       <AlertList
         alerts={alerts}
         now={data.now}
         brief
         onSeen={acknowledgeAlertAction}
+        onFeedback={sendAlertFeedbackAction}
+        mine={new Set((watches ?? []).map((w) => w.id))}
         className={data.latest ? TILE.alerts : "lg:col-span-12"}
       />
       {/* No meter data yet: the activity sample would pretend otherwise. */}

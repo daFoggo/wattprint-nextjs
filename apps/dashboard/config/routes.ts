@@ -9,6 +9,7 @@ export const BILL_PATH = "/dashboard/bill"
 export const SETTINGS_PATH = "/dashboard/settings"
 export const STATISTICS_PATH = "/dashboard/statistics"
 export const DEVICES_PATH = "/dashboard/devices"
+export const ALERTS_PATH = "/dashboard/alerts"
 export const COPILOT_PATH = "/dashboard/copilot"
 export const onCopilotPage = (pathname: string) =>
   pathname === COPILOT_PATH || pathname.startsWith(`${COPILOT_PATH}/`)

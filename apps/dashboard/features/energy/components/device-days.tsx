@@ -15,6 +15,9 @@ export function DeviceDays({
 }) {
   const t = useTranslations("energy.deviceDays")
   const locale = useLocale()
+  // The API sends at least 30 days (for alert thresholds); this chart is the month's.
+  const month = device.days.at(-1)?.date.slice(0, 7) ?? ""
+  const days = device.days.filter((d) => d.date.startsWith(month))
   return (
     <ComboChart
       className={className}
@@ -22,7 +25,7 @@ export function DeviceDays({
       unit="kWh"
       series={[t("daily"), t("average")]}
       rolling={3}
-      days={device.days.map((d) => ({
+      days={days.map((d) => ({
         key: d.date,
         label: dayLabel(d.date, locale, { month: "numeric", day: "numeric" }),
         title: dayLabel(d.date, locale, {

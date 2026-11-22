@@ -30,6 +30,16 @@ describe("confidence of what the models make", () => {
         next: null,
         basis_days,
         as_of,
+        method: "weekday",
+        model_version: "weekday-profile-v1",
+        kwh_p10: 1,
+        kwh_p50: 1,
+        kwh_p90: 1,
+        amount_p10: 1,
+        amount_p90: 1,
+        change: null,
+        accuracy: null,
+        simulated: [],
       })
     expect(cyclePassed(f(28, "2026-11-16"))).toBe(0.5)
     expect(forecastConfidence(f(28, "2026-11-16"))).toBe("high")

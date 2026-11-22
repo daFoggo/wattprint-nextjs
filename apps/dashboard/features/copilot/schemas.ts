@@ -81,8 +81,49 @@ const WidgetSchema = z.discriminatedUnion("kind", [
       })
     ),
   }),
+  /** A text2sql result: drawn as `type`, or a table (`columns`, `rows`) when it cannot be drawn as is. */
+  z.object({
+    kind: z.literal("chart"),
+    type: z.enum(["line", "area", "bar", "donut", "kpi", "table"]),
+    title: z.string().nullable(),
+    labels: z.array(z.string()),
+    series: z.array(
+      z.object({
+        label: z.string(),
+        unit: z.string().nullable(),
+        values: z.array(z.number().nullable()),
+      })
+    ),
+    columns: z.array(z.string()),
+    rows: z.array(z.array(z.union([z.string(), z.number(), z.null()]))),
+  }),
+  /** An alert Wappi just saved; its card links to the row on the alerts page. `ends_at` stays ISO. */
+  z.object({
+    kind: z.literal("watch"),
+    id: z.string(),
+    label: z.string(),
+    op: z.enum(["gt", "lt"]),
+    threshold: z.number(),
+    unit: z.string(),
+    value: z.number().nullable(),
+    ends_at: z.iso.datetime({ offset: true }),
+  }),
 ])
 export type Widget = z.infer<typeof WidgetSchema>
+
+/** Widgets one by one: one the client cannot read is dropped, never the whole answer. */
+const WidgetsSchema = z.array(z.unknown()).transform((items) =>
+  items.flatMap((item) => {
+    const parsed = WidgetSchema.safeParse(item)
+    if (parsed.success) return [parsed.data]
+    console.warn(
+      "copilot widget dropped",
+      (item as { kind?: unknown } | null)?.kind,
+      parsed.error.issues
+    )
+    return []
+  })
+)
 
 const ReplySchema = z.object({
   intent: z.string(),
@@ -93,7 +134,7 @@ const ReplySchema = z.object({
   /** The answer; `[n]` cites `sources[n - 1]`. */
   text: z.string(),
   sources: z.array(SourceSchema),
-  widgets: z.array(WidgetSchema),
+  widgets: WidgetsSchema,
   followUps: z.array(z.string()),
 })
 export type Reply = z.infer<typeof ReplySchema>

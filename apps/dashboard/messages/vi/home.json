@@ -30,6 +30,8 @@
     "ownerOnly": "Chỉ chủ nhà mới đổi được thông tin nhà.",
     "invalid": "Giá trị không hợp lệ.",
     "memberNote": "Thông tin của {name} do chủ nhà quản lý. Ở đây bạn chọn những gì WattPrint báo cho mình.",
-    "unset": "Chưa chọn"
+    "unset": "Chưa chọn",
+    "summary": "Tổng kết qua email",
+    "summaryHint": "Mỗi tuần một email tóm tắt điện năng và tiền điện."
   }
 }

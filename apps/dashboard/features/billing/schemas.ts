@@ -46,8 +46,10 @@ export type PastBill = z.infer<typeof PastBillSchema>
 export const FULL_COVERAGE = 0.95
 
 /**
- * GET /billing/forecast: the running cycle at its end if the home keeps its usual weekday pattern (last 4 weeks), and
- * the day it passes into the next, dearer tier (`at`, local midnight in ms) if it does this cycle.
+ * GET /billing/forecast: the running cycle at its end. `method` "context": the home's expected-usage model (weather,
+ * calendar, routine), `kwh`/`amount` its middle and `*_p10`…`*_p90` its range; "weekday": the usual weekday pattern
+ * of the last 4 weeks, a point (p10 = p90). `next.at` is the day it passes into the next, dearer tier (local midnight in
+ * ms) and `next.probability` how likely that is (context only); `change` why it moved since yesterday (VND parts).
  */
 export const ForecastSchema = z
   .object({
@@ -62,11 +64,31 @@ export const ForecastSchema = z
         from_kwh: z.number(),
         price_per_kwh: z.number(),
         on: z.iso.date(),
+        probability: z.number().nullable().default(null),
       })
       .nullable(),
     basis_days: z.number(),
     /** The local day it was made on. */
     as_of: z.iso.date(),
+    method: z.enum(["context", "weekday"]),
+    model_version: z.string(),
+    kwh_p10: z.number(),
+    kwh_p50: z.number(),
+    kwh_p90: z.number(),
+    amount_p10: z.number(),
+    amount_p90: z.number(),
+    change: z
+      .object({ amount: z.number(), parts: z.record(z.string(), z.number()) })
+      .nullable(),
+    accuracy: z
+      .object({
+        source: z.enum(["cycle", "backtest"]),
+        error_pct: z.number(),
+        cycles: z.number(),
+      })
+      .nullable(),
+    /** Simulated loads running in this demo home (heater, demo scenarios). */
+    simulated: z.array(z.string()),
   })
   .transform(({ next, tier_no, ...f }) => ({
     ...f,

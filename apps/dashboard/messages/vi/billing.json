@@ -9,7 +9,9 @@
     "nextTier": "Bậc {tier} từ {kwh} kWh",
     "topTier": "Bậc {tier}, bậc cao nhất",
     "today": "Hôm nay <amount></amount> · {kwh} kWh",
-    "viewDetails": "Xem chi tiết hóa đơn"
+    "viewDetails": "Xem chi tiết hóa đơn",
+    "vsUsual": "Hôm nay đang {higher, select, true {cao hơn} other {thấp hơn}} thường lệ {pct} (≈ {amount})",
+    "asUsual": "Hôm nay dùng điện như thường lệ"
   },
   "history": {
     "thisYear": "Các kỳ gần đây",
@@ -29,7 +31,23 @@
     "nextTitle": "Ngày {date} sang bậc {tier}",
     "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn.",
     "unavailable": "Cần ít nhất 7 ngày có đủ số đo để dự báo; quay lại sau ít hôm nữa.",
-    "why": "Học từ {days} ngày có đủ số đo; kỳ đã qua {pct}."
+    "why": "Học từ {days} ngày có đủ số đo; kỳ đã qua {pct}.",
+    "descriptionContext": "Theo mô hình học từ chính nhà bạn: thời tiết, ngày nghỉ và nếp sinh hoạt, tính đến hết ngày {end}.",
+    "range": "Khoảng {low} – {high} ({kwhLow}–{kwhHigh} kWh)",
+    "change": "{up, select, true {Tăng} other {Giảm}} {amount} so với hôm qua, chủ yếu do {top}.",
+    "parts": {
+      "used": "hôm qua dùng khác dự kiến",
+      "weather": "thời tiết những ngày tới",
+      "calendar": "ngày nghỉ, ngày lễ",
+      "occupancy": "nếp sinh hoạt",
+      "trend": "xu hướng gần đây",
+      "unexplained": "yếu tố khác"
+    },
+    "nextLikely": "Khoảng {pct} khả năng sang bậc {tier} vào khoảng {date}",
+    "accuracyBacktest": "Thử trên {cycles, plural, other {# kỳ}} đã qua: lệch trung bình {pct}.",
+    "accuracyCycle": "Kỳ trước dự báo giữa kỳ lệch {pct} so với hóa đơn thật.",
+    "simulated": "Có tải sưởi mô phỏng",
+    "scenario": "Đang chạy kịch bản demo"
   },
   "overview": {
     "title": "Hóa đơn kỳ này, {start} – {end}",
@@ -44,7 +62,8 @@
     "less": "Ít hơn",
     "lastMonth": "Kỳ trước {amount}",
     "partial": "Thiếu dữ liệu",
-    "straddle": "Giá điện thay đổi trong kỳ"
+    "straddle": "Giá điện thay đổi trong kỳ",
+    "forecastRange": "Khoảng {low} – {high}"
   },
   "ladder": {
     "title": "Giá bậc thang và điện đã dùng ở từng bậc",

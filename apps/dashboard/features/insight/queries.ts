@@ -5,7 +5,7 @@ import { cache } from "react"
 import { requirePermission } from "@/lib/dal"
 import { ApiError } from "@/lib/errors"
 
-import { fetchAlerts, fetchCohort } from "./server"
+import { fetchAlerts, fetchCohort, fetchWatches } from "./server"
 
 /**
  * This home against similar homes over the last 30 whole days. Null while fewer than 10 homes can be compared
@@ -24,6 +24,15 @@ export const getCohort = cache(async () => {
 export const getAlerts = cache(async () => {
   const { accessToken } = await requirePermission("account:view")
   return fetchAlerts(accessToken).catch((error: unknown) => {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  })
+})
+
+/** The alerts this user set in their home, active first; null without a home. Read fresh: Wappi sets them too. */
+export const getWatches = cache(async () => {
+  const { accessToken } = await requirePermission("account:view")
+  return fetchWatches(accessToken).catch((error: unknown) => {
     if (error instanceof ApiError && error.status === 404) return null
     throw error
   })

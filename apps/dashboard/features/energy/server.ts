@@ -9,6 +9,7 @@ import {
   ActivitySchema,
   DeviceApiSchema,
   DeviceDetailApiSchema,
+  ExpectedHourSchema,
   OverviewSchema,
   SeriesPointSchema,
 } from "./schemas"
@@ -57,4 +58,14 @@ export async function fetchActivity(token: string) {
   return z
     .array(ActivitySchema)
     .parse(await apiFetch("/energy/activity", { token }))
+}
+
+export async function fetchExpected(token: string, from: Date, to: Date) {
+  const query = new URLSearchParams({
+    from: from.toISOString(),
+    to: to.toISOString(),
+  })
+  return z
+    .array(ExpectedHourSchema)
+    .parse(await apiFetch(`/expected?${query}`, { token }))
 }

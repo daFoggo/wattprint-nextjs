@@ -118,6 +118,17 @@
       "bill": "See the bill",
       "statistics": "See statistics",
       "settings": "Edit home details"
+    },
+    "chart": {
+      "untitled": "Query result",
+      "average": "Average"
+    },
+    "watch": {
+      "title": "Alert set",
+      "condition": "Tells you {op, select, gt {above} other {below}} {value}",
+      "now": "Now",
+      "until": "Watching until",
+      "view": "View alert"
     }
   },
   "voice": {

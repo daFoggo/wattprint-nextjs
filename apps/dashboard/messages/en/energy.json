@@ -56,7 +56,8 @@
     "quarter": "90 days",
     "deviceTitle": "Device power, last 24 hours",
     "title": "Whole-home power over time",
-    "deviceDescription": "Estimated draw in 5-minute steps"
+    "deviceDescription": "Estimated draw in 5-minute steps",
+    "usual": "Usual"
   },
   "deviceStats": {
     "avgOn": "Average when on",

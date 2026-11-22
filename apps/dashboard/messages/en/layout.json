@@ -6,7 +6,8 @@
     "devices": "Devices",
     "bill": "Bill",
     "settings": "Settings",
-    "copilot": "Wappi"
+    "copilot": "Wappi",
+    "alerts": "Alerts"
   },
   "roles": {
     "customer": "Customer",
@@ -45,6 +46,11 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Your home, its bill and what WattPrint tells you about."
+    "description": "Your home, its bill and what WattPrint tells you about.",
+    "alertsMoved": "Alerts (bill, power, devices, the automatic ones) now live on the <alerts>Alerts</alerts> page."
+  },
+  "alerts": {
+    "title": "Alerts",
+    "description": "What you asked Wappi to watch: the bill, energy, power, each device."
   }
 }

@@ -60,7 +60,15 @@ export const DeviceDetailSchema = DeviceSchema.extend({
   /** This month's pace over a whole year (VND). */
   year_amount: z.number(),
   /** Each day of the month so far, today last. */
-  days: z.array(z.object({ date: z.iso.date(), kwh: z.number() })),
+  days: z.array(
+    z.object({
+      date: z.iso.date(),
+      kwh: z.number(),
+      peak_w: z.number(),
+      /** The longest run that started that day, in minutes. */
+      longest_min: z.number(),
+    })
+  ),
   /** The last 24 hours in 5-minute steps: step start (ms) and average draw. */
   power: z.array(z.object({ ts: z.number(), watts: z.number() })),
   /** Runs started in the last 24 hours, oldest first. */
@@ -84,3 +92,16 @@ export const DeviceDetailApiSchema = DeviceDetailSchema.omit({
   month_amount: true,
   year_amount: true,
 })
+
+/**
+ * GET /expected: the home's expected kWh for an hour from its usage model (P10–P90, P50 the usual) and what the meter
+ * measured (null while the hour runs or when readings are missing). `ts` in ms.
+ */
+export const ExpectedHourSchema = z.object({
+  ts: z.iso.datetime({ offset: true }).transform((v) => Date.parse(v)),
+  p10: z.number(),
+  p50: z.number(),
+  p90: z.number(),
+  kwh: z.number().nullable(),
+})
+export type ExpectedHour = z.infer<typeof ExpectedHourSchema>

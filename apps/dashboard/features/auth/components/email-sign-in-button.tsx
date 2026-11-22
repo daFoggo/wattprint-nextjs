@@ -4,11 +4,7 @@ import { useTranslations } from "next-intl"
 import { Button } from "@workspace/ui/components/hairline/button"
 
 /** Email + password: the Server Action opens Keycloak's login page (WattPrint theme, apps/keycloak-theme). */
-export function EmailSignInButton({
-  action,
-}: {
-  action: () => Promise<void>
-}) {
+export function EmailSignInButton({ action }: { action: () => Promise<void> }) {
   const t = useTranslations("auth.signIn")
   return (
     <form action={action}>

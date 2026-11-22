@@ -118,6 +118,17 @@
       "bill": "Xem hóa đơn",
       "statistics": "Xem thống kê",
       "settings": "Sửa thông tin nhà"
+    },
+    "chart": {
+      "untitled": "Kết quả truy vấn",
+      "average": "Trung bình"
+    },
+    "watch": {
+      "title": "Cảnh báo đã đặt",
+      "condition": "Báo khi {op, select, gt {vượt} other {xuống dưới}} {value}",
+      "now": "Hiện tại",
+      "until": "Theo dõi đến",
+      "view": "Xem cảnh báo"
     }
   },
   "voice": {

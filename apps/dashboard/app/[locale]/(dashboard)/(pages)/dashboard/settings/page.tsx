@@ -4,12 +4,12 @@ import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
 import { PageHead } from "@/components/layout/page-head"
+import { ALERTS_PATH } from "@/config/routes"
+import { Link } from "@/i18n/navigation"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
-import { getDashboard } from "@/features/energy/queries"
 import { saveHomeSettingsAction } from "@/features/home/actions"
 import { HomeSettingsForm } from "@/features/home/components/home-settings"
 import { getHomeSettings, getProvinces } from "@/features/home/queries"
-import { ThresholdTry } from "@/features/insight/components/threshold-try"
 
 import { NoHome } from "../../../_components/no-home"
 
@@ -34,12 +34,6 @@ async function Settings() {
   )
 }
 
-/** A daily limit to try against the last 30 whole days (the alert it would set). */
-async function Threshold() {
-  const data = await getDashboard()
-  return data ? <ThresholdTry days={data.days.slice(0, -1)} /> : null
-}
-
 // The form 7 | the limit to try 5, each streaming on its own.
 export default function SettingsPage() {
   const t = useTranslations("layout.settings")
@@ -52,11 +46,15 @@ export default function SettingsPage() {
             <Settings />
           </Suspense>
         </div>
-        <div className="min-w-0 empty:hidden lg:col-span-5">
-          <Suspense fallback={<TileSkeleton height={280} />}>
-            <Threshold />
-          </Suspense>
-        </div>
+        <p className="text-sm text-muted-foreground lg:col-span-5">
+          {t.rich("alertsMoved", {
+            alerts: (chunks) => (
+              <Link href={ALERTS_PATH} className="text-foreground underline">
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
       </div>
     </>
   )

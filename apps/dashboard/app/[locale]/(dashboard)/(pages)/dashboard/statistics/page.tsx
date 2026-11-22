@@ -50,6 +50,7 @@ async function Power({ className }: Props) {
     <PowerChart
       title={t("title")}
       ranges={power.ranges}
+      usual={power.usual}
       now={power.now}
       className={className}
     />

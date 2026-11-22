@@ -1,6 +1,6 @@
 {
   "alerts": {
-    "title": "Cảnh báo: thiết bị, điện nền, bậc giá",
+    "title": "Cảnh báo: thiết bị, điện nền, bậc giá, mức bạn đặt",
     "open": "{count} cảnh báo cần xem",
     "none": "Không có gì cần xem",
     "resolved": "đã tự hết",
@@ -20,6 +20,44 @@
     "tier_near": {
       "title": "{days, plural, =0 {Kỳ này đã sang bậc {tier_no}} other {Khoảng # ngày nữa sang bậc {tier_no}}}",
       "body": "Từ {from_kwh, number} kWh, mỗi kWh giá {price_per_kwh, number} đ chưa VAT."
+    },
+    "watch_hit": {
+      "title": "{label} đã {op, select, gt {vượt} other {xuống dưới}} {threshold, number}{unit, select, vnd { đ} kwh { kWh} w { W} other {}}",
+      "body": "Lúc kiểm tra: {value, number}{unit, select, vnd { đ} kwh { kWh} w { W} other {}}. {repeat, select, true {Wappi sẽ báo lại ở lần kiểm tra sau nếu vẫn {op, select, gt {vượt} other {dưới}} mức này (ngày, kỳ hoặc giờ tới).} other {Bạn đã nhờ Wappi báo khi điều này xảy ra; cảnh báo này đã tắt.}}"
+    },
+    "watch_broken": {
+      "title": "Không theo dõi được: {label}",
+      "body": "Wappi kiểm tra không được nhiều lần liên tiếp nên đã dừng theo dõi. Hãy nhờ Wappi đặt lại cảnh báo này."
+    },
+    "viewWatch": "Xem cảnh báo",
+    "device_on": {
+      "title": "{device} vừa bật lúc {at}",
+      "body": "Bạn nhờ Wappi báo mỗi lần thiết bị này bật."
+    },
+    "device_off": {
+      "title": "{device} vừa tắt (lần chạy từ {at})",
+      "body": "Bạn nhờ Wappi báo mỗi lần thiết bị này tắt."
+    },
+    "device_long_run": {
+      "title": "{device} chạy quá {threshold, number} phút",
+      "body": "Lần chạy này đã {value, number} phút."
+    },
+    "device_high_power": {
+      "title": "{device} dùng quá {threshold, number} W",
+      "body": "Lần chạy này lên tới {value, number} W."
+    },
+    "allAlerts": "Tất cả cảnh báo",
+    "empty": "Muốn được báo khi tiền điện, công suất hay một thiết bị vượt mức? <set>Đặt cảnh báo</set>.",
+    "usage_anomaly": {
+      "title": "Hôm nay nhà dùng hơn mức thường {excess_kwh, number} kWh (≈ {excess_vnd, number} đ)",
+      "body": "So với một ngày như hôm nay (thời tiết, ngày nghỉ, nếp sinh hoạt), từ {start} nhà dùng nhiều hơn dự kiến.",
+      "weather": "Thời tiết đã làm mức thường cao hơn {weather_kwh, number} kWh, phần vượt nằm ngoài phần đó."
+    },
+    "feedback": {
+      "useful": "Đúng, cảm ơn",
+      "notAnomaly": "Không phải bất thường",
+      "thanks": "Cảm ơn bạn đã xác nhận.",
+      "noted": "Đã ghi nhận, WattPrint sẽ ít báo kiểu này hơn cho nhà bạn."
     }
   },
   "peers": {
@@ -28,9 +66,136 @@
     "median": "Trung vị {homes} hộ",
     "you": "Nhà bạn, {days} ngày"
   },
-  "threshold": {
-    "title": "Kéo đường kẻ để thử ngưỡng cảnh báo: một ngày dùng quá bao nhiêu kWh thì báo",
-    "period": "trong {days} ngày qua",
-    "label": "Ngưỡng kWh mỗi ngày"
+  "watches": {
+    "title": "Cảnh báo bạn đã đặt",
+    "empty": "Chưa có cảnh báo nào. Đặt ở đây, hoặc <wappi>nhờ Wappi</wappi> theo dõi điều bạn muốn.",
+    "condition": {
+      "gt": "Báo khi vượt {value}",
+      "lt": "Báo khi xuống dưới {value}"
+    },
+    "status": {
+      "active": "Đang theo dõi",
+      "fired": "Đã báo",
+      "expired": "Hết hạn",
+      "cancelled": "Đã huỷ",
+      "broken": "Lỗi"
+    },
+    "cancel": "Huỷ cảnh báo {label}",
+    "confirm": "Huỷ",
+    "cancelling": "Đang huỷ",
+    "cancelled": "Đã huỷ",
+    "meter": "Mức hiện tại so với ngưỡng",
+    "noValue": "Chưa có số đo.",
+    "lastValue": "Lần đo gần nhất: {value} lúc {at}.",
+    "errors": {
+      "invalid": "Không đặt được cảnh báo này. Kiểm tra lại các ô.",
+      "already_crossed": "Giá trị hiện đã là {value}, đã qua ngưỡng này. Chọn ngưỡng khác.",
+      "too_many": "Bạn đã có 10 cảnh báo đang theo dõi. Huỷ bớt một cái trước.",
+      "no_tariff": "Nhà chưa có biểu giá điện nên chưa tính được tiền điện.",
+      "no_device": "Không tìm thấy thiết bị này trong nhà.",
+      "ends_in_past": "Ngày kết thúc đã qua.",
+      "bad_device": "Phần điện chưa nhận ra thiết bị luôn bật, không có lần chạy nào để báo."
+    },
+    "approxMoney": "(≈ {money})",
+    "lastFired": "Lần báo gần nhất: {at}.",
+    "run": {
+      "device_on": "Báo mỗi lần {device} bật",
+      "device_off": "Báo mỗi lần {device} tắt",
+      "device_run_min": "Báo khi {device} chạy quá {value} một lần",
+      "device_power_w": "Báo khi {device} dùng quá {value}"
+    },
+    "repeat": {
+      "day": "Mỗi ngày",
+      "cycle": "Mỗi kỳ",
+      "hour": "Mỗi giờ",
+      "run": "Mỗi lần chạy"
+    }
+  },
+  "builder": {
+    "title": "Đặt cảnh báo",
+    "hint": "Chọn điều cần theo dõi, kéo vạch trên lịch sử của nhà bạn và xem mức đó đã báo bao nhiêu lần.",
+    "what": "Theo dõi điều gì",
+    "noHistory": "Chưa đủ lịch sử để vẽ ngưỡng. Quay lại sau vài ngày.",
+    "noFigure": "Chưa có số đo",
+    "daily": {
+      "name": "Tiền điện mỗi ngày",
+      "now": "Hôm nay đến giờ: {value}",
+      "title": "Báo khi tiền điện một ngày vượt vạch",
+      "period": "trong {count} ngày qua, nếu đặt ở mức này",
+      "label": "Tiền điện mỗi ngày",
+      "repeat": "Lặp lại mỗi ngày",
+      "what": "tiền điện một ngày",
+      "endsOnHint": "Để trống: đến hết hôm nay"
+    },
+    "cycle": {
+      "name": "Tiền điện cả kỳ",
+      "now": "Kỳ này đến giờ: {value}",
+      "title": "Báo khi tiền điện của kỳ vượt vạch",
+      "period": "trong {count} kỳ qua, nếu đặt ở mức này",
+      "label": "Tiền điện kỳ này",
+      "repeat": "Lặp lại mỗi kỳ",
+      "what": "tiền điện cả kỳ",
+      "endsOnHint": "Để trống: đến hết kỳ hoá đơn"
+    },
+    "power": {
+      "name": "Công suất",
+      "now": "Đang dùng: {value}",
+      "title": "Báo khi công suất vượt vạch",
+      "period": "trong {count} giờ qua (trung bình từng giờ), nếu đặt ở mức này",
+      "label": "Công suất đang dùng",
+      "repeat": "Lặp lại, tối đa mỗi giờ một lần",
+      "what": "công suất",
+      "endsOnHint": "Để trống: 30 ngày"
+    },
+    "devices": {
+      "name": "Thiết bị",
+      "now": "Bật, tắt, chạy quá lâu"
+    },
+    "summary": "Báo khi {what} vượt {value}",
+    "approxKwh": "(≈ {kwh})",
+    "save": "Lưu cảnh báo",
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu cảnh báo",
+    "endsOn": "Theo dõi đến ngày",
+    "endsOnPlaceholder": "Chọn hoặc gõ ngày"
+  },
+  "devices": {
+    "title": "Thiết bị bật, tắt",
+    "hint": "Báo mỗi lần thiết bị bật hoặc tắt, theo những gì WattPrint nhận ra từ công tơ tổng.",
+    "tileTitle": "Cảnh báo cho thiết bị này",
+    "all": "Tất cả cảnh báo",
+    "level": "Mức cần theo dõi",
+    "device_on": {
+      "switch": "Báo khi bật",
+      "label": "{device} bật"
+    },
+    "device_off": {
+      "switch": "Báo khi tắt",
+      "label": "{device} tắt"
+    },
+    "device_run_min": {
+      "name": "Chạy quá lâu",
+      "title": "Báo khi một lần chạy của {device} dài hơn vạch",
+      "label": "{device} chạy quá lâu",
+      "summary": "Báo mỗi lần {device} chạy quá {value}"
+    },
+    "device_power_w": {
+      "name": "Công suất quá cao",
+      "title": "Báo khi {device} dùng công suất vượt vạch",
+      "label": "{device} dùng quá nhiều",
+      "summary": "Báo mỗi lần {device} dùng quá {value}"
+    },
+    "device_kwh_today": {
+      "name": "Tốn nhiều mỗi ngày",
+      "title": "Báo khi {device} tốn nhiều hơn vạch trong một ngày",
+      "label": "Tiền điện mỗi ngày của {device}",
+      "summary": "Báo khi {device} tốn quá {value} một ngày"
+    },
+    "period": "trong {count} ngày qua, nếu đặt ở mức này",
+    "noHistory": "Tháng này chưa đủ ngày để vẽ ngưỡng.",
+    "approxKwh": "(≈ {kwh})",
+    "save": "Lưu cảnh báo",
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu cảnh báo"
   }
 }

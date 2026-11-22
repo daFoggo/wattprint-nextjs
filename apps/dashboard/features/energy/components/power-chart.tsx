@@ -24,12 +24,15 @@ export function PowerChart({
   title,
   description,
   ranges,
+  usual,
   now,
   className,
 }: {
   title: string
   description?: string
   ranges: Partial<Record<Range, Point[]>>
+  /** The home's usual draw under each step of a range (the usage model's P50), drawn as the comparison line. */
+  usual?: Partial<Record<Range, number[]>>
   /** When the data was read: the step it falls in is still running and drawn dashed. */
   now: number
   className?: string
@@ -60,6 +63,8 @@ export function PowerChart({
         label={title}
         buckets={points.map((p) => p.ts)}
         values={points.map((p) => p.watts)}
+        previous={usual?.[range] ?? null}
+        previousLabel={t("usual")}
         interval={INTERVAL[range]}
         unit="W"
         format={{ maximumFractionDigits: 0 }}

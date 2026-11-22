@@ -81,9 +81,12 @@ function TierNext({ from, to }: { from: Tier; to: Tier }) {
  */
 export function BillSummary({
   bill,
+  usual,
   className,
 }: {
   bill: CurrentBill
+  /** Today's measured kWh against what the home's usage model expected for those hours; none without a model. */
+  usual?: { actual: number; expected: number } | null
   className?: string
 }) {
   const t = useTranslations("billing")
@@ -102,6 +105,10 @@ export function BillSummary({
       value: x.amount,
       color: tierColor(x.tier_no),
     }))
+  // Within 5 % of the usual reads "as usual": the model's band is wider than that.
+  const vsUsual =
+    usual && usual.expected > 0 ? usual.actual / usual.expected - 1 : null
+  const price = bill.kwh > 0 ? bill.amount_total / bill.kwh : 0
   parts.push({
     key: "vat",
     label: t("vat", { vat: Math.round(bill.vat_rate * 100) }),
@@ -160,6 +167,22 @@ export function BillSummary({
             ),
           })}
         </p>
+        {vsUsual !== null ? (
+          <p className="text-sm text-muted-foreground">
+            {Math.abs(vsUsual) < 0.05
+              ? t("billSummary.asUsual")
+              : t("billSummary.vsUsual", {
+                  higher: String(vsUsual > 0),
+                  pct: new Intl.NumberFormat(locale, {
+                    style: "percent",
+                    maximumFractionDigits: 0,
+                  }).format(Math.abs(vsUsual)),
+                  amount: vnd.format(
+                    Math.abs(usual!.actual - usual!.expected) * price
+                  ),
+                })}
+          </p>
+        ) : null}
         <PillLink href={BILL_PATH} className="ml-auto">
           {t("billSummary.viewDetails")}
         </PillLink>

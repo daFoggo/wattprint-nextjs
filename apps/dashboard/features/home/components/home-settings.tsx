@@ -57,13 +57,9 @@ export function HomeSettingsForm({
     ])
   )
   const notify: SettingsSection = {
-    title: t("notify"),
-    description: t("notifyHint"),
-    fields: [
-      { type: "toggle", name: "notify_anomaly", label: t("anomaly") },
-      { type: "toggle", name: "notify_tier", label: t("tier") },
-      { type: "toggle", name: "weekly_summary", label: t("weekly") },
-    ],
+    title: t("summary"),
+    description: t("summaryHint"),
+    fields: [{ type: "toggle", name: "weekly_summary", label: t("weekly") }],
   }
   const homeSections: SettingsSection[] = [
     {
@@ -153,14 +149,15 @@ function HomeLocation({
   const [error, setError] = useState<string | null>(null)
   const [pending, start] = useTransition()
   return (
-    <section className="grid gap-3 rounded-3xl border border-border px-4 py-4 md:px-5 md:py-5">
+    // Title left, field right from md, like the SettingsForm sections below it.
+    <section className="grid gap-3 rounded-3xl border border-border px-4 py-4 md:grid-cols-3 md:gap-6 md:px-5 md:py-5">
       <div className="min-w-0">
         <h3 className="text-sm font-medium">{t("location")}</h3>
         <p className="mt-0.5 text-xs leading-normal text-muted-foreground">
           {t("locationHint")}
         </p>
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 md:col-span-2">
         <Combobox
           label={t("location")}
           options={options}

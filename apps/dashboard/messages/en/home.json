@@ -30,6 +30,8 @@
     "ownerOnly": "Only the home's owner can change it.",
     "invalid": "That value isn't valid.",
     "memberNote": "{name} is managed by its owner. Here you choose what WattPrint tells you.",
-    "unset": "Not set"
+    "unset": "Not set",
+    "summary": "Email summary",
+    "summaryHint": "One email a week summing up your energy and bill."
   }
 }

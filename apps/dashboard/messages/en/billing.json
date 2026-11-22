@@ -9,7 +9,9 @@
     "nextTier": "Tier {tier} from {kwh} kWh",
     "topTier": "Tier {tier}, the top one",
     "today": "Today <amount></amount> · {kwh} kWh",
-    "viewDetails": "View bill details"
+    "viewDetails": "View bill details",
+    "vsUsual": "Today is {pct} {higher, select, true {above} other {below}} your usual (≈ {amount})",
+    "asUsual": "Today is about your usual"
   },
   "history": {
     "thisYear": "Recent cycles",
@@ -29,7 +31,23 @@
     "nextTitle": "Tier {tier} starts on {date}",
     "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer.",
     "unavailable": "At least 7 days with full readings are needed to forecast; check back in a few days.",
-    "why": "Learnt from {days} days with full readings; {pct} of the cycle has passed."
+    "why": "Learnt from {days} days with full readings; {pct} of the cycle has passed.",
+    "descriptionContext": "From a model learnt on your own home: weather, days off and daily routine, through {end}.",
+    "range": "About {low} – {high} ({kwhLow}–{kwhHigh} kWh)",
+    "change": "{up, select, true {Up} other {Down}} {amount} since yesterday, mostly from {top}.",
+    "parts": {
+      "used": "yesterday's use against the forecast",
+      "weather": "the weather ahead",
+      "calendar": "days off and holidays",
+      "occupancy": "your routine",
+      "trend": "the recent trend",
+      "unexplained": "other factors"
+    },
+    "nextLikely": "About a {pct} chance of reaching tier {tier} around {date}",
+    "accuracyBacktest": "Tried on {cycles, plural, one {# past cycle} other {# past cycles}}: off by {pct} on average.",
+    "accuracyCycle": "Last cycle's mid-cycle forecast was off by {pct} from the real bill.",
+    "simulated": "Simulated heater",
+    "scenario": "Demo scenario running"
   },
   "overview": {
     "title": "This bill, {start} – {end}",
@@ -44,7 +62,8 @@
     "less": "Less",
     "lastMonth": "Last cycle {amount}",
     "partial": "Missing data",
-    "straddle": "Tariff changed this cycle"
+    "straddle": "Tariff changed this cycle",
+    "forecastRange": "About {low} – {high}"
   },
   "ladder": {
     "title": "Tier prices and what you used in each",

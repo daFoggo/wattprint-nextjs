@@ -11,10 +11,12 @@ import { ApiError } from "@/lib/errors"
 import type messages from "@/messages/vi/energy.json"
 
 import { DAY, dateStart, localDate, localMidnight } from "./days"
+import { todaySoFar, usualWatts } from "./expected"
 import {
   fetchActivity,
   fetchDevice,
   fetchDevices,
+  fetchExpected,
   fetchOverview,
   fetchSeries,
 } from "./server"
@@ -104,13 +106,34 @@ export const getPower = cache(async () => {
       ] as const
     })
   )
-  return {
-    now,
-    ranges: Object.fromEntries(entries) as Record<
-      PowerRange,
-      { ts: number; watts: number }[]
-    >,
-  }
+  const ranges = Object.fromEntries(entries) as Record<
+    PowerRange,
+    { ts: number; watts: number }[]
+  >
+  // The model's usual for the day range (hourly P50 under each 15-minute step); none without a model.
+  const hours = await fetchExpected(
+    accessToken,
+    new Date(now - DAY - 3_600_000),
+    new Date(now + 3_600_000)
+  )
+  const day = usualWatts(
+    ranges.day.map((p) => p.ts),
+    hours
+  )
+  return { now, ranges, usual: day ? { day } : {} }
+})
+
+/** Today's measured kWh against what the home's model expected for those hours; null without a model or a home. */
+export const getTodayUsual = cache(async () => {
+  const overview = await getOverview()
+  if (!overview) return null
+  const { now, accessToken } = overview
+  const hours = await fetchExpected(
+    accessToken,
+    new Date(localMidnight(now)),
+    new Date(now)
+  )
+  return todaySoFar(hours, now)
 })
 
 /** VND per kWh with VAT, for a home without a tariff (about the 2025 tariff's average). */

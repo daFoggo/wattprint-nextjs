@@ -19,3 +19,38 @@ export function forecastConfidence(f: Forecast): Confidence {
   if (f.basis_days < 14 || passed < 0.2) return "low"
   return f.basis_days >= 21 && passed >= 0.5 ? "high" : "medium"
 }
+
+/** The reasons a forecast may name (backend factor groups, plus what was used and the rest). */
+export const CHANGE_PARTS = [
+  "used",
+  "weather",
+  "calendar",
+  "occupancy",
+  "trend",
+  "unexplained",
+] as const
+export type ChangePart = (typeof CHANGE_PARTS)[number]
+
+const CHANGE_MIN_VND = 10_000
+const CHANGE_MIN_SHARE = 0.02
+
+/**
+ * Why the forecast moved since yesterday, biggest reason first; null when the move is under 2 % and 10.000 ₫ (the
+ * backend's own bar) or there is nothing to explain.
+ */
+export function changeSentence(
+  f: Forecast
+): { amount: number; top: ChangePart; parts: [ChangePart, number][] } | null {
+  if (!f.change) return null
+  const bar = Math.min(CHANGE_MIN_VND, CHANGE_MIN_SHARE * f.amount)
+  if (Math.abs(f.change.amount) < bar) return null
+  const parts = Object.entries(f.change.parts)
+    .filter(
+      (e): e is [ChangePart, number] =>
+        (CHANGE_PARTS as readonly string[]).includes(e[0]) &&
+        Math.round(e[1]) !== 0
+    )
+    .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+  if (!parts.length) return null
+  return { amount: f.change.amount, top: parts[0]![0], parts }
+}

@@ -50,6 +50,8 @@ export interface AreaChartProps extends Omit<React.HTMLAttributes<HTMLDivElement
   onLayoutChange?: (layout: AreaLayout) => void;
   format?: Intl.NumberFormatOptions;
   locales?: string | string[];
+  /** After every figure, e.g. "kWh" (patched (hairline/patch.mjs): Intl has no energy units). */
+  unit?: string;
 }
 
 const EASE = "cubic-bezier(0.16,1,0.3,1)";
@@ -172,6 +174,7 @@ export function AreaChart({
   onLayoutChange,
   format,
   locales,
+  unit, // patched (hairline/patch.mjs)
   className = "",
   ...props
 }: AreaChartProps) {
@@ -299,7 +302,7 @@ export function AreaChart({
     setActive(Math.min(n - 1, Math.max(0, active === null ? from : moves[e.key])));
   };
 
-  const fmt = (v: number) => new Intl.NumberFormat(locales, format).format(v);
+  const fmt = (v: number) => new Intl.NumberFormat(locales, format).format(v) + (unit ? ` ${unit}` : ""); // patched (hairline/patch.mjs): the unit
   const totalOf = (s: AreaSeries) => (active !== null ? (s.values[active] ?? 0) : s.values.reduce((sum, v) => sum + v, 0));
   const shownTotal = series.filter(on).reduce((sum, s) => sum + totalOf(s), 0);
   const scaleFormat: Intl.NumberFormatOptions =
@@ -356,7 +359,7 @@ export function AreaChart({
           </div>
         </div>
         <p className="mt-0.5 text-[22px] font-medium leading-tight tracking-[-0.03em] @md:text-[26px] text-foreground">
-          <NumberRoll value={visible ? shownTotal : 0} format={format} locales={locales} duration={active !== null ? 600 : 1000} />
+          <NumberRoll value={visible ? shownTotal : 0} format={format} locales={locales} duration={active !== null ? 600 : 1000} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
         </p>
         <p className="mt-1 whitespace-nowrap text-[11.5px] text-muted-foreground @md:text-[12.5px]">
           <TextMorph>{active !== null ? name(active) : (caption ?? " ")}</TextMorph>
@@ -492,7 +495,7 @@ export function AreaChart({
                 </span>
                 <span className="mt-0.5 flex items-baseline gap-1">
                   <span className="text-[13.5px] font-medium tracking-[-0.01em] text-foreground @md:text-[14.5px]">
-                    <NumberRoll value={visible && shown ? value : 0} format={format} locales={locales} duration={600} />
+                    <NumberRoll value={visible && shown ? value : 0} format={format} locales={locales} duration={600} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
                   </span>
                   <span className="text-[10.5px] text-muted-foreground @md:text-[11px]">
                     <NumberRoll value={visible && shown ? share : 0} format={{ style: "percent" }} duration={600} />

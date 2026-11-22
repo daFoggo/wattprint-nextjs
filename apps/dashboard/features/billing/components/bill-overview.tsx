@@ -65,10 +65,16 @@ export function BillOverview({
           {
             label: t("overview.forecast"),
             value: p.amount,
-            note: t("overview.forecastNote", {
-              kwh: kwh.format(Math.round(p.kwh)),
-              tier: p.tier,
-            }),
+            note:
+              p.method === "context"
+                ? t("overview.forecastRange", {
+                    low: vnd.format(p.amount_p10),
+                    high: vnd.format(p.amount_p90),
+                  })
+                : t("overview.forecastNote", {
+                    kwh: kwh.format(Math.round(p.kwh)),
+                    tier: p.tier,
+                  }),
           },
         ]
       : []),
@@ -141,10 +147,21 @@ export function BillOverview({
       {p?.next ? (
         <Alert
           tone="warning"
-          title={t("forecast.nextTitle", {
-            tier: p.next.tier.tier_no,
-            date: date(p.next.at),
-          })}
+          title={
+            p.next.tier.probability !== null
+              ? t("forecast.nextLikely", {
+                  pct: new Intl.NumberFormat(locale, {
+                    style: "percent",
+                    maximumFractionDigits: 0,
+                  }).format(p.next.tier.probability),
+                  tier: p.next.tier.tier_no,
+                  date: date(p.next.at),
+                })
+              : t("forecast.nextTitle", {
+                  tier: p.next.tier.tier_no,
+                  date: date(p.next.at),
+                })
+          }
         >
           {t("forecast.nextBody", {
             price: vnd.format(p.next.tier.price_per_kwh),

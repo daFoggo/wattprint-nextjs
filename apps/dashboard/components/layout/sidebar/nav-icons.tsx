@@ -1,4 +1,5 @@
 import {
+  IconBell,
   IconChartBar,
   IconDevices,
   IconLayoutDashboard,
@@ -14,6 +15,7 @@ const NAV_ICONS: Record<NavIconName, Icon> = {
   overview: IconLayoutDashboard,
   statistics: IconChartBar,
   devices: IconDevices,
+  alerts: IconBell,
   bill: IconReceipt,
   settings: IconSettings,
 }

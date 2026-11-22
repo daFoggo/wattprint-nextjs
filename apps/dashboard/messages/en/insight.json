@@ -1,6 +1,6 @@
 {
   "alerts": {
-    "title": "Alerts: devices, standby, price tiers",
+    "title": "Alerts: devices, standby, price tiers, your thresholds",
     "open": "{count, plural, one {# alert} other {# alerts}} to look at",
     "none": "Nothing to look at",
     "resolved": "cleared",
@@ -20,6 +20,44 @@
     "tier_near": {
       "title": "{days, plural, =0 {This cycle is now in tier {tier_no}} one {Tier {tier_no} in about a day} other {Tier {tier_no} in about # days}}",
       "body": "From {from_kwh, number} kWh, each kWh costs {price_per_kwh, number} ₫ before VAT."
+    },
+    "watch_hit": {
+      "title": "{label} went {op, select, gt {above} other {below}} {threshold, number}{unit, select, vnd { ₫} kwh { kWh} w { W} other {}}",
+      "body": "At the check: {value, number}{unit, select, vnd { ₫} kwh { kWh} w { W} other {}}. {repeat, select, true {Wappi will tell you again next time if it is still {op, select, gt {over} other {under}} (the next day, cycle or hour).} other {You asked Wappi to tell you when this happened; this alert is now off.}}"
+    },
+    "watch_broken": {
+      "title": "Could not keep watching: {label}",
+      "body": "Wappi failed to check this several times in a row and stopped. Ask Wappi to set it again."
+    },
+    "viewWatch": "View alert",
+    "device_on": {
+      "title": "{device} turned on at {at}",
+      "body": "You asked Wappi to tell you each time it turns on."
+    },
+    "device_off": {
+      "title": "{device} turned off (run from {at})",
+      "body": "You asked Wappi to tell you each time it turns off."
+    },
+    "device_long_run": {
+      "title": "{device} ran over {threshold, number} min",
+      "body": "This run has lasted {value, number} min."
+    },
+    "device_high_power": {
+      "title": "{device} drew over {threshold, number} W",
+      "body": "This run reached {value, number} W."
+    },
+    "allAlerts": "All alerts",
+    "empty": "Want to know when the bill, power or a device goes past a level? <set>Set an alert</set>.",
+    "usage_anomaly": {
+      "title": "Today your home used {excess_kwh, number} kWh more than usual (≈ {excess_vnd, number} ₫)",
+      "body": "Against a day like today (weather, days off, routine), usage since {start} is above what was expected.",
+      "weather": "The weather already raised the usual by {weather_kwh, number} kWh; the excess is beyond that."
+    },
+    "feedback": {
+      "useful": "Right, thanks",
+      "notAnomaly": "Not an anomaly",
+      "thanks": "Thanks for confirming.",
+      "noted": "Noted: WattPrint will raise this kind of alert less for your home."
     }
   },
   "peers": {
@@ -28,9 +66,136 @@
     "median": "Median of {homes} homes",
     "you": "Your home, {days} days"
   },
-  "threshold": {
-    "title": "Drag the line to try an alert: how many kWh in a day is too many",
-    "period": "in the last {days} days",
-    "label": "Daily kWh limit"
+  "watches": {
+    "title": "Alerts you set",
+    "empty": "No alerts yet. Set one here, or <wappi>ask Wappi</wappi> to watch what you want.",
+    "condition": {
+      "gt": "Tells you above {value}",
+      "lt": "Tells you below {value}"
+    },
+    "status": {
+      "active": "Watching",
+      "fired": "Told you",
+      "expired": "Ended",
+      "cancelled": "Cancelled",
+      "broken": "Failed"
+    },
+    "cancel": "Cancel the alert {label}",
+    "confirm": "Cancel",
+    "cancelling": "Cancelling",
+    "cancelled": "Cancelled",
+    "meter": "Now against the threshold",
+    "noValue": "No reading yet.",
+    "lastValue": "Last reading: {value} at {at}.",
+    "errors": {
+      "invalid": "This alert could not be set. Check the fields.",
+      "already_crossed": "It is already {value}, past this threshold. Pick another.",
+      "too_many": "You already have 10 active alerts. Cancel one first.",
+      "no_tariff": "The home has no tariff yet, so the bill cannot be priced.",
+      "no_device": "That device is not in this home.",
+      "ends_in_past": "The end date has passed.",
+      "bad_device": "The unknown remainder is always on, so it has no runs to tell about."
+    },
+    "approxMoney": "(≈ {money})",
+    "lastFired": "Last told: {at}.",
+    "run": {
+      "device_on": "Tells you each time {device} turns on",
+      "device_off": "Tells you each time {device} turns off",
+      "device_run_min": "Tells you when {device} runs over {value} at a time",
+      "device_power_w": "Tells you when {device} draws over {value}"
+    },
+    "repeat": {
+      "day": "Daily",
+      "cycle": "Each cycle",
+      "hour": "Hourly",
+      "run": "Each run"
+    }
+  },
+  "builder": {
+    "title": "Set an alert",
+    "hint": "Pick what to watch, drag the line over your home's history and see how often it would have told you.",
+    "what": "What to watch",
+    "noHistory": "Not enough history to draw a threshold yet. Come back in a few days.",
+    "noFigure": "No reading yet",
+    "daily": {
+      "name": "Daily cost",
+      "now": "Today so far: {value}",
+      "title": "Tell me when a day costs more than the line",
+      "period": "in the last {count} days, at this level",
+      "label": "Daily cost",
+      "repeat": "Repeat every day",
+      "what": "a day's cost",
+      "endsOnHint": "Empty: until the end of today"
+    },
+    "cycle": {
+      "name": "Cycle bill",
+      "now": "This cycle so far: {value}",
+      "title": "Tell me when a cycle's bill passes the line",
+      "period": "in the last {count} cycles, at this level",
+      "label": "This cycle's bill",
+      "repeat": "Repeat every cycle",
+      "what": "the cycle's bill",
+      "endsOnHint": "Empty: until the billing cycle ends"
+    },
+    "power": {
+      "name": "Power",
+      "now": "In use: {value}",
+      "title": "Tell me when power passes the line",
+      "period": "in the last {count} hours (hourly average), at this level",
+      "label": "Power in use",
+      "repeat": "Repeat, at most once an hour",
+      "what": "power",
+      "endsOnHint": "Empty: 30 days"
+    },
+    "devices": {
+      "name": "Devices",
+      "now": "On, off, running too long"
+    },
+    "summary": "Tells you when {what} passes {value}",
+    "approxKwh": "(≈ {kwh})",
+    "save": "Save alert",
+    "saving": "Saving…",
+    "saved": "Alert saved",
+    "endsOn": "Watch until",
+    "endsOnPlaceholder": "Pick or type a date"
+  },
+  "devices": {
+    "title": "Devices on and off",
+    "hint": "Tells you each time a device turns on or off, as WattPrint tells it apart on the main meter.",
+    "tileTitle": "Alerts for this device",
+    "all": "All alerts",
+    "level": "Level to watch",
+    "device_on": {
+      "switch": "When it turns on",
+      "label": "{device} turned on"
+    },
+    "device_off": {
+      "switch": "When it turns off",
+      "label": "{device} turned off"
+    },
+    "device_run_min": {
+      "name": "Runs too long",
+      "title": "Tell me when a run of {device} lasts longer than the line",
+      "label": "{device} runs too long",
+      "summary": "Tells you each time {device} runs over {value}"
+    },
+    "device_power_w": {
+      "name": "Draws too much",
+      "title": "Tell me when {device} draws more than the line",
+      "label": "{device} draws too much",
+      "summary": "Tells you each time {device} draws over {value}"
+    },
+    "device_kwh_today": {
+      "name": "Costs too much a day",
+      "title": "Tell me when {device} costs more than the line in a day",
+      "label": "{device}'s daily cost",
+      "summary": "Tells you when {device} costs over {value} a day"
+    },
+    "period": "in the last {count} days, at this level",
+    "noHistory": "Not enough days this month to draw a threshold.",
+    "approxKwh": "(≈ {kwh})",
+    "save": "Save alert",
+    "saving": "Saving…",
+    "saved": "Alert saved"
   }
 }

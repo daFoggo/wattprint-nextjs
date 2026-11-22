@@ -8,16 +8,24 @@ import { Skeleton } from "@workspace/ui/components/hairline/skeleton"
 
 import { PageHead } from "@/components/layout/page-head"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
-import { DEVICES_PATH } from "@/config/routes"
+import { ALERTS_PATH, DEVICES_PATH } from "@/config/routes"
 import { getCurrentBill } from "@/features/billing/queries"
 import { DeviceAbout } from "@/features/energy/components/device-about"
 import { DeviceDays } from "@/features/energy/components/device-days"
 import { DeviceIcon } from "@/components/shared/device-icon"
-import { DeviceChip } from "@/components/shared/nav-links"
+import { CardLink, DeviceChip } from "@/components/shared/nav-links"
+import { Tile } from "@/components/shared/tile"
 import { DeviceStats } from "@/features/energy/components/device-stats"
 import { DeviceTimeline } from "@/features/energy/components/device-timeline"
 import { PowerChart } from "@/features/energy/components/power-chart"
 import { getDashboard, getDevice, getDevices } from "@/features/energy/queries"
+import {
+  saveWatchAction,
+  setDeviceEventAction,
+} from "@/features/insight/actions"
+import { DeviceAlertTile } from "@/features/insight/components/device-alerts"
+import { getWatches } from "@/features/insight/queries"
+import { avgPrice } from "@/features/insight/sources"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("layout.device")
@@ -165,16 +173,52 @@ async function Log({ params, className }: Slot) {
   )
 }
 
+/** Sense's device alerts: on/off switches and a level to watch each run or day, set on this month's days. */
+async function Watches({
+  params,
+  className,
+}: {
+  params: Params
+  className?: string
+}) {
+  const [device, watches, bill, t] = await Promise.all([
+    load(params),
+    getWatches(),
+    getCurrentBill(),
+    getTranslations("insight.devices"),
+  ])
+  // The unknown remainder is always on: no runs to tell about.
+  if (!device || !watches || device.type === "other") return null
+  return (
+    <Tile
+      title={t("tileTitle")}
+      action={<CardLink href={ALERTS_PATH}>{t("all")}</CardLink>}
+      className={className}
+    >
+      <DeviceAlertTile
+        device={{ id: device.id, name: device.name, type: device.type }}
+        days={device.days}
+        price={avgPrice(bill)}
+        watches={watches}
+        save={saveWatchAction}
+        setEvent={setDeviceEventAction}
+      />
+    </Tile>
+  )
+}
+
 // Rows on lg (12 columns), tiles paired by their natural height so a row's edges line up:
 //   the figures 12
 //   every day this month 7         | the log of its runs 5
 //   the last 24 hours' power 8     | how it compares, and a tip 4
+//   its alerts 12
 const TILE = {
   stats: "lg:col-span-12",
   days: "lg:col-span-7",
   log: "lg:col-span-5",
   power: "lg:col-span-8",
   about: "lg:col-span-4",
+  watches: "lg:col-span-12",
 }
 
 export default function DevicePage({ params }: { params: Params }) {
@@ -208,6 +252,11 @@ export default function DevicePage({ params }: { params: Params }) {
           fallback={<TileSkeleton height={230} className={TILE.about} />}
         >
           <About params={params} className={TILE.about} />
+        </Suspense>
+        <Suspense
+          fallback={<TileSkeleton height={280} className={TILE.watches} />}
+        >
+          <Watches params={params} className={TILE.watches} />
         </Suspense>
       </div>
     </>

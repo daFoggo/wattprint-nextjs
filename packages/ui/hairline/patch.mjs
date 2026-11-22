@@ -176,6 +176,36 @@ export const PATCHES = [
     to: '<NumberRoll value={visible ? t.value : 0} format={whole} locales={locales} duration={800} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />',
   },
   {
+    file: "area-chart.tsx",
+    why: "Intl has no kWh or W unit: Wappi's charts put the unit right after each figure, not in the title.",
+    from: "  format?: Intl.NumberFormatOptions;\n  locales?: string | string[];\n}\n\nconst EASE",
+    to: '  format?: Intl.NumberFormatOptions;\n  locales?: string | string[];\n  /** After every figure, e.g. "kWh" (patched (hairline/patch.mjs): Intl has no energy units). */\n  unit?: string;\n}\n\nconst EASE',
+  },
+  {
+    file: "area-chart.tsx",
+    why: "Takes the `unit` prop above.",
+    from: "  format,\n  locales,\n  className = \"\",\n  ...props\n}: AreaChartProps) {",
+    to: "  format,\n  locales,\n  unit, // patched (hairline/patch.mjs)\n  className = \"\",\n  ...props\n}: AreaChartProps) {",
+  },
+  {
+    file: "area-chart.tsx",
+    why: "Readouts and the hidden table carry the unit.",
+    from: "  const fmt = (v: number) => new Intl.NumberFormat(locales, format).format(v);",
+    to: '  const fmt = (v: number) => new Intl.NumberFormat(locales, format).format(v) + (unit ? ` ${unit}` : ""); // patched (hairline/patch.mjs): the unit',
+  },
+  {
+    file: "area-chart.tsx",
+    why: "The total carries the unit.",
+    from: "<NumberRoll value={visible ? shownTotal : 0} format={format} locales={locales} duration={active !== null ? 600 : 1000} />",
+    to: '<NumberRoll value={visible ? shownTotal : 0} format={format} locales={locales} duration={active !== null ? 600 : 1000} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />',
+  },
+  {
+    file: "area-chart.tsx",
+    why: "The series tiles carry the unit.",
+    from: "<NumberRoll value={visible && shown ? value : 0} format={format} locales={locales} duration={600} />",
+    to: '<NumberRoll value={visible && shown ? value : 0} format={format} locales={locales} duration={600} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />',
+  },
+  {
     file: "donut-chart.tsx",
     why: "Intl has no kWh or W unit: the Overview puts the unit right after each figure, not in the title.",
     from: "  centerLabel?: string;\n",

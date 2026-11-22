@@ -6,7 +6,8 @@
     "devices": "Thiết bị",
     "bill": "Hóa đơn",
     "settings": "Cài đặt",
-    "copilot": "Wappi"
+    "copilot": "Wappi",
+    "alerts": "Cảnh báo"
   },
   "roles": {
     "customer": "Khách hàng",
@@ -45,6 +46,11 @@
   },
   "settings": {
     "title": "Cài đặt",
-    "description": "Thông tin nhà, hóa đơn và những gì WattPrint báo cho bạn."
+    "description": "Thông tin nhà, hóa đơn và những gì WattPrint báo cho bạn.",
+    "alertsMoved": "Cảnh báo (tiền điện, công suất, thiết bị, cảnh báo tự động) đã gom về trang <alerts>Cảnh báo</alerts>."
+  },
+  "alerts": {
+    "title": "Cảnh báo",
+    "description": "Những gì bạn nhờ Wappi canh: tiền điện, điện năng, công suất, từng thiết bị."
   }
 }
