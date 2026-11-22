@@ -127,11 +127,11 @@ export function BillSummary({
         format={VND}
         locales={locale}
       />
-      {/* The tier card takes what height the row adds, so the foot stays at the bottom. */}
+      {/* The tier card takes what height the row adds, its content centred, so the foot stays at the bottom. */}
       {tier?.to_kwh != null && next ? (
         // fillUsed (a local patch): the kWh used fill the tube from the left, the figure is what is left.
         <TokenBucket
-          className="flex-1"
+          className="flex flex-1 flex-col justify-center"
           title={t("tier", { tier: tier.tier_no })}
           header={<TierNow tier={tier} />}
           footer={<TierNext from={tier} to={next} />}

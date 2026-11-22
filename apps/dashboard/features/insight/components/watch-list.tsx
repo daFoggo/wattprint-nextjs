@@ -5,13 +5,13 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { Badge, type BadgeTone } from "@workspace/ui/components/hairline/badge"
 import { ConfirmAction } from "@workspace/ui/components/hairline/confirm-action"
+import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { UsageMeter } from "@workspace/ui/components/hairline/usage-meter"
 
-import { DeviceChip } from "@/components/shared/nav-links"
+import { DeviceChip, PillLink } from "@/components/shared/nav-links"
 import { COPILOT_PATH, DEVICES_PATH } from "@/config/routes"
-import { Link } from "@/i18n/navigation"
 
-import { formatFigure, unitLabel, type Watch } from "../schemas"
+import { formatFigure, isWatched, unitLabel, type Watch } from "../schemas"
 
 const TONE: Record<Watch["status"], BadgeTone> = {
   active: "success",
@@ -41,7 +41,8 @@ const PERIOD: Record<string, "day" | "cycle" | "hour" | "run"> = {
 }
 
 /**
- * The alerts the user set, active first, each as one sentence: what, when, and the money a kWh stands for. An
+ * The alerts being watched, each as one sentence: what, when, and the money a kWh stands for. Only active ones
+ * (and broken ones, which need a look): the ended ones are history, and their alerts are in the list above. An
  * active "above" alert draws how close its last reading is. Each row is `#watch-<id>` (Wappi's card points here).
  */
 export function WatchList({
@@ -49,11 +50,14 @@ export function WatchList({
   devices,
   price,
   cancel,
+  add,
 }: {
   watches: Watch[]
   devices: { id: string; name: string; type: string }[]
   price: number | null
   cancel: (id: string) => Promise<void>
+  /** The add button, offered when nothing is watched. */
+  add?: React.ReactNode
 }) {
   const t = useTranslations("insight.watches")
   const locale = useLocale()
@@ -65,22 +69,25 @@ export function WatchList({
     minute: "2-digit",
   })
 
-  if (!watches.length)
+  const watched = watches.filter(isWatched)
+  if (!watched.length)
     return (
-      <p className="text-sm text-muted-foreground">
-        {t.rich("empty", {
-          wappi: (chunks) => (
-            <Link href={COPILOT_PATH} className="text-foreground underline">
-              {chunks}
-            </Link>
-          ),
-        })}
-      </p>
+      <EmptyState
+        scene="inbox"
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
+        action={
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {add}
+            <PillLink href={COPILOT_PATH}>{t("emptyAction")}</PillLink>
+          </div>
+        }
+      />
     )
 
   return (
     <ul className="flex flex-col divide-y divide-border">
-      {watches.map((w) => {
+      {watched.map((w) => {
         const device = devices.find((d) => d.id === w.device_id)
         // Money first: a kWh figure reads as its cost, the kWh after it.
         const figure = (n: number) =>
@@ -123,9 +130,11 @@ export function WatchList({
                     {t(`repeat.${PERIOD[w.metric] ?? "run"}`)}
                   </Badge>
                 ) : null}
-                <Badge tone={TONE[w.status]} dot>
-                  {t(`status.${w.status}`)}
-                </Badge>
+                {active ? null : (
+                  <Badge tone={TONE[w.status]} dot>
+                    {t(`status.${w.status}`)}
+                  </Badge>
+                )}
                 {active ? (
                   <ConfirmAction
                     icon={<IconX aria-hidden className="size-4" />}

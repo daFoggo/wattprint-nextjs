@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { editableNumber, parseNumber } from "../../lib/parse-number"; // patched (hairline/patch.mjs)
 import { NumberRoll } from "./number-roll";
 
 /* ─────────────────────────────────────────────────────────
@@ -31,6 +32,8 @@ export interface StepperInputProps {
   unit?: string;
   /** Format options passed to NumberRoll when not editing. */
   format?: Intl.NumberFormatOptions;
+  /** Locale(s) for the number (patched (hairline/patch.mjs)). */
+  locales?: string | string[];
   /** Visual variant: "pill" for rounded-full, "field" for standard form input. */
   variant?: "pill" | "field";
   size?: "sm" | "default";
@@ -89,6 +92,7 @@ export function StepperInput({
   largeStep,
   unit,
   format,
+  locales, // patched (hairline/patch.mjs)
   variant = "pill",
   size = "default",
   disabled = false,
@@ -101,7 +105,7 @@ export function StepperInput({
   const currentVal = isControlled ? controlledValue : uncontrolledValue;
 
   const [editing, setEditing] = React.useState(false);
-  const [editText, setEditText] = React.useState(String(currentVal));
+  const [editText, setEditText] = React.useState(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -208,13 +212,13 @@ export function StepperInput({
 
   const commitEdit = React.useCallback(() => {
     setEditing(false);
-    const parsed = parseFloat(editText);
+    const parsed = parseNumber(editText, locales); // patched (hairline/patch.mjs)
     if (!Number.isNaN(parsed)) {
       updateVal(parsed);
     } else {
-      setEditText(String(currentVal));
+      setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);
     }
-  }, [currentVal, editText, updateVal]);
+  }, [currentVal, editText, updateVal, locales]); // patched (hairline/patch.mjs)
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
@@ -244,7 +248,7 @@ export function StepperInput({
       } else if (e.key === "Escape") {
         e.preventDefault();
         setEditing(false);
-        setEditText(String(currentVal));
+        setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);
       }
     }
   };
@@ -302,7 +306,7 @@ export function StepperInput({
         onClick={() => {
           if (disabled || editing) return;
           setEditing(true);
-          setEditText(String(currentVal));
+          setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);
           setTimeout(() => inputRef.current?.select(), 10);
         }}
       >
@@ -319,7 +323,7 @@ export function StepperInput({
           />
         ) : (
           <div className="flex items-baseline gap-1" aria-hidden="true">
-            <NumberRoll value={currentVal} format={format} duration={260} />
+            <NumberRoll value={currentVal} format={format} locales={/* patched (hairline/patch.mjs) */ locales} duration={260} />
             {unit && <span className="font-sans text-[11px] text-muted-foreground">{unit}</span>}
           </div>
         )}

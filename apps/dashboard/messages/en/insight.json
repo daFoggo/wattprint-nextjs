@@ -2,7 +2,6 @@
   "alerts": {
     "title": "Alerts: devices, standby, price tiers, your thresholds",
     "open": "{count, plural, one {# alert} other {# alerts}} to look at",
-    "none": "Nothing to look at",
     "resolved": "cleared",
     "longer_than_usual": {
       "title": "{device} runs longer than usual",
@@ -47,7 +46,9 @@
       "body": "This run reached {value, number} W."
     },
     "allAlerts": "All alerts",
-    "empty": "Want to know when the bill, power or a device goes past a level? <set>Set an alert</set>.",
+    "emptyTitle": "Nothing to look at",
+    "emptyDescription": "Want to know when the bill, power or a device goes past a level?",
+    "emptyAction": "Set an alert",
     "usage_anomaly": {
       "title": "Today your home used {excess_kwh, number} kWh more than usual (≈ {excess_vnd, number} ₫)",
       "body": "Against a day like today (weather, days off, routine), usage since {start} is above what was expected.",
@@ -68,7 +69,9 @@
   },
   "watches": {
     "title": "Alerts you set",
-    "empty": "No alerts yet. Set one here, or <wappi>ask Wappi</wappi> to watch what you want.",
+    "emptyTitle": "No alerts yet",
+    "emptyDescription": "Set one here, or ask Wappi to watch what you want.",
+    "emptyAction": "Ask Wappi",
     "condition": {
       "gt": "Tells you above {value}",
       "lt": "Tells you below {value}"
@@ -111,54 +114,6 @@
       "run": "Each run"
     }
   },
-  "builder": {
-    "title": "Set an alert",
-    "hint": "Pick what to watch, drag the line over your home's history and see how often it would have told you.",
-    "what": "What to watch",
-    "noHistory": "Not enough history to draw a threshold yet. Come back in a few days.",
-    "noFigure": "No reading yet",
-    "daily": {
-      "name": "Daily cost",
-      "now": "Today so far: {value}",
-      "title": "Tell me when a day costs more than the line",
-      "period": "in the last {count} days, at this level",
-      "label": "Daily cost",
-      "repeat": "Repeat every day",
-      "what": "a day's cost",
-      "endsOnHint": "Empty: until the end of today"
-    },
-    "cycle": {
-      "name": "Cycle bill",
-      "now": "This cycle so far: {value}",
-      "title": "Tell me when a cycle's bill passes the line",
-      "period": "in the last {count} cycles, at this level",
-      "label": "This cycle's bill",
-      "repeat": "Repeat every cycle",
-      "what": "the cycle's bill",
-      "endsOnHint": "Empty: until the billing cycle ends"
-    },
-    "power": {
-      "name": "Power",
-      "now": "In use: {value}",
-      "title": "Tell me when power passes the line",
-      "period": "in the last {count} hours (hourly average), at this level",
-      "label": "Power in use",
-      "repeat": "Repeat, at most once an hour",
-      "what": "power",
-      "endsOnHint": "Empty: 30 days"
-    },
-    "devices": {
-      "name": "Devices",
-      "now": "On, off, running too long"
-    },
-    "summary": "Tells you when {what} passes {value}",
-    "approxKwh": "(≈ {kwh})",
-    "save": "Save alert",
-    "saving": "Saving…",
-    "saved": "Alert saved",
-    "endsOn": "Watch until",
-    "endsOnPlaceholder": "Pick or type a date"
-  },
   "devices": {
     "title": "Devices on and off",
     "hint": "Tells you each time a device turns on or off, as WattPrint tells it apart on the main meter.",
@@ -175,6 +130,8 @@
     },
     "device_run_min": {
       "name": "Runs too long",
+      "switch": "Alert when a run lasts over",
+      "limit": "How long one run lasts",
       "title": "Tell me when a run of {device} lasts longer than the line",
       "label": "{device} runs too long",
       "summary": "Tells you each time {device} runs over {value}"
@@ -197,5 +154,90 @@
     "save": "Save alert",
     "saving": "Saving…",
     "saved": "Alert saved"
+  },
+  "add": {
+    "button": "Add alert",
+    "title": "Add alert",
+    "pick": "What do you want to know about?",
+    "groups": {
+      "money": "Bill",
+      "device": "Devices",
+      "home": "Whole home"
+    },
+    "templates": {
+      "daily": {
+        "title": "A day's cost goes over",
+        "hint": "Spot the days you use more than usual",
+        "lead": "Tell me when a day's cost goes over",
+        "label": "A day's cost"
+      },
+      "cycle": {
+        "title": "The cycle's bill goes over",
+        "hint": "Keep the monthly bill on budget",
+        "lead": "Tell me when the cycle's bill goes over",
+        "label": "The cycle's bill"
+      },
+      "device_run_min": {
+        "title": "A device runs too long",
+        "hint": "A stove, iron or water heater left on",
+        "lead": "Tell me when",
+        "verb": "runs over"
+      },
+      "device_on": {
+        "title": "A device turns on",
+        "hint": "Know when the washer or AC starts",
+        "lead": "Tell me each time",
+        "verb": "turns on"
+      },
+      "device_off": {
+        "title": "A device turns off",
+        "hint": "Know when the washer is done",
+        "lead": "Tell me each time",
+        "verb": "turns off"
+      },
+      "power": {
+        "title": "Whole-home power goes over",
+        "hint": "Several big devices running at once",
+        "lead": "Tell me when whole-home power goes over",
+        "label": "Whole-home power"
+      }
+    },
+    "device": "Device",
+    "minutes": "How long one run lasts",
+    "amount": "Level",
+    "preview": "At this level, {period} it would have told you {count, plural, =0 {0 times} one {once} other {# times}}.",
+    "noPreview": "Not enough history yet to tell how often it would alert.",
+    "ran": "Last week {device} ran on {count, plural, =0 {no day} one {1 day} other {# days}}.",
+    "period": {
+      "daily": "over the last 30 days",
+      "cycle": "over past cycles",
+      "power": "over the last 7 days",
+      "device_run_min": "this month"
+    },
+    "repeat": {
+      "daily": "Tell me again each day",
+      "cycle": "Tell me again each cycle",
+      "power": "Tell me again each hour"
+    },
+    "back": "Back",
+    "save": "Save alert",
+    "saving": "Saving…",
+    "saved": "Alert saved"
+  },
+  "auto": {
+    "tag": "Automatic",
+    "notify_anomaly": {
+      "title": "Unusual use compared with your normal",
+      "hint": "WattPrint compares with your home's habits and tells you when a day runs unusually high."
+    },
+    "notify_tier": {
+      "title": "A higher price tier ahead",
+      "hint": "Tells you before this cycle's bill moves into a pricier tier."
+    }
+  },
+  "page": {
+    "fired": "Told you",
+    "watched": "Watching",
+    "watchedHint": "The alerts WattPrint runs by itself and the ones you set."
   }
 }

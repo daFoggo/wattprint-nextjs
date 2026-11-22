@@ -89,6 +89,10 @@ export const WatchSchema = z.object({
 })
 export type Watch = z.infer<typeof WatchSchema>
 
+/** Still listed on the alerts page (and so linkable as `#watch-<id>`): active, or broken and needing a look. */
+export const isWatched = (w: Pick<Watch, "status">) =>
+  w.status === "active" || w.status === "broken"
+
 /** POST /insights/watches. */
 export const WatchCreateSchema = z.object({
   metric: z.enum(WATCH_METRICS),

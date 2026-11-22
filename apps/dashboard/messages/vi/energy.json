@@ -39,6 +39,8 @@
   },
   "estimated": "Ước tính từ công tơ tổng bằng mô hình nhận diện thiết bị của hệ thống.",
   "timeline": {
+    "emptyTitle": "Chưa có lần chạy nào trong 24 giờ qua",
+    "emptyDescription": "Khi WattPrint nhận ra một thiết bị bật, lần chạy đó sẽ hiện ở đây.",
     "title": "Nhật ký thiết bị, 24 giờ qua",
     "running": "{device} đang bật",
     "ran": "{device} chạy {h, plural, =0 {} other {# giờ }}{m} phút · {kwh} kWh",
@@ -49,6 +51,9 @@
     "deviceDescription": "Chạy {count} lần · mỗi dòng là một lần bật đến lúc tắt"
   },
   "power": {
+    "emptyTitle": "Chưa có số đo trong khoảng này",
+    "emptyDescription": "Công tơ không gửi dữ liệu trong khoảng thời gian này. Thử một khoảng dài hơn.",
+    "emptyDay": "Công tơ không gửi dữ liệu trong 24 giờ qua.",
     "range": "Khoảng thời gian",
     "day": "24 giờ",
     "week": "7 ngày",
@@ -79,6 +84,8 @@
   "roomSpending": {
     "title": "Tiền điện tháng này theo phòng",
     "hint": "Chạm vào một phòng để xem từng thiết bị · ước tính",
+    "byDeviceTitle": "Tiền điện tháng này theo thiết bị",
+    "byDeviceHint": "Từng thiết bị · ước tính",
     "label": "Tháng này",
     "allDevices": "Tất cả thiết bị",
     "roomTitle": "Tiền điện tháng này · {room}",

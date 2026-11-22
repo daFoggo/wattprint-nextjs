@@ -3,13 +3,13 @@
 import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 
+import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { SegmentedControl } from "@workspace/ui/components/hairline/segmented-control"
 import { TrendChart } from "@workspace/ui/components/hairline/trend-chart"
 
 import { Tile } from "@/components/shared/tile"
 
-type Range = "day" | "week" | "month" | "quarter"
-type Point = { ts: number; watts: number }
+import { startRange, type Point, type Range } from "../power"
 
 // What one step of each range is, for the dates in the readout.
 const INTERVAL = {
@@ -19,7 +19,7 @@ const INTERVAL = {
   quarter: "day",
 } as const
 
-/** Average draw over time, one range or a switch between several (Sense's meter). */
+/** Average draw over time, one range or a switch between several (Sense's meter); a range with no readings says so. */
 export function PowerChart({
   title,
   description,
@@ -40,7 +40,7 @@ export function PowerChart({
   const t = useTranslations("energy.power")
   const locale = useLocale()
   const keys = Object.keys(ranges) as Range[]
-  const [range, setRange] = useState(keys[0]!)
+  const [range, setRange] = useState(() => startRange(ranges))
   const points = ranges[range] ?? []
   return (
     <Tile
@@ -59,18 +59,26 @@ export function PowerChart({
         ) : null
       }
     >
-      <TrendChart
-        label={title}
-        buckets={points.map((p) => p.ts)}
-        values={points.map((p) => p.watts)}
-        previous={usual?.[range] ?? null}
-        previousLabel={t("usual")}
-        interval={INTERVAL[range]}
-        unit="W"
-        format={{ maximumFractionDigits: 0 }}
-        now={now}
-        locale={locale}
-      />
+      {points.length ? (
+        <TrendChart
+          label={title}
+          buckets={points.map((p) => p.ts)}
+          values={points.map((p) => p.watts)}
+          previous={usual?.[range] ?? null}
+          previousLabel={t("usual")}
+          interval={INTERVAL[range]}
+          unit="W"
+          format={{ maximumFractionDigits: 0 }}
+          now={now}
+          locale={locale}
+        />
+      ) : (
+        <EmptyState
+          scene="chart"
+          title={t("emptyTitle")}
+          description={t(keys.length > 1 ? "emptyDescription" : "emptyDay")}
+        />
+      )}
     </Tile>
   )
 }

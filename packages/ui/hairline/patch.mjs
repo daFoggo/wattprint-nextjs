@@ -380,6 +380,67 @@ export const PATCHES = [
     to: '<span className={/* patched (hairline/patch.mjs): clip-path alone still counts as scroll overflow */ "relative inline-block overflow-clip [clip-path:inset(0)]"}>',
   },
 
+  {
+    file: "stepper-input.tsx",
+    why: "The number between − and + ignored the page's language: an amount read \"₫1,400,000\" beside Vietnamese figures (\"1.400.000 ₫\"). It takes `locales` and passes it to NumberRoll.",
+    from: '  /** Format options passed to NumberRoll when not editing. */\n  format?: Intl.NumberFormatOptions;\n',
+    to: '  /** Format options passed to NumberRoll when not editing. */\n  format?: Intl.NumberFormatOptions;\n  /** Locale(s) for the number (patched (hairline/patch.mjs)). */\n  locales?: string | string[];\n',
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Reads `locales` (see above).",
+    from: "  unit,\n  format,\n  variant = \"pill\",",
+    to: "  unit,\n  format,\n  locales, // patched (hairline/patch.mjs)\n  variant = \"pill\",",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Passes `locales` to the number (see above).",
+    from: "<NumberRoll value={currentVal} format={format} duration={260} />",
+    to: "<NumberRoll value={currentVal} format={format} locales={/* patched (hairline/patch.mjs) */ locales} duration={260} />",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "A typed amount went through parseFloat: \"500.000\" (half a million in Vietnamese) became 500, then rounded to the step, often 0. It is read in `locales` (src/lib/parse-number.ts).",
+    from: 'import * as React from "react";\n',
+    to: 'import * as React from "react";\nimport { editableNumber, parseNumber } from "../../lib/parse-number"; // patched (hairline/patch.mjs)\n',
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Reads the typed amount in `locales` (see above).",
+    from: "    const parsed = parseFloat(editText);\n",
+    to: "    const parsed = parseNumber(editText, locales); // patched (hairline/patch.mjs)\n",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Re-reads with a changed `locales` (see above).",
+    from: "  }, [currentVal, editText, updateVal]);",
+    to: "  }, [currentVal, editText, updateVal, locales]); // patched (hairline/patch.mjs)",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "The edit box was filled with String(value), \"8.2\", which Vietnamese reads as 82: opening the number and leaving it saved 10x. It is filled in `locales` (editableNumber, see above).",
+    from: "React.useState(String(currentVal))",
+    to: "React.useState(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */)",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Fills the edit box in `locales` (see above).",
+    from: "} else {\n      setEditText(String(currentVal));",
+    to: "} else {\n      setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Fills the edit box in `locales` (see above).",
+    from: "setEditing(false);\n        setEditText(String(currentVal));",
+    to: "setEditing(false);\n        setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);",
+  },
+  {
+    file: "stepper-input.tsx",
+    why: "Fills the edit box in `locales` (see above).",
+    from: "setEditing(true);\n          setEditText(String(currentVal));",
+    to: "setEditing(true);\n          setEditText(editableNumber(currentVal, locales) /* patched (hairline/patch.mjs) */);",
+  },
+
   // Built-in English, translated (see TEXT above).
   imports("button.tsx"),
   hook(

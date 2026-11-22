@@ -39,6 +39,8 @@
   },
   "estimated": "Estimated from the main meter by the system's device recognition model.",
   "timeline": {
+    "emptyTitle": "No runs in the last 24 hours",
+    "emptyDescription": "When WattPrint spots a device turning on, the run shows up here.",
     "title": "Device log, last 24 hours",
     "running": "{device} is on",
     "ran": "{device} ran {h, plural, =0 {} other {#h }}{m} min · {kwh} kWh",
@@ -49,6 +51,9 @@
     "deviceDescription": "Ran {count, plural, one {# time} other {# times}} · each line is one run, on to off"
   },
   "power": {
+    "emptyTitle": "No readings in this range",
+    "emptyDescription": "The meter sent no data in this period. Try a longer range.",
+    "emptyDay": "The meter sent no data in the last 24 hours.",
     "range": "Range",
     "day": "24 hours",
     "week": "7 days",
@@ -79,6 +84,8 @@
   "roomSpending": {
     "title": "This month’s cost by room",
     "hint": "Tap a room to see its devices · estimated",
+    "byDeviceTitle": "This month’s cost by device",
+    "byDeviceHint": "Each device · estimated",
     "label": "This month",
     "allDevices": "All devices",
     "roomTitle": "This month’s cost · {room}",

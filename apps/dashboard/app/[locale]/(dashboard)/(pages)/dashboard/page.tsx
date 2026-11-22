@@ -24,6 +24,7 @@ import {
 } from "@/features/insight/actions"
 import { AlertList } from "@/features/insight/components/alert-list"
 import { getAlerts, getWatches } from "@/features/insight/queries"
+import { isWatched } from "@/features/insight/schemas"
 import { WeatherCard } from "@/features/weather/components/weather-card"
 import { getWeather } from "@/features/weather/queries"
 import { requirePermission } from "@/lib/dal"
@@ -84,7 +85,7 @@ async function Tiles() {
         brief
         onSeen={acknowledgeAlertAction}
         onFeedback={sendAlertFeedbackAction}
-        mine={new Set((watches ?? []).map((w) => w.id))}
+        mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
         className={data.latest ? TILE.alerts : "lg:col-span-12"}
       />
       {/* No meter data yet: the activity sample would pretend otherwise. */}

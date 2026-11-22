@@ -46,11 +46,10 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Your home, its bill and what WattPrint tells you about.",
-    "alertsMoved": "Alerts (bill, power, devices, the automatic ones) now live on the <alerts>Alerts</alerts> page."
+    "description": "Your home and its bill."
   },
   "alerts": {
     "title": "Alerts",
-    "description": "What you asked Wappi to watch: the bill, energy, power, each device."
+    "description": "What WattPrint told you and what it watches for your home."
   }
 }

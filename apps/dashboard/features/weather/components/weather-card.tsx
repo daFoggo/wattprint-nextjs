@@ -50,15 +50,28 @@ const clock = (locale: string) => (dt: number) =>
 
 const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
 
-// The liquid's colour follows the sky. Literal classes, so Tailwind generates them.
+// One colour per sky for the liquid, the icon and the temperature line, so the card reads as the weather and not
+// as a chart; the ink is that colour dark enough for text in each theme. Literal classes, so Tailwind generates them.
 const PALETTE = {
-  clear: "text-amber-400",
-  night: "text-indigo-400",
-  clouds: "text-slate-400",
-  rain: "text-sky-500",
-  storm: "text-violet-500",
-  snow: "text-cyan-200",
-  mist: "text-zinc-400",
+  clear: {
+    liquid: "text-amber-400",
+    ink: "text-amber-600 dark:text-amber-400",
+  },
+  night: {
+    liquid: "text-indigo-400",
+    ink: "text-indigo-600 dark:text-indigo-400",
+  },
+  clouds: {
+    liquid: "text-slate-400",
+    ink: "text-slate-600 dark:text-slate-400",
+  },
+  rain: { liquid: "text-sky-500", ink: "text-sky-600 dark:text-sky-400" },
+  storm: {
+    liquid: "text-violet-500",
+    ink: "text-violet-600 dark:text-violet-400",
+  },
+  snow: { liquid: "text-cyan-200", ink: "text-cyan-600 dark:text-cyan-300" },
+  mist: { liquid: "text-zinc-400", ink: "text-zinc-600 dark:text-zinc-400" },
 }
 
 function mood(code: string): keyof typeof PALETTE {
@@ -91,7 +104,7 @@ function Face({ weather }: { weather: Weather }) {
         <Sky
           code={sky.icon}
           aria-hidden
-          className="size-5 text-muted-foreground"
+          className={`size-5 ${PALETTE[mood(sky.icon)].ink}`}
         />
         <span className="text-2xl font-medium tracking-tight tabular-nums">
           {Math.round(now.temp)}
@@ -126,7 +139,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
   const sky = now.sky
   const temps = next.map((slot) => slot.temp)
   const wettest = next.reduce((a, b) => (b.pop > a.pop ? b : a), next[0]!)
-  const liquid = PALETTE[mood(sky.icon)]
+  const { liquid, ink } = PALETTE[mood(sky.icon)]
   const level = levelFor(now.temp)
   return (
     <Popover
@@ -163,11 +176,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
               {t("feelsLike", { temp: Math.round(now.feels_like) })}
             </p>
           </div>
-          <Sky
-            code={sky.icon}
-            aria-hidden
-            className="size-8 text-muted-foreground"
-          />
+          <Sky code={sky.icon} aria-hidden className={`size-8 ${ink}`} />
         </div>
 
         <div className="flex flex-col gap-1.5 rounded-xl bg-card p-2.5">
@@ -184,7 +193,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
               label: hour(slot.dt),
             }))}
             variant="area"
-            color="primary"
+            color={ink}
             width="100%"
             height={32}
             showScrubber

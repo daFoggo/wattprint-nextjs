@@ -3,6 +3,8 @@ import { Suspense } from "react"
 import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
+import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
+
 import { PageHead } from "@/components/layout/page-head"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillOverview } from "@/features/billing/components/bill-overview"
@@ -37,9 +39,12 @@ async function Overview() {
   ])
   if (!bill || !data) {
     return (
-      <section className="flex flex-col gap-2 rounded-3xl border bg-background p-6 lg:col-span-12">
-        <h2 className="text-base font-medium">{t("emptyTitle")}</h2>
-        <p className="text-sm text-muted-foreground">{t("emptyDescription")}</p>
+      <section className="rounded-3xl bg-card p-6 lg:col-span-12">
+        <EmptyState
+          scene="inbox"
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
+        />
       </section>
     )
   }

@@ -1,12 +1,13 @@
 import { useLocale, useTranslations } from "next-intl"
 
 import { Alert } from "@workspace/ui/components/hairline/alert"
+import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 
-import { CardLink, DeviceChip } from "@/components/shared/nav-links"
+import { CardLink, DeviceChip, PillLink } from "@/components/shared/nav-links"
 import { Tile } from "@/components/shared/tile"
 import { ALERTS_PATH, DEVICES_PATH } from "@/config/routes"
-import { Link } from "@/i18n/navigation"
 
+import { alertValues } from "../alert-values"
 import type { Alert as AlertData, Verdict } from "../schemas"
 import { AlertFeedback } from "./alert-feedback"
 import { SeenAlert } from "./seen-alert"
@@ -25,7 +26,8 @@ function ago(ts: number, now: number, locale: string) {
 /**
  * What the detectors found, unresolved first (the backend's order): what happened, with its figures, and the
  * way to the device. A resolved alert stays in the list, in the success tone. `brief` keeps to the open ones
- * and their headlines (the Overview). With `onSeen`, an open alert's ✕ marks it seen.
+ * and their headlines (the Overview), with the way to the alerts page; the full list is that page's own. With
+ * `onSeen`, an open alert's ✕ marks it seen.
  */
 export function AlertList({
   alerts,
@@ -34,6 +36,7 @@ export function AlertList({
   onSeen,
   onFeedback,
   mine,
+  title,
   className,
 }: {
   alerts: AlertData[]
@@ -44,6 +47,7 @@ export function AlertList({
   onFeedback?: (id: string, verdict: Verdict) => Promise<void>
   /** Ids of the viewer's own watches: only those have a row on the alerts page to link to. */
   mine?: Set<string>
+  title?: string
   className?: string
 }) {
   const t = useTranslations("insight.alerts")
@@ -58,38 +62,30 @@ export function AlertList({
   const open = alerts.filter((a) => a.status === "open").length
   return (
     <Tile
-      title={t("title")}
-      description={open ? t("open", { count: open }) : t("none")}
+      title={title ?? t("title")}
+      description={open ? t("open", { count: open }) : undefined}
       className={className}
-      action={<CardLink href={ALERTS_PATH}>{t("allAlerts")}</CardLink>}
+      action={
+        brief ? <CardLink href={ALERTS_PATH}>{t("allAlerts")}</CardLink> : null
+      }
     >
       <div className="flex flex-col gap-3">
         {shown.length ? null : (
-          <p className="text-sm text-muted-foreground">
-            {t.rich("empty", {
-              set: (chunks) => (
-                <Link href={ALERTS_PATH} className="text-foreground underline">
-                  {chunks}
-                </Link>
-              ),
-            })}
-          </p>
+          <EmptyState
+            scene="done"
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
+            action={
+              brief ? (
+                <PillLink href={ALERTS_PATH}>{t("emptyAction")}</PillLink>
+              ) : null
+            }
+          />
         )}
         {shown.map((a) => {
-          // ICU selects read strings: a boolean figure (a watch's `repeat`) becomes "true"/"false".
-          const values = {
-            device: a.device?.name ?? "",
-            ...Object.fromEntries(
-              Object.entries(a.payload).map(([k, v]) => [
-                k,
-                typeof v === "boolean"
-                  ? String(v)
-                  : (k === "at" || k === "start") && typeof v === "string"
-                    ? clock.format(new Date(v)) // a device run's start, as a time of day
-                    : v,
-              ])
-            ),
-          }
+          const values = alertValues(a.payload, a.device?.name ?? "", (iso) =>
+            clock.format(new Date(iso))
+          )
           const props = {
             tone: a.status === "resolved" ? "success" : TONE[a.severity],
             title: t(`${a.kind}.title`, values),

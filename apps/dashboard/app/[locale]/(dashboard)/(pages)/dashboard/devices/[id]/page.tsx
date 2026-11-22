@@ -136,14 +136,15 @@ async function Power({ params, className }: Slot) {
     load(params),
     getTranslations("energy"),
   ])
-  // No estimate in the last 24 hours (a new home, a long meter gap): nothing to draw.
-  if (!device?.power.length) return null
+  if (!device) return null
+  // No estimate in the last 24 hours (a new home, a long meter gap): the tile stays and says so.
+  const last = device.power.at(-1)
   return (
     <PowerChart
       title={t("power.deviceTitle")}
       description={t("power.deviceDescription")}
       ranges={{ day: device.power }}
-      now={device.power.at(-1)!.ts + 5 * 60_000}
+      now={last ? last.ts + 5 * 60_000 : 0}
       className={className}
     />
   )

@@ -2,7 +2,6 @@
   "alerts": {
     "title": "Cảnh báo: thiết bị, điện nền, bậc giá, mức bạn đặt",
     "open": "{count} cảnh báo cần xem",
-    "none": "Không có gì cần xem",
     "resolved": "đã tự hết",
     "longer_than_usual": {
       "title": "{device} chạy lâu hơn thường lệ",
@@ -47,7 +46,9 @@
       "body": "Lần chạy này lên tới {value, number} W."
     },
     "allAlerts": "Tất cả cảnh báo",
-    "empty": "Muốn được báo khi tiền điện, công suất hay một thiết bị vượt mức? <set>Đặt cảnh báo</set>.",
+    "emptyTitle": "Không có gì cần xem",
+    "emptyDescription": "Muốn được báo khi tiền điện, công suất hay một thiết bị vượt mức?",
+    "emptyAction": "Đặt cảnh báo",
     "usage_anomaly": {
       "title": "Hôm nay nhà dùng hơn mức thường {excess_kwh, number} kWh (≈ {excess_vnd, number} đ)",
       "body": "So với một ngày như hôm nay (thời tiết, ngày nghỉ, nếp sinh hoạt), từ {start} nhà dùng nhiều hơn dự kiến.",
@@ -68,7 +69,9 @@
   },
   "watches": {
     "title": "Cảnh báo bạn đã đặt",
-    "empty": "Chưa có cảnh báo nào. Đặt ở đây, hoặc <wappi>nhờ Wappi</wappi> theo dõi điều bạn muốn.",
+    "emptyTitle": "Chưa có cảnh báo nào",
+    "emptyDescription": "Đặt ở đây, hoặc nhờ Wappi theo dõi điều bạn muốn.",
+    "emptyAction": "Nhờ Wappi",
     "condition": {
       "gt": "Báo khi vượt {value}",
       "lt": "Báo khi xuống dưới {value}"
@@ -111,54 +114,6 @@
       "run": "Mỗi lần chạy"
     }
   },
-  "builder": {
-    "title": "Đặt cảnh báo",
-    "hint": "Chọn điều cần theo dõi, kéo vạch trên lịch sử của nhà bạn và xem mức đó đã báo bao nhiêu lần.",
-    "what": "Theo dõi điều gì",
-    "noHistory": "Chưa đủ lịch sử để vẽ ngưỡng. Quay lại sau vài ngày.",
-    "noFigure": "Chưa có số đo",
-    "daily": {
-      "name": "Tiền điện mỗi ngày",
-      "now": "Hôm nay đến giờ: {value}",
-      "title": "Báo khi tiền điện một ngày vượt vạch",
-      "period": "trong {count} ngày qua, nếu đặt ở mức này",
-      "label": "Tiền điện mỗi ngày",
-      "repeat": "Lặp lại mỗi ngày",
-      "what": "tiền điện một ngày",
-      "endsOnHint": "Để trống: đến hết hôm nay"
-    },
-    "cycle": {
-      "name": "Tiền điện cả kỳ",
-      "now": "Kỳ này đến giờ: {value}",
-      "title": "Báo khi tiền điện của kỳ vượt vạch",
-      "period": "trong {count} kỳ qua, nếu đặt ở mức này",
-      "label": "Tiền điện kỳ này",
-      "repeat": "Lặp lại mỗi kỳ",
-      "what": "tiền điện cả kỳ",
-      "endsOnHint": "Để trống: đến hết kỳ hoá đơn"
-    },
-    "power": {
-      "name": "Công suất",
-      "now": "Đang dùng: {value}",
-      "title": "Báo khi công suất vượt vạch",
-      "period": "trong {count} giờ qua (trung bình từng giờ), nếu đặt ở mức này",
-      "label": "Công suất đang dùng",
-      "repeat": "Lặp lại, tối đa mỗi giờ một lần",
-      "what": "công suất",
-      "endsOnHint": "Để trống: 30 ngày"
-    },
-    "devices": {
-      "name": "Thiết bị",
-      "now": "Bật, tắt, chạy quá lâu"
-    },
-    "summary": "Báo khi {what} vượt {value}",
-    "approxKwh": "(≈ {kwh})",
-    "save": "Lưu cảnh báo",
-    "saving": "Đang lưu…",
-    "saved": "Đã lưu cảnh báo",
-    "endsOn": "Theo dõi đến ngày",
-    "endsOnPlaceholder": "Chọn hoặc gõ ngày"
-  },
   "devices": {
     "title": "Thiết bị bật, tắt",
     "hint": "Báo mỗi lần thiết bị bật hoặc tắt, theo những gì WattPrint nhận ra từ công tơ tổng.",
@@ -175,6 +130,8 @@
     },
     "device_run_min": {
       "name": "Chạy quá lâu",
+      "switch": "Báo khi chạy quá",
+      "limit": "Thời gian một lần chạy",
       "title": "Báo khi một lần chạy của {device} dài hơn vạch",
       "label": "{device} chạy quá lâu",
       "summary": "Báo mỗi lần {device} chạy quá {value}"
@@ -197,5 +154,90 @@
     "save": "Lưu cảnh báo",
     "saving": "Đang lưu…",
     "saved": "Đã lưu cảnh báo"
+  },
+  "add": {
+    "button": "Thêm cảnh báo",
+    "title": "Thêm cảnh báo",
+    "pick": "Bạn muốn được báo khi nào?",
+    "groups": {
+      "money": "Tiền điện",
+      "device": "Thiết bị",
+      "home": "Cả nhà"
+    },
+    "templates": {
+      "daily": {
+        "title": "Tiền điện một ngày vượt mức",
+        "hint": "Biết ngay ngày nào dùng nhiều hơn mọi khi",
+        "lead": "Báo khi tiền điện một ngày vượt",
+        "label": "Tiền điện một ngày"
+      },
+      "cycle": {
+        "title": "Tiền điện cả kỳ vượt mức",
+        "hint": "Giữ hóa đơn tháng trong ngân sách",
+        "lead": "Báo khi tiền điện cả kỳ vượt",
+        "label": "Tiền điện cả kỳ"
+      },
+      "device_run_min": {
+        "title": "Thiết bị chạy quá lâu",
+        "hint": "Quên tắt bếp, bàn là, bình nóng lạnh",
+        "lead": "Báo khi",
+        "verb": "chạy quá"
+      },
+      "device_on": {
+        "title": "Thiết bị bật lên",
+        "hint": "Biết khi máy giặt, điều hòa bắt đầu chạy",
+        "lead": "Báo mỗi khi",
+        "verb": "bật lên"
+      },
+      "device_off": {
+        "title": "Thiết bị tắt đi",
+        "hint": "Biết khi máy giặt đã giặt xong",
+        "lead": "Báo mỗi khi",
+        "verb": "tắt đi"
+      },
+      "power": {
+        "title": "Công suất cả nhà vượt mức",
+        "hint": "Nhiều thiết bị lớn chạy cùng lúc",
+        "lead": "Báo khi công suất cả nhà vượt",
+        "label": "Công suất cả nhà"
+      }
+    },
+    "device": "Thiết bị",
+    "minutes": "Thời gian một lần chạy",
+    "amount": "Mức",
+    "preview": "Với mức này, {period} sẽ báo {count, plural, =0 {0 lần} other {# lần}}.",
+    "noPreview": "Chưa đủ lịch sử để ước lượng sẽ báo bao nhiêu lần.",
+    "ran": "Tuần qua {device} chạy {count, plural, =0 {không ngày nào} other {# ngày}}.",
+    "period": {
+      "daily": "30 ngày qua",
+      "cycle": "các kỳ trước",
+      "power": "7 ngày qua",
+      "device_run_min": "tháng này"
+    },
+    "repeat": {
+      "daily": "Báo lại mỗi ngày",
+      "cycle": "Báo lại mỗi kỳ",
+      "power": "Báo lại mỗi giờ"
+    },
+    "back": "Quay lại",
+    "save": "Lưu cảnh báo",
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu cảnh báo"
+  },
+  "auto": {
+    "tag": "Tự động",
+    "notify_anomaly": {
+      "title": "Dùng điện khác thường so với mọi khi",
+      "hint": "WattPrint tự so với thói quen của nhà bạn và báo khi một ngày cao bất thường."
+    },
+    "notify_tier": {
+      "title": "Sắp sang bậc giá mới",
+      "hint": "Báo trước khi tiền điện kỳ này bước sang bậc đắt hơn."
+    }
+  },
+  "page": {
+    "fired": "Đã báo",
+    "watched": "Đang theo dõi",
+    "watchedHint": "Cảnh báo WattPrint tự chạy và những cảnh báo bạn đã đặt."
   }
 }

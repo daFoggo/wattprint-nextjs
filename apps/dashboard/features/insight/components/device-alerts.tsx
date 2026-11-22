@@ -9,8 +9,6 @@ import { Switch } from "@workspace/ui/components/hairline/switch"
 import { ThresholdLine } from "@workspace/ui/components/hairline/threshold-line"
 import { toast } from "@workspace/ui/components/hairline/toast-stack"
 
-import { DeviceIcon } from "@/components/shared/device-icon"
-
 import type { SaveResult } from "../actions"
 import { formatFigure, type Watch } from "../schemas"
 import { lineScale, toKwh } from "../sources"
@@ -63,36 +61,6 @@ function EventSwitches({
         />
       ))}
     </div>
-  )
-}
-
-/** Every device with its two switches, on the alerts page (`#devices`, where the builder's card points). */
-export function DeviceAlertList({
-  devices,
-  watches,
-  setEvent,
-}: {
-  devices: Device[]
-  watches: Watch[]
-  setEvent: SetEvent
-}) {
-  return (
-    <ul className="flex flex-col divide-y divide-border">
-      {devices
-        .filter((d) => d.type !== "other") // the unknown remainder is always on
-        .map((d) => (
-          <li
-            key={d.id}
-            className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <span className="flex items-center gap-3">
-              <DeviceIcon type={d.type} />
-              <span className="text-sm font-medium">{d.name}</span>
-            </span>
-            <EventSwitches device={d} watches={watches} setEvent={setEvent} />
-          </li>
-        ))}
-    </ul>
   )
 }
 

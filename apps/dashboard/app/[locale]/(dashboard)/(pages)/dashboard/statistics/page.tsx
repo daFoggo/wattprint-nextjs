@@ -133,19 +133,20 @@ async function Background({ className }: Props) {
 
 // From the moment to the year, as rows on lg (12 columns). Tiles are paired by their natural height, so a row's
 // edges line up without stretching a short tile far:
-//   power: day, week, 30 and 90 days 7      | this cycle against the last 5
-//   this month's money by room 4 (→ devices) | the week against the one before, then against similar homes 8
+//   power: day, week, 30 and 90 days 12
+//   this month's money by room 4 (→ devices) | the week against the one before, then this cycle against the last 8
 //   every day, last 30 days 8               | the bill at the cycle's end 4
 //   month by month, this year and last 6    | background load 6
+//   against similar homes 12 (only with enough real homes, so its absence leaves no hole)
 const TILE = {
-  power: "lg:col-span-7",
-  cycle: "lg:col-span-5",
+  power: "lg:col-span-12",
   rooms: "lg:col-span-4",
   compare: "lg:col-span-8",
   days: "lg:col-span-8",
   forecast: "lg:col-span-4",
   months: "lg:col-span-6",
   standby: "lg:col-span-6",
+  peers: "lg:col-span-12",
 }
 
 export default function StatisticsPage() {
@@ -160,22 +161,17 @@ export default function StatisticsPage() {
           <Power className={TILE.power} />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={230} className={TILE.cycle} />}
-        >
-          <Cycle className={TILE.cycle} />
-        </Suspense>
-        <Suspense
           fallback={<TileSkeleton height={540} className={TILE.rooms} />}
         >
           <Rooms className={TILE.rooms} />
         </Suspense>
-        {/* Two short tiles, one over the other, as tall as the rooms beside them. */}
+        {/* Two tiles, one over the other, as tall as the rooms beside them. */}
         <div className={cn("flex min-w-0 flex-col gap-4", TILE.compare)}>
           <Suspense fallback={<TileSkeleton height={300} />}>
             <Weeks />
           </Suspense>
-          <Suspense fallback={<TileSkeleton height={140} className="flex-1" />}>
-            <Peers className="flex-1" />
+          <Suspense fallback={<TileSkeleton height={230} className="flex-1" />}>
+            <Cycle className="flex-1" />
           </Suspense>
         </div>
         <Suspense
@@ -197,6 +193,11 @@ export default function StatisticsPage() {
           fallback={<TileSkeleton height={330} className={TILE.standby} />}
         >
           <Background className={TILE.standby} />
+        </Suspense>
+        <Suspense
+          fallback={<TileSkeleton height={140} className={TILE.peers} />}
+        >
+          <Peers className={TILE.peers} />
         </Suspense>
       </div>
     </>
