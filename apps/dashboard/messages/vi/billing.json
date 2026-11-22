@@ -43,11 +43,10 @@
       "trend": "xu hướng gần đây",
       "unexplained": "yếu tố khác"
     },
-    "nextLikely": "Khoảng {pct} khả năng sang bậc {tier} vào khoảng {date}",
+    "nextLikely": "{pct} khả năng sang bậc {tier} vào khoảng {date}",
     "accuracyBacktest": "Thử trên {cycles, plural, other {# kỳ}} đã qua: lệch trung bình {pct}.",
     "accuracyCycle": "Kỳ trước dự báo giữa kỳ lệch {pct} so với hóa đơn thật.",
-    "simulated": "Có tải sưởi mô phỏng",
-    "scenario": "Đang chạy kịch bản demo"
+    "simulated": "Có tải sưởi mô phỏng"
   },
   "overview": {
     "title": "Hóa đơn kỳ này, {start} – {end}",

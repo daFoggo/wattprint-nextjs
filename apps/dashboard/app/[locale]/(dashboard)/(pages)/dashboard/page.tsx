@@ -28,6 +28,7 @@ import { isWatched } from "@/features/insight/schemas"
 import { WeatherCard } from "@/features/weather/components/weather-card"
 import { getWeather } from "@/features/weather/queries"
 import { requirePermission } from "@/lib/dal"
+import { isExpectedDataError } from "@/lib/errors"
 
 import { NoHome } from "../../_components/no-home"
 
@@ -63,7 +64,11 @@ async function Tiles() {
     getActivity(),
     getAlerts(),
     getWatches().catch(() => null), // only decides a link: never take the tiles down
-    getTodayUsual().catch(() => null), // only adds a sentence: never take the tiles down
+    // No model yet (4xx) only drops a sentence; a failing backend still fails the page.
+    getTodayUsual().catch((error: unknown) => {
+      if (isExpectedDataError(error)) return null
+      throw error
+    }),
     getTranslations("energy"),
   ])
   // The devices' money is the bill's, split by their kWh.

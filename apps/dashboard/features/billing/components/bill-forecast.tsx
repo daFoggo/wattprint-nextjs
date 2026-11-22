@@ -67,9 +67,9 @@ export function BillForecast({
       })}
       action={
         <div className="flex flex-wrap items-center justify-end gap-1.5">
-          {p.simulated.length ? (
+          {p.simulated.includes("heater") ? (
             <Badge tone="warning" size="sm">
-              {t(p.simulated.includes("heater") ? "simulated" : "scenario")}
+              {t("simulated")}
             </Badge>
           ) : null}
           <ModelBadge kind="forecast" confidence={forecastConfidence(p)} />

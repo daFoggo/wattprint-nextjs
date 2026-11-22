@@ -43,11 +43,10 @@
       "trend": "the recent trend",
       "unexplained": "other factors"
     },
-    "nextLikely": "About a {pct} chance of reaching tier {tier} around {date}",
+    "nextLikely": "A {pct} chance of reaching tier {tier} around {date}",
     "accuracyBacktest": "Tried on {cycles, plural, one {# past cycle} other {# past cycles}}: off by {pct} on average.",
     "accuracyCycle": "Last cycle's mid-cycle forecast was off by {pct} from the real bill.",
-    "simulated": "Simulated heater",
-    "scenario": "Demo scenario running"
+    "simulated": "Simulated heater"
   },
   "overview": {
     "title": "This bill, {start} – {end}",
