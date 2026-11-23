@@ -1,6 +1,6 @@
 import {
   appImportBans,
-  designSyntaxRule,
+  appSyntaxRule,
 } from "@workspace/eslint-config/design-system"
 import { nextJsConfig } from "@workspace/eslint-config/next-js"
 
@@ -9,7 +9,7 @@ export default [
   ...nextJsConfig,
   {
     rules: {
-      "no-restricted-syntax": designSyntaxRule,
+      "no-restricted-syntax": appSyntaxRule,
       "no-restricted-imports": ["error", { paths: appImportBans }],
     },
   },

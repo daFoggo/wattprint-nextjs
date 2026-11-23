@@ -4,9 +4,12 @@ paths:
   - "apps/dashboard/features/*/components/*provider*.tsx"
 ---
 
-# Client state: rules agents miss
+# Client state (Zustand): rules an agent must not miss
 
-Source of truth: `docs/client-state.md`.
+Source of truth: docs/client-state.md §1–§8.
 
-- Zustand only for client-only UI state shared across distant client components, never for server data.
-- A per-provider store factory in `features/<name>/store.ts`, its provider in `components/`, mounted in `app/`. Never a module-level store; never read in a Server Component.
+- A store only for client-only state shared by distant client components; never mirror server data (the cache is the cache). URL state stays in `searchParams`.
+- Per-provider store factory in `features/<name>/store.ts`, provider in `components/`, mounted in `app/`; never a module-level store.
+- Read with one selector per value; never `store.getState()` during render; never in a Server Component.
+- A store with user data is keyed by user id (`<Provider key={userId}>`), and a persisted store's `name` includes it.
+- Middleware only on the combined store, `devtools` outermost. Never mutate state.

@@ -1,7 +1,8 @@
 /**
  * The docs' rules that a machine can check, so an agent or a person cannot miss them:
  * docs/design-system.md §1 (Tailwind default scale, two weights, flat) and the hairline-ui skill (icons),
- * docs/data-fetching.md §3 (no client data library), docs/internationalization.md (locale-aware navigation).
+ * docs/data-fetching.md §3 (no client data library), docs/internationalization.md (locale-aware navigation,
+ * no hardcoded UI text or locale), docs/design-system.md §3 (fonts load once in @workspace/ui/lib/fonts).
  * A deliberate exception gets `// eslint-disable-next-line <rule> -- <reason with its doc>`.
  */
 
@@ -24,6 +25,10 @@ const CLASS_BANS = [
     /(^|[\s:])(shadow(?!-none)(?=-|\s|$)|drop-shadow|backdrop-blur)/,
     "The design is flat: no shadows or blur (docs/design-system.md §1).",
   ],
+  [
+    /(^|[\s:])dark:(bg|text|border|ring|outline|fill|stroke|from|via|to|divide|decoration|caret|accent|placeholder)-/,
+    "Style through the theme tokens, not dark: color pairs; both themes come from globals.css (docs/design-system.md §1, §2).",
+  ],
 ]
 
 export const designSyntaxRule = [
@@ -32,6 +37,35 @@ export const designSyntaxRule = [
     { selector: `${CLASS_SCOPE} Literal[value=${re}]`, message },
     { selector: `${CLASS_SCOPE} TemplateElement[value.raw=${re}]`, message },
   ]),
+]
+
+/**
+ * For the apps: UI text comes from messages/{vi,en} and numbers and dates format with the current locale
+ * (docs/internationalization.md, Writing UI text). Units (kWh) and single symbols are not text.
+ */
+const TEXT_MESSAGE =
+  "No hardcoded UI text: add it to messages/{vi,en}/<namespace>.json and use useTranslations/getTranslations (docs/internationalization.md)."
+const LOCALE_MESSAGE =
+  "Format with the current locale (useLocale()/getLocale()), never a hardcoded one (docs/internationalization.md)."
+
+export const appSyntaxRule = [
+  ...designSyntaxRule,
+  { selector: "JSXText[value=/(?!kWh\\b)\\p{L}{3,}/u]", message: TEXT_MESSAGE },
+  {
+    selector:
+      "JSXAttribute[name.name=/^(aria-label|placeholder|title|alt|label|description)$/] > Literal[value=/(?!kWh\\b)\\p{L}{3,}/u]",
+    message: TEXT_MESSAGE,
+  },
+  {
+    selector:
+      "NewExpression[callee.object.name='Intl'][arguments.0.type='Literal']",
+    message: LOCALE_MESSAGE,
+  },
+  {
+    selector:
+      "CallExpression[callee.property.name=/^toLocale(Date|Time)?String$/][arguments.0.type='Literal']",
+    message: LOCALE_MESSAGE,
+  },
 ]
 
 /** For every package with UI code. */
@@ -66,4 +100,9 @@ export const appImportBans = [
     message:
       "Use @/i18n/navigation; next/navigation drops /en. External URLs and route handlers outside [locale] are the exception (docs/internationalization.md).",
   },
+  ...["next/font/google", "next/font/local"].map((name) => ({
+    name,
+    message:
+      "Fonts load once in @workspace/ui/lib/fonts; do not load fonts per app (docs/design-system.md §3).",
+  })),
 ]

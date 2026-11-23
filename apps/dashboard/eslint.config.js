@@ -1,5 +1,6 @@
 import {
   appImportBans,
+  appSyntaxRule,
   designSyntaxRule,
 } from "@workspace/eslint-config/design-system"
 import { nextJsConfig } from "@workspace/eslint-config/next-js"
@@ -18,6 +19,24 @@ const layerRestrictions = [
 
 const featureRestrictions = layerRestrictions
 
+// docs/data-fetching.md §5.1: every "use cache" scope calls cacheLife.
+const dashboardSyntaxRule = [
+  ...appSyntaxRule,
+  {
+    selector:
+      ":function:has(ExpressionStatement[directive=/^use cache/]):not(:has(CallExpression[callee.name='cacheLife']))",
+    message:
+      'Always call cacheLife() with "use cache" (docs/data-fetching.md §5.1).',
+  },
+]
+
+// A rule that flags the whole file (a missing directive, a forbidden file name).
+const fileRule = (selector, message) => [
+  "error",
+  ...dashboardSyntaxRule.slice(1),
+  { selector, message },
+]
+
 const authRestrictedGroup = [
   "@/lib/auth",
   "@/lib/env",
@@ -30,8 +49,40 @@ export default [
   ...nextJsConfig,
   {
     rules: {
-      "no-restricted-syntax": designSyntaxRule,
+      "no-restricted-syntax": dashboardSyntaxRule,
       "no-restricted-imports": ["error", { paths: appImportBans }],
+    },
+  },
+  {
+    // global-error replaces the root layout: no messages provider and no theme there (docs/design-system.md §1).
+    files: ["app/global-error.tsx"],
+    rules: { "no-restricted-syntax": designSyntaxRule },
+  },
+  {
+    files: ["features/*/server.ts", "features/*/queries.ts"],
+    rules: {
+      "no-restricted-syntax": fileRule(
+        "Program:not(:has(ImportDeclaration[source.value='server-only']))",
+        'server.ts and queries.ts start with import "server-only" (docs/adding-a-feature.md).'
+      ),
+    },
+  },
+  {
+    files: ["features/*/actions.ts"],
+    rules: {
+      "no-restricted-syntax": fileRule(
+        "Program:not(:has(> ExpressionStatement[directive='use server']))",
+        'actions.ts starts with "use server" (docs/adding-a-feature.md).'
+      ),
+    },
+  },
+  {
+    files: ["**/index.ts", "**/index.tsx"],
+    rules: {
+      "no-restricted-syntax": fileRule(
+        "Program",
+        "No barrel index.ts: import the file you need (features/README.md)."
+      ),
     },
   },
   {
@@ -64,6 +115,24 @@ export default [
               ],
               message:
                 "Feature components must not import server-only modules (server, queries, dal, http, auth).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["app/**/page.tsx", "app/**/layout.tsx"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: appImportBans,
+          patterns: [
+            {
+              group: ["@/features/*/server", "@/features/*/server.*"],
+              message:
+                "Pages never import server.ts: read through the feature's queries.ts (docs/adding-a-feature.md §7).",
             },
           ],
         },

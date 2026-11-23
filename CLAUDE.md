@@ -19,18 +19,24 @@ Adapted from the four principles in [andrej-karpathy-skills](https://github.com/
 ## 3. Surgical changes
 - Touch only what the request needs. Match existing style; do not reformat or refactor neighbours.
 - Remove imports/functions that *your* change orphaned; only mention unrelated dead code.
-- Respect the boundaries enforced by ESLint (`app/` composes, `features/` do not import each other or `app/`).
 
 ## 4. Goal-driven execution
 - Turn the task into a verifiable goal and a short plan with a check per step.
-- "Done" means `pnpm check` and `pnpm build` pass; UI/auth changes are also exercised against a running app.
+- "Done" means verify passes; UI/auth changes are also exercised against a running app (dev servers: web 11091, dashboard 11092).
 - Report what was and was not verified. Never claim a flow works if only its error path was tried.
 
+## Commands
+- Verify (the Stop hook runs it; ~35 s cold, seconds when turbo-cached):
+  `pnpm check && diff -rq --strip-trailing-cr .agents/skills .claude/skills && cmp apps/dashboard/i18n/routing.ts apps/web/i18n/routing.ts`
+  Healthy: `Tasks: 17 successful, 17 total` and no output from `diff`/`cmp`.
+- One file: `pnpm exec eslint --max-warnings 0 <file>` from its package (the check hook runs this after each edit).
+- CI only: `pnpm turbo run build --affected` (`next build`; needs `KEYCLOAK_CLIENT_SECRET`, any value). Run it yourself only when
+  asked, never while it could clash with the running dev servers. Local only: `test:e2e` and `test:e2e:instant` (CONTRIBUTING.md).
+
 ## Process (sdlc plugin)
-- Every change goes through the `sdlc` skill: pick lane S/M/L; lane L artifacts live in `docs/work/<date>-<slug>/`.
-- Standards are enforced, not remembered: `.claude/rules/` loads per path, ESLint holds the checkable design and i18n rules,
-  and `.claude/sdlc.json` makes the hooks lint each edit, guard vendored UI and run `pnpm check` before you stop.
-- Review: the `reviewer` agent with `REVIEW.md`, three rounds at most. Debt (shortcuts, deferred findings) goes to `docs/debt.md`.
+- Every change goes through the `sdlc` skill (lane S/M/L). Lane L artifacts: `docs/work/<date>-<slug>/`; debt: `docs/debt.md`.
+- `.claude/sdlc.json` lints each edit, blocks vendored UI (`packages/ui/src/components/{hairline,ui}`), bans npm/yarn and
+  killing shared processes, and runs verify on Stop. `.claude/rules/` cards load per path; reviews read `REVIEW.md`.
 
 ## Git
 - Conventional Commits (commitlint enforces it). Do not add co-author or "generated with" lines to commits or PRs.
