@@ -298,7 +298,9 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 | `spending-ring.tsx` | With a category open, the legend starts with the same small "All" button as the ring's centre (feature patch) | Cost by room: after picking a room in the list, the way back sits where the hand is; the centre button alone was easy to miss |
 | `floating.ts` | `themeVars` copies the anchor's theme tokens only when they differ from the page's; otherwise the portal inherits them live | Popovers, menus and tooltips froze the theme they opened in, so switching light/dark from the account menu left the menu in the old theme until it closed |
 | `log-stream.tsx` | A `header` node above the toolbar (feature patch) | The title only named the log for screen readers: the Overview's device log was the one card without a heading |
+| `log-stream.tsx` | A `timeZone` prop: every row's time in that IANA zone, on the server and in the browser (feature patch) | The device log showed the browser's timezone while the rest of the app shows the home's |
 | `token-bucket.tsx` | A `header` node that replaces the title row; `title` still names the meter (feature patch) | The Overview's tier card: the price now and the next one, large, with an arrow between |
+| `empty-state-scenes.ts`, `empty-state.tsx` | `box` and `Shapes` exported (feature patch) | The demo-home cards on sign-in (`features/auth/components/demo-house-scene.tsx`) draw an isometric house in the EmptyState style without copying its geometry or theme tokens |
 
 Patches fix bugs first. A **feature patch** (marked above) is allowed only when the product needs a capability that no prop
 or wrapper can give; keep it small, say why in `patch.mjs`, and list it here so an upstream update re-checks it.

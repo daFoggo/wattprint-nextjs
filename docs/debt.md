@@ -4,27 +4,36 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
-- 2026-11-22 (alerts v3, docs/work/2026-11-22-alerts-v3, R1 Minor):
-  - The add button reads every named device's detail (`getDevice`, which also re-reads `/energy/devices` and the
-    tips) on each alerts page load and after each save: about 15 backend calls for 7 devices. A bulk run-length
-    endpoint, or `getDevice` reusing `getDevices`, once homes have ~20 devices.
-  - A broken watch (a Wappi `sql` rule that stopped working) stays under "Đang theo dõi" with its badge: the list
-    offers no delete for it and the backend's `cancel_watch` only ends active rows. Needs both sides.
-  - With under two points of history, a money template steps by 1 ₫ (`templates.ts` fallback). Step by a round
-    amount (1,000 ₫ / 10,000 ₫) for new homes.
-  - A Wappi watch widget in chat links to `#watch-<id>` even after the watch ended (the widget has no status);
-    the Overview and alerts page now link only listed watches (`isWatched`).
+- 2026-11-23 (T03 demo sign-in, wattprint-backend docs/work/2026-11-23-demo-sign-in): every demo visitor signs in as the
+  one real owner of the home (no read-only role, no limits, by decision), so a visitor can change that home's
+  settings for everyone. Declined for now: separate demo members per visitor (`DEMO_EXTRA_MEMBERS`). The session
+  caps are counted per API process (`shortcut:` in `demo.py`). Pay: before the demo is linked from a public page,
+  when a visitor breaks it, or when the API runs several workers.
+- 2026-11-23 (T03 R3 Minor): `demo.py` `_unlock` reads `access_token` from the admin client's 200 without checking
+  the body, so a malformed answer gives 500 instead of 503. Unlikely with Keycloak. Pay: next touch of `demo.py`.
+- 2026-11-22 (alerts v3) A Wappi watch widget in chat links to `#watch-<id>` even after the watch ended (the widget
+  has no status); the Overview and alerts page now link only listed watches (`isWatched`). T02 2026-11-23: not paid.
+  The widget is a snapshot stored in the chat (status `active` when made); knowing it ended needs a live read per
+  widget or a status lookup on chat load, and a missing anchor only lands on the top of the alerts page. Pay: when
+  the chat can carry live watch status.
+- 2026-11-23 (T02, R1 Minors): no test pins that the LogStream `timeZone` patch formats in that zone (patch.test only
+  checks the text is applied); none pins that `getDevice` shares `getDevices`' cache (a different `bill` on the
+  alerts page would bring back one list read per device); rooms test does not cover a room whose second device
+  spent 0 (it becomes lone and is named by the device). Pay: next touch of each file.
+- 2026-11-23 (T02): `pnpm --filter @workspace/ui hairline` now fails: upstream `voice-talk.tsx` no longer matches its
+  useHairlineText patch (upstream also changed `voice-orb.tsx` and `globals.css`). T02 restored those three files to
+  HEAD and kept only its log-stream change. Pay: before the next Hairline update (re-cut the voice-talk patch).
 - 2026-11-22 (docs/work/2026-11-22-public-domains): prod (`../wattprint-web-prod`, `next start` 11081/11082) runs as
   detached shells, so a reboot stops it; Keycloak serves the public domain from `start-dev`. Move both to services
-  (systemd or containers, Keycloak `start`) when the demo must survive restarts.
-- 2026-11-22 (public domains, R1 minors): `deploy/nginx/apply.sh` uses `nginx -t && reload`, which `set -e` does not
-  stop on, so a bad site file still prints ok; auth nginx forwards the client's own `X-Forwarded-For` (Keycloak logs a
-  spoofable IP, use `$remote_addr`); wattprint-backend README/.env.example LAN-phone recipe now also needs `API_BIND=0.0.0.0`.
+  (systemd or containers, Keycloak `start`) when the demo must survive restarts. T02 2026-11-23: not done, it is
+  infrastructure on the prod server (out of scope for code work).
 - 2026-11-22 (public domains, mobile R1): wattprint-expo dev/preview/production share the `wattprint` scheme, so with
   two variants installed the Keycloak redirect can open the wrong one and sign-in silently returns; fix = a scheme per
   env + matching `wattprint-mobile` redirect URIs. After cutover a dev build without `.env` falls back to the localhost
-  issuer (`auth-client.ts:28`) and Keycloak's cookie check likely fails; set `EXPO_PUBLIC_KEYCLOAK_URL`.
-- 2026-11-22 (docs/work/2026-11-21-ai-forecast-anomaly, R1 minors and accepted limits):
+  issuer (`auth-client.ts:28`) and Keycloak's cookie check likely fails; set `EXPO_PUBLIC_KEYCLOAK_URL`. T02
+  2026-11-23: skipped, wattprint-expo is not in this workspace.
+- 2026-11-22 (docs/work/2026-11-21-ai-forecast-anomaly, R1 minors and accepted limits; T02 2026-11-23: skipped,
+  the forecast module is being worked on by someone else):
   - The usage model loses its backtest on Houses 2 and 5 (MAPE 16.3 % / 7.9 % vs the weekday average's 9.1 % /
     6.9 %); there the bill forecast falls back to the weekday method (`trusted()`). P10–P90 coverage 25–61 %
     against a 72–88 % target. Pay: when the model wins on more homes (weather-normalised level, more NILM history).
@@ -36,20 +45,34 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   - Feedback buttons only on the Overview; mail has no link back.
   - `refresh_home` ~1.7 s per modelled home per hour, run serially in the insight worker: measure before more
     than a few hundred homes have a model.
-- 2026-11-22 (room-spending fix, R2 minor): when the tile is by device, a device alone in a room is still labelled
-  by its room (`features/energy/rooms.ts`). Pay: when homes start setting rooms.
-- 2026-11-22 (signed-in check): the device log (`LogStream` patch) shows the browser's timezone after hydration,
-  the rest of the app the home's (`Asia/Ho_Chi_Minh`); they differ only for a browser outside Vietnam. Pay: when
-  a home can be outside Vietnam (format with the app's `timeZone` in the patch).
-- 2026-11-22 (empty states, R2 minor): with no runs, the device page's log keeps its subtitle "Chạy 0 lần · mỗi dòng là
-  một lần bật đến lúc tắt" above the empty state. Pay: next touch of `devices/[id]/page.tsx` (drop the second half at 0).
 
 Deliberate scale limits stay as `shortcut:` comments in the code, each with its trigger
-(wattprint-backend: SSE polling, per-process copilot rate count, pattern-only privacy, hourly bill recompute, CPU
+(wattprint-backend: SSE polling, per-process copilot and demo sign-in rate counts, pattern-only privacy, hourly
+bill recompute, CPU
 torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline `action-receipt` type exclusion).
 
 ## Paid
 
+- 2026-11-23 (T03 debt fixes): the shared demo owner locked by wrong passwords now unlocks itself (the API clears the
+  lockout with service account `wattprint-demo-admin` and retries); `/demo/session` answers only the dashboard (its
+  client secret) and caps each visitor (5 a minute, by the address nginx saw) under the global 20, so one script no
+  longer keeps everyone on 429.
+- 2026-11-23 (T02, uncommitted; lane M, R1 ship, lane S for nginx/docs/copy):
+  - Alerts v3: `getDevice` reuses the request's `getDevices` and a cached `tips`, so the add button reads
+    `/energy/devices` once (7 devices: 8 backend calls, was 15). The per-device read stays as a `shortcut:`.
+  - Alerts v3: a broken watch can be cancelled: backend `cancel_watch` ends active or broken rows
+    (tests/test_watches.py), the alerts page shows the cancel button on every listed watch.
+  - Alerts v3: with under two points of history a money template steps by 1,000 ₫ from the figure now rounded to it
+    (templates.test.ts).
+  - Public domains: `apply.sh` stops on a failed `nginx -t`; all three sites send `X-Forwarded-For $remote_addr`
+    (both domains answer `server: nginx` with no CDN/proxy headers, so nginx is the edge); README/.env.example LAN
+    recipe names `API_BIND=0.0.0.0`. Takes effect only after `sudo ./apply.sh` on the nginx host (not this server);
+    then check Keycloak logs the real client IP, and a private IP there means a proxy in front: revert to
+    `$proxy_add_x_forwarded_for` with `real_ip`.
+  - Room spending: when the tile is by device, a lone device in a room is named by the device (rooms.test.ts).
+  - Device log: LogStream takes a `timeZone` (patch.mjs feature patch, docs/design-system.md); the device timeline
+    passes the home's `Asia/Ho_Chi_Minh`, so server, browser and the rest of the app agree.
+  - Device page: with no runs the log subtitle is just "Chạy 0 lần".
 - 2026-11-21 (change D, after docs/work/2026-11-21-alerts-v2):
   - Home settings location card: title left, field right from `md` (`md:grid-cols-3`), like the SettingsForm rows.
   - Hallmark beside the design system: the first real new page (Alerts) was built with Hallmark's app-screen

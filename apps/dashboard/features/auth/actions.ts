@@ -2,15 +2,22 @@
 
 import { updateTag } from "next/cache"
 import { cookies } from "next/headers"
-import { getLocale } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
+import { z } from "zod"
 // eslint-disable-next-line no-restricted-imports -- redirects to Keycloak (external) or a getPathname({ locale }) path (docs/internationalization.md)
 import { redirect } from "next/navigation"
 
-import { OAUTH_CALLBACK_PATH, SIGN_IN_PATH } from "@/config/routes"
+import {
+  DASHBOARD_PATH,
+  OAUTH_CALLBACK_PATH,
+  SIGN_IN_PATH,
+} from "@/config/routes"
 import { getPathname } from "@/i18n/navigation"
 import { getAuthProvider } from "@/lib/auth"
 import { SESSION_TAG } from "@/lib/dal"
 import { publicEnv } from "@/lib/env.public"
+
+import { createDemoSession } from "./server"
 
 /**
  * Sends the browser to Keycloak in the page's language. With `provider` Keycloak goes straight to that identity
@@ -41,6 +48,24 @@ export async function signInWithGoogleAction(): Promise<void> {
 
 export async function signInWithEmailAction(): Promise<void> {
   await startSignIn()
+}
+
+/** Signs in as a demo home's owner: the backend does the password grant, we verify and store the tokens. */
+export async function signInAsDemoHomeAction(
+  house: string
+): Promise<{ error: string } | void> {
+  const locale = await getLocale()
+  try {
+    const tokens = await createDemoSession(
+      z.string().min(1).max(32).parse(house)
+    )
+    await (await getAuthProvider()).signInWithTokens(tokens)
+  } catch (error) {
+    console.error("demo sign-in failed", error)
+    return { error: (await getTranslations("auth.demo"))("failed") }
+  }
+  updateTag(SESSION_TAG)
+  redirect(getPathname({ href: DASHBOARD_PATH, locale }))
 }
 
 export async function signOutAction(): Promise<void> {

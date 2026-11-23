@@ -41,7 +41,7 @@ const path = (points: Vec3[], close = true) =>
 type Style = { fills?: [SceneFill, SceneFill, SceneFill]; stroke?: SceneStroke; dashed?: boolean; hero?: boolean };
 
 /** The three faces you can see of an upright box: the left-front, the right-front and the top. */
-function box(x: number, y: number, z: number, w: number, d: number, h: number, style: Style = {}): SceneShape[] {
+export /* patched (hairline/patch.mjs) */ function box(x: number, y: number, z: number, w: number, d: number, h: number, style: Style = {}): SceneShape[] {
   const [X, Y, Z] = [x + w, y + d, z + h];
   const [left, right, top] = style.fills ?? ["left", "right", "top"];
   const base = { stroke: style.stroke ?? "line", dashed: style.dashed, hero: style.hero };

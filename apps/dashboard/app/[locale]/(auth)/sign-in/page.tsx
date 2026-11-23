@@ -3,11 +3,16 @@ import { Suspense } from "react"
 import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
+import { Skeleton } from "@workspace/ui/components/hairline/skeleton"
+
 import { FormError } from "@/features/auth/components/form-error"
 import { EmailSignInButton } from "@/features/auth/components/email-sign-in-button"
 import { GoogleSignInButton } from "@/features/auth/components/google-sign-in-button"
+import { DemoHomesDialog } from "@/features/auth/components/demo-homes-dialog"
+import { getDemoHomes } from "@/features/auth/queries"
 
 import {
+  signInAsDemoHomeAction,
   signInWithEmailAction,
   signInWithGoogleAction,
 } from "@/features/auth/actions"
@@ -37,6 +42,13 @@ async function OAuthError({
   return <FormError message={t("failed")} />
 }
 
+/** Only when the backend has a seeded demo home (it reads the database, so it streams in). */
+async function DemoHomes() {
+  const homes = await getDemoHomes()
+  if (homes.length === 0) return null
+  return <DemoHomesDialog homes={homes} action={signInAsDemoHomeAction} />
+}
+
 export default function SignInPage({
   searchParams,
 }: {
@@ -46,22 +58,21 @@ export default function SignInPage({
   return (
     <>
       <AuthAside>
-        <AuthPitch title={t("pitchTitle")}>
-          {t("pitchBody")}
-        </AuthPitch>
+        <AuthPitch title={t("pitchTitle")}>{t("pitchBody")}</AuthPitch>
       </AuthAside>
       <AuthMain>
         <AuthHeader />
         <AuthBody>
-          <AuthHeading title={t("title")}>
-            {t("subtitle")}
-          </AuthHeading>
+          <AuthHeading title={t("title")}>{t("subtitle")}</AuthHeading>
           <div className="flex flex-col gap-4">
             <Suspense>
               <OAuthError searchParams={searchParams} />
             </Suspense>
             <GoogleSignInButton action={signInWithGoogleAction} />
             <EmailSignInButton action={signInWithEmailAction} />
+            <Suspense fallback={<Skeleton height={40} />}>
+              <DemoHomes />
+            </Suspense>
           </div>
         </AuthBody>
       </AuthMain>

@@ -140,7 +140,7 @@ function Shape({ shape, clipId }: { shape: SceneShape; clipId?: string }) {
   return clipId ? <g clipPath={`url(#${clipId})`}>{el}</g> : el;
 }
 
-function Shapes({ shapes, id }: { shapes: SceneShape[]; id: string }) {
+export /* patched (hairline/patch.mjs) */ function Shapes({ shapes, id }: { shapes: SceneShape[]; id: string }) {
   const clips = [...new Set(shapes.flatMap((s) => (s.clip ? [s.clip] : [])))];
   return (
     <>

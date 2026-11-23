@@ -24,7 +24,22 @@ const hook = (file, line) =>
     `${line}  const t = useHairlineText(); // patched (hairline/patch.mjs)\n`
   )
 
+// The demo-home cards (apps/dashboard features/auth) draw their own isometric house with the EmptyState helpers.
+const SCENE = "Exported for the demo-home illustrations, drawn in the EmptyState style without copying its geometry or tokens."
+
 export const PATCHES = [
+  {
+    file: "empty-state-scenes.ts",
+    why: SCENE,
+    from: "\nfunction box(",
+    to: "\nexport /* patched (hairline/patch.mjs) */ function box(",
+  },
+  {
+    file: "empty-state.tsx",
+    why: SCENE,
+    from: "\nfunction Shapes(",
+    to: "\nexport /* patched (hairline/patch.mjs) */ function Shapes(",
+  },
   {
     file: "prompt-composer.tsx",
     why: "Stop re-renders the button into Send (type=submit) during its own click, so the click's default action then submitted the form: stopping an answer also sent whatever was typed.",
@@ -315,15 +330,45 @@ export const PATCHES = [
   },
   {
     file: "log-stream.tsx",
-    why: "The clock read the local time on the server and in the browser: the server's timezone is UTC, so hydration mismatched the Activity tile. Both renders show UTC, then the visitor's timezone; the milliseconds come apart so narrow rows can drop them.",
+    why: "The clock read the local time on the server and in the browser: the server's timezone is UTC, so hydration mismatched the Activity tile. Both renders show UTC, then the visitor's timezone; with `timeZone` (feature patch below) both show that zone. The milliseconds come apart so narrow rows can drop them.",
     from: 'const pad = (n: number, w = 2) => String(n).padStart(w, "0");\nconst clock = (d: DateLike) => {\n  const t = new Date(toTime(d));\n  return `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`;\n};',
-    to: 'const pad = (n: number, w = 2) => String(n).padStart(w, "0");\nconst clock = (d: DateLike, local: boolean) => { // patched (hairline/patch.mjs): UTC until hydrated, then local\n  const t = new Date(toTime(d));\n  const [h, m, s] = local ? [t.getHours(), t.getMinutes(), t.getSeconds()] : [t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()];\n  return [`${pad(h)}:${pad(m)}:${pad(s)}`, `.${pad(t.getMilliseconds(), 3)}`] as const;\n};\n// The server and the hydrating render both show UTC, then the visitor\'s timezone takes over.\nconst subscribeNothing = () => () => {};\nconst useHydrated = () => React.useSyncExternalStore(subscribeNothing, () => true, () => false);',
+    to: 'const pad = (n: number, w = 2) => String(n).padStart(w, "0");\nconst clock = (d: DateLike, local: boolean, timeZone?: string) => { // patched (hairline/patch.mjs): in `timeZone`, else UTC until hydrated, then local\n  const t = new Date(toTime(d));\n  const [h, m, s] = local ? [t.getHours(), t.getMinutes(), t.getSeconds()] : [t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()];\n  const hms = timeZone ? t.toLocaleTimeString("en-GB", { timeZone, hourCycle: "h23" }) : `${pad(h)}:${pad(m)}:${pad(s)}`;\n  return [hms, `.${pad(t.getMilliseconds(), 3)}`] as const;\n};\n// The server and the hydrating render both show UTC, then the visitor\'s timezone takes over.\nconst subscribeNothing = () => () => {};\nconst useHydrated = () => React.useSyncExternalStore(subscribeNothing, () => true, () => false);',
   },
   {
     file: "log-stream.tsx",
-    why: "Each row picks its clock after hydration (see above).",
+    why: "The device log showed the browser's timezone, the rest of the app the home's: `timeZone` formats every row's time in the given IANA zone on the server and in the browser (feature patch).",
+    from: "  /** Lines kept in memory while you're at the bottom. */\n  max?: number;\n",
+    to: "  /** Lines kept in memory while you're at the bottom. */\n  max?: number;\n  /** IANA zone for the times, e.g. the home's; without it, the visitor's (patched (hairline/patch.mjs)). */\n  timeZone?: string;\n",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Takes the `timeZone` prop of the patch above.",
+    from: "subscribe, loadEarlier, max = 1000",
+    to: "subscribe, loadEarlier, timeZone /* patched (hairline/patch.mjs) */, max = 1000",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Hands `timeZone` to each row (see above).",
+    from: "  reduced: boolean;\n  toggle: (id: string) => void;\n}",
+    to: "  reduced: boolean;\n  toggle: (id: string) => void;\n  timeZone?: string; // patched (hairline/patch.mjs)\n}",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Hands `timeZone` to each row (see above); before the useHairlineText hook, which names this line.",
+    from: "function Row({ line, open, query, enter, reduced, toggle }: RowProps) {",
+    to: "function Row({ line, open, query, enter, reduced, toggle, timeZone /* patched (hairline/patch.mjs) */ }: RowProps) {",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Hands `timeZone` to each row (see above).",
+    from: "reduced={reduced} toggle={toggle} />",
+    to: "reduced={reduced} toggle={toggle} timeZone={timeZone} /* patched (hairline/patch.mjs) */ />",
+  },
+  {
+    file: "log-stream.tsx",
+    why: "Each row picks its clock after hydration, or in `timeZone` (see above).",
     from: "  const [copied, setCopied] = React.useState(false);\n  const has = Boolean(line.data && Object.keys(line.data).length);",
-    to: "  const [copied, setCopied] = React.useState(false);\n  const hydrated = useHydrated();\n  const [time, ms] = clock(line.at, hydrated); // patched (hairline/patch.mjs)\n  const has = Boolean(line.data && Object.keys(line.data).length);",
+    to: "  const [copied, setCopied] = React.useState(false);\n  const hydrated = useHydrated();\n  const [time, ms] = clock(line.at, hydrated, timeZone); // patched (hairline/patch.mjs)\n  const has = Boolean(line.data && Object.keys(line.data).length);",
   },
   {
     file: "token-bucket.tsx",
@@ -497,7 +542,7 @@ export const PATCHES = [
   imports("log-stream.tsx"),
   hook(
     "log-stream.tsx",
-    "const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle }: RowProps) {\n"
+    "const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle, timeZone /* patched (hairline/patch.mjs) */ }: RowProps) {\n"
   ),
   text(
     "log-stream.tsx",

@@ -20,6 +20,7 @@ import {
   logoutKeycloakSession,
   refreshKeycloakTokens,
   type KeycloakOidcConfig,
+  type KeycloakTokenResponse,
 } from "./oidc"
 
 const oidcConfig: KeycloakOidcConfig = {
@@ -30,6 +31,33 @@ const oidcConfig: KeycloakOidcConfig = {
 
 export function createKeycloakProvider(options: AuthOptions): AuthProvider {
   const cookieNames = getKeycloakCookieNames(options.cookieName)
+
+  /** Writes the token cookies; the one place for the callback, the refresh and a token sign-in. */
+  function storeTokens(
+    cookieStore: Awaited<ReturnType<typeof cookies>>,
+    tokens: KeycloakTokenResponse
+  ) {
+    const refreshMaxAge = tokens.refresh_expires_in || 30 * 24 * 3600
+    cookieStore.set(
+      cookieNames.access,
+      tokens.access_token,
+      tokenCookieOptions(tokens.expires_in || 300)
+    )
+    if (tokens.refresh_token) {
+      cookieStore.set(
+        cookieNames.refresh,
+        tokens.refresh_token,
+        tokenCookieOptions(refreshMaxAge)
+      )
+    }
+    if (tokens.id_token) {
+      cookieStore.set(
+        cookieNames.id,
+        tokens.id_token,
+        tokenCookieOptions(refreshMaxAge)
+      )
+    }
+  }
 
   return {
     async getSession(): Promise<Session | null> {
@@ -73,32 +101,24 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
       if (!refreshToken) return
 
       try {
-        const tokens = await refreshKeycloakTokens(oidcConfig, refreshToken)
-        const accessMaxAge = tokens.expires_in || 300
-        const refreshMaxAge = tokens.refresh_expires_in || 30 * 24 * 3600
-
-        cookieStore.set(
-          cookieNames.access,
-          tokens.access_token,
-          tokenCookieOptions(accessMaxAge)
+        storeTokens(
+          cookieStore,
+          await refreshKeycloakTokens(oidcConfig, refreshToken)
         )
-        if (tokens.refresh_token) {
-          cookieStore.set(
-            cookieNames.refresh,
-            tokens.refresh_token,
-            tokenCookieOptions(refreshMaxAge)
-          )
-        }
-        if (tokens.id_token) {
-          cookieStore.set(
-            cookieNames.id,
-            tokens.id_token,
-            tokenCookieOptions(refreshMaxAge)
-          )
-        }
       } catch (err) {
         console.error("[keycloak] refreshSession error:", err)
       }
+    },
+
+    async signInWithTokens(tokens: KeycloakTokenResponse): Promise<void> {
+      // Same checks as getSession (signature, issuer, azp = this client) before any cookie is written.
+      const claims = await verifyKeycloakJwt(
+        tokens.access_token,
+        oidcConfig.issuer,
+        { clientId: oidcConfig.clientId }
+      )
+      if (!claims) throw new Error("Keycloak token rejected: not valid for this app")
+      storeTokens(await cookies(), tokens)
     },
 
     async signOut(redirectTo?: string): Promise<string | void> {
@@ -184,30 +204,7 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
           redirectUri: pkce.redirectUri,
         })
 
-        const accessMaxAge = tokens.expires_in || 300
-        const refreshMaxAge = tokens.refresh_expires_in || 30 * 24 * 3600
-
-        cookieStore.set(
-          cookieNames.access,
-          tokens.access_token,
-          tokenCookieOptions(accessMaxAge)
-        )
-
-        if (tokens.refresh_token) {
-          cookieStore.set(
-            cookieNames.refresh,
-            tokens.refresh_token,
-            tokenCookieOptions(refreshMaxAge)
-          )
-        }
-
-        if (tokens.id_token) {
-          cookieStore.set(
-            cookieNames.id,
-            tokens.id_token,
-            tokenCookieOptions(refreshMaxAge)
-          )
-        }
+        storeTokens(cookieStore, tokens)
       },
     },
   }

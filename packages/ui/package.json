@@ -52,6 +52,7 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/hairline/motion": "./src/components/hairline/ui-interaction-motion.ts",
     "./components/hairline/voice-session": "./src/components/hairline/voice-session.ts",
+    "./components/hairline/empty-state-scenes": "./src/components/hairline/empty-state-scenes.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
   }

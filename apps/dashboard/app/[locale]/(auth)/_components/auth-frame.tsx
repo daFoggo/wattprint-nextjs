@@ -25,6 +25,7 @@ export function AuthAside({ children }: { children: React.ReactNode }) {
         </div>
         {/* Same height as the header so the showcase stays vertically centered. */}
         <div className="relative flex h-24 shrink-0 items-center justify-between text-sm text-muted-foreground">
+          {/* eslint-disable-next-line no-restricted-syntax -- the brand name, the same in vi and en (docs/internationalization.md) */}
           <span>© 2026 WattPrint</span>
           <ThemeToggle />
         </div>
