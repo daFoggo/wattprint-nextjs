@@ -29,6 +29,13 @@ export async function fetchConversation(token: string, id: string) {
   )
 }
 
+/** The watches' statuses only, to show which watch widgets in a stored chat have ended. */
+export async function fetchWatchStatuses(token: string) {
+  return z
+    .array(z.object({ id: z.string(), status: z.string() }))
+    .parse(await apiFetch("/insights/watches", { token }))
+}
+
 export async function patchConversation(
   token: string,
   id: string,

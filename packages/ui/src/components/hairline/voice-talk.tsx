@@ -49,6 +49,8 @@ export interface VoiceTalkProps extends VoiceSessionOptions {
   /** The orb's diameter in px. */
   size?: number;
   colors?: [string, string, string];
+  /** The plasma's colour, when no colors are given. */
+  tone?: "ice" | "solar" | "rose";
   /** The assistant's name, for screen readers. */
   label?: string;
   labels?: Partial<VoiceTalkLabels>;
@@ -112,7 +114,7 @@ function Spinner() {
   );
 }
 
-export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {
+export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {
   const t = useHairlineText(); // patched (hairline/patch.mjs)
   const own = useVoiceSession(options);
   const session = given ?? own;
@@ -163,7 +165,7 @@ export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, la
   return (
     <div className={`flex flex-col items-center ${className}`}>
       <div className={mode === "tap" ? "cursor-pointer" : undefined} onClick={mode === "tap" ? () => session.toggle() : undefined}>
-        <VoiceOrb state={session.state} getLevel={session.getLevel} getSpectrum={session.getSpectrum} size={size} colors={colors} label={label} />
+        <VoiceOrb state={session.state} getLevel={session.getLevel} getSpectrum={session.getSpectrum} size={size} colors={colors} tone={tone} label={label} />
       </div>
 
       <div className="mt-5 flex items-center">

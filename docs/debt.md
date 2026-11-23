@@ -4,6 +4,12 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
+- 2026-11-23 (debt-watch-status R1 Minor): opening a stored chat that holds a watch widget also reads
+  `/insights/watches`; when that read fails the whole chat fails to open (dashboard-data: a failed read throws).
+  Pay: if the alerts endpoint is ever down more than the chat, or users report chats that will not open.
+- 2026-11-23 (debt-watch-status R1 Minor): the Hairline re-cut brought upstream's canvas plasma `voice-orb.tsx`; voice
+  mode passes neither `colors` nor `tone`, so the orb is the fixed "ice" blue in both themes, not checked by eye at
+  375/1440 px. Pay: next touch of voice mode (pick `colors` from the chart tokens or a `tone`).
 - 2026-11-23 (T03 demo sign-in, wattprint-backend docs/work/2026-11-23-demo-sign-in): every demo visitor signs in as the
   one real owner of the home (no read-only role, no limits, by decision), so a visitor can change that home's
   settings for everyone. Declined for now: separate demo members per visitor (`DEMO_EXTRA_MEMBERS`). The session
@@ -11,18 +17,6 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   when a visitor breaks it, or when the API runs several workers.
 - 2026-11-23 (T03 R3 Minor): `demo.py` `_unlock` reads `access_token` from the admin client's 200 without checking
   the body, so a malformed answer gives 500 instead of 503. Unlikely with Keycloak. Pay: next touch of `demo.py`.
-- 2026-11-22 (alerts v3) A Wappi watch widget in chat links to `#watch-<id>` even after the watch ended (the widget
-  has no status); the Overview and alerts page now link only listed watches (`isWatched`). T02 2026-11-23: not paid.
-  The widget is a snapshot stored in the chat (status `active` when made); knowing it ended needs a live read per
-  widget or a status lookup on chat load, and a missing anchor only lands on the top of the alerts page. Pay: when
-  the chat can carry live watch status.
-- 2026-11-23 (T02, R1 Minors): no test pins that the LogStream `timeZone` patch formats in that zone (patch.test only
-  checks the text is applied); none pins that `getDevice` shares `getDevices`' cache (a different `bill` on the
-  alerts page would bring back one list read per device); rooms test does not cover a room whose second device
-  spent 0 (it becomes lone and is named by the device). Pay: next touch of each file.
-- 2026-11-23 (T02): `pnpm --filter @workspace/ui hairline` now fails: upstream `voice-talk.tsx` no longer matches its
-  useHairlineText patch (upstream also changed `voice-orb.tsx` and `globals.css`). T02 restored those three files to
-  HEAD and kept only its log-stream change. Pay: before the next Hairline update (re-cut the voice-talk patch).
 - 2026-11-22 (docs/work/2026-11-22-public-domains): prod (`../wattprint-web-prod`, `next start` 11081/11082) runs as
   detached shells, so a reboot stops it; Keycloak serves the public domain from `start-dev`. Move both to services
   (systemd or containers, Keycloak `start`) when the demo must survive restarts. T02 2026-11-23: not done, it is
@@ -52,6 +46,13 @@ bill recompute, CPU
 torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline `action-receipt` type exclusion).
 
 ## Paid
+
+- 2026-11-23 (debt-watch-status, lane M, R1 ship; docs/work/2026-11-23-debt-watch-status):
+  - Alerts v3: a Wappi watch widget in a stored chat shows "Ended" and drops its `#watch-<id>` link once the alerts
+    list has that watch as fired, expired or cancelled (read on chat load, only when the chat holds a watch widget).
+  - T02 R1 Minors: tests pin the LogStream `timeZone` patch (hairline/log-stream.test.mjs), `getDevice` reusing the
+    request's `getDevices` read (energy queries.test.ts) and a 0-spend roommate making a room lone (rooms.test.ts).
+  - `pnpm --filter @workspace/ui hairline` passes again: the voice-talk hook anchor re-cut for upstream's `tone` prop.
 
 - 2026-11-23 (T03 debt fixes): the shared demo owner locked by wrong passwords now unlocks itself (the API clears the
   lockout with service account `wattprint-demo-admin` and retries); `/demo/session` answers only the dashboard (its

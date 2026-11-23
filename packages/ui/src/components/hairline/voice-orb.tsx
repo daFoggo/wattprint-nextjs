@@ -1,34 +1,37 @@
 "use client";
 
 import * as React from "react";
-import { createSpring, useInteractionActivity, useInteractionReducedMotion, type Spring } from "./ui-interaction-motion";
+import { createSpring, useInteractionActivity, useInteractionReducedMotion } from "./ui-interaction-motion";
 import { BANDS, createAudioMeter, elementSource, type AudioMeter } from "./voice-audio";
-import { createFluidOrb, resolveColors, waterCss, type Emitter, type FluidOrb, type Rgb, type Water } from "./voice-orb-gl";
 
 /* ─────────────────────────────────────────────────────────
- * VOICE ORB: ink in water that the voice moves
+ * VOICE ORB: plasma in a glass globe that the voice moves
  *
- * A real fluid runs inside a round vessel, and each state is a way
- * of moving it, so the orb shows which way the sound is going:
- *   listening  sound comes in: the voice's frequency bands push
- *              ink in from the rim, low notes in the first colour,
- *              high notes in the last
- *   speaking   sound goes out: each syllable blooms ink outward
- *              from the centre, band by band
- *   thinking   no sound: a slow vortex stirs the ink and folds the
- *              colours into each other
- *   idle       the ink drifts, barely moving; a finger or a cursor
- *              stirs it
+ * A dark globe with a feathered edge holds a core of light and six
+ * long ribbons of plasma on tilted orbits. Each state moves them its
+ * own way, so the orb shows which way the sound is going:
+ *   listening  sound comes in: the ribbons draw toward the core and
+ *              brighten with their bands of the voice; a clear onset
+ *              sends one soft pulse in from the edge
+ *   speaking   sound goes out: the core swells with loudness and a
+ *              clear syllable sends a soft pulse outward
+ *   thinking   no sound: the ribbons lengthen and wind into a slow
+ *              spiral and the core breathes, dimmer
+ *   idle       a slow drift; a finger or a cursor draws the light
+ *              toward it
  *
- * The states are spring weights, so they blend: speech fading into
- * thought hands the ink from one motion to the next. Loudness and
- * bands are read once a frame from functions, never through React
- * state. Off screen or in a hidden tab it stops.
+ * Everything is smoothed: loudness through a soft spring, bands that
+ * rise quickly and fall slowly, states blending over about a second
+ * and a half, and turning that accumulates, so nothing jolts. The
+ * globe is always dark, so it reads the same on any page. Loudness
+ * and bands are read once a frame from functions, never through React
+ * state; off screen or in a hidden tab it stops.
  *
- * Reduced motion: one still, settled picture per state.
+ * Reduced motion: one still picture per state.
  * ───────────────────────────────────────────────────────── */
 
 export type VoiceOrbState = "idle" | "listening" | "thinking" | "speaking";
+export type VoiceOrbTone = "ice" | "solar" | "rose";
 
 export interface VoiceOrbProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
   state?: VoiceOrbState;
@@ -38,71 +41,71 @@ export interface VoiceOrbProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   getSpectrum?: () => ArrayLike<number>;
   /** The loudness as a prop instead; getLevel wins when both are given. */
   level?: number;
-  /** Diameter in px. */
+  /** Diameter of the orb's box in px; the globe fills most of it and its light spills a little past. */
   size?: number;
-  /** Three CSS colours for the ink, low notes to high. Theme variables welcome. */
+  /** The plasma's colour. */
+  tone?: VoiceOrbTone;
+  /** Your own three colours instead of a tone: the deep plasma, the streams, the core. Any CSS colour, theme variables too. */
   colors?: [string, string, string];
   /** What it's called for screen readers; the state is added to it. */
   label?: string;
 }
 
-const COLORS: [string, string, string] = ["var(--chart-1, var(--primary))", "var(--chart-3, var(--primary))", "var(--chart-2, var(--primary))"];
-/** Inks for themes without colour of their own: blue, teal and coral. */
-const INKS: Rgb[] = [
-  [0.23, 0.42, 0.95],
-  [0.08, 0.66, 0.6],
-  [0.96, 0.46, 0.38],
-];
-const SAY: Record<VoiceOrbState, string> = { idle: "ready", listening: "listening", thinking: "thinking", speaking: "speaking" };
-const SILENT = new Float32Array(BANDS);
-const TAU = Math.PI * 2;
+type Rgb = [number, number, number];
 
-// How each state moves the water: accelerations in grid cells per second², and ink poured per second.
-const PULL_IN = 1450;
-const PUSH_OUT = 1750;
-const DRIFT = 45;
-const INK_IN = 7;
-const INK_OUT = 7;
-const MOOD = { stiffness: 60, damping: 15 };
-const LEVEL = { stiffness: 320, damping: 30 };
+interface Plasma {
+  halo: Rgb;
+  deep: Rgb;
+  nebulaA: Rgb;
+  nebulaB: Rgb;
+  arc: Rgb;
+  arcCore: Rgb;
+  coreMid: Rgb;
+  rim: Rgb;
+  rimHighlight: Rgb;
+}
 
-const clamp01 = (n: number) => (Number.isFinite(n) ? Math.max(0, Math.min(1, n)) : 0);
-const mixRgb = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
-/** Low notes in the first colour, through the second, high notes in the third. */
-const bandColor = (palette: Rgb[], b: number) => {
-  const t = (b / (BANDS - 1)) * 2;
-  return t <= 1 ? mixRgb(palette[0], palette[1], t) : mixRgb(palette[1], palette[2], t - 1);
+const TONES: Record<VoiceOrbTone, Plasma> = {
+  ice: {
+    halo: [56, 189, 248],
+    deep: [3, 19, 38],
+    nebulaA: [37, 134, 232],
+    nebulaB: [125, 224, 255],
+    arc: [72, 198, 255],
+    arcCore: [235, 250, 255],
+    coreMid: [135, 226, 255],
+    rim: [165, 232, 255],
+    rimHighlight: [235, 250, 255],
+  },
+  solar: {
+    halo: [245, 158, 11],
+    deep: [34, 12, 4],
+    nebulaA: [234, 88, 12],
+    nebulaB: [251, 191, 36],
+    arc: [251, 146, 60],
+    arcCore: [255, 250, 235],
+    coreMid: [253, 212, 130],
+    rim: [253, 212, 145],
+    rimHighlight: [255, 248, 230],
+  },
+  rose: {
+    halo: [244, 114, 182],
+    deep: [31, 6, 18],
+    nebulaA: [225, 29, 110],
+    nebulaB: [251, 146, 190],
+    arc: [244, 114, 182],
+    arcCore: [255, 240, 246],
+    coreMid: [251, 170, 205],
+    rim: [251, 182, 206],
+    rimHighlight: [255, 240, 246],
+  },
 };
 
-/** Where the three pools of dilute ink sit in the water (the vessel's box, y down): low notes top left, high notes below. */
-const POOLS: [number, number][] = [
-  [0.32, 0.36],
-  [0.68, 0.4],
-  [0.5, 0.72],
-];
-
-/** The water's look: the pools turned by phase (they drift a full turn in about a minute), deeper in the dark. */
-function waterLook(dark: boolean, phase: number): Omit<Water, "inks"> {
-  const c = Math.cos(phase), s = Math.sin(phase);
-  return {
-    pools: POOLS.map(([x, y]): [number, number] => [0.5 + (x - 0.5) * c - (y - 0.5) * s, 0.5 + (x - 0.5) * s + (y - 0.5) * c]),
-    poolAlpha: dark ? 0.36 : 0.3,
-    poolRadius: 0.46,
-    base: dark ? [0.09, 0.2] : [0.07, 0.16],
-    line: dark ? 0.4 : 0.32,
-  };
-}
-
-/** The inks and whether the page is dark, read from the theme. A theme whose chart colours are greys (shadcn's default)
- * would pour grey ink, so then the orb uses inks of its own. */
-function readTheme(host: HTMLElement, colorKey: string) {
-  const [r1, r2, r3, bg] = resolveColors(host, [...colorKey.split("|"), "var(--background, #fff)"]);
-  const chroma = (c: Rgb) => Math.max(...c) - Math.min(...c);
-  const inks = [r1, r2, r3].some((c) => chroma(c) > 0.12) ? [r1, r2, r3] : INKS;
-  return { inks, dark: 0.2126 * bg[0] + 0.7152 * bg[1] + 0.0722 * bg[2] < 0.45 };
-}
-
-const rgbCss = (c: Rgb) => `rgb(${Math.round(c[0] * 255)} ${Math.round(c[1] * 255)} ${Math.round(c[2] * 255)})`;
+const SAY: Record<VoiceOrbState, string> = { idle: "ready", listening: "listening", thinking: "thinking", speaking: "speaking" };
+const SILENT = new Float32Array(BANDS);
+// States blend over about a second and a half; loudness is followed smoothly, never frame by frame.
+const MOOD = { stiffness: 34, damping: 11.5 };
+const LEVEL = { stiffness: 110, damping: 19 };
 
 type Weights = { listen: number; speak: number; think: number };
 const WEIGHTS: Record<VoiceOrbState, Weights> = {
@@ -112,60 +115,55 @@ const WEIGHTS: Record<VoiceOrbState, Weights> = {
   speaking: { listen: 0, speak: 1, think: 0 },
 };
 
-interface Clock {
-  time: number;
-  turn: number;
-  stir: number;
-}
+const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
+const clamp01 = (n: number) => (Number.isFinite(n) ? clamp(n, 0, 1) : 0);
+const rgba = (c: Rgb, a: number) => `rgba(${Math.round(c[0])}, ${Math.round(c[1])}, ${Math.round(c[2])}, ${clamp(a, 0, 1).toFixed(3)})`;
+const mix = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+const WHITE: Rgb = [255, 255, 255];
+const BLACK: Rgb = [2, 6, 14];
 
-/** Everything a state does to the water this frame. Pure: the same inputs make the same emitters. */
-function emittersFor(w: Weights, bands: ArrayLike<number>, palette: Rgb[], clock: Clock, dt: number): Emitter[] {
-  const out: Emitter[] = [];
-  const idle = Math.max(0, 1 - w.listen - w.speak - w.think);
-  for (let b = 0; b < BANDS; b++) {
-    const e = clamp01(bands[b] ?? 0);
-    const color = bandColor(palette, b);
-    if (w.listen > 0.02 && e > 0.03) {
-      const a = clock.turn + (b * TAU) / BANDS;
-      const c = Math.cos(a), s = Math.sin(a);
-      const k = e * w.listen;
-      out.push({ x: 0.5 + 0.43 * c, y: 0.5 + 0.43 * s, radius: 0.038, fx: -c * PULL_IN * k * dt, fy: -s * PULL_IN * k * dt, color, amount: k * INK_IN * dt });
+/** Three CSS colours (theme variables and oklch() too) resolved to sRGB through the page, then a whole plasma built from them. */
+function plasmaFrom(host: Element, colors: [string, string, string]): Plasma {
+  const probe = document.createElement("span");
+  probe.style.display = "none";
+  host.appendChild(probe);
+  let swatch: CanvasRenderingContext2D | null | undefined;
+  const rgb = colors.map((c): Rgb => {
+    probe.style.color = "";
+    probe.style.color = c;
+    const resolved = getComputedStyle(probe).color;
+    if (/^rgba?\(/.test(resolved)) {
+      const m = resolved.match(/[\d.]+/g)?.map(Number);
+      if (m && m.length >= 3) return [m[0], m[1], m[2]];
     }
-    if (w.speak > 0.02 && e > 0.03) {
-      // Each band blooms out on two opposite sides, so the voice opens the ink evenly instead of shooting one plume.
-      const a = -clock.turn * 1.3 + (b * Math.PI) / BANDS + (b % 2) * Math.PI + 0.4;
-      const c = Math.cos(a), s = Math.sin(a);
-      const k = e * w.speak;
-      out.push({ x: 0.5 + 0.04 * c, y: 0.5 + 0.04 * s, radius: 0.036, fx: c * PUSH_OUT * k * dt, fy: s * PUSH_OUT * k * dt, color, amount: k * INK_OUT * dt });
+    if (swatch === undefined) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1;
+      canvas.height = 1;
+      swatch = canvas.getContext("2d", { willReadFrequently: true });
     }
-  }
-  // Thinking and idle feed the body from two points circling near the middle; the turning water winds it into arms.
-  const feed = 0.9 * w.think;
-  if (feed > 0.02) {
-    for (let k = 0; k < 2; k++) {
-      const a = clock.stir + k * Math.PI;
-      out.push({ x: 0.5 + 0.12 * Math.cos(a), y: 0.5 + 0.12 * Math.sin(a), radius: 0.026, color: palette[k], amount: feed * 2.2 * dt });
+    if (swatch) {
+      swatch.clearRect(0, 0, 1, 1);
+      swatch.fillStyle = "#808080";
+      swatch.fillStyle = resolved;
+      swatch.fillRect(0, 0, 1, 1);
+      const d = swatch.getImageData(0, 0, 1, 1).data;
+      return [d[0], d[1], d[2]];
     }
-  }
-  if (idle > 0.02) {
-    const t = clock.time;
-    const x = 0.5 + 0.2 * Math.cos(t * 0.23), y = 0.5 + 0.2 * Math.sin(t * 0.17 + 1);
-    const a = Math.atan2(y - 0.5, x - 0.5) + Math.PI / 2;
-    out.push({ x, y, radius: 0.09, fx: Math.cos(a) * DRIFT * idle * dt, fy: Math.sin(a) * DRIFT * idle * dt });
-  }
-  return out;
-}
-
-/** How the water itself behaves in a blend of states: eddies, how fast motion and ink fade, and the turn. */
-function waterFor(w: Weights) {
-  const idle = Math.max(0, 1 - w.listen - w.speak - w.think);
-  const voice = w.listen + w.speak;
+    return [128, 128, 128];
+  });
+  probe.remove();
+  const [deep, stream, core] = rgb;
   return {
-    curl: 2 * idle + 1.2 * w.think + 6 * voice,
-    velocityFade: 0.9 * idle + 0.7 * w.think + 0.8 * voice,
-    inkFade: 0.1 * idle + 0.22 * w.think + 0.34 * voice,
-    rimFade: 0.35 * idle + 0.25 * w.think + 0.05 * w.listen + 0.12 * w.speak,
-    swirl: 0.08 * idle + 0.6 * w.think + 0.05 * w.listen - 0.04 * w.speak,
+    halo: stream,
+    deep: mix(deep, BLACK, 0.86),
+    nebulaA: deep,
+    nebulaB: mix(stream, WHITE, 0.25),
+    arc: stream,
+    arcCore: mix(core, WHITE, 0.82),
+    coreMid: mix(core, WHITE, 0.45),
+    rim: mix(stream, WHITE, 0.5),
+    rimHighlight: mix(core, WHITE, 0.88),
   };
 }
 
@@ -175,236 +173,292 @@ function bandsFromLevel(level: number, time: number, out: Float32Array) {
   return out;
 }
 
-/** The first drops: three small ones, wound into wisps before the first frame, so it never starts empty. */
-function seedFor(palette: Rgb[]): Emitter[] {
-  return [
-    { x: 0.44, y: 0.56, radius: 0.045, color: palette[0], amount: 1.4 },
-    { x: 0.58, y: 0.47, radius: 0.04, color: palette[1], amount: 1.2 },
-    { x: 0.46, y: 0.41, radius: 0.03, color: palette[2], amount: 0.8 },
-  ];
+interface Pulse {
+  age: number;
+  inward: boolean;
 }
 
-export function VoiceOrb({ state = "idle", getLevel, getSpectrum, level, size = 160, colors = COLORS, label = "Voice assistant", className = "", style, ...props }: VoiceOrbProps) {
+interface Frame {
+  t: number;
+  /** Turns accumulated at a speed set by the state, so a change of state never jolts the ribbons. */
+  phase: number;
+  w: Weights;
+  level: number;
+  bands: Float32Array;
+  pull: { x: number; y: number; on: number };
+  pulses: Pulse[];
+}
+
+const RIBBONS = 6;
+const PULSE_LIFE = 1.15;
+const ease = (x: number) => 1 - (1 - clamp(x, 0, 1)) ** 3;
+
+/** One picture of the orb. Lengths are fractions of R, so it draws the same at any size. */
+function paint(ctx: CanvasRenderingContext2D, box: number, R: number, p: Plasma, f: Frame) {
+  const { t, phase, w, level, bands, pull, pulses } = f;
+  const voice = level * (w.listen + w.speak);
+  const cx = box / 2;
+  const cy = box / 2;
+  ctx.globalCompositeOperation = "source-over";
+  ctx.globalAlpha = 1;
+  ctx.clearRect(0, 0, box, box);
+
+  // The dark heart of the globe; its edge is feathered at the end, never drawn as a line.
+  const cavity = ctx.createRadialGradient(cx - R * 0.14, cy - R * 0.16, R * 0.05, cx, cy, R);
+  cavity.addColorStop(0, rgba(p.nebulaA, 0.4));
+  cavity.addColorStop(0.62, rgba(p.deep, 1));
+  cavity.addColorStop(1, rgba(BLACK, 1));
+  ctx.fillStyle = cavity;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Everything inside leans a little toward a finger.
+  const ox = cx + pull.x * R * 0.08 * pull.on;
+  const oy = cy + pull.y * R * 0.08 * pull.on;
+
+  ctx.globalCompositeOperation = "lighter";
+  // Slow clouds of light.
+  for (let i = 0; i < 6; i++) {
+    const a = phase * (0.35 + i * 0.05) * (i % 2 ? -1 : 1) + i * 1.05;
+    const d = R * (0.16 + 0.12 * Math.sin(t * 0.5 + i * 1.7));
+    const px = ox + Math.cos(a) * d;
+    const py = oy + Math.sin(a) * d;
+    const r = R * (0.5 + 0.12 * (i % 3));
+    const g = ctx.createRadialGradient(px, py, 0, px, py, r);
+    g.addColorStop(0, rgba(i % 2 ? p.nebulaB : p.nebulaA, 0.24 + voice * 0.14));
+    g.addColorStop(1, rgba(p.nebulaA, 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Long ribbons of light on tilted orbits: drawn in toward the core while listening, opened out while speaking,
+  // wound into a spiral while thinking. Only slow, smooth curves; the voice brightens and swells them, never shakes them.
+  const reach = 1 - 0.18 * w.listen * (0.4 + level) + 0.14 * w.speak * level;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  for (let k = 0; k < RIBBONS; k++) {
+    const band = bands[(k * 3) % BANDS] ?? 0;
+    const a = R * (0.42 + 0.075 * k) * reach;
+    const squash = 0.35 + 0.5 * ((k * 0.37) % 1);
+    const tilt = k * 0.52 + phase * 0.12 * (k % 2 ? 1 : -1);
+    const start = phase * (0.8 + 0.1 * k) * (k % 2 ? -1 : 1) + k * 1.3;
+    const span = 1.9 + 0.5 * Math.sin(t * 0.21 + k) + 1.4 * w.think;
+    const pts: [number, number][] = [];
+    for (let n = 0; n <= 40; n++) {
+      const q = n / 40;
+      const th = start + span * q;
+      const swell = 1 + 0.04 * Math.sin(th * 2 + t * 0.8 + k) + 0.13 * band * (w.listen + w.speak) * Math.sin(th * 3 + t * 1.4 + k * 2);
+      const r = a * swell * (1 - 0.42 * w.think * q);
+      const ex = Math.cos(th) * r;
+      const ey = Math.sin(th) * r * squash;
+      pts.push([ox + ex * Math.cos(tilt) - ey * Math.sin(tilt), oy + ex * Math.sin(tilt) + ey * Math.cos(tilt)]);
+    }
+    const [x0, y0] = pts[0];
+    const [x1, y1] = pts[pts.length - 1];
+    const fade = (c: Rgb, alpha: number) => {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, rgba(c, 0));
+      g.addColorStop(0.3, rgba(c, alpha));
+      g.addColorStop(0.7, rgba(c, alpha));
+      g.addColorStop(1, rgba(c, 0));
+      return g;
+    };
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    for (let n = 1; n < pts.length; n++) ctx.lineTo(pts[n][0], pts[n][1]);
+    const lift = 0.8 + 0.7 * band * (w.listen + w.speak) + 0.2 * w.think;
+    ctx.strokeStyle = fade(p.arc, 0.13 * lift);
+    ctx.lineWidth = R * 0.12;
+    ctx.stroke();
+    ctx.strokeStyle = fade(p.arc, 0.3 * lift);
+    ctx.lineWidth = R * 0.04;
+    ctx.stroke();
+    ctx.strokeStyle = fade(p.arcCore, Math.min(1, 0.78 * lift));
+    ctx.lineWidth = Math.max(1, R * 0.012);
+    ctx.stroke();
+  }
+
+  // Soft pulses: in from the edge while listening, out from the core while speaking. Never a hard line.
+  for (const pulse of pulses) {
+    const k = ease(pulse.age / PULSE_LIFE);
+    const r = pulse.inward ? R * (0.96 - 0.5 * k) : R * (0.42 + 0.54 * k);
+    const band = R * 0.14;
+    const g = ctx.createRadialGradient(cx, cy, Math.max(0, r - band), cx, cy, r + band);
+    g.addColorStop(0, rgba(p.arc, 0));
+    // Eased in over its first fifth of a second, then fading: a pulse never pops.
+    const life = pulse.age < 0.2 ? Math.sin((pulse.age / 0.2) * (Math.PI / 2)) : 1 - (pulse.age - 0.2) / (PULSE_LIFE - 0.2);
+    g.addColorStop(0.5, rgba(p.rimHighlight, 0.36 * Math.max(0, life)));
+    g.addColorStop(1, rgba(p.arc, 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + band, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // The core: swells with the voice while speaking, breathes and dims while thinking.
+  const breath = 0.5 + 0.5 * Math.sin(t * 0.9);
+  const coreR = R * (0.48 + 0.22 * w.speak * level + 0.08 * w.listen * level - 0.08 * w.think + 0.05 * w.think * breath + 0.02 * Math.sin(t * 0.9));
+  const glow = 0.95 - 0.22 * w.think * (1 - breath);
+  const core = ctx.createRadialGradient(ox, oy, 0, ox, oy, coreR);
+  core.addColorStop(0, `rgba(255, 255, 255, ${glow.toFixed(3)})`);
+  core.addColorStop(0.22, `rgba(255, 255, 255, ${(glow * 0.92).toFixed(3)})`);
+  core.addColorStop(0.5, rgba(p.coreMid, 0.7 * glow));
+  core.addColorStop(0.8, rgba(p.nebulaA, 0.3));
+  core.addColorStop(1, rgba(p.nebulaA, 0));
+  ctx.fillStyle = core;
+  ctx.beginPath();
+  ctx.arc(ox, oy, coreR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // A few motes drifting slowly.
+  for (let i = 0; i < 10; i++) {
+    const a = i * 2.399 + phase * (0.25 + (i % 3) * 0.08);
+    const r = R * (0.3 + ((i * 0.137) % 0.5));
+    ctx.fillStyle = `rgba(240, 250, 255, ${(0.18 + 0.32 * (0.5 + 0.5 * Math.sin(t * 1.1 + i * 1.9))).toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, Math.max(0.8, R * 0.009), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Light gathering softly inside the edge, and a faint reflection: glass felt, not outlined.
+  ctx.globalCompositeOperation = "source-over";
+  const rim = ctx.createRadialGradient(cx, cy, R * 0.7, cx, cy, R);
+  rim.addColorStop(0, rgba(p.arc, 0));
+  rim.addColorStop(0.82, rgba(p.arc, 0.1 + voice * 0.08));
+  rim.addColorStop(1, rgba(p.rim, 0.05));
+  ctx.fillStyle = rim;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.fill();
+  const sheen = ctx.createRadialGradient(cx - R * 0.34, cy - R * 0.4, 0, cx - R * 0.3, cy - R * 0.36, R * 0.5);
+  sheen.addColorStop(0, "rgba(255, 255, 255, 0.16)");
+  sheen.addColorStop(1, "rgba(255, 255, 255, 0)");
+  ctx.fillStyle = sheen;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Feather the edge: solid to 84% of the radius, gone at the edge.
+  ctx.globalCompositeOperation = "destination-in";
+  const mask = ctx.createRadialGradient(cx, cy, R * 0.84, cx, cy, R);
+  mask.addColorStop(0, "rgba(0, 0, 0, 1)");
+  mask.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = mask;
+  ctx.fillRect(0, 0, box, box);
+
+  // The light around it, behind everything.
+  ctx.globalCompositeOperation = "destination-over";
+  const halo = ctx.createRadialGradient(cx, cy, R * 0.55, cx, cy, R * 1.45);
+  halo.addColorStop(0, rgba(p.halo, 0.24 + voice * 0.1));
+  halo.addColorStop(0.5, rgba(p.halo, 0.08 + voice * 0.04));
+  halo.addColorStop(1, rgba(p.halo, 0));
+  ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, box, box);
+  ctx.globalCompositeOperation = "source-over";
+}
+
+export function VoiceOrb({ state = "idle", getLevel, getSpectrum, level, size = 160, tone = "ice", colors, label = "Voice assistant", className = "", style, ...props }: VoiceOrbProps) {
   const reduced = useInteractionReducedMotion();
   const { ref: activityRef, active } = useInteractionActivity<HTMLDivElement>();
   const canvas = React.useRef<HTMLCanvasElement>(null);
-  const fallback = React.useRef<HTMLSpanElement>(null);
-  const [failed, setFailed] = React.useState(false);
-  const colorKey = colors.join("|");
-
+  const colorKey = colors?.join("|") ?? "";
   const input = React.useRef({ state, getLevel, getSpectrum, level });
   React.useLayoutEffect(() => {
     input.current = { state, getLevel, getSpectrum, level };
   });
 
   const engine = React.useRef<{
-    fluid: FluidOrb;
-    palette: Rgb[];
-    dark: boolean;
-    /** Seconds the water has been shown; the pools drift with it. */
-    waterTime: number;
-    springs: { listen: Spring; speak: Spring; think: Spring; level: Spring };
-    clock: Clock;
+    plasma: Plasma;
+    springs: { listen: ReturnType<typeof createSpring>; speak: ReturnType<typeof createSpring>; think: ReturnType<typeof createSpring>; level: ReturnType<typeof createSpring> };
+    time: number;
     bands: Float32Array;
-    stirs: Emitter[];
-    /** True while the first ink is being folded, a few steps a frame; the loop waits for it. */
-    pouring: boolean;
-    frame: (dt: number) => void;
-    settle: (target: Weights) => void;
+    pull: { x: number; y: number; on: number; target: number };
+    pulses: Pulse[];
+    phase: number;
+    /** Loudness a moment ago and when the last pulse went, to send pulses only on clear onsets. */
+    recent: number;
+    lastPulse: number;
+    draw: (dt: number) => void;
   } | null>(null);
 
-  // The fluid lives as long as the canvas; its size is fixed when it starts.
+  // The canvas reaches past the box so the light around the glass is never cut into a square.
+  const box = Math.round(size * 1.5);
+  const R = size * 0.47;
+
   React.useEffect(() => {
     const el = canvas.current;
-    if (!el) return;
+    const ctx = el?.getContext("2d");
+    if (!el || !ctx) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    el.width = Math.round(size * dpr);
-    el.height = Math.round(size * dpr);
-    let fluid: FluidOrb | null = null;
-    try {
-      fluid = createFluidOrb(el);
-    } catch {
-      fluid = null;
-    }
-    if (!fluid) {
-      const frame = requestAnimationFrame(() => setFailed(true));
-      return () => cancelAnimationFrame(frame);
-    }
-    const f = fluid;
-    const start = WEIGHTS[input.current.state];
+    el.width = Math.round(box * dpr);
+    el.height = Math.round(box * dpr);
     const quiet = () => {};
+    const start = WEIGHTS[input.current.state];
     const springs = {
       listen: createSpring(start.listen, MOOD, quiet, 0.002),
       speak: createSpring(start.speak, MOOD, quiet, 0.002),
       think: createSpring(start.think, MOOD, quiet, 0.002),
       level: createSpring(0, LEVEL, quiet, 0.002),
     };
-    const clock: Clock = { time: 0, turn: 0, stir: 0 };
-    const bands = new Float32Array(BANDS);
-
+    const targetBands = new Float32Array(BANDS);
     const e: NonNullable<typeof engine.current> = {
-      fluid: f,
-      palette: [[0.19, 0.36, 0.87], [0.11, 0.69, 0.48], [0.91, 0.45, 0.23]],
-      dark: false,
-      waterTime: 0,
+      plasma: colorKey ? plasmaFrom(el.parentElement ?? document.body, colorKey.split("|") as [string, string, string]) : TONES[tone],
       springs,
-      clock,
-      bands,
-      stirs: [],
-      pouring: false,
-      frame(dt) {
-        if (e.pouring) return;
+      time: 0,
+      bands: new Float32Array(BANDS),
+      pull: { x: 0, y: 0, on: 0, target: 0 },
+      pulses: [],
+      phase: 0,
+      recent: 0,
+      lastPulse: -10,
+      draw(dt) {
         const { state: s, getLevel: read, getSpectrum: spectrum, level: given } = input.current;
         const moving = s === "listening" || s === "speaking";
-        const raw = moving ? clamp01(read ? read() : (given ?? 0)) : 0;
-        springs.level.set(raw);
-        const lv = Math.max(0, springs.level.get());
+        springs.level.set(moving ? clamp01(read ? read() : (given ?? 0)) : 0);
+        const lv = clamp01(springs.level.get());
+        // Bands rise quickly and fall slowly, so the ribbons swell with the voice instead of flickering.
+        const up = 1 - Math.exp(-dt * 9);
+        const down = 1 - Math.exp(-dt * 2.5);
         if (moving && spectrum) {
           const got = spectrum();
-          for (let b = 0; b < BANDS; b++) bands[b] = clamp01(got[Math.floor((b * got.length) / BANDS)] ?? 0);
-        } else bandsFromLevel(lv, clock.time, bands);
-        const w = { listen: Math.max(0, springs.listen.get()), speak: Math.max(0, springs.speak.get()), think: Math.max(0, springs.think.get()) };
-        clock.time += dt;
-        clock.turn += dt * (0.22 + 0.5 * w.think);
-        clock.stir += dt * 1.5;
-        const emitters = emittersFor(w, bands, e.palette, clock, dt);
-        if (e.stirs.length) emitters.push(...e.stirs.splice(0));
-        f.step({ dt, emitters, ...waterFor(w) });
-        e.waterTime += dt;
-        f.draw({ radius: 0.455 + 0.025 * lv * (w.listen + w.speak) - 0.012 * w.think, water: { inks: e.palette, ...waterLook(e.dark, e.waterTime * 0.1) }, dark: e.dark });
-      },
-      settle(target) {
-        if (e.pouring) return;
-        // A still picture of a state: run it for a moment at speech-like loudness, then hold.
-        const w = target;
-        bandsFromLevel(0.55, clock.time, bands);
-        for (let i = 0; i < 50; i++) {
-          clock.time += 1 / 30;
-          clock.turn += (1 / 30) * 0.3;
-          clock.stir += (1 / 30) * 1.5;
-          f.step({ dt: 1 / 30, emitters: emittersFor(w, bands, e.palette, clock, 1 / 30), ...waterFor(w) });
+          for (let b = 0; b < BANDS; b++) {
+            const v = clamp01(got[Math.floor((b * got.length) / BANDS)] ?? 0);
+            e.bands[b] += (v - e.bands[b]) * (v > e.bands[b] ? up : down);
+          }
+        } else {
+          const target = bandsFromLevel(lv, e.time, targetBands);
+          for (let b = 0; b < BANDS; b++) e.bands[b] += (target[b] - e.bands[b]) * (target[b] > e.bands[b] ? up : down);
         }
-        f.draw({ radius: 0.455, water: { inks: e.palette, ...waterLook(e.dark, e.waterTime * 0.1) }, dark: e.dark });
+        // A clear onset (the voice rising well above where it was a moment ago) sends one soft pulse, at most every 0.5s.
+        if (moving && lv - e.recent > 0.12 && lv > 0.3 && e.time - e.lastPulse > 0.5) {
+          e.pulses.push({ age: 0, inward: s === "listening" });
+          e.lastPulse = e.time;
+        }
+        e.recent += (lv - e.recent) * (1 - Math.exp(-dt * 4));
+        for (const pulse of e.pulses) pulse.age += dt;
+        e.pulses = e.pulses.filter((pulse) => pulse.age < PULSE_LIFE);
+        e.pull.on += (e.pull.target - e.pull.on) * (1 - Math.exp(-dt * 4));
+        const w = { listen: clamp01(springs.listen.get()), speak: clamp01(springs.speak.get()), think: clamp01(springs.think.get()) };
+        const idle = Math.max(0, 1 - w.listen - w.speak - w.think);
+        e.phase += dt * (0.32 * idle + 0.9 * w.think + 0.55 * w.listen + 0.6 * w.speak);
+        e.time += dt;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        paint(ctx, box, R, e.plasma, { t: e.time, phase: e.phase, w, level: lv, bands: e.bands, pull: e.pull, pulses: e.pulses });
       },
     };
     engine.current = e;
-
-    const lost = (event: Event) => {
-      event.preventDefault();
-      setFailed(true);
-    };
-    el.addEventListener("webglcontextlost", lost);
+    e.time = 1.8;
+    e.draw(0);
     return () => {
-      el.removeEventListener("webglcontextlost", lost);
-      Object.values(springs).forEach((s) => s.stop());
-      f.dispose();
+      Object.values(springs).forEach((sp) => sp.stop());
       engine.current = null;
     };
-  }, [size]);
+  }, [box, R, tone, colorKey]);
 
-  // The stand-in is the same water the fluid starts in, in CSS, so handing over to the fluid changes nothing but the ink.
-  // It is painted with the resolved theme before the first paint (the markup's own picture only shows before hydration).
-  const paintStandIn = React.useCallback((theme: { inks: Rgb[]; dark: boolean }) => {
-    const el = fallback.current;
-    if (!el) return;
-    const css = waterCss(waterLook(theme.dark, 0), theme.inks.map(rgbCss));
-    el.style.background = css.background;
-    el.style.boxShadow = css.boxShadow;
-  }, []);
-  React.useLayoutEffect(() => {
-    const el = fallback.current;
-    if (el) paintStandIn(readTheme(el.parentElement ?? document.body, colorKey));
-  }, [colorKey, paintStandIn]);
-
-  // Colours from the theme, again whenever the theme changes. The first time, the ink is poured and settled before it shows.
-  const poured = React.useRef(false);
-  React.useEffect(() => {
-    const el = canvas.current;
-    if (!el || failed) return;
-    poured.current = false;
-    let pour = 0;
-    const apply = () => {
-      const e = engine.current;
-      if (!e) return;
-      const theme = readTheme(el.parentElement ?? document.body, colorKey);
-      e.palette = theme.inks;
-      e.dark = theme.dark;
-      paintStandIn(theme);
-      const reveal = () => {
-        // A true crossfade: both show the same water, so fading one in as the other fades out keeps the water still and
-        // only the ink appears. (The stand-in's slow fade is only for a WebGL failure.)
-        const standIn = fallback.current;
-        if (!standIn) return;
-        el.style.transition = standIn.style.transition = "opacity 240ms linear";
-        el.style.opacity = "1";
-        standIn.style.opacity = "0";
-      };
-      if (poured.current) {
-        e.frame(0.0001);
-        return reveal();
-      }
-      poured.current = true;
-      // Pour, then fold it with a stir before it shows, so it starts as ink that has been moving. It waits for the shaders
-      // to finish compiling in the background, then folds a few steps a frame behind the stand-in, never as one long task.
-      const fold = { listen: 0, speak: 0, think: 1 };
-      const stir = (steps: number) => {
-        for (let i = 0; i < steps; i++) {
-          e.clock.time += 1 / 30;
-          e.clock.stir += (1 / 30) * 1.5;
-          e.fluid.step({ dt: 1 / 30, emitters: emittersFor(fold, e.bands, e.palette, e.clock, 1 / 30), ...waterFor(fold) });
-        }
-      };
-      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      e.pouring = true;
-      let left = -1;
-      const chunk = () => {
-        if (engine.current !== e) return;
-        try {
-          if (!e.fluid.ready()) {
-            pour = requestAnimationFrame(chunk);
-            return;
-          }
-        } catch {
-          setFailed(true);
-          return;
-        }
-        if (left < 0) {
-          e.fluid.seed(seedFor(e.palette));
-          left = 54;
-        }
-        const n = still ? left : Math.min(6, left);
-        stir(n);
-        left -= n;
-        if (left > 0) {
-          pour = requestAnimationFrame(chunk);
-          return;
-        }
-        e.pouring = false;
-        if (still) e.settle(WEIGHTS[input.current.state]);
-        else e.frame(1 / 60);
-        reveal();
-      };
-      pour = requestAnimationFrame(chunk);
-    };
-    apply();
-    // Only a theme switch matters (a class or data-theme on <html>); other attribute writes are ignored.
-    const root = document.documentElement;
-    let theme = `${root.className}|${root.dataset.theme ?? ""}`;
-    const watch = new MutationObserver(() => {
-      const next = `${root.className}|${root.dataset.theme ?? ""}`;
-      if (next === theme) return;
-      theme = next;
-      apply();
-    });
-    watch.observe(root, { attributes: true, attributeFilter: ["class", "data-theme"] });
-    return () => {
-      watch.disconnect();
-      cancelAnimationFrame(pour);
-      if (engine.current) engine.current.pouring = false;
-    };
-  }, [colorKey, failed, size, paintStandIn]);
-
-  // A state change re-aims the weights from wherever they are; under reduced motion it settles a still of the new state.
+  // A state change re-aims the weights from wherever they are; under reduced motion it paints a still of the new state.
   React.useEffect(() => {
     const e = engine.current;
     if (!e) return;
@@ -413,7 +467,8 @@ export function VoiceOrb({ state = "idle", getLevel, getSpectrum, level, size = 
       e.springs.listen.jump(w.listen);
       e.springs.speak.jump(w.speak);
       e.springs.think.jump(w.think);
-      e.settle(w);
+      e.time = 1.8;
+      e.draw(0);
       return;
     }
     e.springs.listen.set(w.listen);
@@ -423,34 +478,18 @@ export function VoiceOrb({ state = "idle", getLevel, getSpectrum, level, size = 
 
   // The loop: only while on screen and the tab is visible, never under reduced motion.
   React.useEffect(() => {
-    if (!active || reduced || failed) return;
+    if (!active || reduced) return;
     let frame = 0;
     let last = 0;
     const tick = (now: number) => {
       const dt = last ? Math.min(1 / 30, (now - last) / 1000) : 1 / 60;
       last = now;
-      engine.current?.frame(dt);
+      engine.current?.draw(dt);
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [active, reduced, failed]);
-
-  // A finger or a cursor stirs the water: no ink, just a push along the way it moved.
-  const lastPoint = React.useRef<{ x: number; y: number } | null>(null);
-  const stir = (event: React.PointerEvent<HTMLDivElement>) => {
-    const e = engine.current;
-    if (!e || reduced) return;
-    const box = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - box.left) / box.width;
-    const y = 1 - (event.clientY - box.top) / box.height;
-    const prev = lastPoint.current;
-    lastPoint.current = { x, y };
-    if (!prev || Math.hypot(x - 0.5, y - 0.5) > 0.46) return;
-    const dx = x - prev.x, dy = y - prev.y;
-    if (Math.abs(dx) + Math.abs(dy) < 0.002) return;
-    e.stirs.push({ x, y, radius: 0.06, fx: Math.max(-120, Math.min(120, dx * 4000)), fy: Math.max(-120, Math.min(120, dy * 4000)) });
-  };
+  }, [active, reduced]);
 
   return (
     <div
@@ -460,31 +499,26 @@ export function VoiceOrb({ state = "idle", getLevel, getSpectrum, level, size = 
       {...props}
       onPointerMove={(event) => {
         props.onPointerMove?.(event);
-        stir(event);
+        const e = engine.current;
+        if (!e) return;
+        const r = event.currentTarget.getBoundingClientRect();
+        e.pull.x = clamp(((event.clientX - r.left) / r.width - 0.5) * 2, -1, 1);
+        e.pull.y = clamp(((event.clientY - r.top) / r.height - 0.5) * 2, -1, 1);
+        e.pull.target = 1;
       }}
       onPointerLeave={(event) => {
         props.onPointerLeave?.(event);
-        lastPoint.current = null;
+        if (engine.current) engine.current.pull.target = 0;
       }}
       className={`relative inline-grid shrink-0 place-items-center ${className}`}
       style={{ width: size, height: size, ...style }}
     >
-      {/* First paint, and the whole orb where WebGL 2 isn't available: the fluid's water, without the moving ink. */}
-      <span
-        ref={fallback}
+      <canvas
+        ref={canvas}
         aria-hidden="true"
-        className="absolute rounded-full transition-[opacity,scale] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{
-          width: "91%",
-          height: "91%",
-          opacity: 1,
-          // The vessel's size in the state it opens in, so the hand-over to the fluid has one edge.
-          scale: state === "thinking" ? 0.443 / 0.455 : 1,
-          ["--orb-d" as string]: `${size * 0.91}px`,
-          ...waterCss(waterLook(false, 0), colors),
-        }}
+        className="pointer-events-none absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2"
+        style={{ width: box, height: box }}
       />
-      <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 size-full" style={{ display: failed ? "none" : undefined, opacity: 0 }} />
       <span role="status" className="sr-only">
         {SAY[state]}
       </span>

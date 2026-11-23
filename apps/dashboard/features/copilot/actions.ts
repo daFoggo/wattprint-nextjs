@@ -10,6 +10,7 @@ import {
   deleteConversation,
   fetchConversation,
   fetchConversations,
+  fetchWatchStatuses,
   patchConversation,
   putFeedback,
 } from "./server"
@@ -31,7 +32,11 @@ export async function listConversationsAction() {
 
 export async function loadConversationAction(id: string) {
   const { accessToken } = await requirePermission("account:view")
-  return toMessages(await fetchConversation(accessToken, Id.parse(id)))
+  const c = await fetchConversation(accessToken, Id.parse(id))
+  const hasWatch = c.messages.some((m) =>
+    m.reply?.widgets.some((w) => w.kind === "watch")
+  )
+  return toMessages(c, hasWatch ? await fetchWatchStatuses(accessToken) : [])
 }
 
 export async function updateConversationAction(

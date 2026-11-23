@@ -128,7 +128,8 @@
       "condition": "Tells you {op, select, gt {above} other {below}} {value}",
       "now": "Now",
       "until": "Watching until",
-      "view": "View alert"
+      "view": "View alert",
+      "ended": "Ended"
     }
   },
   "voice": {

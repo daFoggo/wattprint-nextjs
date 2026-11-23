@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-import { ChatEventSchema, ConversationSchema } from "../schemas"
+import { ChatEventSchema, ConversationSchema, toMessages } from "../schemas"
 
 const done = (url: string) => ({
   event: "done",
@@ -143,5 +143,59 @@ describe("reply widgets", () => {
       ],
     })
     expect(c.messages[0]?.reply?.widgets).toEqual([forecast])
+  })
+})
+
+describe("toMessages", () => {
+  const watch = (id: string) => ({
+    kind: "watch",
+    id,
+    label: "Tiền điện kỳ này",
+    op: "gt",
+    threshold: 1000000,
+    unit: "vnd",
+    value: 640000,
+    ends_at: "2026-11-30T17:00:00Z",
+  })
+  const conversation = ConversationSchema.parse({
+    id: "c",
+    title: null,
+    pinned: false,
+    updated_at: "2026-11-20T00:00:00+07:00",
+    messages: [
+      {
+        id: "m",
+        role: "assistant",
+        content: "",
+        reply: {
+          ...done("/x").data.reply,
+          widgets: [watch("w1"), watch("w2"), watch("w3"), forecast],
+        },
+        feedback: null,
+        created_at: "2026-11-20T00:00:00+07:00",
+      },
+    ],
+  })
+
+  it("marks the watch widgets whose watch has ended", () => {
+    const [m] = toMessages(conversation, [
+      { id: "w1", status: "fired" },
+      { id: "w2", status: "broken" },
+    ])
+    const widgets = m?.role === "assistant" ? m.reply?.widgets : undefined
+    // w2 is broken but still listed on the alerts page; w3 is unknown (newer than the list): both stay live.
+    expect(widgets?.map((w) => (w.kind === "watch" ? w.ended : w.kind))).toEqual([
+      true,
+      undefined,
+      undefined,
+      "forecast",
+    ])
+  })
+
+  it("leaves widgets alone without statuses", () => {
+    const [m] = toMessages(conversation)
+    expect(m?.role === "assistant" && m.reply?.widgets).toEqual(
+      conversation.messages[0]?.reply?.widgets
+    )
   })
 })

@@ -107,6 +107,8 @@ const WidgetSchema = z.discriminatedUnion("kind", [
     unit: z.string(),
     value: z.number().nullable(),
     ends_at: z.iso.datetime({ offset: true }),
+    /** Set on load when the alerts page lists the watch as over (fired, expired, cancelled). */
+    ended: z.boolean().optional(),
   }),
 ])
 export type Widget = z.infer<typeof WidgetSchema>
@@ -230,7 +232,22 @@ export type Thread = {
 type Conversation = z.infer<typeof ConversationSchema>
 
 /** A stored conversation as the chat shows it. */
-export function toMessages(c: Conversation): Message[] {
+export function toMessages(
+  c: Conversation,
+  watches: { id: string; status: string }[] = []
+): Message[] {
+  // A watch the list does not hold (newer than it, or past its 50 rows) stays shown as live.
+  const ended = new Set(
+    watches
+      .filter((w) => w.status !== "active" && w.status !== "broken")
+      .map((w) => w.id)
+  )
+  const withStatus = (reply: Reply): Reply => ({
+    ...reply,
+    widgets: reply.widgets.map((w) =>
+      w.kind === "watch" && ended.has(w.id) ? { ...w, ended: true } : w
+    ),
+  })
   return c.messages.map((m) =>
     m.role === "user"
       ? { id: m.id, role: "user", text: m.content }
@@ -240,7 +257,7 @@ export function toMessages(c: Conversation): Message[] {
           phase: "done",
           steps: m.reply?.steps ?? [],
           text: m.content,
-          reply: m.reply ?? undefined,
+          reply: m.reply ? withStatus(m.reply) : undefined,
           feedback: m.feedback,
         }
   )

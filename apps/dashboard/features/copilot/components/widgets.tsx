@@ -379,9 +379,11 @@ const WIDGETS: WidgetComponents = {
         title={t("watch.title")}
         description={widget.label}
         action={
-          <CardLink href={`${ALERTS_PATH}#watch-${widget.id}`}>
-            {t("watch.view")}
-          </CardLink>
+          widget.ended ? undefined : (
+            <CardLink href={`${ALERTS_PATH}#watch-${widget.id}`}>
+              {t("watch.view")}
+            </CardLink>
+          )
         }
       >
         <p className="text-sm">
@@ -395,7 +397,10 @@ const WIDGETS: WidgetComponents = {
             ...(widget.value === null
               ? []
               : [{ label: t("watch.now"), value: figure(widget.value) }]),
-            { label: t("watch.until"), value: until },
+            {
+              label: t("watch.until"),
+              value: widget.ended ? t("watch.ended") : until,
+            },
           ]}
         />
       </Tile>

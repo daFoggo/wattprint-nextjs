@@ -128,7 +128,8 @@
       "condition": "Báo khi {op, select, gt {vượt} other {xuống dưới}} {value}",
       "now": "Hiện tại",
       "until": "Theo dõi đến",
-      "view": "Xem cảnh báo"
+      "view": "Xem cảnh báo",
+      "ended": "Đã kết thúc"
     }
   },
   "voice": {

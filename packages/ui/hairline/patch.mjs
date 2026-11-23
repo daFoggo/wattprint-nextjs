@@ -1503,7 +1503,7 @@ export const PATCHES = [
   imports("voice-talk.tsx"),
   hook(
     "voice-talk.tsx",
-    'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {\n'
+    'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {\n'
   ),
   text(
     "voice-talk.tsx",

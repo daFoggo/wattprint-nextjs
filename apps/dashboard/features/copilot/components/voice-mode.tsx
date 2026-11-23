@@ -16,7 +16,7 @@ import { MOODS } from "../moods"
 import { WappiAvatar, useWappiState } from "./wappi-avatar"
 
 /**
- * Voice mode: Hairline's VoiceTalk, the fluid orb with its one morphing button (Talk, Send, Thinking, Interrupt),
+ * Voice mode: Hairline's VoiceTalk, the plasma orb with its one morphing button (Talk, Send, Thinking, Interrupt),
  * microphone handling and end-of-speech detection. Each turn also lands in the chat, so nothing said is lost.
  */
 export function VoiceMode({

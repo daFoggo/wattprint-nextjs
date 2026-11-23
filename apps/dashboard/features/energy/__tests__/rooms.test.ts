@@ -46,4 +46,14 @@ describe("roomSpending with a lone device in a room", () => {
     expect(got.byRoom).toBe(false)
     expect(got.data.map((c) => c.label)).toEqual(["Fridge", "Kettle"])
   })
+
+  it("drops a device that spent 0, so its roommate is lone and named by the device", () => {
+    const got = roomSpending([
+      device("Kettle", "Kitchen", 5),
+      device("Off", "Kitchen", 0),
+      device("Fridge", null, 9),
+    ])
+    expect(got.byRoom).toBe(false)
+    expect(got.data.map((c) => c.label)).toEqual(["Fridge", "Kettle"])
+  })
 })
