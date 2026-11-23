@@ -135,20 +135,19 @@ export function WatchList({
                     {t(`status.${w.status}`)}
                   </Badge>
                 )}
-                {active ? (
-                  <ConfirmAction
-                    icon={<IconX aria-hidden className="size-4" />}
-                    label={t("cancel", { label: w.label })}
-                    labels={{
-                      idle: t("confirm"),
-                      pending: t("cancelling"),
-                      success: t("cancelled"),
-                    }}
-                    tone="danger"
-                    resetAfter={0}
-                    onConfirm={() => cancel(w.id)}
-                  />
-                ) : null}
+                {/* Broken ones too: the user can drop a rule that stopped working. */}
+                <ConfirmAction
+                  icon={<IconX aria-hidden className="size-4" />}
+                  label={t("cancel", { label: w.label })}
+                  labels={{
+                    idle: t("confirm"),
+                    pending: t("cancelling"),
+                    success: t("cancelled"),
+                  }}
+                  tone="danger"
+                  resetAfter={0}
+                  onConfirm={() => cancel(w.id)}
+                />
               </div>
             </div>
             {active &&

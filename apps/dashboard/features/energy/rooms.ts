@@ -5,7 +5,7 @@ import type { Device } from "./schemas"
 /**
  * This month's cost by room: devices that share a room become one category opening into them, a room with one
  * device is named by its room, a device with no room stands alone. `byRoom` is false when no room opens into
- * devices, so the tile speaks of devices.
+ * devices, so the tile speaks of devices and every category is named by its device.
  */
 export function roomSpending(devices: Device[]): {
   data: SpendCategory[]
@@ -16,12 +16,13 @@ export function roomSpending(devices: Device[]): {
     if (d.month_amount <= 0) continue
     rooms.set(d.room ?? d.id, [...(rooms.get(d.room ?? d.id) ?? []), d])
   }
+  const byRoom = [...rooms.values()].some((list) => list.length > 1)
   const data: SpendCategory[] = [...rooms.entries()]
     .map(([room, list]) =>
       list.length === 1
         ? {
             id: list[0]!.id,
-            label: list[0]!.room ?? list[0]!.name,
+            label: (byRoom ? list[0]!.room : null) ?? list[0]!.name,
             value: list[0]!.month_amount,
           }
         : {
@@ -34,5 +35,5 @@ export function roomSpending(devices: Device[]): {
           }
     )
     .sort((a, b) => b.value - a.value)
-  return { data, byRoom: data.some((c) => c.children) }
+  return { data, byRoom }
 }

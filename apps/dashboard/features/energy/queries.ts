@@ -157,13 +157,13 @@ const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
 }
 
 /** A device's tip in the page's language; the backend's English text for types without one. */
-async function tips() {
+const tips = cache(async () => {
   const t = await getTranslations("energy.tips")
   return (d: { type: string; tip: string | null }) => {
     const key = TYPE_KEYS[d.type]
     return key ? t(key) : d.tip
   }
-}
+})
 
 /** VND per kWh of this month: the bill so far split by the devices' kWh, else the average rate. */
 function pricePerKwh(devices: { month_kwh: number }[], bill?: number) {
@@ -196,11 +196,11 @@ export const getDevice = cache(async (id: string, bill?: number) => {
   if (!overview || !z.uuid().safeParse(id).success) return null
   const [d, all, tip] = await Promise.all([
     fetchDevice(overview.accessToken, id),
-    fetchDevices(overview.accessToken),
+    getDevices(bill), // the same read as the list's, once per request
     tips(),
   ])
   if (!d) return null
-  const price = pricePerKwh(all, bill)
+  const price = pricePerKwh(all ?? [], bill)
   const today = localDate(overview.now)
   const elapsed = (overview.now - dateStart(`${today.slice(0, 8)}01`)) / DAY
   return {

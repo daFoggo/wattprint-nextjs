@@ -48,7 +48,7 @@
     "runningSelf": "Đang bật",
     "ranSelf": "Chạy {h, plural, =0 {} other {# giờ }}{m} phút · {kwh} kWh",
     "description": "Thiết bị nào đã chạy, chạy bao lâu và tốn bao nhiêu điện · ước tính",
-    "deviceDescription": "Chạy {count} lần · mỗi dòng là một lần bật đến lúc tắt"
+    "deviceDescription": "{count, plural, =0 {Chạy 0 lần} other {Chạy # lần · mỗi dòng là một lần bật đến lúc tắt}}"
   },
   "power": {
     "emptyTitle": "Chưa có số đo trong khoảng này",

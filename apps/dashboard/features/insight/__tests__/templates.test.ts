@@ -57,7 +57,16 @@ describe("templatesFor", () => {
       false
     )
     expect(cycle!.start).toBe(120_000)
-    expect(cycle!.step).toBe(1)
+    expect(cycle!.step).toBe(1_000)
+  })
+
+  it("steps money by 1,000 ₫ from the figure now rounded to it, other units by 1", () => {
+    const [cycle, power] = templatesFor(
+      [source("cycle", "vnd", [], 123_456), source("power", "w", [], 812)],
+      false
+    )
+    expect(cycle).toMatchObject({ start: 123_000, step: 1_000 })
+    expect(power).toMatchObject({ start: 812, step: 1 })
   })
 
   it("starts a run limit at 30 minutes in 15-minute steps", () => {

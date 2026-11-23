@@ -44,5 +44,6 @@ describe("roomSpending with a lone device in a room", () => {
       device("Fridge", null, 9),
     ])
     expect(got.byRoom).toBe(false)
+    expect(got.data.map((c) => c.label)).toEqual(["Fridge", "Kettle"])
   })
 })

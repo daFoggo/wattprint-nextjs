@@ -18,9 +18,12 @@ export const RUN_MINUTES = [15, 30, 60, 120, 240]
 
 function fromSource(s: AlertSource, group: Template["group"]): Template {
   const history = s.data.map((d) => d.value)
-  // Too little history for a quartile: start from the figure now, in single steps.
+  // Too little history for a quartile: start from the figure now, money in 1,000 ₫ steps, the rest in single ones.
+  const step = s.unit === "vnd" ? 1000 : 1
   const scale =
-    history.length >= 2 ? lineScale(history) : { start: s.now ?? 0, step: 1 }
+    history.length >= 2
+      ? lineScale(history)
+      : { start: Math.round((s.now ?? 0) / step) * step, step }
   return {
     key: s.key,
     group,

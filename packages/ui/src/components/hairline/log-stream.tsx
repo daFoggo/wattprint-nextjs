@@ -54,6 +54,8 @@ export interface LogStreamProps extends Omit<React.HTMLAttributes<HTMLDivElement
   loadEarlier?: (before: LogLine) => Promise<LogLine[]>;
   /** Lines kept in memory while you're at the bottom. */
   max?: number;
+  /** IANA zone for the times, e.g. the home's; without it, the visitor's (patched (hairline/patch.mjs)). */
+  timeZone?: string;
   /** The scrolling area's height. */
   height?: number | string;
   title?: string;
@@ -85,10 +87,11 @@ const useReducedMotion = () =>
 
 const toTime = (d: DateLike) => (d instanceof Date ? d.getTime() : typeof d === "number" ? d : new Date(d).getTime());
 const pad = (n: number, w = 2) => String(n).padStart(w, "0");
-const clock = (d: DateLike, local: boolean) => { // patched (hairline/patch.mjs): UTC until hydrated, then local
+const clock = (d: DateLike, local: boolean, timeZone?: string) => { // patched (hairline/patch.mjs): in `timeZone`, else UTC until hydrated, then local
   const t = new Date(toTime(d));
   const [h, m, s] = local ? [t.getHours(), t.getMinutes(), t.getSeconds()] : [t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()];
-  return [`${pad(h)}:${pad(m)}:${pad(s)}`, `.${pad(t.getMilliseconds(), 3)}`] as const;
+  const hms = timeZone ? t.toLocaleTimeString("en-GB", { timeZone, hourCycle: "h23" }) : `${pad(h)}:${pad(m)}:${pad(s)}`;
+  return [hms, `.${pad(t.getMilliseconds(), 3)}`] as const;
 };
 // The server and the hydrating render both show UTC, then the visitor's timezone takes over.
 const subscribeNothing = () => () => {};
@@ -130,14 +133,15 @@ interface RowProps {
   enter: boolean;
   reduced: boolean;
   toggle: (id: string) => void;
+  timeZone?: string; // patched (hairline/patch.mjs)
 }
 
-const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle }: RowProps) {
+const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle, timeZone /* patched (hairline/patch.mjs) */ }: RowProps) {
   const t = useHairlineText(); // patched (hairline/patch.mjs)
   const ref = React.useRef<HTMLDivElement>(null);
   const [copied, setCopied] = React.useState(false);
   const hydrated = useHydrated();
-  const [time, ms] = clock(line.at, hydrated); // patched (hairline/patch.mjs)
+  const [time, ms] = clock(line.at, hydrated, timeZone); // patched (hairline/patch.mjs)
   const has = Boolean(line.data && Object.keys(line.data).length);
 
   React.useLayoutEffect(() => {
@@ -218,7 +222,7 @@ const Row = React.memo(function Row({ line, open, query, enter, reduced, toggle 
   );
 });
 
-export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1000, height = 420, header /* patched (hairline/patch.mjs) */, title = "Logs", className = "", ...props }: LogStreamProps) {
+export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, timeZone /* patched (hairline/patch.mjs) */, max = 1000, height = 420, header /* patched (hairline/patch.mjs) */, title = "Logs", className = "", ...props }: LogStreamProps) {
   const t = useHairlineText(); // patched (hairline/patch.mjs)
   const reduced = useReducedMotion();
   const id = React.useId();
@@ -498,7 +502,7 @@ export function LogStream({ defaultValue = NONE, subscribe, loadEarlier, max = 1
           )}
           <div role="list" aria-label={title} id={`${id}-list`}>
             {visible.map((l) => (
-              <Row key={l.id} line={l} open={open.has(l.id)} query={q} enter={fresh.has(l.id)} reduced={reduced} toggle={toggle} />
+              <Row key={l.id} line={l} open={open.has(l.id)} query={q} enter={fresh.has(l.id)} reduced={reduced} toggle={toggle} timeZone={timeZone} /* patched (hairline/patch.mjs) */ />
             ))}
           </div>
           {!visible.length && (

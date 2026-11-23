@@ -71,6 +71,7 @@ export function DeviceTimeline({
         </div>
       }
       defaultValue={lines}
+      timeZone="Asia/Ho_Chi_Minh" // the home's, like the rest of the app
       height={290}
     />
   )

@@ -48,7 +48,7 @@
     "runningSelf": "On now",
     "ranSelf": "Ran {h, plural, =0 {} other {#h }}{m} min · {kwh} kWh",
     "description": "Which devices ran, for how long and what they used · estimated",
-    "deviceDescription": "Ran {count, plural, one {# time} other {# times}} · each line is one run, on to off"
+    "deviceDescription": "{count, plural, =0 {Ran 0 times} one {Ran # time · each line is one run, on to off} other {Ran # times · each line is one run, on to off}}"
   },
   "power": {
     "emptyTitle": "No readings in this range",
