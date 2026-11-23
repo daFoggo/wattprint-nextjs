@@ -97,5 +97,12 @@
   "secrets": true,
   "artifacts": "docs/work",
   "debt": "docs/debt.md",
-  "providers": {}
+  "providers": {},
+  "skills": [
+    { "glob": ["apps/dashboard/**/*.{ts,tsx}", "apps/web/**/*.{ts,tsx}"], "skill": "next-mono-base" },
+    { "glob": ["apps/dashboard/**/*.tsx", "apps/web/**/*.tsx", "packages/ui-patterns/**/*.tsx"], "skill": "vercel-react-best-practices" },
+    { "glob": ["apps/dashboard/**/*.{tsx,css}", "packages/ui-patterns/**/*.tsx", "packages/ui/src/styles/**"], "skill": "design-system" },
+    { "glob": ["apps/dashboard/**/*.tsx", "packages/ui-patterns/**/*.tsx", "packages/ui/hairline/**"], "skill": "hairline-ui" },
+    { "glob": ["packages/ui/src/**", "packages/ui/components.json"], "skill": "shadcn" }
+  ]
 }

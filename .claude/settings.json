@@ -1,10 +1,19 @@
 {
-  "extraKnownMarketplaces": {
-    "ai-native-sdlc": { "source": { "source": "github", "repo": "daFoggo/ai-native-sdlc" } },
-    "hallmark": { "source": { "source": "github", "repo": "Nutlope/hallmark" } }
-  },
   "enabledPlugins": {
-    "sdlc@ai-native-sdlc": true,
     "hallmark@hallmark": true
+  },
+  "extraKnownMarketplaces": {
+    "ai-native-sdlc": {
+      "source": {
+        "source": "github",
+        "repo": "daFoggo/ai-native-sdlc"
+      }
+    },
+    "hallmark": {
+      "source": {
+        "source": "github",
+        "repo": "Nutlope/hallmark"
+      }
+    }
   }
 }
