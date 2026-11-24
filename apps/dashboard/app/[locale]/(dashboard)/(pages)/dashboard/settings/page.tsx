@@ -18,11 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** The home's settings; without a home there is nothing to set. */
 async function Settings() {
-  const [settings, provinces] = await Promise.all([
-    getHomeSettings(),
-    getProvinces(),
-  ])
+  // The session first: the prerender stops there, so the cached provinces never fetch at build (no backend in CI).
+  const settings = await getHomeSettings()
   if (!settings) return <NoHome />
+  const provinces = await getProvinces()
   return (
     <HomeSettingsForm
       {...settings}

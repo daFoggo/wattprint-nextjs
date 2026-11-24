@@ -7,6 +7,7 @@ vi.mock("next/cache", () => ({
   updateTag: vi.fn(),
   refresh: vi.fn(),
   cacheLife: vi.fn(),
+  io: async () => {},
 }))
 const jar = { set: vi.fn(), delete: vi.fn(), get: vi.fn() }
 vi.mock("next/headers", () => ({ cookies: async () => jar }))
