@@ -1,12 +1,10 @@
 {
   "opportunities": {
     "title": "Where you can save",
-    "description": "From your own home's device data, to the end of the cycle ({end}). Money is priced at the highest tier this cycle reaches.",
+    "description": "Estimated to the cycle's end ({end}), at the highest tier this cycle reaches.",
     "empty": "Your devices run as usual. Come back in a few days, with more data.",
     "rough": "rough estimate",
     "range": "about {low}–{high} kWh",
-    "pickUpTo": "Pick up to 3",
-    "saves": "{amount} · {kwh} kWh",
     "alwaysOn": "Cut standby power (devices on standby, chargers left in)",
     "alwaysOnHint": "You pick how much to cut. The data cannot tell which devices it is.",
     "alwaysOnCut": "Cut",
@@ -16,21 +14,17 @@
     "alwaysOnNow": "Standby power is about {watts} W, day and night",
     "full": "Three picked. Untick one to pick another.",
     "share": "{share, number, percent}",
-    "gone": "{n, plural, one {# preselected action no longer applies, so it was left out.} other {# preselected actions no longer apply, so they were left out.}}"
+    "gone": "{n, plural, one {# preselected action no longer applies, so it was left out.} other {# preselected actions no longer apply, so they were left out.}}",
+    "roughKwh": "{kwh} kWh, a rough estimate"
   },
   "summary": {
     "title": "Your plan",
     "none": "Pick 1–3 actions to see what the plan is worth.",
-    "without": "This cycle's bill as usual",
-    "with": "Following the plan",
-    "total": "Saves about {amount}",
     "totalKwh": "{kwh} kWh by {end}",
     "totalRange": "{kwh} kWh ({low}–{high}) by {end}",
     "avoidsTier": "Stays out of tier {tier}",
     "hardToMeasure": "This is small against your home's day-to-day swing, so even by the cycle end it may not show clearly. Add an action to make it easier to see.",
-    "commitTitle": "Your commitments",
     "start": "Day you started",
-    "startHint": "{date} at the earliest: the last time your home's expected use was recomputed.",
     "begin": "Start the plan",
     "refused": {
       "plan_exists": "You already have a plan running. Reload the page to see it.",
@@ -39,11 +33,12 @@
       "no_forecast": "The home needs a few more days of readings before a plan.",
       "invalid": "The plan could not be saved. Try again later."
     },
-    "noneTitle": "No action picked",
     "saves": "Saves by the cycle end",
-    "clarity": "How clearly it will show",
     "clear": "Large enough to show clearly",
-    "review": "Review and start"
+    "review": "Review and start",
+    "bill": "Bill at the cycle's end",
+    "unclear": "Hard to see",
+    "startFrom": "From {date} at the earliest."
   },
   "commit": {
     "fewer_runs": "When the machine is not full, I wait for a full load before running it.",

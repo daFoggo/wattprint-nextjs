@@ -147,7 +147,7 @@ export default function PlanPage() {
       >
         {t("description")}
       </PageHead>
-      <Suspense fallback={<TileSkeleton height={281} mobile={500} />}>
+      <Suspense fallback={<TileSkeleton height={286} mobile={445} />}>
         <Content />
       </Suspense>
     </>

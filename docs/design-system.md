@@ -282,6 +282,7 @@ vendored file is committed without its patch (for example after a bare `shadcn a
 
 | File | Patch | Why |
 | :--- | :--- | :--- |
+| `tooltip.tsx` | Wraps at 16rem (`max-w-64`), `rounded-xl` instead of a nowrap pill | A sentence (a device's certainty, a forecast change) ran as one very long line |
 | `toast-stack.tsx` | Server snapshot returns one cached `[]` | A new array per call made React warn on every page (`<Toaster />` is in the root layout) |
 | `dropdown-menu.tsx`, `popover.tsx` | Portal into the enclosing `<dialog>` when there is one | A modal `<dialog>` (Sheet, Dialog) makes `<body>` inert: menus and the account panel in the mobile sidebar Sheet could not be clicked |
 | `floating.ts` | `preventDefault()` on Escape | Escape in a menu also closed the Sheet/Dialog around it |

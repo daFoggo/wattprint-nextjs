@@ -1,12 +1,10 @@
 {
   "opportunities": {
     "title": "Có thể tiết kiệm ở đâu",
-    "description": "Tính từ số liệu thiết bị của chính nhà bạn, đến hết kỳ ({end}). Số tiền tính theo bậc giá cao nhất kỳ này sẽ dùng tới.",
+    "description": "Ước tính đến hết kỳ ({end}), theo bậc giá cao nhất kỳ này sẽ dùng tới.",
     "empty": "Các thiết bị đang dùng như thường lệ. Quay lại sau vài ngày, khi có thêm số liệu.",
     "rough": "ước lượng sơ bộ",
     "range": "khoảng {low}–{high} kWh",
-    "pickUpTo": "Chọn tối đa 3 việc",
-    "saves": "{amount} · {kwh} kWh",
     "alwaysOn": "Giảm điện chờ (thiết bị để chờ, sạc cắm sẵn)",
     "alwaysOnHint": "Bạn tự chọn mức muốn giảm. Hệ thống không biết cụ thể đó là thiết bị nào.",
     "alwaysOnCut": "Giảm bao nhiêu W điện chờ",
@@ -16,21 +14,17 @@
     "alwaysOnNow": "Điện chờ hiện khoảng {watts} W, chạy cả ngày lẫn đêm",
     "full": "Đã đủ 3 việc. Bỏ chọn một việc để chọn việc khác.",
     "share": "{share, number, percent}",
-    "gone": "{n, plural, other {# việc}} được chọn sẵn không còn áp dụng nữa nên đã bỏ ra."
+    "gone": "{n, plural, other {# việc}} được chọn sẵn không còn áp dụng nữa nên đã bỏ ra.",
+    "roughKwh": "{kwh} kWh, ước lượng sơ bộ"
   },
   "summary": {
     "title": "Kế hoạch của bạn",
     "none": "Chọn 1–3 việc để xem kế hoạch đáng bao nhiêu tiền.",
-    "without": "Hóa đơn nếu giữ nguyên thói quen",
-    "with": "Nếu làm theo kế hoạch",
-    "total": "Tiết kiệm khoảng {amount}",
     "totalKwh": "{kwh} kWh đến {end}",
     "totalRange": "{kwh} kWh ({low}–{high}) đến {end}",
     "avoidsTier": "Không lên bậc {tier}",
     "hardToMeasure": "Mức này còn nhỏ so với dao động thường ngày của nhà, đến cuối kỳ có thể chưa thấy rõ. Chọn thêm việc để kết quả dễ thấy hơn.",
-    "commitTitle": "Việc bạn sẽ làm",
     "start": "Ngày bắt đầu làm",
-    "startHint": "Chọn sớm nhất từ {date}, ngày hệ thống cập nhật mức dự kiến của nhà gần nhất.",
     "begin": "Bắt đầu kế hoạch",
     "refused": {
       "plan_exists": "Bạn đang có một kế hoạch chạy rồi. Tải lại trang để xem.",
@@ -39,11 +33,12 @@
       "no_forecast": "Nhà cần thêm vài ngày số liệu trước khi lập kế hoạch.",
       "invalid": "Không lưu được kế hoạch. Thử lại sau."
     },
-    "noneTitle": "Chưa chọn việc nào",
     "saves": "Tiết kiệm đến cuối kỳ",
-    "clarity": "Mức tiết kiệm có đủ lớn để nhìn thấy",
     "clear": "Đủ lớn để thấy rõ",
-    "review": "Xem và bắt đầu"
+    "review": "Xem và bắt đầu",
+    "bill": "Hóa đơn cuối kỳ",
+    "unclear": "Khó thấy rõ",
+    "startFrom": "Sớm nhất từ {date}."
   },
   "commit": {
     "fewer_runs": "Khi máy chưa đầy, mình đợi gom đủ đồ rồi mới chạy.",

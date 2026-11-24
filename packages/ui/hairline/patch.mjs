@@ -111,6 +111,12 @@ export const PATCHES = [
     to: "          </tbody>\n        </table></div>{/* patched (hairline/patch.mjs): closes the wrapper above */}\n      </div>",
   },
   {
+    file: "tooltip.tsx",
+    why: "One nowrap pill: a sentence (a device's certainty, a forecast change) ran as one very long line. Text now wraps at 16rem, and the corners are rounded-xl (a pill does not hold two lines), short labels included.",
+    from: '            className="pointer-events-none fixed left-0 top-0 z-[60] flex items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-2.5 py-1',
+    to: '            // patched (hairline/patch.mjs): wraps at 16rem instead of one nowrap pill\n            className="pointer-events-none fixed left-0 top-0 z-[60] flex items-center gap-2 max-w-64 text-pretty rounded-xl bg-foreground px-2.5 py-1',
+  },
+  {
     file: "donut-chart.tsx",
     why: "A legend row carries a short mark after its label (the Overview: how far a device's share is trusted, as signal bars with a tooltip) and says it to screen readers.",
     from: "  /** Any CSS colour; slices without one take --chart-1 to --chart-5 in order. */\n  color?: string;\n}",

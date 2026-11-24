@@ -112,7 +112,8 @@ export function Tooltip({ children, content, shortcut, side = "top", align = "ce
             ref={surface}
             id={id}
             role="tooltip"
-            className="pointer-events-none fixed left-0 top-0 z-[60] flex items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-2.5 py-1 text-[12px] font-medium text-background"
+            // patched (hairline/patch.mjs): wraps at 16rem instead of one nowrap pill
+            className="pointer-events-none fixed left-0 top-0 z-[60] flex items-center gap-2 max-w-64 text-pretty rounded-xl bg-foreground px-2.5 py-1 text-[12px] font-medium text-background"
             style={{ ...vars, left: place.x, top: place.y, transformOrigin: place.origin, ...pose }}
           >
             {content}

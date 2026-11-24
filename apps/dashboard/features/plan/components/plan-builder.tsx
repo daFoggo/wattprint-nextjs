@@ -10,7 +10,6 @@ import { Checkbox } from "@workspace/ui/components/hairline/checkbox"
 import { DatePicker } from "@workspace/ui/components/hairline/date-picker"
 import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { NumberRoll } from "@workspace/ui/components/hairline/number-roll"
-import { Progress } from "@workspace/ui/components/hairline/progress"
 import { StepperInput } from "@workspace/ui/components/hairline/stepper-input"
 
 import { DeviceIcon } from "@/components/shared/device-icon"
@@ -27,7 +26,7 @@ import {
 } from "../math"
 import { startPlanAction } from "../actions"
 import type { PlanAction } from "../schemas"
-import { at, formats, type CommitKey, type PlanData } from "./plan-data"
+import { at, formats, type PlanData } from "./plan-data"
 
 const MAX_ACTIONS = 3
 const ALWAYS_ON = "always_on" as const
@@ -126,21 +125,11 @@ export function PlanBuilder({
     })
   }
 
-  const max = Math.max(
-    ...data.advice.map((a) => a.range?.high ?? a.kwh),
-    steps ? alwaysOnKwh(steps.max, data.daysLeft) : 0,
-    0.001
-  )
   const ratio = detectable(
     delta / Math.max(data.daysLeft, 1),
     data.sigma,
     data.daysLeft
   )
-  const commitments = [
-    ...chosen.map((a) => ({ key: a.key, type: a.type })),
-    ...(alwaysOn ? [{ key: ALWAYS_ON, type: ALWAYS_ON }] : []),
-  ]
-
   return (
     <div
       className={`grid grid-cols-1 gap-4 lg:grid-cols-12 ${delta > 0 ? "pb-24 lg:pb-0" : ""}`}
@@ -152,7 +141,10 @@ export function PlanBuilder({
         })}
         action={
           <Badge size="sm" tone={full ? "primary" : "neutral"} outline>
-            {t("opportunities.picked", { n: picked.length, max: MAX_ACTIONS })}
+            {t("opportunities.picked", {
+              n: picked.length,
+              max: MAX_ACTIONS,
+            })}
           </Badge>
         }
         className="lg:col-span-7"
@@ -161,8 +153,8 @@ export function PlanBuilder({
           <Alert tone="info" title={t("opportunities.gone", { n: gone })} />
         ) : null}
         {full ? (
-          // The rest grey out at three: say why, where the eye is.
-          <p className="text-sm text-muted-foreground">
+          // The rest grey out at three: say why, where the eye is (a tooltip never opens on a phone).
+          <p className="text-xs text-muted-foreground">
             {t("opportunities.full")}
           </p>
         ) : null}
@@ -194,20 +186,15 @@ export function PlanBuilder({
                     </>
                   }
                   amount={f.vnd.format(a.amount)}
-                  kwh={t("opportunities.kwh", { kwh: f.kwh.format(a.kwh) })}
-                  bar={{
-                    value: a.kwh,
-                    low: a.range?.low ?? null,
-                    high: a.range?.high ?? null,
-                    max,
-                  }}
-                  note={
+                  kwh={
                     a.range
                       ? t("opportunities.range", {
                           low: f.kwh.format(a.range.low),
                           high: f.kwh.format(a.range.high),
                         })
-                      : t("opportunities.rough")
+                      : t("opportunities.roughKwh", {
+                          kwh: f.kwh.format(a.kwh),
+                        })
                   }
                 />
               )
@@ -230,11 +217,12 @@ export function PlanBuilder({
                 kwh={t("opportunities.kwh", {
                   kwh: f.kwh.format(alwaysOnDelta),
                 })}
-                bar={{ value: alwaysOnDelta, low: null, high: null, max }}
-                note={t("opportunities.alwaysOnHint")}
               >
                 {alwaysOn ? (
                   <div className="flex flex-wrap items-center gap-3">
+                    <p className="w-full text-xs text-muted-foreground">
+                      {t("opportunities.alwaysOnHint")}
+                    </p>
                     <span aria-hidden className="text-sm text-muted-foreground">
                       {t("opportunities.alwaysOnCut")}
                     </span>
@@ -279,127 +267,104 @@ export function PlanBuilder({
       </Tile>
 
       <div id="plan-summary" className="scroll-mt-24 lg:col-span-5">
-        {/* Empty, it fills the row beside the list; with picks it is taller and follows the scroll instead. */}
-        <Tile
-          title={t("summary.title")}
-          className={delta > 0 ? "lg:sticky lg:top-24" : "h-full"}
-        >
-          {delta > 0 ? (
-            <>
-              <div className="flex flex-col gap-1.5">
-                <span className="text-sm text-muted-foreground">
-                  {t("summary.saves")}
-                </span>
-                <NumberRoll
-                  value={without - withPlan}
-                  format={{
-                    style: "currency",
-                    currency: "VND",
-                    maximumFractionDigits: 0,
-                  }}
-                  locales={locale}
-                  className="text-4xl font-medium tracking-tight tabular-nums"
-                />
-                <span className="text-xs text-muted-foreground tabular-nums">
-                  {low !== high
-                    ? t("summary.totalRange", {
-                        kwh: f.kwh.format(delta),
-                        low: f.kwh.format(low),
-                        high: f.kwh.format(high),
-                        end: f.date.format(at(data.periodEnd)),
-                      })
-                    : t("summary.totalKwh", {
-                        kwh: f.kwh.format(delta),
-                        end: f.date.format(at(data.periodEnd)),
-                      })}
-                </span>
-              </div>
+        {/* One shape picked or not, so the tile never jumps; it follows the scroll beside a long list. */}
+        <Tile title={t("summary.title")} className="lg:sticky lg:top-24">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm text-muted-foreground">
+              {t("summary.saves")}
+            </span>
+            <NumberRoll
+              value={without - withPlan}
+              format={{
+                style: "currency",
+                currency: "VND",
+                maximumFractionDigits: 0,
+              }}
+              locales={locale}
+              className={`text-3xl font-medium tracking-tight tabular-nums ${delta > 0 ? "" : "text-muted-foreground"}`}
+            />
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {delta <= 0
+                ? t("summary.none")
+                : low !== high
+                  ? t("summary.totalRange", {
+                      kwh: f.kwh.format(delta),
+                      low: f.kwh.format(low),
+                      high: f.kwh.format(high),
+                      end: f.date.format(at(data.periodEnd)),
+                    })
+                  : t("summary.totalKwh", {
+                      kwh: f.kwh.format(delta),
+                      end: f.date.format(at(data.periodEnd)),
+                    })}
+            </span>
+          </div>
 
-              <section className="flex flex-col gap-3">
-                <BillBar
-                  label={t("summary.without")}
-                  amount={f.vnd.format(without)}
-                  share={1}
-                  tone="muted"
-                />
-                <BillBar
-                  label={t("summary.with")}
-                  amount={f.vnd.format(withPlan)}
-                  share={without ? withPlan / without : 0}
-                  tone="primary"
-                />
+          <div className="flex flex-col gap-2 border-t pt-4 text-sm">
+            <dl className="flex items-baseline justify-between gap-3">
+              <dt className="text-muted-foreground">{t("summary.bill")}</dt>
+              <dd className="flex flex-wrap items-baseline justify-end gap-2 tabular-nums">
+                {delta > 0 ? (
+                  <s className="text-xs text-muted-foreground">
+                    {f.vnd.format(without)}
+                  </s>
+                ) : null}
+                <span className="font-medium">
+                  {f.vnd.format(delta > 0 ? withPlan : without)}
+                </span>
+              </dd>
+            </dl>
+            {delta > 0 && (tierPlan < tierNow || ratio !== null) ? (
+              <div className="flex flex-wrap gap-2">
                 {tierPlan < tierNow ? (
-                  <Badge tone="success" className="self-start">
+                  <Badge size="sm" tone="success">
                     {t("summary.avoidsTier", { tier: tierNow })}
                   </Badge>
                 ) : null}
-              </section>
+                {ratio !== null ? (
+                  <Badge
+                    size="sm"
+                    tone={ratio < 1 ? "warning" : "success"}
+                    outline
+                  >
+                    {t(ratio < 1 ? "summary.unclear" : "summary.clear")}
+                  </Badge>
+                ) : null}
+              </div>
+            ) : null}
+            {delta > 0 && ratio !== null && ratio < 1 ? (
+              // The way to a clearer result: shown, since a tooltip never opens on a phone.
+              <p className="text-xs text-muted-foreground">
+                {t("summary.hardToMeasure")}
+              </p>
+            ) : null}
+          </div>
 
-              {ratio !== null ? (
-                <section className="flex flex-col gap-1.5">
-                  <Progress
-                    value={Math.min(ratio, 1) * 100}
-                    label={t("summary.clarity")}
-                    doneLabel={t("summary.clear")}
-                    showValue={false}
-                  />
-                  {ratio < 1 ? (
-                    <p className="text-xs text-muted-foreground">
-                      {t("summary.hardToMeasure")}
-                    </p>
-                  ) : null}
-                </section>
-              ) : null}
-
-              <section className="flex flex-col gap-2">
-                <h3 className="text-sm font-medium">
-                  {t("summary.commitTitle")}
-                </h3>
-                <ul className="flex flex-col gap-2">
-                  {commitments.map((c) => (
-                    <li key={c.key} className="flex items-start gap-3 text-sm">
-                      <DeviceIcon type={c.type} size="sm" />
-                      <span className="text-muted-foreground">
-                        {t(`commit.${c.key as CommitKey}`)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <DatePicker
-                label={t("summary.start")}
-                hint={t("summary.startHint", {
-                  date: f.date.format(at(data.minStart)),
-                })}
-                value={start}
-                onValueChange={(v) => setStart(v ?? data.today)}
-                min={data.minStart}
-                max={data.today}
-                locale={locale}
-                weekStartsOn={1}
+          <div className="flex flex-col gap-3">
+            <DatePicker
+              label={t("summary.start")}
+              hint={t("summary.startFrom", {
+                date: f.date.format(at(data.minStart)),
+              })}
+              value={start}
+              onValueChange={(v) => setStart(v ?? data.today)}
+              min={data.minStart}
+              max={data.today}
+              locale={locale}
+              weekStartsOn={1}
+            />
+            {refused ? (
+              <Alert
+                tone="danger"
+                title={t(
+                  `summary.refused.${refused in REFUSALS ? (refused as keyof typeof REFUSALS) : "invalid"}`
+                )}
               />
-              {refused ? (
-                <Alert
-                  tone="danger"
-                  title={t(
-                    `summary.refused.${refused in REFUSALS ? (refused as keyof typeof REFUSALS) : "invalid"}`
-                  )}
-                />
-              ) : null}
-              <Button size="lg" onClick={begin} disabled={pending}>
-                {t("summary.begin")}
-              </Button>
-            </>
-          ) : (
-            <div className="flex flex-1 items-center justify-center">
-              <EmptyState
-                scene="inbox"
-                title={t("summary.noneTitle")}
-                description={t("summary.none")}
-              />
-            </div>
-          )}
+            ) : null}
+            <Button onClick={begin} disabled={pending || delta <= 0}>
+              {t("summary.begin")}
+            </Button>
+          </div>
         </Tile>
       </div>
 
@@ -429,7 +394,7 @@ export function PlanBuilder({
   )
 }
 
-/** One action to pick: its device, what it saves (₫ first), and a bar of its kWh against the largest, its range lighter. */
+/** One action to pick, in two lines: what it is and on which device, and what it saves (₫ over its kWh to the cycle's end). */
 function Opportunity({
   type,
   title,
@@ -439,8 +404,6 @@ function Opportunity({
   meta,
   amount,
   kwh,
-  bar,
-  note,
   children,
 }: {
   type: string
@@ -451,13 +414,10 @@ function Opportunity({
   meta: React.ReactNode
   amount: string
   kwh: string
-  bar: { value: number; low: number | null; high: number | null; max: number }
-  note: string
   children?: React.ReactNode
 }) {
-  const pct = (v: number) => `${Math.min((v / bar.max) * 100, 100)}%`
   return (
-    <li className="flex items-start gap-3 py-4 first:pt-0 last:pb-0">
+    <li className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
       <Checkbox
         checked={on}
         disabled={disabled}
@@ -466,73 +426,23 @@ function Opportunity({
         className="mt-2"
       />
       <DeviceIcon type={type} />
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <div className="flex flex-col gap-1 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             <span className="text-sm font-medium">{title}</span>
             <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {meta}
             </span>
           </div>
-          <div className="flex shrink-0 items-baseline gap-2 sm:flex-col sm:items-end sm:gap-0.5">
-            <span className="text-lg font-medium tabular-nums">{amount}</span>
+          <div className="flex shrink-0 items-baseline gap-2 lg:flex-col lg:items-end lg:gap-1">
+            <span className="text-sm font-medium tabular-nums">{amount}</span>
             <span className="text-xs text-muted-foreground tabular-nums">
               {kwh}
             </span>
           </div>
         </div>
-        <span aria-hidden className="relative h-1.5 rounded-full bg-muted">
-          {bar.low !== null && bar.high !== null ? (
-            <span
-              className="absolute inset-y-0 rounded-full bg-primary/20"
-              style={{
-                left: pct(bar.low),
-                width: `calc(${pct(bar.high)} - ${pct(bar.low)})`,
-              }}
-            />
-          ) : null}
-          <span
-            className={`absolute inset-y-0 left-0 rounded-full transition-colors duration-150 ${on ? "bg-primary" : "bg-muted-foreground/40"}`}
-            style={{ width: pct(bar.value) }}
-          />
-        </span>
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {note}
-        </span>
         {children}
       </div>
     </li>
-  )
-}
-
-/** A bill as a bar against the bill as usual, so the cut reads at a glance. */
-function BillBar({
-  label,
-  amount,
-  share,
-  tone,
-}: {
-  label: string
-  amount: string
-  share: number
-  tone: "muted" | "primary"
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-3 text-sm">
-        <span className="text-muted-foreground">{label}</span>
-        <span
-          className={`tabular-nums ${tone === "primary" ? "font-medium" : ""}`}
-        >
-          {amount}
-        </span>
-      </div>
-      <span aria-hidden className="relative h-2 rounded-full bg-muted">
-        <span
-          className={`absolute inset-y-0 left-0 rounded-full ${tone === "primary" ? "bg-primary" : "bg-muted-foreground/40"}`}
-          style={{ width: `${Math.max(share, 0) * 100}%` }}
-        />
-      </span>
-    </div>
   )
 }
