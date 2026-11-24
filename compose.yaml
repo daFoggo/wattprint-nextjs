@@ -6,6 +6,7 @@ services:
   dashboard:
     build:
       context: .
+      network: host # the build prerenders pages that read the API (provinces) at localhost:11093
       secrets: [dashboard_env, web_env]
     image: wattprint-web:latest
     container_name: wattprint-dashboard
