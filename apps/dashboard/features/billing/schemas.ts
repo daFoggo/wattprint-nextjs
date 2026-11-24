@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { DEVICE_ADVICE } from "@/config/advice"
+
 // Only the fields the bill card reads; Zod drops the rest of the backend response.
 const TierSchema = z.object({
   tier_no: z.number(),
@@ -99,14 +101,6 @@ export const ForecastSchema = z
     },
   }))
 export type Forecast = z.infer<typeof ForecastSchema>
-
-export const DEVICE_ADVICE = [
-  "fewer_runs",
-  "heater_setpoint",
-  "heater_earlier_off",
-  "kettle_fill",
-  "fridge_check",
-] as const
 
 /** What explains a device's week against its usual (backend expect.device.explain_outlook). */
 export const DEVICE_FACTORS = [

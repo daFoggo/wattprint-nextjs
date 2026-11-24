@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { DEVICE_ADVICE } from "@/config/advice"
+
 // The copilot API's shapes (wattprint-backend app/modules/copilot): the reply and the stream are
 // parsed with these on the client too, so a change on either side fails loudly.
 
@@ -51,13 +53,22 @@ const WidgetSchema = z.discriminatedUnion("kind", [
     feels: z.number(),
     humidity: z.number(),
   }),
+  /** Up to three of the device advice; `id` (`<deviceId>.<key>`) is the plan page's `?add=`. Older plans (a 14-day trial) no longer parse and drop. */
   z.object({
     kind: z.literal("plan"),
-    id: z.string(),
-    tasks: z.array(z.object({ label: z.string(), detail: z.string() })),
+    actions: z.array(
+      z.object({
+        id: z.string(),
+        key: z.enum(DEVICE_ADVICE),
+        device: z.string(),
+        params: z.record(z.string(), z.number()),
+        kwh: z.number(),
+        vnd: z.number(),
+      })
+    ),
     kwh: z.number(),
-    vnd: z.number().nullable(),
-    status: z.string(),
+    /** Each action's saving summed; the plan page prices them together. */
+    vnd: z.number(),
   }),
   z.object({
     kind: z.literal("peers"),

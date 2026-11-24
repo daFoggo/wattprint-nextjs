@@ -242,7 +242,11 @@ export function WeatherCard({ weather }: { weather: Weather }) {
           ))}
         </dl>
         <p className="text-xs text-muted-foreground">
-          {t("updated", { time: hour(now.dt), place: weather.province })}
+          {t("updated", {
+            time: hour(now.dt),
+            place: weather.province,
+            source: weather.source,
+          })}
         </p>
       </div>
     </Popover>

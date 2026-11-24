@@ -3,6 +3,7 @@ import {
   IconChartBar,
   IconDevices,
   IconLayoutDashboard,
+  IconPigMoney,
   IconReceipt,
   IconSettings,
   type Icon,
@@ -16,6 +17,7 @@ const NAV_ICONS: Record<NavIconName, Icon> = {
   statistics: IconChartBar,
   devices: IconDevices,
   alerts: IconBell,
+  plan: IconPigMoney,
   bill: IconReceipt,
   settings: IconSettings,
 }

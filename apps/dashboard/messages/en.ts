@@ -7,6 +7,7 @@ import home from "./en/home.json"
 import insight from "./en/insight.json"
 import weather from "./en/weather.json"
 import copilot from "./en/copilot.json"
+import plan from "./en/plan.json"
 
 import type vi from "./vi"
 
@@ -21,4 +22,5 @@ export default {
   insight,
   weather,
   copilot,
+  plan,
 } satisfies typeof vi

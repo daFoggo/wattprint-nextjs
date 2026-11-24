@@ -7,6 +7,7 @@ import home from "./vi/home.json"
 import insight from "./vi/insight.json"
 import weather from "./vi/weather.json"
 import copilot from "./vi/copilot.json"
+import plan from "./vi/plan.json"
 
 // One file per namespace, so features are translated without touching each other.
 export default {
@@ -19,4 +20,5 @@ export default {
   insight,
   weather,
   copilot,
+  plan,
 }

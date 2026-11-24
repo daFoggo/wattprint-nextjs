@@ -55,11 +55,18 @@ const stored = [
   { kind: "weather", temp: 31, feels: 35, humidity: 70 },
   {
     kind: "plan",
-    id: "p1",
-    tasks: [{ label: "AC at 26", detail: "..." }],
-    kwh: 12,
-    vnd: null,
-    status: "proposed",
+    actions: [
+      {
+        id: "d1.kettle_fill",
+        key: "kettle_fill",
+        device: "Kettle",
+        params: { share: 30 },
+        kwh: 0.96,
+        vnd: 5100,
+      },
+    ],
+    kwh: 0.96,
+    vnd: 5100,
   },
   { kind: "peers", you: 9.1, median: 7.4, days: 30, homes: 12 },
   { kind: "standby", watts: [80, 82], kwh: 59, vnd: 180000 },
@@ -118,6 +125,19 @@ describe("reply widgets", () => {
       widgetsOf([{ kind: "alert_card" }, forecast, { ...forecast, used: "x" }])
     ).toEqual([forecast])
     expect(warn).toHaveBeenCalledTimes(2)
+  })
+
+  it("drops a 14-day trial plan stored before the plan page took plans over", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {})
+    const trial = {
+      kind: "plan",
+      id: "p1",
+      tasks: [{ label: "AC at 26", detail: "..." }],
+      kwh: 12,
+      vnd: null,
+      status: "proposed",
+    }
+    expect(widgetsOf([trial, forecast])).toEqual([forecast])
   })
 
   it("drops the bad widget in a stored conversation too", () => {

@@ -1,10 +1,9 @@
 "use client"
 
-import { Component, useState, type ReactNode } from "react"
+import { Component, type ReactNode } from "react"
 import { IconArrowRight } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
-import { ApprovalCard } from "@workspace/ui/components/hairline/approval-card"
 import { AreaChart } from "@workspace/ui/components/hairline/area-chart"
 import { BalanceMeter } from "@workspace/ui/components/hairline/balance-meter"
 import { ComboChart } from "@workspace/ui/components/hairline/combo-chart"
@@ -13,19 +12,16 @@ import { DataTable } from "@workspace/ui/components/hairline/data-table"
 import { DonutChart } from "@workspace/ui/components/hairline/donut-chart"
 import { Plan } from "@workspace/ui/components/hairline/plan"
 import { Sparkline } from "@workspace/ui/components/hairline/sparkline"
-import { toast } from "@workspace/ui/components/hairline/toast-stack"
 import { UsageMeter } from "@workspace/ui/components/hairline/usage-meter"
 import { linkButton } from "@workspace/ui-patterns/link-button"
 
 import { CardLink } from "@/components/shared/nav-links"
 import { Tile } from "@/components/shared/tile"
-import { ALERTS_PATH } from "@/config/routes"
+import { ALERTS_PATH, PLAN_PATH } from "@/config/routes"
 import { Link } from "@/i18n/navigation"
 
-import { acceptPlanAction } from "../actions"
 import { axisLabels, chartView, tableCell } from "../chart"
 import type { Widget } from "../schemas"
-import { useCopilot } from "./copilot-provider"
 
 /** Figures as the dashboard shows them: a muted label under a large value (design system, Metrics). */
 function Stats({ items }: { items: { label: string; value: string }[] }) {
@@ -41,57 +37,53 @@ function Stats({ items }: { items: { label: string; value: string }[] }) {
   )
 }
 
-/** A plan Wappi saved: its tasks, and Start, which begins the 14-day trial on the backend. */
+/** A plan Wappi drew from the device advice: the plan page opens with these actions picked, to start it there. */
 function PlanWidget({ widget }: { widget: Extract<Widget, { kind: "plan" }> }) {
   const t = useTranslations("copilot.widgets")
+  const tip = useTranslations("billing.deviceForecast")
   const locale = useLocale()
-  const { react } = useCopilot()
-  const [status, setStatus] = useState(widget.status)
   const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 })
   const vnd = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "VND",
   })
-  const kwh = `${number.format(widget.kwh)} kWh`
   return (
     <div className="flex flex-col gap-3">
       <Plan
         title={t("plan.title")}
-        tasks={widget.tasks.map((task) => ({
-          ...task,
-          status: "pending", // the user's to do; the trial is measured, not ticked off
+        tasks={widget.actions.map((a) => ({
+          label: tip(`tip.${a.key}`, a.params),
+          detail: t("plan.task", {
+            device: a.device,
+            kwh: number.format(a.kwh),
+          }),
+          status: "pending", // the user's to do, once started on the plan page
         }))}
         defaultOpen
       />
-      {status === "accepted" ? (
-        <p className="text-sm text-muted-foreground">{t("plan.running")}</p>
-      ) : (
-        <ApprovalCard
-          title={t("plan.approval")}
-          description={t("plan.description")}
-          details={[
-            {
-              label: t("plan.saving"),
-              value:
-                widget.vnd === null
-                  ? t("plan.savingKwh", { kwh })
-                  : t("plan.savingValue", { kwh, vnd: vnd.format(widget.vnd) }),
-            },
-            { label: t("plan.length"), value: t("plan.lengthValue") },
-          ]}
-          approveLabel={t("plan.approve")}
-          denyLabel={t("plan.deny")}
-          onApprove={async () => {
-            try {
-              setStatus(await acceptPlanAction(widget.id))
-              react("celebrating")
-              toast.success(t("plan.started"))
-            } catch {
-              toast.error(t("plan.failed"))
-            }
-          }}
+      <Stats
+        items={[
+          {
+            label: t("plan.saving"),
+            value: `${number.format(widget.kwh)} kWh`,
+          },
+          { label: t("plan.money"), value: vnd.format(widget.vnd) },
+        ]}
+      />
+      <p className="text-sm text-muted-foreground">{t("plan.note")}</p>
+      <Link
+        href={{
+          pathname: PLAN_PATH,
+          query: { add: widget.actions.map((a) => a.id) },
+        }}
+        className={linkButton({ size: "md", className: "group self-start" })}
+      >
+        {t("plan.open")}
+        <IconArrowRight
+          aria-hidden
+          className="size-4 group-hover:translate-x-1 motion-safe:transition-transform motion-safe:duration-200"
         />
-      )}
+      </Link>
     </div>
   )
 }

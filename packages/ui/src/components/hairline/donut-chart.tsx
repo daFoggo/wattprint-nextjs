@@ -38,6 +38,9 @@ export interface DonutSlice {
   value: number;
   /** Any CSS colour; slices without one take --chart-1 to --chart-5 in order. */
   color?: string;
+  /** patched (hairline/patch.mjs): a short mark after the legend label, and what it says for the row's name. */
+  mark?: React.ReactNode;
+  markLabel?: string;
 }
 
 export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
@@ -306,7 +309,7 @@ export function DonutChart({
                   <button
                     type="button"
                     aria-pressed={a.shown}
-                    aria-label={`${a.label}: ${fmt(a.amount)}${a.shown ? `, ${Math.round(a.share * 100)}%` : t(", hidden")}`}
+                    aria-label={`${a.label}${a.markLabel ? ` (${a.markLabel})` : ""}: ${fmt(a.amount)}${a.shown ? `, ${Math.round(a.share * 100)}%` : t(", hidden")}`}
                     onClick={() => toggle(a.id)}
                     onPointerEnter={(e) => e.pointerType === "mouse" && point(a.id)}
                     onPointerLeave={(e) => e.pointerType === "mouse" && point(null)}
@@ -321,6 +324,7 @@ export function DonutChart({
                       style={{ background: a.shown ? a.color : "transparent", boxShadow: `inset 0 0 0 1.5px ${a.color}` }}
                     />
                     <span className={`min-w-0 flex-1 truncate ${a.shown ? "text-foreground" : "text-muted-foreground line-through decoration-muted-foreground/60"}`}>{a.label}</span>
+                    {a.mark /* patched (hairline/patch.mjs) */}
                     <span className="tabular-nums text-foreground">
                       <NumberRoll value={visible ? a.amount : 0} format={format} locales={locales} duration={900} suffix={/* patched (hairline/patch.mjs) */ unit ? ` ${unit}` : ""} />
                     </span>

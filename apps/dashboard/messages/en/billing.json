@@ -13,28 +13,11 @@
     "vsUsual": "Today is {pct} {higher, select, true {above} other {below}} your usual (≈ {amount})",
     "asUsual": "Today is about your usual"
   },
-  "history": {
-    "thisYear": "Recent cycles",
-    "lastYear": "Same months a year before",
-    "amount": "Cost each month",
-    "kwh": "Energy each month (kWh)"
-  },
   "forecast": {
     "title": "Bill forecast for the end of the cycle",
-    "description": "From the home's day-of-week pattern over the last 4 weeks, to the end of {end}.",
-    "amount": "Expected bill",
-    "kwh": "Expected energy",
-    "tier": "Ends in",
-    "tierValue": "Tier {tier}",
-    "higher": "{pct} more than the last cycle ({amount}).",
-    "lower": "{pct} less than the last cycle ({amount}).",
-    "nextTitle": "Tier {tier} starts on {date}",
     "nextBody": "From {kwh} kWh every kWh costs {price} before VAT. Use big appliances less to stay in this tier longer.",
     "unavailable": "At least 7 days with full readings are needed to forecast; check back in a few days.",
-    "why": "Learnt from {days} days with full readings; {pct} of the cycle has passed.",
-    "descriptionContext": "From a model learnt on your own home: weather, days off and daily routine, through {end}.",
     "range": "About {low} – {high} ({kwhLow}–{kwhHigh} kWh)",
-    "change": "{up, select, true {Up} other {Down}} {amount} since yesterday, mostly from {top}.",
     "parts": {
       "used": "yesterday's use against the forecast",
       "weather": "the weather ahead",
@@ -43,14 +26,40 @@
       "trend": "the recent trend",
       "unexplained": "other factors"
     },
+    "simulated": "Simulated heater",
+    "planLink": "Plan to stay out of tier {tier}",
+    "headline": "{kwh} kWh, ends in tier {tier}",
+    "used": "Used so far: {kwh} kWh",
+    "expected": "Expected by {date}: {kwh} kWh",
+    "path": "Energy used so far and expected by the end of the cycle, against the price tiers",
+    "until": "To the end of {end}",
+    "vsLast": "Against the last cycle ({amount})",
+    "howTitle": "How this forecast is made",
+    "nextShort": "Tier {tier} from about {date}",
+    "nextShortLikely": "{pct} chance of tier {tier} from about {date}",
+    "nextTitle": "Tier {tier} starts on {date}",
     "nextLikely": "A {pct} chance of reaching tier {tier} around {date}",
-    "accuracyBacktest": "Tried on {cycles, plural, one {# past cycle} other {# past cycles}}: off by {pct} on average.",
-    "accuracyCycle": "Last cycle's mid-cycle forecast was off by {pct} from the real bill.",
-    "simulated": "Simulated heater"
+    "how": {
+      "method": "Method",
+      "context": "A model of your own home",
+      "weekday": "The last 4 weeks' routine",
+      "range": "An 8 in 10 chance the bill lands in this range",
+      "since": "Since yesterday",
+      "sinceValue": "{amount} · {top}",
+      "basis": "Data",
+      "basisValue": "{days} days with full readings",
+      "low": "Low",
+      "mid": "Expected",
+      "high": "High",
+      "checked": "Checked",
+      "checkedBacktest": "On {cycles} past cycles",
+      "checkedCycle": "Against last cycle's bill"
+    },
+    "sameAsLast": "Same as last cycle"
   },
   "overview": {
     "title": "This bill, {start} – {end}",
-    "description": "Tiered household tariff, VAT included · {days, plural, one {# day} other {# days}} until the meter reading",
+    "description": "Tiered household tariff, VAT included",
     "soFar": "So far",
     "today": "Today",
     "forecast": "Expected at the end",
@@ -62,7 +71,11 @@
     "lastMonth": "Last cycle {amount}",
     "partial": "Missing data",
     "straddle": "Tariff changed this cycle",
-    "forecastRange": "About {low} – {high}"
+    "forecastRange": "About {low} – {high}",
+    "cycleDay": "Day {day} of {total}, {left, plural, one {# day} other {# days}} left",
+    "partialBody": "The meter missed some hours this cycle, so the bill may read lower than it is.",
+    "straddleBody": "The tariff changed mid-cycle: the days before and after are priced at each period’s rates, as the utility does.",
+    "partialStraddle": "Missing data and a tariff change this cycle"
   },
   "ladder": {
     "title": "Tier prices and what you used in each",
@@ -89,8 +102,6 @@
   },
   "deviceForecast": {
     "title": "Next 7 days",
-    "listTitle": "Each device to the end of the cycle",
-    "listDescription": "From now to the end of {end}: each device's range and how certain it is",
     "range": "Between {low} and {high} kWh",
     "day": "{date}: about {kwh} kWh",
     "confidence": {
@@ -109,7 +120,6 @@
     "saves": "Saves {amount} ({kwh} kWh) by the end of the cycle",
     "avoidsTier": "keeps you out of tier {tier}",
     "simulated": "Simulated",
-    "more": "Open the device",
     "week": "About {kwh} kWh · {amount} over the next 7 days",
     "versus": "{dir, select, up {{pct}% above usual} down {{pct}% below usual} other {About usual}}",
     "toEnd": "To the end of {end}: {amount} · {kwh} kWh",
@@ -130,6 +140,12 @@
     "routineLine": "From its usual for the weekday and hour over the last 4 weeks: {usual} kWh a day. The weather model did not forecast this device better.",
     "busiest": "Most on {date}: about {kwh} kWh",
     "unfit": "This device is used irregularly: the model does not match its last 4 weeks closely enough to tell the reasons apart reliably.",
-    "trendCause": "— last week was also {dir, select, down {colder} other {warmer}} ({recent, number, ::.#}°C against {usual, number, ::.#}°C)"
+    "trendCause": "— last week was also {dir, select, down {colder} other {warmer}} ({recent, number, ::.#}°C against {usual, number, ::.#}°C)",
+    "addToPlan": "Add to plan",
+    "rest": "From now to {end}: about {amount}",
+    "certainty": "{level}: from the days measured and how regular the device is",
+    "certaintyNew": "{level}: too few days measured yet",
+    "hasTip": "A way to save",
+    "simulatedNote": "This device's figures are simulated"
   }
 }

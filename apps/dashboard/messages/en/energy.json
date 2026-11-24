@@ -21,14 +21,26 @@
     "todaySoFar": "Today so far",
     "more": "See statistics",
     "rest": "{count} more devices",
-    "why": "{pct} of the energy is not matched to a device yet (Other)."
+    "why": "{pct} of the energy is not matched to a device yet (Other).",
+    "accuracy": {
+      "levelLong": {
+        "high": "High certainty",
+        "medium": "Medium certainty",
+        "low": "Low certainty"
+      },
+      "tip": {
+        "high": "This device's share is picked out with good certainty.",
+        "medium": "This device's share is a fair estimate.",
+        "low": "This device is hard to pick out of the total; take its figure as a rough guide."
+      }
+    }
   },
   "deviceList": {
     "label": "Devices",
     "search": "Search devices",
     "colDevice": "Device",
     "colStatus": "Status",
-    "colNow": "Now",
+    "colNow": "Power now",
     "on": "On",
     "off": "Off",
     "nounOne": "device",
@@ -37,7 +49,7 @@
     "weekLabel": "{device}, energy over the last 7 days",
     "onAt": "On · {watts} W"
   },
-  "estimated": "Estimated from the main meter by the system's device recognition model.",
+  "estimated": "Estimated from the home's meter.",
   "timeline": {
     "emptyTitle": "No runs in the last 24 hours",
     "emptyDescription": "When WattPrint spots a device turning on, the run shows up here.",
@@ -62,7 +74,8 @@
     "deviceTitle": "Device power, last 24 hours",
     "title": "Whole-home power over time",
     "deviceDescription": "Estimated draw in 5-minute steps",
-    "usual": "Usual"
+    "usual": "Usual",
+    "description": "How much power the home draws (W) moment to moment, against usual."
   },
   "deviceStats": {
     "avgOn": "Average when on",
@@ -78,7 +91,7 @@
     "average": "3-day average"
   },
   "about": {
-    "title": "Against devices of its kind, and saving tips",
+    "title": "Saving tips",
     "typical": "A device of this kind usually draws <b>{typical} W</b> when on; yours averages <b>{yours} W</b>.",
     "tips": {
       "ac": "Set it to 26 °C or higher; each degree lower adds roughly 6 to 8 percent to its energy use.",
@@ -104,13 +117,13 @@
     }
   },
   "roomSpending": {
-    "title": "This month’s cost by room",
-    "hint": "Tap a room to see its devices · estimated",
-    "byDeviceTitle": "This month’s cost by device",
-    "byDeviceHint": "Each device · estimated",
-    "label": "This month",
+    "title": "This cycle’s cost by room",
+    "hint": "This cycle so far, estimated. Pick a room for its devices, a device for its forecast to the cycle's end.",
+    "byDeviceTitle": "This cycle’s cost by device",
+    "byDeviceHint": "This cycle so far, estimated. Pick a device for its forecast to the cycle's end.",
+    "label": "This cycle",
     "allDevices": "All devices",
-    "roomTitle": "This month’s cost · {room}",
+    "roomTitle": "This cycle’s cost · {room}",
     "roomHint": "Each device in the room · estimated"
   },
   "cycleCompare": {
@@ -121,11 +134,11 @@
     "noChange": "A new cycle: no whole day to compare yet."
   },
   "standby": {
-    "title": "Background load: power used with nothing on",
+    "title": "Standby power",
     "description": "The home’s lowest draw each day: what it uses with nobody using anything, such as the router, chargers and devices on standby.",
     "level": "Level now",
-    "year": "A year",
-    "cost": "Cost a year",
+    "year": "Energy per year",
+    "cost": "Cost per year",
     "chart": "Background load each day, last 30 days"
   },
   "tips": {

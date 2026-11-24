@@ -3,6 +3,7 @@ import {
   IconDeviceSpeaker,
   IconDeviceTv,
   IconDots,
+  IconFlame,
   IconFridge,
   IconMicrowave,
   IconPlugConnected,
@@ -28,6 +29,7 @@ const ICONS: Record<string, Icon> = {
   hifi: IconDeviceSpeaker,
   microwave: IconMicrowave,
   toaster: IconBread,
+  electric_heater: IconFlame,
 }
 
 /** A device's kind as an icon in a round well, as Sense lists them. */

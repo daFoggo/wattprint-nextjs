@@ -13,28 +13,11 @@
     "vsUsual": "Hôm nay đang {higher, select, true {cao hơn} other {thấp hơn}} thường lệ {pct} (≈ {amount})",
     "asUsual": "Hôm nay dùng điện như thường lệ"
   },
-  "history": {
-    "thisYear": "Các kỳ gần đây",
-    "lastYear": "Cùng kỳ năm trước",
-    "amount": "Tiền điện từng tháng",
-    "kwh": "Điện năng từng tháng (kWh)"
-  },
   "forecast": {
     "title": "Dự báo hóa đơn cuối kỳ",
-    "description": "Theo thói quen dùng điện từng ngày trong tuần của 4 tuần gần nhất, tính đến hết ngày {end}.",
-    "amount": "Hóa đơn dự kiến",
-    "kwh": "Điện năng dự kiến",
-    "tier": "Kết thúc ở",
-    "tierValue": "Bậc {tier}",
-    "higher": "Cao hơn {pct} so với kỳ trước ({amount}).",
-    "lower": "Thấp hơn {pct} so với kỳ trước ({amount}).",
-    "nextTitle": "Ngày {date} sang bậc {tier}",
     "nextBody": "Từ {kwh} kWh, mỗi kWh giá {price} chưa gồm VAT. Bớt dùng thiết bị công suất lớn để ở lại bậc hiện tại lâu hơn.",
     "unavailable": "Cần ít nhất 7 ngày có đủ số đo để dự báo; quay lại sau ít hôm nữa.",
-    "why": "Học từ {days} ngày có đủ số đo; kỳ đã qua {pct}.",
-    "descriptionContext": "Theo mô hình học từ chính nhà bạn: thời tiết, ngày nghỉ và nếp sinh hoạt, tính đến hết ngày {end}.",
     "range": "Khoảng {low} – {high} ({kwhLow}–{kwhHigh} kWh)",
-    "change": "{up, select, true {Tăng} other {Giảm}} {amount} so với hôm qua, chủ yếu do {top}.",
     "parts": {
       "used": "hôm qua dùng khác dự kiến",
       "weather": "thời tiết những ngày tới",
@@ -43,14 +26,40 @@
       "trend": "xu hướng gần đây",
       "unexplained": "yếu tố khác"
     },
+    "simulated": "Có tải sưởi mô phỏng",
+    "planLink": "Lập kế hoạch tránh bậc {tier}",
+    "headline": "{kwh} kWh, kết thúc ở bậc {tier}",
+    "used": "Đã dùng: {kwh} kWh",
+    "expected": "Dự kiến đến {date}: {kwh} kWh",
+    "path": "Điện đã dùng và dự kiến đến cuối kỳ, so với các bậc giá",
+    "until": "Đến hết ngày {end}",
+    "vsLast": "So với kỳ trước ({amount})",
+    "howTitle": "Cách tính dự báo này",
+    "nextShort": "Sang bậc {tier} từ khoảng {date}",
+    "nextShortLikely": "{pct} khả năng sang bậc {tier} từ khoảng {date}",
+    "nextTitle": "Ngày {date} sang bậc {tier}",
     "nextLikely": "{pct} khả năng sang bậc {tier} vào khoảng {date}",
-    "accuracyBacktest": "Thử trên {cycles, plural, other {# kỳ}} đã qua: lệch trung bình {pct}.",
-    "accuracyCycle": "Kỳ trước dự báo giữa kỳ lệch {pct} so với hóa đơn thật.",
-    "simulated": "Có tải sưởi mô phỏng"
+    "how": {
+      "method": "Cách tính",
+      "context": "Mô hình riêng của nhà",
+      "weekday": "Thói quen 4 tuần gần nhất",
+      "range": "8/10 khả năng hóa đơn nằm trong khoảng này",
+      "since": "Từ hôm qua",
+      "sinceValue": "{amount} · {top}",
+      "basis": "Dữ liệu",
+      "basisValue": "{days} ngày đủ số liệu",
+      "low": "Thấp",
+      "mid": "Dự kiến",
+      "high": "Cao",
+      "checked": "Đã kiểm tra",
+      "checkedBacktest": "Trên {cycles} kỳ trước",
+      "checkedCycle": "Với hóa đơn kỳ trước"
+    },
+    "sameAsLast": "Như kỳ trước"
   },
   "overview": {
     "title": "Hóa đơn kỳ này, {start} – {end}",
-    "description": "Giá điện sinh hoạt bậc thang, đã gồm VAT · còn {days} ngày nữa chốt kỳ",
+    "description": "Giá điện sinh hoạt bậc thang, đã gồm VAT",
     "soFar": "Đến hôm nay",
     "today": "Hôm nay",
     "forecast": "Dự kiến cuối kỳ",
@@ -62,7 +71,11 @@
     "lastMonth": "Kỳ trước {amount}",
     "partial": "Thiếu dữ liệu",
     "straddle": "Giá điện thay đổi trong kỳ",
-    "forecastRange": "Khoảng {low} – {high}"
+    "forecastRange": "Khoảng {low} – {high}",
+    "cycleDay": "Ngày {day}/{total} của kỳ, còn {left} ngày",
+    "partialBody": "Công tơ thiếu số đo một số giờ trong kỳ, nên tiền điện có thể thấp hơn thực tế.",
+    "straddleBody": "Biểu giá đổi giữa kỳ: các ngày trước và sau được tính theo giá của từng giai đoạn, như điện lực làm.",
+    "partialStraddle": "Thiếu dữ liệu và giá điện thay đổi trong kỳ"
   },
   "ladder": {
     "title": "Giá bậc thang và điện đã dùng ở từng bậc",
@@ -89,8 +102,6 @@
   },
   "deviceForecast": {
     "title": "Dự báo 7 ngày tới",
-    "listTitle": "Dự báo theo thiết bị đến cuối kỳ",
-    "listDescription": "Từ giờ đến hết ngày {end}: khoảng dự báo và độ chắc chắn của từng thiết bị",
     "range": "Khoảng {low}–{high} kWh",
     "day": "{date}: khoảng {kwh} kWh",
     "confidence": {
@@ -109,7 +120,6 @@
     "saves": "Tiết kiệm {amount} ({kwh} kWh) đến cuối kỳ",
     "avoidsTier": "tránh được bậc {tier}",
     "simulated": "Mô phỏng",
-    "more": "Xem thiết bị",
     "week": "Khoảng {kwh} kWh · {amount} trong 7 ngày tới",
     "versus": "{dir, select, up {Cao hơn bình thường {pct}%} down {Thấp hơn bình thường {pct}%} other {Gần như bình thường}}",
     "toEnd": "Đến hết {end}: {amount} · {kwh} kWh",
@@ -130,6 +140,12 @@
     "routineLine": "Dự báo theo nếp cùng thứ và giờ của 4 tuần qua: bình thường {usual} kWh/ngày. Mô hình theo thời tiết chưa dự báo tốt hơn cho thiết bị này.",
     "busiest": "Tốn nhất {date}: khoảng {kwh} kWh",
     "unfit": "Thiết bị này dùng thất thường: mô hình chưa khớp đủ với mức dùng thực tế 4 tuần qua để tách lý do một cách đáng tin.",
-    "trendCause": "— tuần qua cũng {dir, select, down {lạnh hơn} other {ấm hơn}} ({recent, number, ::.#}°C so với {usual, number, ::.#}°C)"
+    "trendCause": "— tuần qua cũng {dir, select, down {lạnh hơn} other {ấm hơn}} ({recent, number, ::.#}°C so với {usual, number, ::.#}°C)",
+    "addToPlan": "Thêm vào kế hoạch",
+    "rest": "Từ nay đến {end}: khoảng {amount}",
+    "certainty": "{level}: mức dự báo dựa trên số ngày đo và độ đều đặn của thiết bị",
+    "certaintyNew": "{level}: chưa đủ ngày đo",
+    "hasTip": "Có cách tiết kiệm",
+    "simulatedNote": "Số liệu của thiết bị này là mô phỏng"
   }
 }

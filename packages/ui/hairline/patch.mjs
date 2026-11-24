@@ -111,6 +111,24 @@ export const PATCHES = [
     to: "          </tbody>\n        </table></div>{/* patched (hairline/patch.mjs): closes the wrapper above */}\n      </div>",
   },
   {
+    file: "donut-chart.tsx",
+    why: "A legend row carries a short mark after its label (the Overview: how far a device's share is trusted, as signal bars with a tooltip) and says it to screen readers.",
+    from: "  /** Any CSS colour; slices without one take --chart-1 to --chart-5 in order. */\n  color?: string;\n}",
+    to: "  /** Any CSS colour; slices without one take --chart-1 to --chart-5 in order. */\n  color?: string;\n  /** patched (hairline/patch.mjs): a short mark after the legend label, and what it says for the row's name. */\n  mark?: React.ReactNode;\n  markLabel?: string;\n}",
+  },
+  {
+    file: "donut-chart.tsx",
+    why: "Renders the slice's mark (above) in its legend row and adds its words to the row's name.",
+    from: '{a.label}</span>\n',
+    to: '{a.label}</span>\n                    {a.mark /* patched (hairline/patch.mjs) */}\n',
+  },
+  {
+    file: "donut-chart.tsx",
+    why: "The row's name says the mark too.",
+    from: "aria-label={`${a.label}: ${fmt(a.amount)}",
+    to: "aria-label={`${a.label}${a.markLabel ? ` (${a.markLabel})` : \"\"}: ${fmt(a.amount)}",
+  },
+  {
     file: "compare-bars.tsx",
     why: "No header slot or unit: the Overview needs a Week/Month switch beside the title (as DonutChart's `action`) and kWh after each figure (Intl has no energy units).",
     from: "  onComparedChange?: (compared: boolean) => void;\n  format?: Intl.NumberFormatOptions;",
@@ -1162,6 +1180,18 @@ export const PATCHES = [
     why: "Row actions carry `onRowClick` (patch above).",
     from: "  detail: (row: T) => React.ReactNode;\n};",
     to: "  detail: (row: T) => React.ReactNode;\n  open: (row: T) => void; // patched (hairline/patch.mjs): onRowClick\n};",
+  },
+  {
+    file: "data-table.tsx",
+    why: "A column can give the narrow card its own content: the card is a <button>, so a cell holding a link (the device name) renders plain there instead of nesting interactive content.",
+    from: '  card?: "title" | "subtitle" | "trailing" | "hidden";\n}',
+    to: '  card?: "title" | "subtitle" | "trailing" | "hidden";\n  /** The cell as the narrow card shows it, when it differs (patched (hairline/patch.mjs)). */\n  cardCell?: (row: T) => React.ReactNode;\n}',
+  },
+  {
+    file: "data-table.tsx",
+    why: "The card's title takes `cardCell` (patch above).",
+    from: '<span className="block truncate text-[13.5px] font-medium">{cellText(title, row)}</span>',
+    to: '<span className="block truncate text-[13.5px] font-medium">{title.cardCell ? title.cardCell(row) : cellText(title, row) /* patched (hairline/patch.mjs) */}</span>',
   },
   {
     file: "data-table.tsx",

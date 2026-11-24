@@ -53,6 +53,8 @@ export interface DataTableColumn<T> {
   editable?: boolean;
   /** Its place in the card a narrow container shows instead of columns. */
   card?: "title" | "subtitle" | "trailing" | "hidden";
+  /** The cell as the narrow card shows it, when it differs (patched (hairline/patch.mjs)). */
+  cardCell?: (row: T) => React.ReactNode;
 }
 
 export interface DataTableAction<T> {
@@ -312,7 +314,7 @@ function TableRowView<T>(p: RowProps<T>) {
           className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left disabled:cursor-default"
         >
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13.5px] font-medium">{cellText(title, row)}</span>
+            <span className="block truncate text-[13.5px] font-medium">{title.cardCell ? title.cardCell(row) : cellText(title, row) /* patched (hairline/patch.mjs) */}</span>
             {subtitles.length > 0 && (
               <span className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[12px] text-muted-foreground">
                 {subtitles.map((c, i) => (

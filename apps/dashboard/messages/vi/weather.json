@@ -8,6 +8,6 @@
   "humidity": "Độ ẩm",
   "wind": "Gió",
   "rainAt": "Mưa {time}",
-  "updated": "Cập nhật {time} · {place} · OpenWeather",
+  "updated": "Cập nhật {time} · {place} · {source, select, era5 {ERA5 qua Open-Meteo} other {OpenWeather}}",
   "unset": "Chọn tỉnh/thành để xem thời tiết"
 }

@@ -88,19 +88,12 @@
       "humidity": "Độ ẩm"
     },
     "plan": {
-      "title": "Kế hoạch tiết kiệm",
-      "approval": "Bắt đầu thử 14 ngày",
-      "description": "Wappi so điện năng công tơ tổng 14 ngày làm theo kế hoạch với 14 ngày trước khi bắt đầu.",
-      "saving": "Dự kiến tiết kiệm",
-      "savingValue": "{kwh} · {vnd} mỗi tháng",
-      "length": "Thời gian",
-      "lengthValue": "14 ngày",
-      "approve": "Bắt đầu",
-      "deny": "Để sau",
-      "started": "Đã bắt đầu thử 14 ngày",
-      "savingKwh": "{kwh} mỗi tháng",
-      "running": "Đang thử: Wappi sẽ đo mức tiết kiệm sau 14 ngày.",
-      "failed": "Chưa bắt đầu được, thử lại sau."
+      "title": "Kế hoạch Wappi gợi ý",
+      "task": "{device} · {kwh} kWh đến cuối kỳ",
+      "saving": "Điện bớt được đến cuối kỳ",
+      "money": "Tiền tiết kiệm, ước tính",
+      "note": "Mở trang Kế hoạch để xem số tiền khi làm cùng lúc các việc này, chọn ngày bắt đầu rồi bắt đầu.",
+      "open": "Mở trong trang Kế hoạch"
     },
     "peers": {
       "title": "So với {homes} hộ tương tự, {days} ngày qua",

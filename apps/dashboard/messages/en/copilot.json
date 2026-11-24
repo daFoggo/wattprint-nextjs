@@ -88,19 +88,12 @@
       "humidity": "Humidity"
     },
     "plan": {
-      "title": "Savings plan",
-      "approval": "Start a 14-day trial",
-      "description": "Wappi compares the main meter's energy over the 14 days of the plan with the 14 days before it.",
-      "saving": "Expected saving",
-      "savingValue": "{kwh} · {vnd} a month",
-      "length": "Length",
-      "lengthValue": "14 days",
-      "approve": "Start",
-      "deny": "Later",
-      "started": "The 14-day trial has started",
-      "savingKwh": "{kwh} a month",
-      "running": "Trying it: Wappi measures the saving after 14 days.",
-      "failed": "Could not start it; try again later."
+      "title": "Wappi's suggested plan",
+      "task": "{device} · {kwh} kWh to the cycle's end",
+      "saving": "Energy saved to the cycle's end",
+      "money": "Money saved, estimated",
+      "note": "Open the plan page to see what these save together, pick a start day and start.",
+      "open": "Open on the plan page"
     },
     "peers": {
       "title": "Against {homes} similar homes, last {days} days",

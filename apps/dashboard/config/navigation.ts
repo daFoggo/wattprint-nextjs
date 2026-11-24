@@ -5,6 +5,7 @@ import {
   onCopilotPage,
   DASHBOARD_PATH,
   ALERTS_PATH,
+  PLAN_PATH,
   DEVICES_PATH,
   SETTINGS_PATH,
   STATISTICS_PATH,
@@ -15,7 +16,7 @@ import {
  * components) because `entries` cross from a Server Component to the client `NavTree`.
  */
 export type NavIconName =
-  "overview" | "statistics" | "devices" | "alerts" | "bill" | "settings"
+  "overview" | "statistics" | "devices" | "alerts" | "plan" | "bill" | "settings"
 
 export type NavLink = {
   /** Message key in `layout.nav`, translated at render; unknown keys show as is. */
@@ -81,6 +82,12 @@ export const NAV_SCOPES: NavScope[] = [
             title: "alerts",
             href: ALERTS_PATH,
             icon: "alerts",
+            permission: "account:view",
+          },
+          {
+            title: "plan",
+            href: PLAN_PATH,
+            icon: "plan",
             permission: "account:view",
           },
           {

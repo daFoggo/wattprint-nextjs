@@ -7,7 +7,9 @@
     "bill": "Bill",
     "settings": "Settings",
     "copilot": "Wappi",
-    "alerts": "Alerts"
+    "alerts": "Alerts",
+    "plan": "Savings plan",
+    "history": "Past plans"
   },
   "roles": {
     "customer": "Customer",
@@ -22,7 +24,7 @@
   "close": "Close",
   "overview": {
     "title": "Overview",
-    "description": "This cycle’s cost, energy against the weeks before, where the power goes and what needs a look.",
+    "description": "This cycle's bill (the billing period), where the power goes and what needs a look.",
     "noHomeTitle": "No home yet",
     "noHomeDescription": "This account is not a member of a home. Ask the owner for an invite code, or pair a meter."
   },
@@ -31,6 +33,14 @@
     "description": "This billing cycle so far, priced tier by tier as the electricity company will.",
     "emptyTitle": "No bill yet",
     "emptyDescription": "This account has no home with a tariff plan to price its energy."
+  },
+  "plan": {
+    "title": "Savings plan",
+    "description": "Pick a few concrete actions from your own home's data, see what they are worth on the tiered bill, then follow them to the end of the cycle.",
+    "emptyTitle": "No plan yet",
+    "emptyDescription": "A plan needs a home with a tariff and at least a week of readings to know where to save.",
+    "noTariffTitle": "Your running plan needs a tariff",
+    "noTariff": "The home has no tariff, so the plan cannot be priced. Add one in Settings to follow it again."
   },
   "devices": {
     "title": "Devices",
@@ -42,11 +52,12 @@
   },
   "statistics": {
     "title": "Statistics",
-    "description": "Energy by day, week, month and year; against last week, last month and similar homes; and what the cycle will come to."
+    "description": "Energy and cost by day and month; against the last cycle and similar homes; the bill forecast for the cycle's end.",
+    "peers": "Against similar homes"
   },
   "settings": {
     "title": "Settings",
-    "description": "Your home and its bill."
+    "description": "Home, location, bill and the summary email."
   },
   "alerts": {
     "title": "Alerts",

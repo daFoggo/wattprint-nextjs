@@ -25,13 +25,19 @@ export const trackMax = (days: Day[]) =>
 /** The week's kWh and VND: the sum of its days that have a forecast. */
 export function weekTotals(days: Day[]): { kwh: number; amount: number } {
   return days.reduce(
-    (t, d) => ({ kwh: t.kwh + (d.kwh ?? 0), amount: t.amount + (d.amount ?? 0) }),
+    (t, d) => ({
+      kwh: t.kwh + (d.kwh ?? 0),
+      amount: t.amount + (d.amount ?? 0),
+    }),
     { kwh: 0, amount: 0 }
   )
 }
 
 /** The week against the usual: "up" or "down" by `pct` (whole percent), or "same" within 5 %. */
-export function versusUsual(e: Explain): { dir: "up" | "down" | "same"; pct: number } {
+export function versusUsual(e: Explain): {
+  dir: "up" | "down" | "same"
+  pct: number
+} {
   if (e.usual_kwh_day <= 0) return { dir: "same", pct: 0 }
   const change = (e.forecast_kwh_day - e.usual_kwh_day) / e.usual_kwh_day
   const pct = Math.round(Math.abs(change) * 100)

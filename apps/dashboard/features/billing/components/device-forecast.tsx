@@ -1,9 +1,13 @@
 import { useLocale, useTranslations } from "next-intl"
 
-import { Badge, type BadgeTone } from "@workspace/ui/components/hairline/badge"
+import { IconBulb } from "@tabler/icons-react"
 
-import { CardLink } from "@/components/shared/nav-links"
+import { Badge, type BadgeTone } from "@workspace/ui/components/hairline/badge"
+import { linkButton } from "@workspace/ui-patterns/link-button"
+
 import { Tile } from "@/components/shared/tile"
+import { Link } from "@/i18n/navigation"
+import { PLAN_PATH } from "@/config/routes"
 
 import {
   band,
@@ -13,7 +17,7 @@ import {
   versusUsual,
   weekTotals,
 } from "../device-forecast"
-import type { DeviceForecast, DeviceForecasts } from "../schemas"
+import type { DeviceForecast } from "../schemas"
 
 const TONE: Record<DeviceForecast["confidence"], BadgeTone> = {
   high: "success",
@@ -46,6 +50,12 @@ function formats(locale: string) {
 
 const at = (iso: string) => new Date(`${iso}T00:00:00+07:00`)
 
+/** The plan page with this advice picked. */
+const planHref = (device: string, key: string) => ({
+  pathname: PLAN_PATH,
+  query: { add: `${device}.${key}` },
+})
+
 /** How certain: the badge alone (the measured error stays behind it, for Wappi). */
 function Certainty({ d }: { d: DeviceForecast }) {
   const t = useTranslations("billing.deviceForecast")
@@ -76,7 +86,8 @@ export function DeviceForecastTile({
   const week = weekTotals(d.next_days)
   const e = d.explain
   // A change against the usual is told when it can be trusted: the weekday mean's always, the model's when it fits.
-  const vs = e && (d.method === "weekday" || e.explainable) ? versusUsual(e) : null
+  const vs =
+    e && (d.method === "weekday" || e.explainable) ? versusUsual(e) : null
   return (
     <Tile
       title={t("title")}
@@ -86,7 +97,10 @@ export function DeviceForecastTile({
     >
       <div className="flex flex-col gap-1">
         <p className="text-base font-medium tabular-nums">
-          {t("week", { kwh: f.kwh.format(week.kwh), amount: f.vnd.format(week.amount) })}
+          {t("week", {
+            kwh: f.kwh.format(week.kwh),
+            amount: f.vnd.format(week.amount),
+          })}
         </p>
         <p className="text-xs text-muted-foreground tabular-nums">
           {t("toEnd", {
@@ -201,14 +215,17 @@ export function DeviceForecastTile({
                             })}`
                           : null}
                       </span>
-                      <span className="tabular-nums text-muted-foreground">
+                      <span className="text-muted-foreground tabular-nums">
                         {t("effect", {
                           kwh: `${up ? "+" : "−"}${f.kwhDay.format(Math.abs(x.kwh_day))}`,
                           amount: `${up ? "+" : "−"}${f.vnd.format(Math.abs(x.amount))}`,
                         })}
                       </span>
                     </span>
-                    <span aria-hidden className="relative h-1.5 rounded-full bg-muted">
+                    <span
+                      aria-hidden
+                      className="relative h-1.5 rounded-full bg-muted"
+                    >
                       <span className="absolute inset-y-0 left-1/2 w-px bg-border" />
                       <span
                         className={`absolute inset-y-0 rounded-full ${up ? "bg-primary" : "bg-muted-foreground"}`}
@@ -237,7 +254,9 @@ export function DeviceForecastTile({
                 key={a.key}
                 className="flex flex-col gap-1 rounded-xl bg-muted p-3 text-xs"
               >
-                <span className="font-medium">{t(`tip.${a.key}`, a.params)}</span>
+                <span className="font-medium">
+                  {t(`tip.${a.key}`, a.params)}
+                </span>
                 <span className="text-muted-foreground tabular-nums">
                   {t("saves", {
                     amount: f.vnd.format(a.saved_amount),
@@ -247,6 +266,15 @@ export function DeviceForecastTile({
                     ? ` · ${t("avoidsTier", { tier: a.avoids_tier })}`
                     : null}
                 </span>
+                <Link
+                  href={planHref(d.device_id, a.key)}
+                  className={linkButton({
+                    size: "md",
+                    className: "self-start",
+                  })}
+                >
+                  {t("addToPlan")}
+                </Link>
               </li>
             ))}
           </ul>
@@ -256,80 +284,71 @@ export function DeviceForecastTile({
   )
 }
 
-/** Every device to the cycle's end, priciest first: its amount and range, certainty and best advice. */
-export function DeviceForecastList({
-  forecasts,
-  href,
-  className,
+/**
+ * A device's forecast on demand (the hover card on its name): from now to the cycle's end with its kWh range and
+ * against its usual, then its best advice with the one action, adding it to the plan.
+ */
+export function DeviceForecastCard({
+  device: d,
+  periodEnd,
 }: {
-  forecasts: DeviceForecasts
-  href: (id: string) => string
-  className?: string
+  device: DeviceForecast
+  periodEnd: string
 }) {
   const t = useTranslations("billing.deviceForecast")
   const f = formats(useLocale())
+  const top = d.advice[0]
+  const vs =
+    d.explain && (d.method === "weekday" || d.explain.explainable)
+      ? t("versus", versusUsual(d.explain))
+      : null
   return (
-    <Tile
-      title={t("listTitle")}
-      description={t("listDescription", {
-        end: f.date.format(at(forecasts.period_end)),
-      })}
-      className={className}
-    >
-      <ul className="flex flex-col divide-y divide-border">
-        {forecasts.devices.map((d) => {
-          const top = d.advice[0]
-          return (
-            <li
-              key={d.device_id}
-              className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
-            >
-              <div className="flex min-w-0 flex-col gap-1.5">
-                <span className="flex flex-wrap items-center gap-2 text-sm font-medium">
-                  {d.name}
-                  {d.simulated ? (
-                    <Badge size="sm" outline>
-                      {t("simulated")}
-                    </Badge>
-                  ) : null}
-                </span>
-                <span className="flex flex-wrap items-center gap-2">
-                  <Certainty d={d} />
-                  {d.explain &&
-                  (d.method === "weekday" || d.explain.explainable) ? (
-                    <span className="text-xs text-muted-foreground">
-                      {t("versus", versusUsual(d.explain))}
-                    </span>
-                  ) : null}
-                </span>
-                {top ? (
-                  <span className="text-xs text-muted-foreground">
-                    {t(`tip.${top.key}`, top.params)} ·{" "}
-                    {t("saves", {
-                      amount: f.vnd.format(top.saved_amount),
-                      kwh: f.kwh.format(top.saved_kwh),
-                    })}
-                  </span>
-                ) : null}
-              </div>
-              <div className="flex shrink-0 flex-col items-start gap-1 sm:items-end">
-                <span className="text-base font-medium tabular-nums">
-                  {f.vnd.format(d.amount)}
-                </span>
-                <span className="text-xs text-muted-foreground tabular-nums">
-                  {d.kwh_p10 !== null && d.kwh_p90 !== null
-                    ? t("range", {
-                        low: f.kwh.format(d.kwh_p10),
-                        high: f.kwh.format(d.kwh_p90),
-                      })
-                    : `${f.kwh.format(d.kwh)} kWh`}
-                </span>
-                <CardLink href={href(d.device_id)}>{t("more")}</CardLink>
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-    </Tile>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-medium tabular-nums">
+          {t("rest", {
+            end: f.date.format(at(periodEnd)),
+            amount: f.vnd.format(d.amount),
+          })}
+        </p>
+        <p className="text-xs text-muted-foreground tabular-nums">
+          {d.kwh_p10 !== null && d.kwh_p90 !== null
+            ? t("range", {
+                low: f.kwh.format(d.kwh_p10),
+                high: f.kwh.format(d.kwh_p90),
+              })
+            : `${f.kwh.format(d.kwh)} kWh`}
+          {vs ? ` · ${vs}` : null}
+        </p>
+        {d.simulated ? (
+          <Badge size="sm" outline className="self-start">
+            {t("simulatedNote")}
+          </Badge>
+        ) : null}
+      </div>
+      {top ? (
+        <div className="flex flex-col gap-2 rounded-xl bg-muted p-3">
+          <p className="flex items-start gap-2 text-sm">
+            <IconBulb
+              aria-hidden
+              className="mt-0.5 size-4 shrink-0 text-primary"
+            />
+            {t(`tip.${top.key}`, top.params)}
+          </p>
+          <p className="text-xs text-muted-foreground tabular-nums">
+            {t("saves", {
+              amount: f.vnd.format(top.saved_amount),
+              kwh: f.kwh.format(top.saved_kwh),
+            })}
+          </p>
+          <Link
+            href={planHref(d.device_id, top.key)}
+            className={linkButton({ size: "md", className: "self-start" })}
+          >
+            {t("addToPlan")}
+          </Link>
+        </div>
+      ) : null}
+    </div>
   )
 }

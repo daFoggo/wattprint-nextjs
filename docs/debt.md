@@ -6,9 +6,11 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 - 2026-11-22 (docs/work/2026-11-21-ai-forecast-anomaly, R1 minors and accepted limits; T02 2026-11-23: skipped,
   the forecast module is being worked on by someone else):
-  - The usage model loses its backtest on Houses 2 and 5 (MAPE 16.3 % / 7.9 % vs the weekday average's 9.1 % /
-    6.9 %); there the bill forecast falls back to the weekday method (`trusted()`). P10–P90 coverage 25–61 %
-    against a 72–88 % target. Pay: when the model wins on more homes (weather-normalised level, more NILM history).
+  - The usage model still loses its backtest on House 2 (MAPE 14.8 % vs the weekday average's 9.3 %; House 5 now
+    wins 5.3 % vs 7.0 %, docs/work/2026-11-24-expect-mean-centre); there the bill forecast falls back to the
+    weekday method (`trusted()`). P10–P90 coverage 35–65 % against a 72–88 % target: misses lean upward, a drift
+    the frozen 7-day level does not follow (a block bootstrap and the L2 centre did not close it). Pay: a level
+    that follows drift, more NILM history.
   - Weak weather response: a −8 °C cold spell raises 3 days' expectation by ~4 % while the simulated heater adds
     ~13 kWh/day; the 7-day level absorbs the season. Pay: with the item above.
   - NILM backfill was cut (House 2 has 170 older days, House 5 none); `presence` is left out where unknown.
@@ -25,6 +27,12 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   - A weaker signal later the same day overwrites the stored payload of the device's alert.
   - A run ending between the last analysed time before midnight and midnight is never judged (missed, never wrong);
     during NILM catch-up a whole day can be skipped. Pay: keep a "judged up to" mark per home.
+- 2026-11-24 (docs/work/2026-11-24-savings-plan; change 2 moved plans to the backend, frozen hourly):
+  - The expected-usage model still under-predicts by 0.8–1.9 kWh/day out of sample (was 2.9–3.7 before the L2
+    centre, docs/work/2026-11-24-expect-mean-centre): the drift above. Plans add that mean back
+    (`tb_savings_plan.bias`). Pay: with the coverage item above.
+  - The advice range reuses the device forecast's error %; the always-on default cut is a quarter of the load
+    (`shortcut:` in `features/plan/math.ts`). Pay: when real plans show what is usual.
 
 Deliberate scale limits stay as `shortcut:` comments in the code, each with its trigger
 (wattprint-backend: SSE polling, per-process copilot rate counts, per-process demo guest rate windows
@@ -33,6 +41,39 @@ bill recompute, CPU
 torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline `action-receipt` type exclusion).
 
 ## Paid
+
+- 2026-11-24 (savings plan, `freeze_plans` cost): measured on REFIT House 5 with 6 guest plans, every day unfrozen:
+  1.4 s for the home, run once per plan per new day (a frozen day is never measured again); guests are capped by the
+  demo quota and purged after 24 h. Nothing to change.
+
+- 2026-11-24 (docs/work/2026-11-24-plan-device-weather, R1-R2 ship): a planned device with a trusted model is
+  measured against its own model per day (weather observed, its level and the home's presence as at the start),
+  frozen with the home's day once NILM has finished it (at most 2 days' wait); the page and week chips say which
+  basis each device uses.
+
+- 2026-11-24 (docs/work/2026-11-24-wappi-plan-handoff, R1-R2 ship): Wappi's `propose_plan` takes 1-3
+  `device_forecast` advice ids, prices them from the service and links to `/dashboard/plan?add=…`, where the builder
+  picks them; the 14-day trial (accept route, `measure_plans`, the approval card) is gone. `tb_suggestion`,
+  `tb_suggestion_feedback`, `tb_savings_measure` are no longer written; their rows stay as history.
+
+- 2026-11-24 (savings plan debt, lane L; docs/work/2026-11-24-savings-plan/review.md "Debt pass"):
+  - Change 2 Minors: a running plan stays readable from its own record when the basis or forecast is gone
+    (`measuredBy`, tested), and with the tariff gone the page says why; two creates at once answer 409
+    (`plan_exists`); a failed freeze in `create_plan` is logged and the plan is stored (both tested). After a refit
+    each new day takes the predicting model's own mean error (`day_bias`, tested).
+  - Change 3 Minors: past plans read in the past tense; the device list's phone card shows the plain name
+    (DataTable `cardCell` feature patch), no link inside its button; the history pill and the older/newer chips
+    hide on a history error (`HideOnError`); the record page reads device types from `getDevices`; vi/en copy in
+    step; the device "Mẹo tiết kiệm" tile leads with its tip; unused keys/props gone; an open alert is first in the
+    DOM on the Overview (focus order), lg keeps the bento with `order`; a past plan's end date carries its year.
+    Backend: the seed keeps the stored demo plans when it can rebuild none (`replace_plans`, tested);
+    `measure_days` no longer exported for the seed.
+  - Weather: Wappi's weather tool names ERA5 via Open-Meteo for a demo home, as the card does (tested).
+  - laws-of-ux audit leftovers: the statistics page in three headed groups (money first, then energy, then similar
+    homes, which shows only with enough homes; one NoHome without a home); the bill's forecast is the hero with the
+    cycle's progress, its missing-data / tariff-change chips are an Alert that says why; settings puts the location
+    right after "Ngôi nhà" and says "Đã lưu vị trí"; the cycle day is a pick of 1–28; the standby cut has 25/50/75%
+    quick picks (`alwaysOnPresets`, tested).
 
 - 2026-11-24 (demo R1 Minors): `create_guest` answers 503 on a refused token or key fetch (`jwt.PyJWTError`), with a
   test; a refused Keycloak delete is logged; the sidebar demo row reads the demo homes only for a viewer, and is a
@@ -131,4 +172,3 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
   - NILM's runs are fragmented and noisy (REFIT dishwashers: ~260 "runs" in 4 weeks, 0.1 kWh each). Advice joins
     pieces within 60 min and ignores joined runs under 300 Wh (`PROGRAM_MIN_WH`, shortcut); change 1's D2 long run
     and D3 odd hour still judge the raw pieces. Pay: join runs into programs once, in `refresh_cycles`.
-

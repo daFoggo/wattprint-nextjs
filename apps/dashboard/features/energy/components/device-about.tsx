@@ -17,17 +17,7 @@ export function DeviceAbout({
   const watts = new Intl.NumberFormat(useLocale())
   return (
     <Tile title={t("title")} className={className}>
-      {device.typical_w ? (
-        <p className="text-sm text-muted-foreground">
-          {t.rich("typical", {
-            typical: watts.format(device.typical_w),
-            yours: watts.format(device.avg_on_w),
-            b: (chunks) => (
-              <span className="font-medium text-foreground">{chunks}</span>
-            ),
-          })}
-        </p>
-      ) : null}
+      {/* The tip first, as the title says; how this one compares with its kind after it. */}
       {device.tip ? (
         <div className="flex gap-3 rounded-xl bg-muted p-4">
           <IconBulb aria-hidden className="size-4 shrink-0 text-primary" />
@@ -38,6 +28,17 @@ export function DeviceAbout({
               : device.tip}
           </p>
         </div>
+      ) : null}
+      {device.typical_w ? (
+        <p className="text-sm text-muted-foreground">
+          {t.rich("typical", {
+            typical: watts.format(device.typical_w),
+            yours: watts.format(device.avg_on_w),
+            b: (chunks) => (
+              <span className="font-medium text-foreground">{chunks}</span>
+            ),
+          })}
+        </p>
       ) : null}
     </Tile>
   )

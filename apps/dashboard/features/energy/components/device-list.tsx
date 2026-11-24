@@ -11,7 +11,7 @@ import { NumberRoll } from "@workspace/ui/components/hairline/number-roll"
 import { Sparkline } from "@workspace/ui/components/hairline/sparkline"
 
 import { DEVICES_PATH } from "@/config/routes"
-import { useRouter } from "@/i18n/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
 
 import type { Device } from "../schemas"
 import { DeviceIcon } from "@/components/shared/device-icon"
@@ -41,19 +41,9 @@ export function DeviceList({
       width: "minmax(200px,1.6fr)",
       sortable: true,
       card: "title",
-      cell: (d) => (
-        <span className="flex min-w-0 items-center gap-3">
-          <DeviceIcon type={d.type} />
-          <span className="flex min-w-0 flex-col">
-            <span className="truncate font-medium">{d.name}</span>
-            {d.room ? (
-              <span className="truncate text-xs text-muted-foreground">
-                {d.room}
-              </span>
-            ) : null}
-          </span>
-        </span>
-      ),
+      // The phone card is a button already: the plain name there, the link only in the table row.
+      cardCell: (d) => <DeviceName device={d} />,
+      cell: (d) => <DeviceName device={d} link />,
     },
     {
       key: "week_kwh",
@@ -98,7 +88,7 @@ export function DeviceList({
       width: "minmax(80px,0.8fr)",
       align: "right",
       sortable: true,
-      card: "trailing",
+      card: "hidden",
       cell: (d) => <NumberRoll value={d.watts} suffix=" W" locales={locale} />,
     },
     {
@@ -123,7 +113,8 @@ export function DeviceList({
       width: "minmax(116px,1fr)",
       align: "right",
       sortable: true,
-      card: "hidden",
+      // The money is what the list is sorted by, so the phone card keeps it.
+      card: "trailing",
       cell: (d) => (
         <NumberRoll value={d.month_amount} format={VND} locales={locale} />
       ),
@@ -144,5 +135,39 @@ export function DeviceList({
         router.push(`${DEVICES_PATH}/${encodeURIComponent(d.id)}`)
       }
     />
+  )
+}
+
+/** A device's icon, name and room; `link` makes the name a real link (keyboard focus, open in a new tab). */
+function DeviceName({
+  device: d,
+  link = false,
+}: {
+  device: Device
+  link?: boolean
+}) {
+  return (
+    <span className="flex min-w-0 items-center gap-3">
+      <DeviceIcon type={d.type} />
+      <span className="flex min-w-0 flex-col">
+        {link ? (
+          <Link
+            href={`${DEVICES_PATH}/${encodeURIComponent(d.id)}`}
+            className="truncate rounded-sm font-medium focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
+            // The row's own click would open it a second time.
+            onClick={(e) => e.stopPropagation()}
+          >
+            {d.name}
+          </Link>
+        ) : (
+          <span className="truncate font-medium">{d.name}</span>
+        )}
+        {d.room ? (
+          <span className="truncate text-xs text-muted-foreground">
+            {d.room}
+          </span>
+        ) : null}
+      </span>
+    </span>
   )
 }

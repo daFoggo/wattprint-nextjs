@@ -3,12 +3,15 @@ import { useLocale, useTranslations } from "next-intl"
 import { Alert } from "@workspace/ui/components/hairline/alert"
 import { Badge } from "@workspace/ui/components/hairline/badge"
 import { NumberRoll } from "@workspace/ui/components/hairline/number-roll"
+import { Progress } from "@workspace/ui/components/hairline/progress"
 
+import { PillLink } from "@/components/shared/nav-links"
 import { Tile } from "@/components/shared/tile"
+import { PLAN_PATH } from "@/config/routes"
 
+import { cycleDay } from "../forecast"
 import type { CurrentBill, Forecast, PastBill } from "../schemas"
 
-const DAY = 86_400_000
 const VND = {
   style: "currency",
   currency: "VND",
@@ -46,38 +49,45 @@ export function BillOverview({
       month: "numeric",
       timeZone: "Asia/Ho_Chi_Minh",
     })
-  const end = dayStart(bill.period_end) + DAY
-  const daysLeft = Math.max(0, Math.round((end - now) / DAY))
   const change = lastMonth && p ? p.amount / lastMonth.amount - 1 : null
+  const cycle = cycleDay(bill.period_start, bill.period_end, now)
+  // The forecast is the figure to act on: the hero, with its range and the cycle's progress. Without one, the bill
+  // so far takes its place and the row keeps the rest.
+  const hero = p
+    ? {
+        label: t("overview.forecast"),
+        value: p.amount,
+        note:
+          p.method === "context"
+            ? t("overview.forecastRange", {
+                low: vnd.format(p.amount_p10),
+                high: vnd.format(p.amount_p90),
+              })
+            : t("overview.forecastNote", {
+                kwh: kwh.format(Math.round(p.kwh)),
+                tier: p.tier,
+              }),
+      }
+    : {
+        label: t("overview.soFar"),
+        value: bill.amount_total,
+        note: t("overview.kwh", { kwh: kwh.format(bill.kwh) }),
+      }
   const stats = [
-    {
-      label: t("overview.soFar"),
-      value: bill.amount_total,
-      note: t("overview.kwh", { kwh: kwh.format(bill.kwh) }),
-    },
+    ...(p
+      ? [
+          {
+            label: t("overview.soFar"),
+            value: bill.amount_total,
+            note: t("overview.kwh", { kwh: kwh.format(bill.kwh) }),
+          },
+        ]
+      : []),
     {
       label: t("overview.today"),
       value: bill.today_amount,
       note: t("overview.kwh", { kwh: kwh.format(bill.today_kwh) }),
     },
-    ...(p
-      ? [
-          {
-            label: t("overview.forecast"),
-            value: p.amount,
-            note:
-              p.method === "context"
-                ? t("overview.forecastRange", {
-                    low: vnd.format(p.amount_p10),
-                    high: vnd.format(p.amount_p90),
-                  })
-                : t("overview.forecastNote", {
-                    kwh: kwh.format(Math.round(p.kwh)),
-                    tier: p.tier,
-                  }),
-          },
-        ]
-      : []),
   ]
   return (
     <Tile
@@ -85,32 +95,51 @@ export function BillOverview({
         start: date(dayStart(bill.period_start)),
         end: date(dayStart(bill.period_end)),
       })}
-      description={t("overview.description", { days: daysLeft })}
+      description={t("overview.description")}
       className={className}
-      action={
-        bill.status === "partial" || bill.tariff_straddle ? (
-          <div className="flex flex-wrap gap-1.5">
-            {bill.status === "partial" && (
-              <Badge tone="warning" size="sm">
-                {t("overview.partial")}
-              </Badge>
-            )}
-            {bill.tariff_straddle && (
-              // The backend splits the cycle by days between the two tariffs, as EVN does.
-              <Badge tone="warning" size="sm">
-                {t("overview.straddle")}
-              </Badge>
-            )}
-          </div>
-        ) : null
-      }
     >
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-4">
+      {bill.status === "partial" || bill.tariff_straddle ? (
+        // Why a figure may be off, in words, not a bare warning chip.
+        <Alert
+          tone="warning"
+          title={t(
+            bill.status === "partial" && bill.tariff_straddle
+              ? "overview.partialStraddle"
+              : bill.status === "partial"
+                ? "overview.partial"
+                : "overview.straddle"
+          )}
+        >
+          {[
+            bill.status === "partial" ? t("overview.partialBody") : null,
+            bill.tariff_straddle ? t("overview.straddleBody") : null,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        </Alert>
+      ) : null}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <span className="text-xs text-muted-foreground">{hero.label}</span>
+          <span className="text-4xl font-medium tracking-tight tabular-nums">
+            <NumberRoll value={hero.value} format={VND} locales={locale} />
+          </span>
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {hero.note}
+          </span>
+        </div>
+        <Progress
+          value={(cycle.day / cycle.total) * 100}
+          label={t("overview.cycleDay", cycle)}
+          showValue={false}
+        />
+      </div>
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-3">
         {stats.map((s) => (
           <div key={s.label} className="flex min-w-0 flex-col gap-1">
             <dt className="text-xs text-muted-foreground">{s.label}</dt>
             <dd className="flex flex-col gap-0.5">
-              <span className="text-2xl font-medium tabular-nums">
+              <span className="text-xl font-medium tabular-nums">
                 <NumberRoll value={s.value} format={VND} locales={locale} />
               </span>
               <span className="text-xs text-muted-foreground tabular-nums">
@@ -125,7 +154,7 @@ export function BillOverview({
               {t("overview.change")}
             </dt>
             <dd className="flex flex-col gap-0.5">
-              <span className="flex items-center gap-2 text-2xl font-medium tabular-nums">
+              <span className="flex items-center gap-2 text-xl font-medium tabular-nums">
                 {new Intl.NumberFormat(locale, {
                   style: "percent",
                   maximumFractionDigits: 0,
@@ -147,6 +176,11 @@ export function BillOverview({
       {p?.next ? (
         <Alert
           tone="warning"
+          action={
+            <PillLink href={PLAN_PATH}>
+              {t("forecast.planLink", { tier: p.next.tier.tier_no })}
+            </PillLink>
+          }
           title={
             p.next.tier.probability !== null
               ? t("forecast.nextLikely", {

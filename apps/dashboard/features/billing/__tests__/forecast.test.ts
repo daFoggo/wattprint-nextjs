@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { changeSentence } from "../forecast"
+import { bandPosition, changeSentence, cycleDay, tierPath } from "../forecast"
 import { ForecastSchema, PastBillSchema } from "../schemas"
 
 /** What every forecast carries besides its own figures (a weekday one: a point, no reasons). */
@@ -137,5 +137,87 @@ describe("PastBillSchema", () => {
       tariff_straddle: false,
     })
     expect(b.month).toBe("2026-09")
+  })
+})
+
+describe("cycleDay", () => {
+  const start = "2026-11-15"
+  const end = "2026-12-14" // 30 days
+  const at = (iso: string) => Date.parse(iso)
+  it("counts the cycle's days on Vietnam days, not by rounding hours", () => {
+    // 08:00 on the first day in Vietnam (01:00Z): day 1 of 30, 29 left after it.
+    expect(cycleDay(start, end, at("2026-11-15T01:00:00Z"))).toEqual({
+      day: 1,
+      total: 30,
+      left: 29,
+    })
+    // 23:00 the same Vietnam day (16:00Z) is still day 1.
+    expect(cycleDay(start, end, at("2026-11-15T16:00:00Z")).day).toBe(1)
+    // 00:30 the next Vietnam day (17:30Z) is day 2.
+    expect(cycleDay(start, end, at("2026-11-15T17:30:00Z")).day).toBe(2)
+  })
+  it("ends on the last day with none left, and never runs past it", () => {
+    expect(cycleDay(start, end, at("2026-12-14T10:00:00Z"))).toEqual({
+      day: 30,
+      total: 30,
+      left: 0,
+    })
+    expect(cycleDay(start, end, at("2026-12-20T10:00:00Z")).day).toBe(30)
+  })
+})
+
+describe("tierPath", () => {
+  const tier = (n: number, from: number, to: number | null) => ({
+    tier_no: n,
+    from_kwh: from,
+    to_kwh: to,
+    price_per_kwh: 1000 * n,
+    kwh: 0,
+    amount: 0,
+  })
+  const tiers = [
+    tier(1, 0, 50),
+    tier(2, 50, 100),
+    tier(3, 100, 200),
+    tier(4, 200, 300),
+    tier(5, 300, 400),
+    tier(6, 400, null),
+  ]
+
+  it("spans the tiers up to the one the cycle ends in, filled to what is used and what is expected", () => {
+    const p = tierPath(tiers, 120, 160)
+    expect(p.max).toBe(200) // the end of tier 3, where 160 kWh lands
+    expect(p.segments.map((s) => s.tier_no)).toEqual([1, 2, 3])
+    expect(p.segments[2]).toMatchObject({
+      left: 50,
+      width: 50,
+      used: 20, // 20 of its 100 kWh
+      expected: 60,
+    })
+    expect(p.segments[0]).toMatchObject({ used: 100, expected: 100 })
+  })
+
+  it("ends an open top tier a little past the expected kWh", () => {
+    const p = tierPath(tiers, 380, 450)
+    expect(p.max).toBeCloseTo(450 * 1.1)
+    expect(p.segments.at(-1)).toMatchObject({
+      tier_no: 6,
+      left: (400 / 495) * 100,
+    })
+  })
+
+  it("draws nothing used before the first kWh", () => {
+    const p = tierPath(tiers, 0, 30)
+    expect(p.segments.map((s) => s.tier_no)).toEqual([1])
+    expect(p.segments[0]).toMatchObject({ used: 0, expected: 60 })
+  })
+})
+
+describe("bandPosition", () => {
+  it("places a value in its band, clamped, the middle for a point", () => {
+    expect(bandPosition(150, 100, 200)).toBe(50)
+    expect(bandPosition(90, 100, 200)).toBe(0)
+    expect(bandPosition(260, 100, 200)).toBe(100)
+    expect(bandPosition(100, 100, 100)).toBe(50)
   })
 })

@@ -6,11 +6,12 @@ import { useState } from "react"
 import { DonutChart } from "@workspace/ui/components/hairline/donut-chart"
 import { SegmentedControl } from "@workspace/ui/components/hairline/segmented-control"
 
+import { IconLink } from "@/components/shared/icon-link"
 import { ModelBadge } from "@/components/shared/model-badge"
-import { CardLink } from "@/components/shared/nav-links"
 import { STATISTICS_PATH } from "@/config/routes"
 
 import { mixConfidence, otherShare } from "../confidence"
+import { EstimateMark } from "./estimate-mark"
 import type { Device } from "../schemas"
 
 const TOP = 5
@@ -34,12 +35,21 @@ export function DeviceMix({
   // The week by default: a day only hours old says little about where the power goes.
   const [view, setView] = useState<keyof typeof VIEWS>("week")
   const t = useTranslations("energy")
+  const tl = useTranslations("energy.deviceMix.accuracy")
   const locale = useLocale()
   const { center, kwh } = VIEWS[view]
   // The biggest few by name, the rest as one slice, so the tile stays short. Only what drew something counts:
   // early in the day most devices have not run yet.
   const ranked = devices
-    .map((d) => ({ id: d.id, label: d.name, value: kwh(d) }))
+    .map((d) => ({
+      id: d.id,
+      label: d.name,
+      value: kwh(d),
+      ...(d.estimate && {
+        mark: <EstimateMark key={d.id} level={d.estimate.level} />,
+        markLabel: tl(`levelLong.${d.estimate.level}`),
+      }),
+    }))
     .filter((d) => d.value > 0)
     .sort((a, b) => b.value - a.value)
   const other = otherShare(devices.map((d) => ({ type: d.type, kwh: kwh(d) })))
@@ -67,24 +77,24 @@ export function DeviceMix({
         <span className="flex flex-col items-start gap-1.5">
           <ModelBadge kind="estimate" confidence={mixConfidence(other)} />
           <span>
-            {t("estimated")} {t("deviceMix.why", { pct: pct.format(other) })}{" "}
-            <CardLink href={STATISTICS_PATH} className="text-foreground">
-              {t("deviceMix.more")}
-            </CardLink>
+            {t("estimated")} {t("deviceMix.why", { pct: pct.format(other) })}
           </span>
         </span>
       }
       action={
-        <SegmentedControl
-          label={t("deviceMix.period")}
-          size="sm"
-          value={view}
-          onValueChange={(v) => setView(v as keyof typeof VIEWS)}
-          options={[
-            { value: "today", label: t("today") },
-            { value: "week", label: t("week") },
-          ]}
-        />
+        <div className="flex items-center gap-2">
+          <SegmentedControl
+            label={t("deviceMix.period")}
+            size="sm"
+            value={view}
+            onValueChange={(v) => setView(v as keyof typeof VIEWS)}
+            options={[
+              { value: "today", label: t("today") },
+              { value: "week", label: t("last7Days") },
+            ]}
+          />
+          <IconLink href={STATISTICS_PATH} label={t("deviceMix.more")} />
+        </div>
       }
       data={slices}
       centerLabel={t(center)}

@@ -21,14 +21,26 @@
     "todaySoFar": "Hôm nay đến giờ",
     "more": "Xem thống kê",
     "rest": "{count} thiết bị khác",
-    "why": "{pct} điện năng hệ thống chưa nhận ra thuộc thiết bị nào (mục Khác)."
+    "why": "{pct} điện chưa rõ của thiết bị nào (mục Khác).",
+    "accuracy": {
+      "levelLong": {
+        "high": "Tin cậy cao",
+        "medium": "Tin cậy vừa",
+        "low": "Tin cậy thấp"
+      },
+      "tip": {
+        "high": "Phần điện của thiết bị này được nhận ra khá chắc chắn.",
+        "medium": "Phần điện của thiết bị này chỉ ước tính ở mức tương đối.",
+        "low": "Thiết bị này khó nhận ra trong tổng điện, con số chỉ để tham khảo."
+      }
+    }
   },
   "deviceList": {
     "label": "Thiết bị",
     "search": "Tìm thiết bị",
     "colDevice": "Thiết bị",
     "colStatus": "Trạng thái",
-    "colNow": "Hiện tại",
+    "colNow": "Công suất hiện tại",
     "on": "Bật",
     "off": "Tắt",
     "nounOne": "thiết bị",
@@ -37,7 +49,7 @@
     "weekLabel": "{device}, điện năng 7 ngày qua",
     "onAt": "Đang bật · {watts} W"
   },
-  "estimated": "Ước tính từ công tơ tổng bằng mô hình nhận diện thiết bị của hệ thống.",
+  "estimated": "Ước tính từ công tơ của cả nhà.",
   "timeline": {
     "emptyTitle": "Chưa có lần chạy nào trong 24 giờ qua",
     "emptyDescription": "Khi WattPrint nhận ra một thiết bị bật, lần chạy đó sẽ hiện ở đây.",
@@ -62,7 +74,8 @@
     "deviceTitle": "Công suất thiết bị, 24 giờ qua",
     "title": "Công suất cả nhà theo thời gian",
     "deviceDescription": "Công suất ước tính theo bước 5 phút",
-    "usual": "Thường lệ"
+    "usual": "Thường lệ",
+    "description": "Mức điện cả nhà đang dùng (W) từng lúc, so với thường lệ."
   },
   "deviceStats": {
     "avgOn": "Trung bình khi bật",
@@ -78,7 +91,7 @@
     "average": "Trung bình 3 ngày"
   },
   "about": {
-    "title": "So với thiết bị cùng loại và mẹo tiết kiệm",
+    "title": "Mẹo tiết kiệm",
     "typical": "Loại thiết bị này thường dùng <b>{typical} W</b> khi bật; của bạn trung bình <b>{yours} W</b>.",
     "tips": {
       "ac": "Đặt từ 26 °C trở lên; mỗi độ thấp hơn làm máy tốn thêm khoảng 6–8% điện.",
@@ -104,13 +117,13 @@
     }
   },
   "roomSpending": {
-    "title": "Tiền điện tháng này theo phòng",
-    "hint": "Chạm vào một phòng để xem từng thiết bị · ước tính",
-    "byDeviceTitle": "Tiền điện tháng này theo thiết bị",
-    "byDeviceHint": "Từng thiết bị · ước tính",
-    "label": "Tháng này",
+    "title": "Tiền điện kỳ này theo phòng",
+    "hint": "Từ đầu kỳ đến nay, ước tính. Chọn phòng để xem thiết bị, chọn thiết bị để xem dự báo đến cuối kỳ.",
+    "byDeviceTitle": "Tiền điện kỳ này theo thiết bị",
+    "byDeviceHint": "Từ đầu kỳ đến nay, ước tính. Chọn một thiết bị để xem dự báo đến cuối kỳ.",
+    "label": "Kỳ này",
     "allDevices": "Tất cả thiết bị",
-    "roomTitle": "Tiền điện tháng này · {room}",
+    "roomTitle": "Tiền điện kỳ này · {room}",
     "roomHint": "Từng thiết bị trong phòng · ước tính"
   },
   "cycleCompare": {
@@ -121,11 +134,11 @@
     "noChange": "Kỳ mới bắt đầu: chưa có ngày trọn vẹn để so sánh."
   },
   "standby": {
-    "title": "Điện nền: phần điện tốn cả khi không dùng gì",
+    "title": "Điện nền",
     "description": "Mức thấp nhất mỗi ngày của cả nhà: phần điện tốn cả khi không ai dùng gì, như modem, bộ sạc và thiết bị ở chế độ chờ.",
     "level": "Mức hiện tại",
-    "year": "Mỗi năm",
-    "cost": "Tiền mỗi năm",
+    "year": "Điện năng mỗi năm",
+    "cost": "Tiền điện mỗi năm",
     "chart": "Điện nền mỗi ngày, 30 ngày qua"
   },
   "tips": {

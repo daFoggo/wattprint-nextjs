@@ -14,10 +14,9 @@
     "occupantsInvalid": "Nhập một số từ 1 đến 30.",
     "bill": "Hóa đơn",
     "billHint": "Để tiền điện khớp với hóa đơn của điện lực.",
-    "cycleDay": "Ngày chốt chỉ số",
-    "cycleDayHint": "Ngày điện lực ghi chỉ số công tơ mỗi tháng.",
-    "cycleDayInvalid": "Nhập một ngày từ 1 đến 28.",
-    "weekly": "Tóm tắt hằng tuần qua email",
+    "cycleDay": "Ngày ghi số công tơ",
+    "cycleDayHint": "Ngày điện lực ghi số công tơ mỗi tháng (1–28), kỳ hóa đơn tính từ ngày này.",
+    "weekly": "Gửi tóm tắt mỗi tuần",
     "location": "Vị trí",
     "locationHint": "Tỉnh/thành của ngôi nhà, để lấy thời tiết đúng nơi.",
     "provincePlaceholder": "Chọn tỉnh/thành",
@@ -27,7 +26,9 @@
     "invalid": "Giá trị không hợp lệ.",
     "memberNote": "Thông tin của {name} do chủ nhà quản lý. Ở đây bạn chọn những gì WattPrint báo cho mình.",
     "unset": "Chưa chọn",
-    "summary": "Tổng kết qua email",
-    "summaryHint": "Mỗi tuần một email tóm tắt điện năng và tiền điện."
+    "summary": "Email",
+    "summaryHint": "Mỗi tuần một email tóm tắt điện năng và tiền điện.",
+    "locationSaved": "Đã lưu vị trí.",
+    "cycleDayInvalid": "Nhập một ngày từ 1 đến 28."
   }
 }

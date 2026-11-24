@@ -45,6 +45,11 @@ export const DeviceSchema = z.object({
   month_amount: z.number(),
   /** The last 7 days, oldest first, today last (kWh). */
   week_kwh: z.array(z.number()),
+  /** How far NILM's share for this device can be trusted, as a level only; null when never scored. */
+  estimate: z
+    .object({ level: z.enum(["high", "medium", "low"]) })
+    .nullable()
+    .default(null),
 })
 export type Device = z.infer<typeof DeviceSchema>
 

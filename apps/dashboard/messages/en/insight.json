@@ -1,11 +1,11 @@
 {
   "alerts": {
-    "title": "Alerts: devices, standby, price tiers, your thresholds",
+    "title": "Alerts to look at",
     "open": "{count, plural, one {# alert} other {# alerts}} to look at",
     "resolved": "cleared",
     "longer_than_usual": {
       "title": "{device} runs longer than usual",
-      "body": "Over the last {days} days each run lasted about {recent_min} min, against {usual_min} min usually. Check the door seals and the condenser."
+      "body": "Over the last {days} days each run lasted about {recent_min} min, against {usual_min} min usually."
     },
     "allDevices": "All devices",
     "standby_high": {
@@ -22,7 +22,7 @@
     },
     "watch_hit": {
       "title": "{label} went {op, select, gt {above} other {below}} {threshold, number}{unit, select, vnd { ₫} kwh { kWh} w { W} other {}}",
-      "body": "At the check: {value, number}{unit, select, vnd { ₫} kwh { kWh} w { W} other {}}. {repeat, select, true {Wappi will tell you again next time if it is still {op, select, gt {over} other {under}} (the next day, cycle or hour).} other {You asked Wappi to tell you when this happened; this alert is now off.}}"
+      "body": "At the check: {value, number}{unit, select, vnd { ₫} kwh { kWh} w { W} other {}}. {repeat, select, true {If it is still {op, select, gt {over} other {under}} this level, Wappi will tell you again at the next check.} other {This alert turned off after telling you.}}"
     },
     "watch_broken": {
       "title": "Could not keep watching: {label}",
@@ -55,7 +55,7 @@
       "weather": "The weather already raised the usual by {weather_kwh, number} kWh; the excess is beyond that."
     },
     "feedback": {
-      "useful": "Right, thanks",
+      "useful": "Yes, it was unusual",
       "notAnomaly": "Not an anomaly",
       "thanks": "Thanks for confirming.",
       "noted": "Noted: WattPrint will raise this kind of alert less for your home."
@@ -75,14 +75,14 @@
       },
       "denser": {
         "title": "{device} is cycling more than usual",
-        "body": "On {value, number, percent} of the time these days, against {usual, number, percent} at the same temperature last month (≈ {excess_vnd, number} ₫ a day). Check the door seal and the setting."
+        "body": "On {value, number, percent} of the time these days, against {usual, number, percent} at the same temperature last month (≈ {excess_vnd, number} ₫ a day)."
       }
     }
   },
   "peers": {
-    "more": "Against the median home · more than {pct} of similar homes",
-    "less": "Against the median home · less than {pct} of similar homes",
-    "median": "Median of {homes} homes",
+    "more": "Your home uses more than {pct} of similar homes",
+    "less": "Your home uses less than {pct} of similar homes",
+    "median": "Typical similar home ({homes} homes)",
     "you": "Your home, {days} days"
   },
   "watches": {
@@ -256,8 +256,8 @@
     }
   },
   "page": {
-    "fired": "Told you",
-    "watched": "Watching",
+    "fired": "Alerts that happened",
+    "watched": "Alerts that are on",
     "watchedHint": "The alerts WattPrint runs by itself and the ones you set."
   }
 }

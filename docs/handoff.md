@@ -40,6 +40,13 @@ The per-change specs, plans and review ledgers say which part is which (below).
    `WATTPRINT_ADMIN_PASSWORD` (it has no home: add it to `tb_home_member` of "REFIT House 2" for home pages and
    remove it after), or `refit.house5@wattprint.local`.
 
+## Deploy order (uncommitted work of 2026-11-24)
+
+Ship `wattprint-backend` before `wattprint-web`: the web parses the newer responses strictly and a plan page on an
+older backend fails. Backend first brings migration `c7e2f4a9b158` (`tb_savings_plan`), `/insights/plans*`
+(with each day's `devices`), Wappi's `propose_plan` taking advice ids, and no `/copilot/plans/{id}/accept`.
+Restart the insight worker with it (it does not reload code). Then the web.
+
 ## Process
 
 - `wattprint-web` follows the sdlc plugin (`.claude/sdlc.json`): lane S/M/L, lane L artifacts in

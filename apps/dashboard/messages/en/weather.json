@@ -8,6 +8,6 @@
   "humidity": "Humidity",
   "wind": "Wind",
   "rainAt": "Rain {time}",
-  "updated": "Updated {time} · {place} · OpenWeather",
+  "updated": "Updated {time} · {place} · {source, select, era5 {ERA5 via Open-Meteo} other {OpenWeather}}",
   "unset": "Choose a province to see the weather"
 }

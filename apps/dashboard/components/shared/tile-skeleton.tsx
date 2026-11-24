@@ -8,10 +8,13 @@ import { cn } from "@workspace/ui/lib/utils"
  */
 export function TileSkeleton({
   height,
+  mobile,
   className,
 }: {
-  /** The body's height in px, below the header. */
+  /** The body's height in px, below the header, from lg (measured: the loaded tile, or its row, minus 90). */
   height: number
+  /** Below lg, where a tile has a column of its own and often another height; `height` when left out. */
+  mobile?: number
   className?: string
 }) {
   return (
@@ -26,7 +29,19 @@ export function TileSkeleton({
         <Skeleton width="40%" />
         <Skeleton width="65%" height={10} />
       </div>
-      <Skeleton shape="block" height={height} />
+      {mobile === undefined ? (
+        <Skeleton shape="block" height={height} />
+      ) : (
+        <>
+          {/* Wrapped: the skeleton sets its own display. */}
+          <div className="lg:hidden">
+            <Skeleton shape="block" height={mobile} />
+          </div>
+          <div className="hidden lg:block">
+            <Skeleton shape="block" height={height} />
+          </div>
+        </>
+      )}
     </div>
   )
 }

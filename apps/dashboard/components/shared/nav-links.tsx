@@ -11,16 +11,23 @@ import { Link } from "@/i18n/navigation"
 
 // Links that lead from a card to a page, each no taller than the controls Hairline puts in its cards (28px), so
 // a card's own content stays the loudest thing in it. Three looks for three jobs:
-//   CardLink    the quiet "more of this" in a card's header (Hairline's own cards: "Open →")
+//   CardLink    the quiet "more of this" in a card's header: an outlined pill, its arrow in a muted dot
 //   PillLink    the one step a card exists to lead to, an arrow in a filled dot (Hairline's site buttons)
 //   DeviceChip  to a device, by its icon and name, so you see where you land
 
-const FOCUS =
+export const FOCUS =
   "focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
+/** CardLink's dot and its arrow, shared with IconLink (components/shared/icon-link.tsx) so the two change together. */
+export const LINK_DOT = "flex size-6 items-center justify-center rounded-full"
+export const LINK_ARROW =
+  "size-3.5 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:-rotate-45"
 
 type Href = React.ComponentProps<typeof Link>["href"]
 
-/** Muted text and an arrow that steps forward on hover. */
+/**
+ * A quiet outlined pill, its arrow in a muted dot that turns up and out on hover: PillLink's family one step down
+ * (the primary dot stays for the one step a card exists to lead to).
+ */
 export function CardLink({
   href,
   children,
@@ -34,16 +41,15 @@ export function CardLink({
     <Link
       href={href}
       className={cn(
-        "group inline-flex items-center gap-1 rounded-sm text-xs whitespace-nowrap text-muted-foreground transition-colors duration-200 hover:text-foreground",
+        "group inline-flex h-7 items-center gap-2 rounded-full pr-0.5 pl-3 text-xs font-medium whitespace-nowrap text-foreground ring-1 ring-border transition-colors duration-200 ring-inset hover:bg-accent",
         FOCUS,
         className
       )}
     >
       {children}
-      <IconArrowRight
-        aria-hidden
-        className="size-3.5 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
-      />
+      <span className={cn(LINK_DOT, "bg-muted")}>
+        <IconArrowRight aria-hidden className={LINK_ARROW} />
+      </span>
     </Link>
   )
 }
@@ -78,7 +84,7 @@ export function PillLink({
   )
 }
 
-/** A device's icon and name in a chip; `dir` adds the chevron of a previous / next step. */
+/** A record's name in a chip (a device's with its icon); `dir` adds the chevron of a previous / next step. */
 export function DeviceChip({
   href,
   type,
@@ -87,7 +93,8 @@ export function DeviceChip({
   className,
 }: {
   href: Href
-  type: string
+  /** A device's type, for its icon; leave it out for a record with none (a past plan). */
+  type?: string
   name: string
   dir?: "previous" | "next"
   className?: string
@@ -97,7 +104,11 @@ export function DeviceChip({
       href={href}
       className={cn(
         "group inline-flex h-7 max-w-full min-w-0 items-center gap-1.5 rounded-full bg-background text-xs font-medium ring-1 ring-border transition-colors duration-200 ring-inset hover:bg-accent",
-        dir === "previous" ? "pr-2.5 pl-2" : "pr-1.5 pl-1",
+        dir === "previous"
+          ? "pr-2.5 pl-2"
+          : type
+            ? "pr-1.5 pl-1"
+            : "pr-1.5 pl-2.5",
         FOCUS,
         className
       )}
@@ -108,7 +119,7 @@ export function DeviceChip({
           className="size-3.5 shrink-0 text-muted-foreground motion-safe:transition-transform motion-safe:group-hover:-translate-x-0.5"
         />
       ) : null}
-      <DeviceIcon type={type} size="xs" />
+      {type ? <DeviceIcon type={type} size="xs" /> : null}
       <span className="truncate">{name}</span>
       {dir === "next" ? (
         <IconChevronRight

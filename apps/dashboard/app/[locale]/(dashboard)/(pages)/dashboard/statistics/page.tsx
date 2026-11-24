@@ -3,14 +3,11 @@ import { Suspense } from "react"
 import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
-import { cn } from "@workspace/ui/lib/utils"
-
 import { PageHead } from "@/components/layout/page-head"
-import { DEVICES_PATH } from "@/config/routes"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillForecast } from "@/features/billing/components/bill-forecast"
-import { DeviceForecastList } from "@/features/billing/components/device-forecast"
-import { BillHistory } from "@/features/billing/components/bill-history"
+import { DeviceForecastCard } from "@/features/billing/components/device-forecast"
+import { DeviceForecastMarks } from "@/features/billing/components/device-forecast-marks"
 import { averagePrice } from "@/features/billing/forecast"
 import {
   getBillHistory,
@@ -37,9 +34,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Each tile reads what it needs (React.cache makes each source one read per request) behind its own boundary, so a
-// slow source (the power ranges, the cohort) holds up only its tile. Without a home the power tile says so and the
-// rest stay empty. Every tile is a direct child of the grid (Suspense adds no box), so a row stretches its tiles to
-// one height.
+// slow source (the power ranges, the cohort) holds up only its tile (the rooms tile also waits for the device
+// forecasts, to know whether it has the row to itself). Without a home `Groups` shows NoHome once.
+// Every tile is a direct child of its group's grid (Suspense adds no box), so a row stretches its tiles to one
+// height; a tile whose partner in the row will not render takes the whole row (`alone`), leaving no half-empty row.
 
 type Props = { className?: string }
 
@@ -48,10 +46,11 @@ async function Power({ className }: Props) {
     getPower(),
     getTranslations("energy.power"),
   ])
-  if (!power) return <NoHome />
+  if (!power) return null // no home: the page shows NoHome once (Groups)
   return (
     <PowerChart
       title={t("title")}
+      description={t("description")}
       ranges={power.ranges}
       usual={power.usual}
       now={power.now}
@@ -64,7 +63,7 @@ async function Forecast({ className }: Props) {
   const [bill, forecast, history] = await Promise.all([
     getCurrentBill(),
     getForecast(),
-    getBillHistory(),
+    getBillHistory(), // last cycle, for the change against it
   ])
   if (!bill) return null
   return (
@@ -77,29 +76,41 @@ async function Forecast({ className }: Props) {
   )
 }
 
-const deviceHref = (id: string) => `${DEVICES_PATH}/${encodeURIComponent(id)}`
-
-/** Every device to the cycle's end with its range, certainty and best advice; nothing before a bill forecast. */
-async function Devices({ className }: Props) {
-  const forecasts = await getDeviceForecasts()
-  if (!forecasts?.devices.length) return null
-  return (
-    <DeviceForecastList
-      forecasts={forecasts}
-      href={deviceHref}
-      className={className}
-    />
-  )
-}
-
+/**
+ * This cycle's cost by device; each device's forecast to the cycle's end rides along (marks, a hover card). A failed
+ * forecast read throws here, as its own tile did; none yet (before a bill forecast) leaves the rows plain.
+ */
 async function Rooms({ className }: Props) {
   void getDashboard() // the meter, alongside the bill
-  const bill = await getCurrentBill()
-  // The devices' money is the bill's, split by their kWh.
+  const [bill, forecasts] = await Promise.all([
+    getCurrentBill(),
+    getDeviceForecasts(),
+  ])
   const devices = await getDevices(bill?.amount_total)
-  return devices ? (
-    <RoomSpending devices={devices} className={className} />
-  ) : null
+  if (!devices) return null
+  const extras = Object.fromEntries(
+    (forecasts?.devices ?? []).map((d) => [
+      d.device_id,
+      {
+        marks: <DeviceForecastMarks key={d.device_id} device={d} />,
+        card: (
+          <DeviceForecastCard
+            key={d.device_id}
+            device={d}
+            periodEnd={forecasts!.period_end}
+          />
+        ),
+      },
+    ])
+  )
+  return (
+    <RoomSpending
+      devices={devices}
+      extras={extras}
+      // Forecast is its partner: without a tariff it does not render.
+      className={bill ? className : "lg:col-span-12"}
+    />
+  )
 }
 
 async function Days({ className }: Props) {
@@ -127,13 +138,16 @@ async function Cycle({ className }: Props) {
 }
 
 async function Peers({ className }: Props) {
-  const cohort = await getCohort()
-  return cohort && <PeerCompare cohort={cohort} className={className} />
-}
-
-async function Months({ className }: Props) {
-  const history = await getBillHistory()
-  return history ? <BillHistory bills={history} className={className} /> : null
+  const [cohort, t] = await Promise.all([
+    getCohort(),
+    getTranslations("layout.statistics"),
+  ])
+  if (!cohort) return null
+  return (
+    <Group title={t("peers")}>
+      <PeerCompare cohort={cohort} className={className} />
+    </Group>
+  )
 }
 
 async function Background({ className }: Props) {
@@ -149,24 +163,90 @@ async function Background({ className }: Props) {
   )
 }
 
-// From the moment to the year, as rows on lg (12 columns). Tiles are paired by their natural height, so a row's
-// edges line up without stretching a short tile far:
+// Two groups and the peers, as rows on lg (12 columns), tiles paired by their natural height so a row's edges line up;
+// only the peers carry a heading:
+//   this cycle's money by device (→ room; each device's forecast on hover) 7 | the bill at the cycle's end 5
 //   power: day, week, 30 and 90 days 12
-//   this month's money by room 4 (→ devices) | the week against the one before, then this cycle against the last 8
-//   every day, last 30 days 8               | the bill at the cycle's end 4
-//   each device to the cycle's end 12
-//   month by month, this year and last 6    | background load 6
-//   against similar homes 12 (only with enough real homes, so its absence leaves no hole)
+//   the week against the one before 6 | this cycle against the last 8 6
+//   every day, last 30 days 8 | background load 4
+//   against similar homes 12 (its own heading; absent without enough real homes, so no empty group)
 const TILE = {
+  forecast: "lg:col-span-5",
+  rooms: "lg:col-span-7",
   power: "lg:col-span-12",
-  rooms: "lg:col-span-4",
-  compare: "lg:col-span-8",
+  weeks: "lg:col-span-6",
+  cycle: "lg:col-span-6",
   days: "lg:col-span-8",
-  forecast: "lg:col-span-4",
-  devices: "lg:col-span-12",
-  months: "lg:col-span-6",
-  standby: "lg:col-span-6",
+  standby: "lg:col-span-4",
   peers: "lg:col-span-12",
+}
+
+/** Each tile's skeleton body (lg, below lg): the loaded tile, or its row, measured minus 90 px. */
+const SKELETON = {
+  rooms: [298, 618],
+  forecast: [298, 174],
+  power: [206, 254],
+  weeks: [287, 267],
+  cycle: [287, 214],
+  days: [386, 310],
+  standby: [386, 378],
+} as const
+
+function Skeleton({ tile }: { tile: keyof typeof SKELETON }) {
+  const [height, mobile] = SKELETON[tile]
+  return <TileSkeleton height={height} mobile={mobile} className={TILE[tile]} />
+}
+
+/** Before the home is known: the page's grid of skeletons, so nothing moves when the tiles take their places. */
+function PageSkeleton() {
+  return (
+    <>
+      <Group>
+        <Skeleton tile="rooms" />
+        <Skeleton tile="forecast" />
+        <Skeleton tile="power" />
+      </Group>
+      <Group>
+        <Skeleton tile="weeks" />
+        <Skeleton tile="cycle" />
+        <Skeleton tile="days" />
+        <Skeleton tile="standby" />
+      </Group>
+    </>
+  )
+}
+
+/** A group of tiles, under its heading when it has one. */
+function Group({
+  title,
+  children,
+}: {
+  title?: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className="flex flex-col gap-4">
+      {title ? <h2 className="text-lg font-medium">{title}</h2> : null}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">{children}</div>
+    </section>
+  )
+}
+
+/** Without a home there is nothing to group: one empty state, not headings over empty rows. */
+async function Groups({ children }: { children: React.ReactNode }) {
+  // Start the tiles' reads now, not after the home check: React.cache hands them the same promises.
+  // Each tile awaits the same promise and shows its own error; the catch only keeps an early failure (before the
+  // tiles mount) out of the log as an unhandled rejection.
+  for (const read of [
+    getPower,
+    getCurrentBill,
+    getBillHistory,
+    getDeviceForecasts,
+    getCohort,
+  ])
+    read().catch(() => null)
+  const data = await getDashboard()
+  return data ? children : <NoHome />
 }
 
 export default function StatisticsPage() {
@@ -174,57 +254,38 @@ export default function StatisticsPage() {
   return (
     <>
       <PageHead title={t("title")}>{t("description")}</PageHead>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-        <Suspense
-          fallback={<TileSkeleton height={230} className={TILE.power} />}
-        >
-          <Power className={TILE.power} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={540} className={TILE.rooms} />}
-        >
-          <Rooms className={TILE.rooms} />
-        </Suspense>
-        {/* Two tiles, one over the other, as tall as the rooms beside them. */}
-        <div className={cn("flex min-w-0 flex-col gap-4", TILE.compare)}>
-          <Suspense fallback={<TileSkeleton height={300} />}>
-            <Weeks />
+      <Suspense fallback={<PageSkeleton />}>
+        <Groups>
+          <Group>
+            <Suspense fallback={<Skeleton tile="rooms" />}>
+              <Rooms className={TILE.rooms} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="forecast" />}>
+              <Forecast className={TILE.forecast} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="power" />}>
+              <Power className={TILE.power} />
+            </Suspense>
+          </Group>
+          <Group>
+            <Suspense fallback={<Skeleton tile="weeks" />}>
+              <Weeks className={TILE.weeks} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="cycle" />}>
+              <Cycle className={TILE.cycle} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="days" />}>
+              <Days className={TILE.days} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="standby" />}>
+              <Background className={TILE.standby} />
+            </Suspense>
+          </Group>
+          <Suspense fallback={<TileSkeleton height={140} />}>
+            <Peers className={TILE.peers} />
           </Suspense>
-          <Suspense fallback={<TileSkeleton height={230} className="flex-1" />}>
-            <Cycle className="flex-1" />
-          </Suspense>
-        </div>
-        <Suspense
-          fallback={<TileSkeleton height={410} className={TILE.days} />}
-        >
-          <Days className={TILE.days} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={410} className={TILE.forecast} />}
-        >
-          <Forecast className={TILE.forecast} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={360} className={TILE.devices} />}
-        >
-          <Devices className={TILE.devices} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={330} className={TILE.months} />}
-        >
-          <Months className={TILE.months} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={330} className={TILE.standby} />}
-        >
-          <Background className={TILE.standby} />
-        </Suspense>
-        <Suspense
-          fallback={<TileSkeleton height={140} className={TILE.peers} />}
-        >
-          <Peers className={TILE.peers} />
-        </Suspense>
-      </div>
+        </Groups>
+      </Suspense>
     </>
   )
 }

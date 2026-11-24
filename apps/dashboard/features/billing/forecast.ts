@@ -54,3 +54,54 @@ export function changeSentence(
   if (!parts.length) return null
   return { amount: f.change.amount, top: parts[0]![0], parts }
 }
+
+const DAY_MS = 86_400_000
+/** Midnight of a Vietnam calendar day ("YYYY-MM-DD"), as ms. */
+const vnMidnight = (date: string) => Date.parse(`${date}T00:00:00+07:00`)
+
+/** Where `now` falls in the cycle, on Vietnam days: day 1 is the start, `left` the whole days after today. */
+export function cycleDay(start: string, end: string, now: number) {
+  const total = Math.round((vnMidnight(end) - vnMidnight(start)) / DAY_MS) + 1
+  const day = Math.min(
+    Math.max(Math.floor((now - vnMidnight(start)) / DAY_MS) + 1, 1),
+    total
+  )
+  return { day, total, left: total - day }
+}
+
+/**
+ * The tiers as one bar, up to the end of the tier the cycle ends in (an open top tier: 10 % past the expected kWh):
+ * each tier's place on it (%) and how full it is (% of the tier) with the kWh used and with the kWh expected.
+ */
+export function tierPath(
+  tiers: CurrentBill["tiers"],
+  used: number,
+  expected: number
+) {
+  const end = Math.max(used, expected)
+  const last = tiers.find((x) => x.to_kwh === null || x.to_kwh >= end)
+  const max = last?.to_kwh ?? end * 1.1
+  const fill = (x: CurrentBill["tiers"][number], kwh: number, to: number) =>
+    (Math.min(Math.max(kwh - x.from_kwh, 0), to - x.from_kwh) /
+      (to - x.from_kwh)) *
+    100
+  const segments = tiers
+    .filter((x) => x.from_kwh < max)
+    .map((x) => {
+      const to = Math.min(x.to_kwh ?? max, max)
+      return {
+        tier_no: x.tier_no,
+        left: (x.from_kwh / max) * 100,
+        width: ((to - x.from_kwh) / max) * 100,
+        used: fill(x, used, to),
+        expected: fill(x, expected, to),
+      }
+    })
+  return { max, segments }
+}
+
+/** Where `value` sits in the band `low`–`high`, as a % clamped to 0–100; the middle when the band is a point. */
+export const bandPosition = (value: number, low: number, high: number) =>
+  high > low
+    ? Math.min(100, Math.max(0, (100 * (value - low)) / (high - low)))
+    : 50

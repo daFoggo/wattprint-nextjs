@@ -101,6 +101,7 @@ export function HomeSettingsForm({
       description: t("billHint"),
       fields: [
         {
+          // A number, not a 28-pill choice: that row never wraps and saves on every arrow key.
           type: "text",
           name: "billing_cycle_day",
           label: t("cycleDay"),
@@ -112,21 +113,40 @@ export function HomeSettingsForm({
     },
   ]
   return (
-    <div className={`space-y-4 ${className ?? ""}`}>
+    // The home, then where it is, then its bill and the email: location sits with the home it describes.
+    <div className={`flex flex-col gap-4 ${className ?? ""}`}>
       {owner ? (
-        <HomeLocation home={home} provinces={provinces} action={action} />
+        <>
+          <SettingsForm
+            defaultValue={values}
+            onSave={saving(action)}
+            autosave
+            warnOnLeave
+            sections={homeSections.slice(0, 1)}
+          />
+          <HomeLocation home={home} provinces={provinces} action={action} />
+          <SettingsForm
+            defaultValue={values}
+            onSave={saving(action)}
+            autosave
+            warnOnLeave
+            sections={[...homeSections.slice(1), notify]}
+          />
+        </>
       ) : (
-        <p className="rounded-3xl border border-border px-4 py-3 text-sm text-muted-foreground md:px-5">
-          {t("memberNote", { name: home.name })}
-        </p>
+        <>
+          <p className="rounded-3xl border border-border px-4 py-3 text-sm text-muted-foreground md:px-5">
+            {t("memberNote", { name: home.name })}
+          </p>
+          <SettingsForm
+            defaultValue={values}
+            onSave={saving(action)}
+            autosave
+            warnOnLeave
+            sections={[notify]}
+          />
+        </>
       )}
-      <SettingsForm
-        defaultValue={values}
-        onSave={saving(action)}
-        autosave
-        warnOnLeave
-        sections={owner ? [...homeSections, notify] : [notify]}
-      />
     </div>
   )
 }
@@ -147,6 +167,7 @@ function HomeLocation({
     options.find((o) => o.value === home.province_code) ?? null
   )
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState(false)
   const [pending, start] = useTransition()
   return (
     // Title left, field right from md, like the SettingsForm sections below it.
@@ -169,6 +190,7 @@ function HomeLocation({
             const before = value
             setValue(next)
             setError(null)
+            setSaved(false)
             start(async () => {
               const result = await action({
                 province_code: next?.value ?? null,
@@ -176,7 +198,7 @@ function HomeLocation({
               if (!result.ok) {
                 setValue(before)
                 setError(result.error)
-              }
+              } else setSaved(true)
             })
           }}
           clearable
@@ -186,6 +208,12 @@ function HomeLocation({
             {error}
           </p>
         )}
+        {/* It saves on pick, like the autosaving rows around it: say so. */}
+        {saved && !pending ? (
+          <p role="status" className="mt-1.5 text-xs text-muted-foreground">
+            {t("locationSaved")}
+          </p>
+        ) : null}
       </div>
     </section>
   )

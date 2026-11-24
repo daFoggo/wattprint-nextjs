@@ -154,35 +154,38 @@ export function BillSummary({
       )}
       {/* The tray's foot: today and the way to the bill. */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-2 pb-1">
-        <p className="text-sm text-muted-foreground">
-          {t.rich("billSummary.today", {
-            kwh: kwh.format(bill.today_kwh),
-            amount: () => (
-              <NumberRoll
-                className="font-medium text-foreground"
-                value={bill.today_amount}
-                format={VND}
-                locales={locale}
-              />
-            ),
-          })}
-        </p>
-        {vsUsual !== null ? (
+        {/* The two sentences read as one group; the pill keeps the row's end. */}
+        <div className="flex min-w-0 flex-col gap-0.5">
           <p className="text-sm text-muted-foreground">
-            {Math.abs(vsUsual) < 0.05
-              ? t("billSummary.asUsual")
-              : t("billSummary.vsUsual", {
-                  higher: String(vsUsual > 0),
-                  pct: new Intl.NumberFormat(locale, {
-                    style: "percent",
-                    maximumFractionDigits: 0,
-                  }).format(Math.abs(vsUsual)),
-                  amount: vnd.format(
-                    Math.abs(usual!.actual - usual!.expected) * price
-                  ),
-                })}
+            {t.rich("billSummary.today", {
+              kwh: kwh.format(bill.today_kwh),
+              amount: () => (
+                <NumberRoll
+                  className="font-medium text-foreground"
+                  value={bill.today_amount}
+                  format={VND}
+                  locales={locale}
+                />
+              ),
+            })}
           </p>
-        ) : null}
+          {vsUsual !== null ? (
+            <p className="text-sm text-muted-foreground">
+              {Math.abs(vsUsual) < 0.05
+                ? t("billSummary.asUsual")
+                : t("billSummary.vsUsual", {
+                    higher: String(vsUsual > 0),
+                    pct: new Intl.NumberFormat(locale, {
+                      style: "percent",
+                      maximumFractionDigits: 0,
+                    }).format(Math.abs(vsUsual)),
+                    amount: vnd.format(
+                      Math.abs(usual!.actual - usual!.expected) * price
+                    ),
+                  })}
+            </p>
+          ) : null}
+        </div>
         <PillLink href={BILL_PATH} className="ml-auto">
           {t("billSummary.viewDetails")}
         </PillLink>

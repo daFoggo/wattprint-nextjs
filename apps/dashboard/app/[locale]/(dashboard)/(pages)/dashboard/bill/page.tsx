@@ -80,17 +80,27 @@ export default function BillPage() {
       <PageHead title={t("title")}>{t("description")}</PageHead>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Suspense
-          fallback={<TileSkeleton height={200} className="lg:col-span-12" />}
+          fallback={
+            <TileSkeleton
+              height={313}
+              mobile={412}
+              className="lg:col-span-12"
+            />
+          }
         >
           <Overview />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={420} className="lg:col-span-7" />}
+          fallback={
+            <TileSkeleton height={410} mobile={420} className="lg:col-span-7" />
+          }
         >
           <Ladder className="lg:col-span-7" />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={420} className="lg:col-span-5" />}
+          fallback={
+            <TileSkeleton height={410} mobile={402} className="lg:col-span-5" />
+          }
         >
           <Past className="lg:col-span-5" />
         </Suspense>

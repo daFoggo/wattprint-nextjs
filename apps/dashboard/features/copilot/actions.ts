@@ -6,7 +6,6 @@ import { requirePermission } from "@/lib/dal"
 
 import { toMessages } from "./schemas"
 import {
-  acceptPlan,
   deleteConversation,
   fetchConversation,
   fetchConversations,
@@ -77,10 +76,4 @@ export async function rateAnswerAction(
     Id.parse(messageId),
     z.enum(["up", "down"]).nullable().parse(value)
   )
-}
-
-/** Starts trying a plan Wappi saved; its saving is measured after 14 days. */
-export async function acceptPlanAction(planId: string) {
-  const { accessToken } = await requirePermission("account:view")
-  return (await acceptPlan(accessToken, Id.parse(planId))).status
 }

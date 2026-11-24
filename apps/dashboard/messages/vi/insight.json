@@ -1,11 +1,11 @@
 {
   "alerts": {
-    "title": "Cảnh báo: thiết bị, điện nền, bậc giá, mức bạn đặt",
+    "title": "Cảnh báo cần xem",
     "open": "{count} cảnh báo cần xem",
     "resolved": "đã tự hết",
     "longer_than_usual": {
       "title": "{device} chạy lâu hơn thường lệ",
-      "body": "{days} ngày qua mỗi lần chạy khoảng {recent_min} phút, thường lệ {usual_min} phút. Kiểm tra gioăng cửa và dàn nóng."
+      "body": "{days} ngày qua mỗi lần chạy khoảng {recent_min} phút, thường lệ {usual_min} phút."
     },
     "allDevices": "Tất cả thiết bị",
     "standby_high": {
@@ -22,7 +22,7 @@
     },
     "watch_hit": {
       "title": "{label} đã {op, select, gt {vượt} other {xuống dưới}} {threshold, number}{unit, select, vnd { đ} kwh { kWh} w { W} other {}}",
-      "body": "Lúc kiểm tra: {value, number}{unit, select, vnd { đ} kwh { kWh} w { W} other {}}. {repeat, select, true {Wappi sẽ báo lại ở lần kiểm tra sau nếu vẫn {op, select, gt {vượt} other {dưới}} mức này (ngày, kỳ hoặc giờ tới).} other {Bạn đã nhờ Wappi báo khi điều này xảy ra; cảnh báo này đã tắt.}}"
+      "body": "Lúc kiểm tra: {value, number}{unit, select, vnd { đ} kwh { kWh} w { W} other {}}. {repeat, select, true {Nếu vẫn {op, select, gt {vượt} other {dưới}} mức này, Wappi sẽ báo lại vào lần kiểm tra sau.} other {Cảnh báo này đã tắt sau khi báo.}}"
     },
     "watch_broken": {
       "title": "Không theo dõi được: {label}",
@@ -55,7 +55,7 @@
       "weather": "Thời tiết đã làm mức thường cao hơn {weather_kwh, number} kWh, phần vượt nằm ngoài phần đó."
     },
     "feedback": {
-      "useful": "Đúng, cảm ơn",
+      "useful": "Đúng, bất thường thật",
       "notAnomaly": "Không phải bất thường",
       "thanks": "Cảm ơn bạn đã xác nhận.",
       "noted": "Đã ghi nhận, WattPrint sẽ ít báo kiểu này hơn cho nhà bạn."
@@ -75,14 +75,14 @@
       },
       "denser": {
         "title": "{device} chạy dày hơn thường lệ",
-        "body": "Mấy ngày qua chạy {value, number, percent} thời gian, cùng nhiệt độ tháng trước là {usual, number, percent} (≈ {excess_vnd, number} đ mỗi ngày). Kiểm tra gioăng cửa và nhiệt độ đặt."
+        "body": "Mấy ngày qua chạy {value, number, percent} thời gian, cùng nhiệt độ tháng trước là {usual, number, percent} (≈ {excess_vnd, number} đ mỗi ngày)."
       }
     }
   },
   "peers": {
-    "more": "So với hộ trung vị · nhiều hơn {pct} số hộ tương tự",
-    "less": "So với hộ trung vị · ít hơn {pct} số hộ tương tự",
-    "median": "Trung vị {homes} hộ",
+    "more": "Nhà bạn dùng nhiều hơn {pct} hộ tương tự",
+    "less": "Nhà bạn dùng ít hơn {pct} hộ tương tự",
+    "median": "Hộ tương tự điển hình ({homes} hộ)",
     "you": "Nhà bạn, {days} ngày"
   },
   "watches": {
@@ -256,8 +256,8 @@
     }
   },
   "page": {
-    "fired": "Đã báo",
-    "watched": "Đang theo dõi",
+    "fired": "Cảnh báo đã xảy ra",
+    "watched": "Cảnh báo đang bật",
     "watchedHint": "Cảnh báo WattPrint tự chạy và những cảnh báo bạn đã đặt."
   }
 }

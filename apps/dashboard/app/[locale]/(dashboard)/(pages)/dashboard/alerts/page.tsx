@@ -165,12 +165,16 @@ export default function AlertsPage() {
       </PageHead>
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-12">
         <Suspense
-          fallback={<TileSkeleton height={420} className="lg:col-span-7" />}
+          fallback={
+            <TileSkeleton height={63} mobile={76} className="lg:col-span-7" />
+          }
         >
           <Fired className="lg:col-span-7" />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={420} className="lg:col-span-5" />}
+          fallback={
+            <TileSkeleton height={512} mobile={535} className="lg:col-span-5" />
+          }
         >
           <Watched className="lg:col-span-5" />
         </Suspense>

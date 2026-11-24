@@ -15,9 +15,8 @@
     "bill": "Bill",
     "billHint": "So the cost matches the utility’s bill.",
     "cycleDay": "Meter reading day",
-    "cycleDayHint": "The day the utility reads the meter each month.",
-    "cycleDayInvalid": "Enter a day from 1 to 28.",
-    "weekly": "A weekly summary by email",
+    "cycleDayHint": "The day the utility reads the meter each month (1–28); the billing cycle starts on it.",
+    "weekly": "Send a weekly summary",
     "location": "Location",
     "locationHint": "The home's province, so the weather is read for the right place.",
     "provincePlaceholder": "Choose a province",
@@ -27,7 +26,9 @@
     "invalid": "That value isn't valid.",
     "memberNote": "{name} is managed by its owner. Here you choose what WattPrint tells you.",
     "unset": "Not set",
-    "summary": "Email summary",
-    "summaryHint": "One email a week summing up your energy and bill."
+    "summary": "Email",
+    "summaryHint": "One email a week summing up your energy and bill.",
+    "locationSaved": "Location saved.",
+    "cycleDayInvalid": "Enter a day from 1 to 28."
   }
 }

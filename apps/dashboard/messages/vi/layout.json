@@ -7,7 +7,9 @@
     "bill": "Hóa đơn",
     "settings": "Cài đặt",
     "copilot": "Wappi",
-    "alerts": "Cảnh báo"
+    "alerts": "Cảnh báo",
+    "plan": "Kế hoạch tiết kiệm",
+    "history": "Kế hoạch trước đây"
   },
   "roles": {
     "customer": "Khách hàng",
@@ -22,7 +24,7 @@
   "close": "Đóng",
   "overview": {
     "title": "Tổng quan",
-    "description": "Chi phí kỳ này, điện năng so với các tuần trước, điện đi đâu và điều gì cần chú ý.",
+    "description": "Tiền điện kỳ này (chu kỳ tính hóa đơn), điện đi đâu và điều gì cần chú ý.",
     "noHomeTitle": "Chưa có nhà",
     "noHomeDescription": "Tài khoản này chưa thuộc nhà nào. Hãy xin chủ nhà mã mời, hoặc ghép nối một công tơ."
   },
@@ -31,6 +33,14 @@
     "description": "Kỳ hóa đơn này tính đến nay, tính theo từng bậc như công ty điện lực.",
     "emptyTitle": "Chưa có hóa đơn",
     "emptyDescription": "Tài khoản này chưa có nhà nào có biểu giá để tính tiền điện."
+  },
+  "plan": {
+    "title": "Kế hoạch tiết kiệm",
+    "description": "Chọn vài việc cụ thể từ chính số liệu nhà bạn, xem nó đáng bao nhiêu tiền theo bậc giá, rồi theo dõi đến hết kỳ hóa đơn.",
+    "emptyTitle": "Chưa lập được kế hoạch",
+    "emptyDescription": "Cần một nhà có biểu giá và ít nhất một tuần số liệu để biết tiết kiệm ở đâu.",
+    "noTariffTitle": "Kế hoạch đang chạy cần biểu giá",
+    "noTariff": "Nhà chưa có biểu giá nên không tính được tiền của kế hoạch. Thêm biểu giá trong Cài đặt để xem tiếp."
   },
   "devices": {
     "title": "Thiết bị",
@@ -42,11 +52,12 @@
   },
   "statistics": {
     "title": "Thống kê",
-    "description": "Điện năng theo ngày, tuần, tháng và năm; so với tuần trước, tháng trước và các hộ tương tự; và cuối kỳ sẽ hết bao nhiêu."
+    "description": "Điện năng và tiền điện theo ngày, tháng; so với kỳ trước và các hộ tương tự; dự báo hóa đơn cuối kỳ.",
+    "peers": "So với hộ tương tự"
   },
   "settings": {
     "title": "Cài đặt",
-    "description": "Thông tin nhà và hóa đơn."
+    "description": "Nhà, vị trí, hóa đơn và email tóm tắt."
   },
   "alerts": {
     "title": "Cảnh báo",

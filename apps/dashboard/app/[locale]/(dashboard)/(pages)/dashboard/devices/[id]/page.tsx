@@ -256,11 +256,11 @@ async function Watches({
 }
 
 // Rows on lg (12 columns), tiles paired by their natural height so a row's edges line up:
+//   what it did unusually 12 (only when it did, first: it is what needs a look)
 //   the figures 12
 //   every day this month 7         | the log of its runs 5
 //   the last 24 hours' power 8     | how it compares, and a tip 4
 //   its next 7 days and the cycle's rest 12
-//   what it did unusually 12 (only when it did)
 //   its alerts 12
 const TILE = {
   stats: "lg:col-span-12",
@@ -280,41 +280,41 @@ export default function DevicePage({ params }: { params: Params }) {
         <Head params={params} />
       </Suspense>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        {/* What needs a look comes first, in the stats' boundary: it lands with them, never pushing them down. */}
         <Suspense
           fallback={
             <Skeleton shape="block" height={96} className={TILE.stats} />
           }
         >
+          <Anomalies params={params} className={TILE.anomalies} />
           <Stats params={params} className={TILE.stats} />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={400} className={TILE.days} />}
+          fallback={<TileSkeleton height={379} className={TILE.days} />}
         >
           <Days params={params} className={TILE.days} />
         </Suspense>
-        <Suspense fallback={<TileSkeleton height={400} className={TILE.log} />}>
+        <Suspense fallback={<TileSkeleton height={379} className={TILE.log} />}>
           <Log params={params} className={TILE.log} />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={230} className={TILE.power} />}
+          fallback={<TileSkeleton height={206} className={TILE.power} />}
         >
           <Power params={params} className={TILE.power} />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={230} className={TILE.about} />}
+          fallback={<TileSkeleton height={206} className={TILE.about} />}
         >
           <About params={params} className={TILE.about} />
         </Suspense>
         <Suspense
-          fallback={<TileSkeleton height={320} className={TILE.forecast} />}
+          fallback={<TileSkeleton height={372} className={TILE.forecast} />}
         >
           <Forecast params={params} className={TILE.forecast} />
         </Suspense>
         <Suspense
           fallback={<TileSkeleton height={280} className={TILE.watches} />}
         >
-          {/* Shown only when the device did something unusual, above its alert settings. */}
-          <Anomalies params={params} className={TILE.anomalies} />
           <Watches params={params} className={TILE.watches} />
         </Suspense>
       </div>

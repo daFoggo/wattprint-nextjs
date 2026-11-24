@@ -31,6 +31,8 @@ import { getWeather } from "@/features/weather/queries"
 import { requirePermission } from "@/lib/dal"
 import { isExpectedDataError } from "@/lib/errors"
 
+import { cn } from "@workspace/ui/lib/utils"
+
 import { NoHome } from "../../_components/no-home"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -77,32 +79,43 @@ async function Tiles() {
   // The devices' money is the bill's, split by their kWh.
   const devices = await getDevices(bill?.amount_total)
   if (!data || !devices || !activity || !alerts) return <NoHome />
+  // An open alert is what needs a look: first in the page (screen, reading and focus order) on a phone; lg puts
+  // every tile back in its bento place with `order`.
+  const alertsFirst = alerts.some((a) => a.status === "open")
+  const alertTile = (
+    <AlertList
+      alerts={alerts}
+      now={data.now}
+      brief
+      onSeen={viewer ? undefined : acknowledgeAlertAction}
+      onFeedback={viewer ? undefined : sendAlertFeedbackAction}
+      mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
+      className={cn(data.latest ? TILE.alerts : "lg:col-span-12", "lg:order-3")}
+    />
+  )
   return (
     <>
+      {alertsFirst ? alertTile : null}
       {/* No tariff on the home: nothing to price, so the device mix takes the row. */}
       <DeviceMix
         devices={devices}
-        className={bill ? TILE.mix : "lg:col-span-12"}
+        className={cn(bill ? TILE.mix : "lg:col-span-12", "lg:order-1")}
       />
       {bill ? (
-        <BillSummary bill={bill} usual={usual} className={TILE.bill} />
+        <BillSummary
+          bill={bill}
+          usual={usual}
+          className={cn(TILE.bill, "lg:order-2")}
+        />
       ) : null}
-      <AlertList
-        alerts={alerts}
-        now={data.now}
-        brief
-        onSeen={viewer ? undefined : acknowledgeAlertAction}
-        onFeedback={viewer ? undefined : sendAlertFeedbackAction}
-        mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
-        className={data.latest ? TILE.alerts : "lg:col-span-12"}
-      />
+      {alertsFirst ? null : alertTile}
       {/* No meter data yet: the activity sample would pretend otherwise. */}
       {data.latest ? (
         <DeviceTimeline
           activity={activity}
           title={t("timeline.title")}
           description={t("timeline.description")}
-          className={TILE.activity}
+          className={cn(TILE.activity, "lg:order-4")}
         />
       ) : null}
     </>
@@ -123,10 +136,10 @@ async function Weather() {
 function TileSkeletons() {
   return (
     <>
-      <TileSkeleton className={TILE.mix} height={260} />
-      <TileSkeleton className={TILE.bill} height={260} />
-      <TileSkeleton className={TILE.alerts} height={300} />
-      <TileSkeleton className={TILE.activity} height={300} />
+      <TileSkeleton className={TILE.mix} height={507} mobile={525} />
+      <TileSkeleton className={TILE.bill} height={507} mobile={429} />
+      <TileSkeleton className={TILE.alerts} height={310} mobile={244} />
+      <TileSkeleton className={TILE.activity} height={310} mobile={357} />
     </>
   )
 }

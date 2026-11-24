@@ -68,15 +68,6 @@ export async function putFeedback(
   )
 }
 
-export async function acceptPlan(token: string, planId: string) {
-  return z.object({ id: z.string(), status: z.string() }).parse(
-    await apiFetch(`/copilot/plans/${encodeURIComponent(planId)}/accept`, {
-      token,
-      method: "POST",
-    })
-  )
-}
-
 /** The answer's event stream, passed on as it comes. */
 export async function streamChat(token: string, body: unknown) {
   return apiResponse("/copilot/chat", {
