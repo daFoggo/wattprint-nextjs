@@ -110,6 +110,17 @@ export function createKeycloakProvider(options: AuthOptions): AuthProvider {
       }
     },
 
+    async signInWithTokens(tokens: KeycloakTokenResponse): Promise<void> {
+      // Same checks as getSession (signature, issuer, azp = this client) before any cookie is written.
+      const claims = await verifyKeycloakJwt(
+        tokens.access_token,
+        oidcConfig.issuer,
+        { clientId: oidcConfig.clientId }
+      )
+      if (!claims) throw new Error("Keycloak token rejected: not valid for this app")
+      storeTokens(await cookies(), tokens)
+    },
+
     async signOut(redirectTo?: string): Promise<string | void> {
       const cookieStore = await cookies()
       const refreshToken = cookieStore.get(cookieNames.refresh)?.value

@@ -8,35 +8,40 @@ import type { DemoHome } from "../schemas"
 import { DemoHouseScene } from "./demo-house-scene"
 
 /**
- * A card per seeded REFIT home: its drawing, name and appliances. With `onPick` each card is a button (the
- * picked one says it is opening); without, the cards only show what there is to see.
+ * A row per seeded REFIT home: a small drawing, its name and appliances, compact enough that a dialog shows every
+ * home and its button without scrolling. With `onPick` each row is a button (the picked one says it is opening);
+ * without, the rows only show what there is to see.
  */
 export function DemoHomeCards({
   homes,
   onPick,
   picked,
   pending = false,
+  className,
 }: {
   homes: DemoHome[]
   onPick?: (key: string) => void
   picked?: string
   pending?: boolean
+  className?: string
 }) {
   const t = useTranslations("auth.demo")
   return (
-    <ul className={cn("grid gap-4", homes.length > 1 && "sm:grid-cols-2")}>
+    <ul className={cn("grid gap-2", className)}>
       {homes.map((home) => {
         const busy = pending && picked === home.key
         const body = (
           <>
-            <DemoHouseScene
-              labels={home.devices.map((d) => d.label)}
-              title={t("scene", {
-                name: home.name,
-                devices: home.devices.map((d) => d.name).join(", "),
-              })}
-            />
-            <span className="flex w-full flex-col gap-1">
+            <span className="w-20 shrink-0">
+              <DemoHouseScene
+                labels={home.devices.map((d) => d.label)}
+                title={t("scene", {
+                  name: home.name,
+                  devices: home.devices.map((d) => d.name).join(", "),
+                })}
+              />
+            </span>
+            <span className="flex min-w-0 flex-col gap-1">
               <span className="font-medium">{home.name}</span>
               <span className="text-sm text-muted-foreground">
                 {busy
@@ -47,7 +52,7 @@ export function DemoHomeCards({
           </>
         )
         const card =
-          "flex w-full flex-col items-center gap-3 rounded-xl border bg-background p-4 text-left"
+          "flex w-full items-center gap-4 rounded-xl border bg-background px-4 py-2 text-left"
         return (
           <li key={home.key}>
             {onPick ? (

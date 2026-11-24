@@ -1,5 +1,6 @@
 import type { NextResponse } from "next/server"
 
+import type { KeycloakTokenResponse } from "./keycloak/oidc"
 import type { Role } from "./permissions"
 
 /** Per-app settings. Each app has its own cookie so web and admin sessions stay apart (both run on localhost in dev). */
@@ -29,6 +30,9 @@ export type Calendar = {
   adoptedOn: string
 }
 
+/** Tokens as the identity provider's token endpoint returns them. */
+export type TokenSet = KeycloakTokenResponse
+
 /** Server-side contract (Server Components, Server Actions, Route Handlers). */
 export interface AuthProvider {
   /** Verified session, or null. Must not refresh tokens (the proxy does that). */
@@ -49,6 +53,11 @@ export interface AuthProvider {
    * Action that changed that data.
    */
   refreshSession(): Promise<void>
+  /**
+   * Signs in with tokens obtained elsewhere (a demo guest the backend made): verifies the access token like
+   * `getSession`, throws if it is not valid for this app, then stores the cookies like `oauth.exchangeCode`.
+   */
+  signInWithTokens(tokens: TokenSet): Promise<void>
   /** True when the failure is the Auth server's answer (safe to show), not an outage (rethrow). */
   isExpectedError(error: unknown): boolean
   /** Sign-in through Keycloak's login page (PKCE redirect flow): email + password, or an identity provider. */

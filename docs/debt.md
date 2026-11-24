@@ -4,33 +4,6 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
-- 2026-11-23 (demo sign-in, enabled on the running Keycloak): client `wattprint-web` has Direct Access Grants on, so
-  anyone holding its secret (server-side only: dashboard + API env) can password-grant any realm user, and the
-  `wattprint-demo-admin` service account (`manage-users`) can edit every user. Left because the demo needs instant
-  sign-in as a REFIT home owner now. Pay: replace with a safer flow (e.g. visitors sign up normally and pick a demo
-  home to view), then turn Direct Access Grants off and drop the service account.
-- 2026-11-23 (debt-watch-status R1 Minor): opening a stored chat that holds a watch widget also reads
-  `/insights/watches`; when that read fails the whole chat fails to open (dashboard-data: a failed read throws).
-  Pay: if the alerts endpoint is ever down more than the chat, or users report chats that will not open.
-- 2026-11-23 (debt-watch-status R1 Minor): the Hairline re-cut brought upstream's canvas plasma `voice-orb.tsx`; voice
-  mode passes neither `colors` nor `tone`, so the orb is the fixed "ice" blue in both themes, not checked by eye at
-  375/1440 px. Pay: next touch of voice mode (pick `colors` from the chart tokens or a `tone`).
-- 2026-11-23 (T03 demo sign-in, wattprint-backend docs/work/2026-11-23-demo-sign-in): every demo visitor signs in as the
-  one real owner of the home (no read-only role, no limits, by decision), so a visitor can change that home's
-  settings for everyone. Declined for now: separate demo members per visitor (`DEMO_EXTRA_MEMBERS`). The session
-  caps are counted per API process (`shortcut:` in `demo.py`). Pay: before the demo is linked from a public page,
-  when a visitor breaks it, or when the API runs several workers.
-- 2026-11-23 (T03 R3 Minor): `demo.py` `_unlock` reads `access_token` from the admin client's 200 without checking
-  the body, so a malformed answer gives 500 instead of 503. Unlikely with Keycloak. Pay: next touch of `demo.py`.
-- 2026-11-22 (docs/work/2026-11-22-public-domains): prod (`../wattprint-web-prod`, `next start` 11081/11082) runs as
-  detached shells, so a reboot stops it; Keycloak serves the public domain from `start-dev`. Move both to services
-  (systemd or containers, Keycloak `start`) when the demo must survive restarts. T02 2026-11-23: not done, it is
-  infrastructure on the prod server (out of scope for code work).
-- 2026-11-22 (public domains, mobile R1): wattprint-expo dev/preview/production share the `wattprint` scheme, so with
-  two variants installed the Keycloak redirect can open the wrong one and sign-in silently returns; fix = a scheme per
-  env + matching `wattprint-mobile` redirect URIs. After cutover a dev build without `.env` falls back to the localhost
-  issuer (`auth-client.ts:28`) and Keycloak's cookie check likely fails; set `EXPO_PUBLIC_KEYCLOAK_URL`. T02
-  2026-11-23: skipped, wattprint-expo is not in this workspace.
 - 2026-11-22 (docs/work/2026-11-21-ai-forecast-anomaly, R1 minors and accepted limits; T02 2026-11-23: skipped,
   the forecast module is being worked on by someone else):
   - The usage model loses its backtest on Houses 2 and 5 (MAPE 16.3 % / 7.9 % vs the weekday average's 9.1 % /
@@ -54,11 +27,35 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
     during NILM catch-up a whole day can be skipped. Pay: keep a "judged up to" mark per home.
 
 Deliberate scale limits stay as `shortcut:` comments in the code, each with its trigger
-(wattprint-backend: SSE polling, per-process copilot and demo sign-in rate counts, pattern-only privacy, hourly
+(wattprint-backend: SSE polling, per-process copilot rate counts, per-process demo guest rate windows
+(`auth/services/demo.py` `_quota`), pattern-only privacy, hourly
 bill recompute, CPU
 torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline `action-receipt` type exclusion).
 
 ## Paid
+
+- 2026-11-24 (demo R1 Minors): `create_guest` answers 503 on a refused token or key fetch (`jwt.PyJWTError`), with a
+  test; a refused Keycloak delete is logged; the sidebar demo row reads the demo homes only for a viewer, and is a
+  bordered notice instead of a second account-style row.
+
+- 2026-11-24 (demo homes viewed read-only, lane L; wattprint-backend docs/work/2026-11-23-demo-view, R1-R3 ship):
+  - Demo sign-in no longer password-grants the real owner: a visitor signs in (or signs up) with their own account
+    and picks a demo home on the dashboard's empty state (since 2026-11-24 the sign-in page instead makes a guest
+    account per click: wattprint-backend docs/work/2026-11-24-demo-guest); the backend makes them a read-only `viewer` (403 `home_read_only` on
+    every shared write, Wappi's `create_watch`/`propose_plan` refuse, no alert or weekly mail). Direct Access
+    Grants off on every client (`wattprint-web`, `admin-cli`), service account `wattprint-demo-admin` deleted, the
+    demo owners' sessions ended, `signInWithTokens` removed from `@workspace/auth`. Pays the shared-owner entry, the
+    per-process session caps and `_unlock`'s unchecked body (all removed with the password grant).
+- 2026-11-24 (prod services, lane S: config only): the dashboard and landing run as containers (`compose.yaml`,
+  `Dockerfile`, host network, `restart: unless-stopped`; redeploy `docker compose up -d --build`); Keycloak runs
+  `start` (production mode behind nginx); db, keycloak-db, keycloak, mailpit and api restart with Docker.
+- 2026-11-24 (wattprint-expo docs/work/2026-11-23-scheme-per-env, lane M, R2 ship): a URL scheme per build
+  (`wattprint-dev`, `wattprint-preview`, `wattprint`, registered on `wattprint-mobile`), and the public API/realm by
+  default (no localhost issuer).
+- 2026-11-24 (docs/work/2026-11-23-voice-wappi-chat-fixes, lane L, R2 ship):
+  - Voice orb gone: Wappi stands on Hairline's DitherHorizon in voice mode (VoiceTalk `visual` patch).
+  - A stored chat whose watch statuses cannot be read still opens (rule card exception).
+  - Wappi draft per conversation, gestures only on a change of state (R1 Minors, fixed).
 
 - 2026-11-23 (debt-watch-status, lane M, R1 ship; docs/work/2026-11-23-debt-watch-status):
   - Alerts v3: a Wappi watch widget in a stored chat shows "Ended" and drops its `#watch-<id>` link once the alerts

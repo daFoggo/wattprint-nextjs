@@ -6,13 +6,15 @@ import type { DemoHome } from "../schemas"
 import { DemoHomeCards } from "./demo-home-cards"
 import { FormError } from "./form-error"
 
-/** Picking a card views that demo home read-only from this account (the action opens the dashboard on it). */
+/** Picking a card runs `action` with its key (it views the home, or remembers it while the visitor signs in). */
 export function DemoHomePicker({
   homes,
   action,
+  className,
 }: {
   homes: DemoHome[]
   action: (key: string) => Promise<{ error: string } | void>
+  className?: string
 }) {
   const [error, setError] = useState<string>()
   const [picked, setPicked] = useState<string>()
@@ -22,6 +24,7 @@ export function DemoHomePicker({
       <FormError message={error} />
       <DemoHomeCards
         homes={homes}
+        className={className}
         picked={picked}
         pending={pending}
         onPick={(key) => {

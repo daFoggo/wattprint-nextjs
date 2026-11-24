@@ -29,7 +29,11 @@ export async function NoHome() {
             <h2 className="font-medium">{demo("pickTitle")}</h2>
             <p className="text-sm text-muted-foreground">{demo("pickHint")}</p>
           </div>
-          <DemoHomePicker homes={homes} action={viewDemoHomeAction} />
+          <DemoHomePicker
+            homes={homes}
+            action={viewDemoHomeAction}
+            className="lg:grid-cols-3"
+          />
         </div>
       ) : null}
     </section>

@@ -16,6 +16,7 @@ import { CopilotNavLink } from "@/features/copilot/components/copilot-entry"
 import { CopilotPanel } from "@/features/copilot/components/copilot-panel"
 import { CopilotProvider } from "@/features/copilot/components/copilot-provider"
 
+import { SessionDemo } from "./_components/session-demo"
 import { SessionAccount, SessionNav } from "./_components/session-nav"
 
 /**
@@ -71,8 +72,12 @@ export default function DashboardLayout({
                 </Suspense>
               </div>
             </div>
-            {/* Account row: avatar, name, role; theme and sign out live in its panel. */}
-            <div className="mt-auto flex flex-col">
+            {/* A demo viewer's home row (null for everyone else: nothing holds its place), then the account row:
+                avatar, name, role; theme and sign out live in its panel. */}
+            <div className="mt-auto flex flex-col gap-1">
+              <Suspense fallback={null}>
+                <SessionDemo />
+              </Suspense>
               <Suspense fallback={<Skeleton shape="block" height={40} />}>
                 <SessionAccount />
               </Suspense>

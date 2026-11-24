@@ -79,7 +79,8 @@ export function AlertList({
             title={t("emptyTitle")}
             description={t("emptyDescription")}
             action={
-              brief ? (
+              // No onSeen: a demo viewer, who cannot set alerts.
+              brief && onSeen ? (
                 <PillLink href={ALERTS_PATH}>{t("emptyAction")}</PillLink>
               ) : null
             }

@@ -1,9 +1,8 @@
 "use server"
 
-import { updateTag } from "next/cache"
+import { refresh, updateTag } from "next/cache"
 import { cookies } from "next/headers"
 import { getLocale, getTranslations } from "next-intl/server"
-import { z } from "zod"
 // eslint-disable-next-line no-restricted-imports -- redirects to Keycloak (external) or a getPathname({ locale }) path (docs/internationalization.md)
 import { redirect } from "next/navigation"
 
@@ -15,10 +14,11 @@ import {
 import { getPathname } from "@/i18n/navigation"
 import { getAuthProvider } from "@/lib/auth"
 import { requirePermission, SESSION_TAG } from "@/lib/dal"
-import { isExpectedDataError } from "@/lib/errors"
+import { ApiError, isExpectedDataError } from "@/lib/errors"
 import { publicEnv } from "@/lib/env.public"
 
-import { viewDemoHome } from "./server"
+import { DemoKeySchema } from "./schemas"
+import { createDemoGuest, viewDemoHome } from "./server"
 
 /**
  * Sends the browser to Keycloak in the page's language. With `provider` Keycloak goes straight to that identity
@@ -51,6 +51,33 @@ export async function signInWithEmailAction(): Promise<void> {
   await startSignIn()
 }
 
+/**
+ * One click on the sign-in page: the backend makes a guest account viewing that demo home (deleted after a day)
+ * and hands us its tokens, checked and stored like the OAuth callback's. Then the dashboard opens on the home.
+ */
+export async function startDemoAction(
+  key: string
+): Promise<{ error: string } | void> {
+  const [locale, t] = await Promise.all([
+    getLocale(),
+    getTranslations("auth.demo"),
+  ])
+  const parsed = DemoKeySchema.safeParse(key)
+  if (!parsed.success) return { error: t("failed") }
+  try {
+    const tokens = await createDemoGuest(parsed.data)
+    await (await getAuthProvider()).signInWithTokens(tokens)
+  } catch (error) {
+    console.error("demo guest failed", error)
+    const busy =
+      error instanceof ApiError &&
+      (error.status === 429 || error.status === 503)
+    return { error: t(busy ? "busy" : "failed") }
+  }
+  updateTag(SESSION_TAG)
+  redirect(getPathname({ href: DASHBOARD_PATH, locale }))
+}
+
 /** Views a demo home read-only from the signed-in account, then opens the dashboard on it. */
 export async function viewDemoHomeAction(
   key: string
@@ -60,15 +87,18 @@ export async function viewDemoHomeAction(
     getLocale(),
     getTranslations("auth.demo"),
   ])
-  const parsed = z.string().min(1).max(32).safeParse(key)
+  const parsed = DemoKeySchema.safeParse(key)
   if (!parsed.success) return { error: t("failed") }
   try {
     await viewDemoHome(accessToken, parsed.data)
   } catch (error) {
     if (!isExpectedDataError(error)) throw error
     const code = (error.body as { code?: string } | undefined)?.code
-    return { error: t(code === "demo_not_for_members" ? "notForMembers" : "failed") }
+    return {
+      error: t(code === "demo_not_for_members" ? "notForMembers" : "failed"),
+    }
   }
+  refresh() // the layouts too: the sidebar's demo row shows the new home
   redirect(getPathname({ href: DASHBOARD_PATH, locale }))
 }
 

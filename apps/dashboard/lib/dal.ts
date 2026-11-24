@@ -6,6 +6,7 @@ import { getLocale } from "next-intl/server"
 // eslint-disable-next-line no-restricted-imports -- redirects to /auth/expired, a route handler outside [locale] (docs/internationalization.md)
 import { forbidden, redirect } from "next/navigation"
 
+import { authConfig } from "@workspace/auth/config"
 import { hasPermission, type Permission } from "@workspace/auth/permissions"
 
 import { SESSION_EXPIRED_PATH } from "@/config/routes"
@@ -73,4 +74,9 @@ export const verifySessionFresh = cache(async (): Promise<Session> => {
 export async function refreshSessionClaims(): Promise<void> {
   const provider = await getAuthProvider()
   await provider.refreshSession?.()
+}
+
+/** This app's client secret: the backend makes demo guests only for a caller that sends it. */
+export function demoGuestSecret(): string {
+  return authConfig.KEYCLOAK_CLIENT_SECRET
 }

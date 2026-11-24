@@ -17,7 +17,14 @@ const layerRestrictions = [
   },
 ]
 
-const featureRestrictions = layerRestrictions
+const featureRestrictions = [
+  ...layerRestrictions,
+  {
+    // Only the DAL and lib/env read secrets (docs/data-fetching.md §2); a feature asks the DAL.
+    group: ["@/lib/env", "@workspace/auth/config"],
+    message: "Features never read secrets: get them from @/lib/dal.",
+  },
+]
 
 // docs/data-fetching.md §5.1: every "use cache" scope calls cacheLife.
 const dashboardSyntaxRule = [

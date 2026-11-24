@@ -12,6 +12,8 @@ One provider: Keycloak (OIDC, authorization code + PKCE). Users sign in with ema
 /sign-in "Continue with Google" ─ signInWithGoogleAction ─▶ Keycloak (kc_idp_hint=google) ─▶ Google
 /sign-in "Sign in with email"   ─ signInWithEmailAction  ─▶ Keycloak login page (WattPrint theme: email + password, Google)
         ◀─ /auth/callback?code&state ─ oauth.exchangeCode ─▶ cookies <name>.{access,refresh,id}
+/sign-in "View a demo home" card ─ startDemoAction ─▶ FastAPI POST /demo/homes/{key}/guest (our client secret)
+        ◀─ a new guest's tokens (read-only viewer, deleted after 24 h) ─ signInWithTokens (JWKS check) ─▶ same cookies
 
 Browser ─cookie─▶ proxy.ts ─▶ updateSession: verify access token (JWKS), refresh when < 60 s left
                      ▼

@@ -11,3 +11,15 @@ export const DemoHomesSchema = z.array(
 )
 
 export type DemoHome = z.infer<typeof DemoHomesSchema>[number]
+
+/** A demo home's key, as the backend names it ("2", "5h"). */
+export const DemoKeySchema = z.string().min(1).max(32)
+
+/** POST /demo/homes/{key}/guest: Keycloak tokens of a new guest account, minted for this app's client. */
+export const DemoTokensSchema = z.object({
+  access_token: z.string(),
+  refresh_token: z.string(),
+  id_token: z.string(),
+  expires_in: z.number(),
+  refresh_expires_in: z.number(),
+})

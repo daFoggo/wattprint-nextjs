@@ -2,26 +2,25 @@
 
 import { IconHome } from "@tabler/icons-react"
 import { useTranslations } from "next-intl"
-import { useState, type ReactNode } from "react"
+import { useState } from "react"
 
 import { Button } from "@workspace/ui/components/hairline/button"
 
 import { ResponsiveDialog } from "@/components/shared/responsive-dialog"
 
 import type { DemoHome } from "../schemas"
-import { DemoHomeCards } from "./demo-home-cards"
+import { DemoHomePicker } from "./demo-home-picker"
 
 /**
- * "View a demo home" on the sign-in page: the seeded REFIT homes, shown before anyone has an account. A visitor
- * signs in (or signs up) with their own account first, then picks one on the dashboard: read-only.
+ * "View a demo home" on the sign-in page: the seeded REFIT homes, before anyone has an account. Picking one signs
+ * the visitor in as a new guest and opens the dashboard on that home, read-only.
  */
 export function DemoHomesDialog({
   homes,
-  children,
+  action,
 }: {
   homes: DemoHome[]
-  /** The sign-in control (a form posting the email sign-in action). */
-  children: ReactNode
+  action: (key: string) => Promise<{ error: string } | void>
 }) {
   const t = useTranslations("auth.demo")
   const [open, setOpen] = useState(false)
@@ -42,12 +41,11 @@ export function DemoHomesDialog({
         onOpenChange={setOpen}
         title={t("title")}
         description={t("description")}
-        size={homes.length > 1 ? "lg" : "md"}
+        size="md"
       >
-        <div className="flex flex-col gap-5">
-          <DemoHomeCards homes={homes} />
+        <div className="flex flex-col gap-4">
+          <DemoHomePicker homes={homes} action={action} />
           <p className="text-sm text-muted-foreground">{t("signInHint")}</p>
-          {children}
         </div>
       </ResponsiveDialog>
     </>
