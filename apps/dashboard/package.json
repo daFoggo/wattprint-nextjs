@@ -9,7 +9,7 @@
     "start": "next start --port 11092",
     "lint": "eslint --max-warnings 0",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:instant": "playwright test e2e/instant.spec.ts --workers=1"
