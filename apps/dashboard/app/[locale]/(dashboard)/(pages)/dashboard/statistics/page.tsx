@@ -6,13 +6,16 @@ import { getTranslations } from "next-intl/server"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { PageHead } from "@/components/layout/page-head"
+import { DEVICES_PATH } from "@/config/routes"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillForecast } from "@/features/billing/components/bill-forecast"
+import { DeviceForecastList } from "@/features/billing/components/device-forecast"
 import { BillHistory } from "@/features/billing/components/bill-history"
 import { averagePrice } from "@/features/billing/forecast"
 import {
   getBillHistory,
   getCurrentBill,
+  getDeviceForecasts,
   getForecast,
 } from "@/features/billing/queries"
 import { CycleCompare } from "@/features/energy/components/cycle-compare"
@@ -69,6 +72,21 @@ async function Forecast({ className }: Props) {
       bill={bill}
       forecast={forecast}
       lastMonth={history?.at(-1)}
+      className={className}
+    />
+  )
+}
+
+const deviceHref = (id: string) => `${DEVICES_PATH}/${encodeURIComponent(id)}`
+
+/** Every device to the cycle's end with its range, certainty and best advice; nothing before a bill forecast. */
+async function Devices({ className }: Props) {
+  const forecasts = await getDeviceForecasts()
+  if (!forecasts?.devices.length) return null
+  return (
+    <DeviceForecastList
+      forecasts={forecasts}
+      href={deviceHref}
       className={className}
     />
   )
@@ -136,6 +154,7 @@ async function Background({ className }: Props) {
 //   power: day, week, 30 and 90 days 12
 //   this month's money by room 4 (→ devices) | the week against the one before, then this cycle against the last 8
 //   every day, last 30 days 8               | the bill at the cycle's end 4
+//   each device to the cycle's end 12
 //   month by month, this year and last 6    | background load 6
 //   against similar homes 12 (only with enough real homes, so its absence leaves no hole)
 const TILE = {
@@ -144,6 +163,7 @@ const TILE = {
   compare: "lg:col-span-8",
   days: "lg:col-span-8",
   forecast: "lg:col-span-4",
+  devices: "lg:col-span-12",
   months: "lg:col-span-6",
   standby: "lg:col-span-6",
   peers: "lg:col-span-12",
@@ -183,6 +203,11 @@ export default function StatisticsPage() {
           fallback={<TileSkeleton height={410} className={TILE.forecast} />}
         >
           <Forecast className={TILE.forecast} />
+        </Suspense>
+        <Suspense
+          fallback={<TileSkeleton height={360} className={TILE.devices} />}
+        >
+          <Devices className={TILE.devices} />
         </Suspense>
         <Suspense
           fallback={<TileSkeleton height={330} className={TILE.months} />}

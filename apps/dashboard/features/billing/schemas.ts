@@ -99,3 +99,91 @@ export const ForecastSchema = z
     },
   }))
 export type Forecast = z.infer<typeof ForecastSchema>
+
+export const DEVICE_ADVICE = [
+  "fewer_runs",
+  "heater_setpoint",
+  "heater_earlier_off",
+  "kettle_fill",
+  "fridge_check",
+] as const
+
+/** What explains a device's week against its usual (backend expect.device.explain_outlook). */
+export const DEVICE_FACTORS = [
+  "temperature",
+  "humidity",
+  "sun",
+  "rain",
+  "calendar",
+  "occupancy",
+  "trend",
+  "other",
+] as const
+
+const DeviceDaySchema = z.object({
+  date: z.iso.date(),
+  kwh: z.number().nullable(),
+  kwh_p10: z.number().nullable(),
+  kwh_p90: z.number().nullable(),
+  amount: z.number().nullable(),
+})
+
+/**
+ * GET /billing/devices/forecast: each device's next 7 days and the cycle's rest. `method` "model" is the device's own
+ * model (it beat the weekday-hour mean when tried on past days), "weekday" that mean; `confidence` is the shown
+ * method's error on those days; `explain` the 7 days ahead against the device's usual (its daily mean over the last
+ * 28 days), the factors adding up to the change (none for the weekday mean); `advice` priced on the bill.
+ */
+export const DeviceForecastsSchema = z.object({
+  period_end: z.iso.date(),
+  as_of: z.iso.date(),
+  devices: z.array(
+    z.object({
+      device_id: z.string(),
+      name: z.string(),
+      type: z.string(),
+      simulated: z.boolean(),
+      method: z.enum(["model", "weekday"]),
+      confidence: z.enum(["high", "medium", "low"]),
+      error_pct: z.number().nullable(),
+      backtest_days: z.number(),
+      next_days: z.array(DeviceDaySchema),
+      kwh: z.number(),
+      kwh_p10: z.number().nullable(),
+      kwh_p90: z.number().nullable(),
+      amount: z.number(),
+      explain: z
+        .object({
+          usual_kwh_day: z.number(),
+          forecast_kwh_day: z.number(),
+          /** False: the model misses the device's own past, so it gives no factors. */
+          explainable: z.boolean(),
+          factors: z.array(
+            z.object({
+              key: z.enum(DEVICE_FACTORS),
+              kwh_day: z.number(),
+              amount: z.number(),
+              now: z.number().nullable(),
+              before: z.number().nullable(),
+              /** Trend only: last week's °C when 1 °C+ unlike the 28 days', and theirs. */
+              recent_temp: z.number().nullable(),
+              usual_temp: z.number().nullable(),
+            })
+          ),
+          busiest: DeviceDaySchema.nullable(),
+        })
+        .nullable(),
+      advice: z.array(
+        z.object({
+          key: z.enum(DEVICE_ADVICE),
+          saved_kwh: z.number(),
+          saved_amount: z.number(),
+          avoids_tier: z.number().nullable(),
+          params: z.record(z.string(), z.number()),
+        })
+      ),
+    })
+  ),
+})
+export type DeviceForecasts = z.infer<typeof DeviceForecastsSchema>
+export type DeviceForecast = DeviceForecasts["devices"][number]

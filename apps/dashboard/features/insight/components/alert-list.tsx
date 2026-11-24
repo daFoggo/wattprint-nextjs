@@ -7,10 +7,13 @@ import { CardLink, DeviceChip, PillLink } from "@/components/shared/nav-links"
 import { Tile } from "@/components/shared/tile"
 import { ALERTS_PATH, DEVICES_PATH } from "@/config/routes"
 
-import { alertValues } from "../alert-values"
+import { alertKey, alertValues } from "../alert-values"
 import type { Alert as AlertData, Verdict } from "../schemas"
 import { AlertFeedback } from "./alert-feedback"
 import { SeenAlert } from "./seen-alert"
+
+/** Alerts a model raised: the viewer can say whether they were right. */
+const MODEL_KINDS = new Set(["usage_anomaly", "device_anomaly"])
 
 const TONE = { info: "info", warning: "warning", critical: "danger" } as const
 
@@ -43,7 +46,7 @@ export function AlertList({
   now: number
   brief?: boolean
   onSeen?: (id: string) => Promise<void>
-  /** With it, a model alert (usage_anomaly) asks whether it was right. */
+  /** With it, a model alert (usage_anomaly, device_anomaly) asks whether it was right. */
   onFeedback?: (id: string, verdict: Verdict) => Promise<void>
   /** Ids of the viewer's own watches: only those have a row on the alerts page to link to. */
   mine?: Set<string>
@@ -88,7 +91,7 @@ export function AlertList({
           )
           const props = {
             tone: a.status === "resolved" ? "success" : TONE[a.severity],
-            title: t(`${a.kind}.title`, values),
+            title: t(`${alertKey(a)}.title`, values),
             action: a.device ? (
               // The device itself is the link: its icon and name say where it goes.
               <DeviceChip
@@ -104,7 +107,7 @@ export function AlertList({
             ) : undefined,
             children: (
               <>
-                {brief ? null : `${t(`${a.kind}.body`, values)} `}
+                {brief ? null : `${t(`${alertKey(a)}.body`, values)} `}
                 {!brief &&
                 a.kind === "usage_anomaly" &&
                 Number(a.payload.weather_kwh) > 0
@@ -115,7 +118,7 @@ export function AlertList({
                   {ago(a.ts, now, locale)}
                   {a.status === "resolved" ? ` · ${t("resolved")}` : ""}
                 </span>
-                {onFeedback && a.kind === "usage_anomaly" ? (
+                {onFeedback && MODEL_KINDS.has(a.kind) ? (
                   <AlertFeedback
                     id={a.id}
                     given={a.feedback}

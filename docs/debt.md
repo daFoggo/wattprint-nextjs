@@ -39,6 +39,14 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   - Feedback buttons only on the Overview; mail has no link back.
   - `refresh_home` ~1.7 s per modelled home per hour, run serially in the insight worker: measure before more
     than a few hundred homes have a model.
+- 2026-11-23 (docs/work/2026-11-23-device-ai, change 1):
+  - Only 5 of 18 device models beat the weekday-hour mean (D1 runs for those); human-driven devices (dishwasher,
+    kettle) lose. Pay: with a better device model (run-count features) in change 2.
+  - An `echo_run` demo run stays in `tb_device_cycle` as a D2 peer for 60 days, raising that device's P95. Pay:
+    exclude runs inside a `train = false` scenario from the peers.
+  - A weaker signal later the same day overwrites the stored payload of the device's alert.
+  - A run ending between the last analysed time before midnight and midnight is never judged (missed, never wrong);
+    during NILM catch-up a whole day can be skipped. Pay: keep a "judged up to" mark per home.
 
 Deliberate scale limits stay as `shortcut:` comments in the code, each with its trigger
 (wattprint-backend: SSE polling, per-process copilot and demo sign-in rate counts, pattern-only privacy, hourly
@@ -93,3 +101,32 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
   only avatar-core validates our bundled Wappi character in the client). The alias key matches avatar-core 1.2.1's exact
   specifier; on an avatar-core upgrade, re-grep the client chunks for Ajv codegen, since a changed specifier brings the
   CSP crash back while the config test still passes. (R1 Minor)
+- 2026-11-24 (docs/work/2026-11-23-device-ai, change 2, R1 Minors):
+  - A device forecast "from now" counts the running hour in full (the bill forecast counts only its rest): at 18:50
+    a heater's 18:00 hour is counted again. Pay: weight the first hour like `forecast_bill`.
+  - Heater advice prices every hour to the cycle's end, ignoring the heater scenario's `ends_at`.
+  - "Vì sao" shows a heading with nothing under it when every factor group is under 500 ₫ (model method).
+  - Screen readers hear a day's date and kWh, not its ₫ or P10–P90 range (the bar and the visible figures are
+    aria-hidden).
+  - The weekday fallback's 4-week history keeps demo-event hours (`echo_run`), which training and the holdout drop.
+  - The heater's name reads "Máy sưởi điện (mô phỏng)" beside a "Mô phỏng" badge.
+  - `/billing/devices/forecast` is cached per home and hour in each API process (`_CACHE`, shortcut); move it to the
+    insight worker's hourly job when there are more than a few dozen homes.
+  - That cache only turns over on the hour: after a change of billing cycle day or tariff the device cards keep the
+    old cycle end and prices for up to an hour (R2 Minor). Pay: `_CACHE.pop(home_id)` where those settings are saved.
+  - The holdout's wiring to `tail_as_of` has no test of its own (the test calls the helper directly). (R2 Minor)
+- 2026-11-24 (change 3, explanation, R1 Minors):
+  - The usual sums a day's known hours (days with 22+) and keeps demo-event hours; the model's past covers all 24 hours
+    of all 28 days, so NILM gaps and scenario windows land in "other". Pay: mask both alike (`excluded_hours`).
+  - "Days off" before can be fractional (one holiday in 28 days: 2,25 a week).
+  - The sun line's direction comes from radiation alone, while its share also holds cloud cover and day length.
+  - The model's past factor shares and level average all 28 days while `model_past` and the usual count measured
+    days only: a NILM gap in a cold week moves the temperature share's past and the trend absorbs it. Last week's
+    temperature averages all 7 days though the level averages its full-coverage days. Pay: one mask of measured days.
+  - The trend line's weather gate (`TEMP_RESPONSE_R`) checks the shape of a device's temperature shares, not their size:
+    a device with a tiny but temperature-shaped share can still read "last week was also warmer" (a fact, no cause
+    claimed). Pay: also require the implied kWh to reach 5 % of the usual. (R2 Minor)
+  - NILM's runs are fragmented and noisy (REFIT dishwashers: ~260 "runs" in 4 weeks, 0.1 kWh each). Advice joins
+    pieces within 60 min and ignores joined runs under 300 Wh (`PROGRAM_MIN_WH`, shortcut); change 1's D2 long run
+    and D3 odd hour still judge the raw pieces. Pay: join runs into programs once, in `refresh_cycles`.
+

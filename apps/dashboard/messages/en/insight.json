@@ -59,6 +59,24 @@
       "notAnomaly": "Not an anomaly",
       "thanks": "Thanks for confirming.",
       "noted": "Noted: WattPrint will raise this kind of alert less for your home."
+    },
+    "device_anomaly": {
+      "daily": {
+        "title": "{device} used more than usual today",
+        "body": "{value, number} kWh today, usually about {usual, number} kWh on a day like this (≈ {excess_vnd, number} ₫ more)."
+      },
+      "long_run": {
+        "title": "{device} ran unusually long",
+        "body": "The run at {at} lasted {value, number} min, usually about {usual, number} min at this time and temperature (≈ {excess_vnd, number} ₫ more). Check it is not repeating."
+      },
+      "odd_hour": {
+        "title": "{device} ran at an unusual hour",
+        "body": "It started at {at}; over 60 days it ran at this hour on only {usual, number}% of days. Did someone switch it on?"
+      },
+      "denser": {
+        "title": "{device} is cycling more than usual",
+        "body": "On {value, number, percent} of the time these days, against {usual, number, percent} at the same temperature last month (≈ {excess_vnd, number} ₫ a day). Check the door seal and the setting."
+      }
     }
   },
   "peers": {
@@ -153,7 +171,8 @@
     "approxKwh": "(≈ {kwh})",
     "save": "Save alert",
     "saving": "Saving…",
-    "saved": "Alert saved"
+    "saved": "Alert saved",
+    "anomalies": "What this device did unusually"
   },
   "add": {
     "button": "Add alert",

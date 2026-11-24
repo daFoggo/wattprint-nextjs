@@ -79,7 +79,29 @@
   },
   "about": {
     "title": "Against devices of its kind, and saving tips",
-    "typical": "A device of this kind usually draws <b>{typical} W</b> when on; yours averages <b>{yours} W</b>."
+    "typical": "A device of this kind usually draws <b>{typical} W</b> when on; yours averages <b>{yours} W</b>.",
+    "tips": {
+      "ac": "Set it to 26 °C or higher; each degree lower adds roughly 6 to 8 percent to its energy use.",
+      "fridge": "Keep door seals clean and the fridge away from heat; a full fridge runs more efficiently.",
+      "freezer": "Defrost regularly and keep it full; ice build-up makes the compressor work harder.",
+      "fridge_freezer": "Leave a gap behind the unit for airflow and do not set the temperature colder than needed.",
+      "washing_machine": "Wash full loads in cold water when possible; heating the water is most of the energy.",
+      "washer_dryer": "Drying uses far more energy than washing; air-dry when the weather allows.",
+      "tumble_dryer": "Clean the lint filter every load and spin clothes well before drying.",
+      "dishwasher": "Run only full loads and use the eco programme to cut heating energy.",
+      "television": "Lower the screen brightness and switch the TV off rather than leaving it on standby.",
+      "computer": "Enable sleep mode and switch off the power strip when you are away for long.",
+      "microwave": "Microwaves are efficient for small portions; avoid using the oven to reheat them.",
+      "kettle": "Boil only the water you need; it is a short but high-power appliance.",
+      "toaster": "Short, high-power bursts; unplug it when not in use.",
+      "hifi": "Amplifiers draw power even when idle; turn them off at the switch.",
+      "electric_heater": "Heat the room you are in, not the whole house, and use a thermostat or timer.",
+      "router": "Always on but low power; consider switching it off overnight if nothing needs it.",
+      "water_heater": "Lower the thermostat and switch it off when no one needs hot water.",
+      "electric_car": "Charge outside peak hours and set a charge limit to avoid wasted energy.",
+      "lights": "Switch to LED bulbs and turn lights off in empty rooms.",
+      "oven": "Avoid opening the door while cooking and use the residual heat at the end."
+    }
   },
   "roomSpending": {
     "title": "This month’s cost by room",

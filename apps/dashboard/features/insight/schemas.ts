@@ -32,6 +32,7 @@ export const AlertSchema = z.object({
     "device_long_run",
     "device_high_power",
     "usage_anomaly",
+    "device_anomaly",
   ]),
   severity: z.enum(["info", "warning", "critical"]),
   /** acknowledged: seen, off the Overview; resolved: the detector found the cause gone. */
@@ -43,7 +44,7 @@ export const AlertSchema = z.object({
     .nullable(),
   /** Figures; a watch the user set through Wappi also brings its `label`, `op` (gt/lt) and `unit`. */
   payload: z.record(z.string(), z.union([z.number(), z.string(), z.boolean()])),
-  /** The viewer's own verdict on a model alert (usage_anomaly). */
+  /** The viewer's own verdict on a model alert (usage_anomaly, device_anomaly). */
   feedback: z.enum(["useful", "not_anomaly"]).nullable().default(null),
 })
 export type Alert = z.infer<typeof AlertSchema>

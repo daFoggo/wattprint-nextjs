@@ -31,7 +31,12 @@ export function DeviceAbout({
       {device.tip ? (
         <div className="flex gap-3 rounded-xl bg-muted p-4">
           <IconBulb aria-hidden className="size-4 shrink-0 text-primary" />
-          <p className="text-sm">{device.tip}</p>
+          <p className="text-sm">
+            {/* The catalogue's tip is English only: the reader's language when we have it. */}
+            {t.has(`tips.${device.type}` as "tips.kettle")
+              ? t(`tips.${device.type}` as "tips.kettle")
+              : device.tip}
+          </p>
         </div>
       ) : null}
     </Tile>

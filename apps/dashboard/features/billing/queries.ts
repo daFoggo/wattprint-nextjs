@@ -5,7 +5,12 @@ import { cache } from "react"
 import { requirePermission } from "@/lib/dal"
 import { ApiError } from "@/lib/errors"
 
-import { fetchBillHistory, fetchCurrentBill, fetchForecast } from "./server"
+import {
+  fetchBillHistory,
+  fetchCurrentBill,
+  fetchDeviceForecasts,
+  fetchForecast,
+} from "./server"
 
 /**
  * The running billing cycle, priced by the tariff tiers on the backend; fresh on every request,
@@ -39,6 +44,18 @@ export const getBillHistory = cache(async () => {
 export const getForecast = cache(async () => {
   const { accessToken } = await requirePermission("account:view")
   return fetchForecast(accessToken).catch((error: unknown) => {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  })
+})
+
+/**
+ * Each device's next 7 days and the cycle's rest, with its range, reasons, certainty and advice. Null without a home or
+ * a tariff, or before the home has a bill forecast.
+ */
+export const getDeviceForecasts = cache(async () => {
+  const { accessToken } = await requirePermission("account:view")
+  return fetchDeviceForecasts(accessToken).catch((error: unknown) => {
     if (error instanceof ApiError && error.status === 404) return null
     throw error
   })

@@ -59,6 +59,24 @@
       "notAnomaly": "Không phải bất thường",
       "thanks": "Cảm ơn bạn đã xác nhận.",
       "noted": "Đã ghi nhận, WattPrint sẽ ít báo kiểu này hơn cho nhà bạn."
+    },
+    "device_anomaly": {
+      "daily": {
+        "title": "{device} hôm nay dùng nhiều hơn thường lệ",
+        "body": "Hôm nay {value, number} kWh, thường khoảng {usual, number} kWh trong ngữ cảnh như hôm nay (≈ {excess_vnd, number} đ hơn)."
+      },
+      "long_run": {
+        "title": "{device} chạy lâu bất thường",
+        "body": "Lần chạy lúc {at} kéo dài {value, number} phút, thường khoảng {usual, number} phút ở cùng khung giờ và nhiệt độ (≈ {excess_vnd, number} đ hơn). Kiểm tra xem máy có chạy lặp không."
+      },
+      "odd_hour": {
+        "title": "{device} chạy vào giờ hiếm thấy",
+        "body": "Bắt đầu lúc {at}; 60 ngày qua thiết bị chạy giờ này chỉ {usual, number}% số ngày. Có ai bật không?"
+      },
+      "denser": {
+        "title": "{device} chạy dày hơn thường lệ",
+        "body": "Mấy ngày qua chạy {value, number, percent} thời gian, cùng nhiệt độ tháng trước là {usual, number, percent} (≈ {excess_vnd, number} đ mỗi ngày). Kiểm tra gioăng cửa và nhiệt độ đặt."
+      }
     }
   },
   "peers": {
@@ -153,7 +171,8 @@
     "approxKwh": "(≈ {kwh})",
     "save": "Lưu cảnh báo",
     "saving": "Đang lưu…",
-    "saved": "Đã lưu cảnh báo"
+    "saved": "Đã lưu cảnh báo",
+    "anomalies": "Bất thường gần đây của thiết bị này"
   },
   "add": {
     "button": "Thêm cảnh báo",

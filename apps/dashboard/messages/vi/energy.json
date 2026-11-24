@@ -79,7 +79,29 @@
   },
   "about": {
     "title": "So với thiết bị cùng loại và mẹo tiết kiệm",
-    "typical": "Loại thiết bị này thường dùng <b>{typical} W</b> khi bật; của bạn trung bình <b>{yours} W</b>."
+    "typical": "Loại thiết bị này thường dùng <b>{typical} W</b> khi bật; của bạn trung bình <b>{yours} W</b>.",
+    "tips": {
+      "ac": "Đặt từ 26 °C trở lên; mỗi độ thấp hơn làm máy tốn thêm khoảng 6–8% điện.",
+      "fridge": "Giữ gioăng cửa sạch, đặt tủ xa nguồn nóng; tủ đầy chạy hiệu quả hơn.",
+      "freezer": "Xả đá thường xuyên và giữ tủ đầy; lớp băng dày khiến máy nén chạy nặng hơn.",
+      "fridge_freezer": "Chừa khoảng hở phía sau cho thoáng khí và đừng đặt nhiệt độ lạnh hơn mức cần.",
+      "washing_machine": "Giặt đủ tải, dùng nước lạnh khi có thể; làm nóng nước chiếm phần lớn điện năng.",
+      "washer_dryer": "Sấy tốn điện hơn giặt rất nhiều; phơi khô tự nhiên khi trời cho phép.",
+      "tumble_dryer": "Làm sạch lưới lọc xơ vải mỗi mẻ và vắt thật khô trước khi sấy.",
+      "dishwasher": "Chỉ chạy khi đầy máy và dùng chế độ eco để bớt điện đun nước.",
+      "television": "Giảm độ sáng màn hình và tắt hẳn ti vi thay vì để chế độ chờ.",
+      "computer": "Bật chế độ ngủ và tắt ổ cắm khi đi vắng lâu.",
+      "microwave": "Lò vi sóng tiết kiệm khi hâm lượng nhỏ; đừng dùng lò nướng để hâm lại.",
+      "kettle": "Chỉ đun lượng nước cần dùng; ấm chạy ngắn nhưng công suất lớn.",
+      "toaster": "Chạy từng đợt ngắn, công suất lớn; rút phích khi không dùng.",
+      "hifi": "Âm ly vẫn ăn điện khi không phát; tắt hẳn ở công tắc.",
+      "electric_heater": "Chỉ sưởi phòng đang ở, không sưởi cả nhà, và dùng bộ hẹn giờ hoặc ổn nhiệt.",
+      "router": "Luôn bật nhưng công suất nhỏ; có thể tắt qua đêm nếu không cần.",
+      "water_heater": "Hạ nhiệt độ đặt và tắt khi không ai cần nước nóng.",
+      "electric_car": "Sạc ngoài giờ cao điểm và đặt giới hạn sạc để tránh hao phí.",
+      "lights": "Chuyển sang bóng LED và tắt đèn ở phòng không có người.",
+      "oven": "Hạn chế mở cửa lò khi đang nấu và tận dụng nhiệt dư lúc cuối."
+    }
   },
   "roomSpending": {
     "title": "Tiền điện tháng này theo phòng",

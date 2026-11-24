@@ -86,5 +86,50 @@
     "colKwh": "kWh",
     "colAmount": "Tiền điện, so với kỳ trước",
     "missing": "Thiếu {pct} dữ liệu"
+  },
+  "deviceForecast": {
+    "title": "Dự báo 7 ngày tới",
+    "listTitle": "Dự báo theo thiết bị đến cuối kỳ",
+    "listDescription": "Từ giờ đến hết ngày {end}: khoảng dự báo và độ chắc chắn của từng thiết bị",
+    "range": "Khoảng {low}–{high} kWh",
+    "day": "{date}: khoảng {kwh} kWh",
+    "confidence": {
+      "high": "Chắc chắn cao",
+      "medium": "Chắc chắn vừa",
+      "low": "Chắc chắn thấp"
+    },
+    "advice": "Lời khuyên",
+    "tip": {
+      "fewer_runs": "Bớt 1 lần chạy mỗi tuần (đang {runs_per_week, number} lần, mỗi lần {kwh_per_run, number} kWh)",
+      "heater_setpoint": "Hạ nhiệt độ đặt {degrees, number}°C (xuống {setpoint, number}°C)",
+      "heater_earlier_off": "Tắt sưởi sớm {hours, number} giờ vào buổi tối",
+      "kettle_fill": "Chỉ đun lượng nước cần dùng (bớt khoảng {share, number}% mỗi lần đun)",
+      "fridge_check": "Kiểm tra gioăng cửa và nhiệt độ đặt: tủ đang chạy dày hơn thường lệ"
+    },
+    "saves": "Tiết kiệm {amount} ({kwh} kWh) đến cuối kỳ",
+    "avoidsTier": "tránh được bậc {tier}",
+    "simulated": "Mô phỏng",
+    "more": "Xem thiết bị",
+    "week": "Khoảng {kwh} kWh · {amount} trong 7 ngày tới",
+    "versus": "{dir, select, up {Cao hơn bình thường {pct}%} down {Thấp hơn bình thường {pct}%} other {Gần như bình thường}}",
+    "toEnd": "Đến hết {end}: {amount} · {kwh} kWh",
+    "why": "{dir, select, up {Vì sao cao hơn bình thường} down {Vì sao thấp hơn bình thường} other {Vì sao}}",
+    "usualLine": "Bình thường {usual} kWh/ngày (4 tuần qua) → 7 ngày tới {forecast} kWh/ngày",
+    "noFactor": "Không có yếu tố nào làm khác đáng kể so với bình thường.",
+    "factor": {
+      "temperature": "{dir, select, up {Trời ấm hơn} other {Trời lạnh hơn}}: trung bình {now, number, ::.#}°C (4 tuần qua {before, number, ::.#}°C)",
+      "humidity": "{dir, select, up {Ẩm hơn} other {Khô hơn}}: độ ẩm {now, number, ::.#}% (4 tuần qua {before, number, ::.#}%)",
+      "sun": "{dir, select, up {Nắng hơn} other {Ít nắng, nhiều mây hơn}}: bức xạ {now, number, ::.#} W/m² (4 tuần qua {before, number, ::.#})",
+      "rain": "{dir, select, up {Mưa nhiều hơn} other {Ít mưa hơn}}: {now, number, ::.#} mm/ngày (4 tuần qua {before, number, ::.#})",
+      "calendar": "{now, number} ngày nghỉ trong 7 ngày tới (thường {before, number} ngày)",
+      "occupancy": "{dir, select, up {Nhà có người nhiều hơn} other {Nhà có người ít hơn}} thường lệ",
+      "trend": "{dir, select, up {Dùng nhiều lên} other {Dùng ít đi}} gần đây: {now, number} kWh/ngày (4 tuần qua {before, number})",
+      "other": "Yếu tố khác mô hình chưa giải thích"
+    },
+    "effect": "{kwh} kWh/ngày · {amount}",
+    "routineLine": "Dự báo theo nếp cùng thứ và giờ của 4 tuần qua: bình thường {usual} kWh/ngày. Mô hình theo thời tiết chưa dự báo tốt hơn cho thiết bị này.",
+    "busiest": "Tốn nhất {date}: khoảng {kwh} kWh",
+    "unfit": "Thiết bị này dùng thất thường: mô hình chưa khớp đủ với mức dùng thực tế 4 tuần qua để tách lý do một cách đáng tin.",
+    "trendCause": "— tuần qua cũng {dir, select, down {lạnh hơn} other {ấm hơn}} ({recent, number, ::.#}°C so với {usual, number, ::.#}°C)"
   }
 }

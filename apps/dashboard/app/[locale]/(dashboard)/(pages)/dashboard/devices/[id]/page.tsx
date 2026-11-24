@@ -9,7 +9,8 @@ import { Skeleton } from "@workspace/ui/components/hairline/skeleton"
 import { PageHead } from "@/components/layout/page-head"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { ALERTS_PATH, DEVICES_PATH } from "@/config/routes"
-import { getCurrentBill } from "@/features/billing/queries"
+import { DeviceForecastTile } from "@/features/billing/components/device-forecast"
+import { getCurrentBill, getDeviceForecasts } from "@/features/billing/queries"
 import { DeviceAbout } from "@/features/energy/components/device-about"
 import { DeviceDays } from "@/features/energy/components/device-days"
 import { DeviceIcon } from "@/components/shared/device-icon"
@@ -20,11 +21,14 @@ import { DeviceTimeline } from "@/features/energy/components/device-timeline"
 import { PowerChart } from "@/features/energy/components/power-chart"
 import { getDashboard, getDevice, getDevices } from "@/features/energy/queries"
 import {
+  acknowledgeAlertAction,
   saveWatchAction,
+  sendAlertFeedbackAction,
   setDeviceEventAction,
 } from "@/features/insight/actions"
 import { DeviceAlertTile } from "@/features/insight/components/device-alerts"
-import { getWatches } from "@/features/insight/queries"
+import { AlertList } from "@/features/insight/components/alert-list"
+import { getAlerts, getWatches } from "@/features/insight/queries"
 import { avgPrice } from "@/features/insight/sources"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -174,6 +178,47 @@ async function Log({ params, className }: Slot) {
   )
 }
 
+/** Its next 7 days and the cycle's rest: range, why, certainty, advice; nothing for "Other" or before a forecast. */
+async function Forecast({ params, className }: Slot) {
+  const [device, forecasts] = await Promise.all([
+    load(params),
+    getDeviceForecasts(),
+  ])
+  const mine = forecasts?.devices.find((d) => d.device_id === device?.id)
+  if (!forecasts || !mine) return null
+  return (
+    <DeviceForecastTile
+      device={mine}
+      periodEnd={forecasts.period_end}
+      className={className}
+    />
+  )
+}
+
+/** What this device did unlike itself (device_anomaly), with "was it right?" under each. */
+async function Anomalies({ params, className }: Slot) {
+  const [device, alerts, data, t] = await Promise.all([
+    load(params),
+    getAlerts(),
+    getDashboard(),
+    getTranslations("insight.devices"),
+  ])
+  const mine = (alerts ?? []).filter(
+    (a) => a.kind === "device_anomaly" && a.device?.id === device?.id
+  )
+  if (!device || !data || !mine.length) return null
+  return (
+    <AlertList
+      title={t("anomalies")}
+      alerts={mine}
+      now={data.now}
+      onSeen={acknowledgeAlertAction}
+      onFeedback={sendAlertFeedbackAction}
+      className={className}
+    />
+  )
+}
+
 /** Sense's device alerts: on/off switches and a level to watch each run or day, set on this month's days. */
 async function Watches({
   params,
@@ -212,6 +257,8 @@ async function Watches({
 //   the figures 12
 //   every day this month 7         | the log of its runs 5
 //   the last 24 hours' power 8     | how it compares, and a tip 4
+//   its next 7 days and the cycle's rest 12
+//   what it did unusually 12 (only when it did)
 //   its alerts 12
 const TILE = {
   stats: "lg:col-span-12",
@@ -219,6 +266,8 @@ const TILE = {
   log: "lg:col-span-5",
   power: "lg:col-span-8",
   about: "lg:col-span-4",
+  forecast: "lg:col-span-12",
+  anomalies: "lg:col-span-12",
   watches: "lg:col-span-12",
 }
 
@@ -255,8 +304,15 @@ export default function DevicePage({ params }: { params: Params }) {
           <About params={params} className={TILE.about} />
         </Suspense>
         <Suspense
+          fallback={<TileSkeleton height={320} className={TILE.forecast} />}
+        >
+          <Forecast params={params} className={TILE.forecast} />
+        </Suspense>
+        <Suspense
           fallback={<TileSkeleton height={280} className={TILE.watches} />}
         >
+          {/* Shown only when the device did something unusual, above its alert settings. */}
+          <Anomalies params={params} className={TILE.anomalies} />
           <Watches params={params} className={TILE.watches} />
         </Suspense>
       </div>

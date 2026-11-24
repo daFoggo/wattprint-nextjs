@@ -86,5 +86,50 @@
     "colKwh": "kWh",
     "colAmount": "Bill, against the cycle before",
     "missing": "{pct} of readings missing"
+  },
+  "deviceForecast": {
+    "title": "Next 7 days",
+    "listTitle": "Each device to the end of the cycle",
+    "listDescription": "From now to the end of {end}: each device's range and how certain it is",
+    "range": "Between {low} and {high} kWh",
+    "day": "{date}: about {kwh} kWh",
+    "confidence": {
+      "high": "High certainty",
+      "medium": "Medium certainty",
+      "low": "Low certainty"
+    },
+    "advice": "Advice",
+    "tip": {
+      "fewer_runs": "One run fewer a week (now {runs_per_week, number} a week, {kwh_per_run, number} kWh each)",
+      "heater_setpoint": "Lower the setpoint by {degrees, number}°C (to {setpoint, number}°C)",
+      "heater_earlier_off": "Switch the heater off {hours, number} hour earlier in the evening",
+      "kettle_fill": "Boil only the water you need (about {share, number}% less a boil)",
+      "fridge_check": "Check the door seal and the setting: it is cycling more than usual"
+    },
+    "saves": "Saves {amount} ({kwh} kWh) by the end of the cycle",
+    "avoidsTier": "keeps you out of tier {tier}",
+    "simulated": "Simulated",
+    "more": "Open the device",
+    "week": "About {kwh} kWh · {amount} over the next 7 days",
+    "versus": "{dir, select, up {{pct}% above usual} down {{pct}% below usual} other {About usual}}",
+    "toEnd": "To the end of {end}: {amount} · {kwh} kWh",
+    "why": "{dir, select, up {Why above usual} down {Why below usual} other {Why}}",
+    "usualLine": "Usually {usual} kWh a day (last 4 weeks) → next 7 days {forecast} kWh a day",
+    "noFactor": "Nothing moves it much from its usual.",
+    "factor": {
+      "temperature": "{dir, select, up {Warmer} other {Colder}}: {now, number, ::.#}°C on average (last 4 weeks {before, number, ::.#}°C)",
+      "humidity": "{dir, select, up {More humid} other {Drier}}: {now, number, ::.#}% humidity (last 4 weeks {before, number, ::.#}%)",
+      "sun": "{dir, select, up {Sunnier} other {Cloudier}}: {now, number, ::.#} W/m² of sun (last 4 weeks {before, number, ::.#})",
+      "rain": "{dir, select, up {Wetter} other {Drier}}: {now, number, ::.#} mm a day (last 4 weeks {before, number, ::.#})",
+      "calendar": "{now, number} days off in the next 7 (usually {before, number})",
+      "occupancy": "{dir, select, up {Home more} other {Home less}} than usual",
+      "trend": "{dir, select, up {Using more} other {Using less}} lately: {now, number} kWh a day (last 4 weeks {before, number})",
+      "other": "Other factors the model does not explain"
+    },
+    "effect": "{kwh} kWh a day · {amount}",
+    "routineLine": "From its usual for the weekday and hour over the last 4 weeks: {usual} kWh a day. The weather model did not forecast this device better.",
+    "busiest": "Most on {date}: about {kwh} kWh",
+    "unfit": "This device is used irregularly: the model does not match its last 4 weeks closely enough to tell the reasons apart reliably.",
+    "trendCause": "— last week was also {dir, select, down {colder} other {warmer}} ({recent, number, ::.#}°C against {usual, number, ::.#}°C)"
   }
 }
