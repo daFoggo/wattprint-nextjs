@@ -1,6 +1,7 @@
 import "server-only"
 
 import { getLocale } from "next-intl/server"
+import { io } from "next/cache"
 import { headers } from "next/headers"
 // eslint-disable-next-line no-restricted-imports -- redirects to getPathname({ locale }) or /auth/expired (outside [locale]) (docs/internationalization.md)
 import { redirect } from "next/navigation"
@@ -51,6 +52,9 @@ export async function apiResponse(
   path: string,
   { token, headers, ...init }: ApiFetchOptions = {}
 ): Promise<Response> {
+  // fetch reads the clock: run it at request time, never while prerendering (a cached session gets here during
+  // the prerender; Date.now() there is a blocking route). Resolves at once inside cache scopes and at request time.
+  await io()
   let res: Response
   try {
     res = await fetch(apiUrl(env.API_BASE_URL, path), {
