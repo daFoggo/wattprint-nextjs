@@ -300,8 +300,8 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
 
     // VoiceInput
     Dictate: "Đọc để nhập",
-    "Stop and transcribe": "Dừng và chuyển thành chữ",
-    Transcribing: "Đang chuyển thành chữ",
+    "Stop and transcribe": "Dừng và chép lời",
+    Transcribing: "Đang chép lời",
     Listening: "Đang nghe",
     "Microphone blocked": "Micro bị chặn",
     "Didn’t catch that": "Chưa nghe rõ",

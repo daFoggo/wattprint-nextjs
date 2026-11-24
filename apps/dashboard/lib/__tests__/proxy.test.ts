@@ -16,7 +16,7 @@ vi.mock("@workspace/auth/proxy", () => ({
   },
 }))
 
-const { proxy } = await import("../../proxy")
+const { proxy, config } = await import("../../proxy")
 
 const run = (path: string) =>
   proxy(new NextRequest(new URL(path, "http://localhost:11092")))
@@ -50,6 +50,20 @@ describe("proxy", () => {
     expect(vi.headers.get("x-middleware-rewrite")).toMatch(/\/vi\/dashboard$/)
     const callback = await run("/auth/callback")
     expect(callback.headers.get("x-middleware-rewrite")).toBeNull()
+  })
+
+  it("refreshes the session for /api route handlers, without rewriting or redirecting them", async () => {
+    // A chat open past the access token's 5 minutes posts to /api/copilot/chat: unrefreshed, the
+    // handler redirected the POST to /auth/expired (405 → "Có lỗi khi trả lời").
+    const [matcher] = config.matcher
+    for (const path of ["/api/copilot/chat", "/api/copilot/voice/transcribe"])
+      expect(new RegExp(`^${matcher}$`).test(path), path).toBe(true)
+    for (const signedIn of [true, false]) {
+      auth.signedIn = signedIn
+      const res = await run("/api/copilot/chat")
+      expect(res.headers.get("location")).toBeNull()
+      expect(res.headers.get("x-middleware-rewrite")).toBeNull()
+    }
   })
 
   it("does not treat a look-alike prefix as protected", async () => {

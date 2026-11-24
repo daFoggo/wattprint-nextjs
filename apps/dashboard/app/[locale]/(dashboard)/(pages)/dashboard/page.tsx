@@ -22,6 +22,7 @@ import {
   acknowledgeAlertAction,
   sendAlertFeedbackAction,
 } from "@/features/insight/actions"
+import { isDemoViewer } from "@/features/home/queries"
 import { AlertList } from "@/features/insight/components/alert-list"
 import { getAlerts, getWatches } from "@/features/insight/queries"
 import { isWatched } from "@/features/insight/schemas"
@@ -58,19 +59,21 @@ async function Guard() {
  * live or sampled is shown: it would describe a home the account does not have.
  */
 async function Tiles() {
-  const [data, bill, activity, alerts, watches, usual, t] = await Promise.all([
-    getDashboard(),
-    getCurrentBill(),
-    getActivity(),
-    getAlerts(),
-    getWatches().catch(() => null), // only decides a link: never take the tiles down
-    // No model yet (4xx) only drops a sentence; a failing backend still fails the page.
-    getTodayUsual().catch((error: unknown) => {
-      if (isExpectedDataError(error)) return null
-      throw error
-    }),
-    getTranslations("energy"),
-  ])
+  const [data, bill, activity, alerts, watches, usual, t, viewer] =
+    await Promise.all([
+      getDashboard(),
+      getCurrentBill(),
+      getActivity(),
+      getAlerts(),
+      getWatches().catch(() => null), // only decides a link: never take the tiles down
+      // No model yet (4xx) only drops a sentence; a failing backend still fails the page.
+      getTodayUsual().catch((error: unknown) => {
+        if (isExpectedDataError(error)) return null
+        throw error
+      }),
+      getTranslations("energy"),
+      isDemoViewer(),
+    ])
   // The devices' money is the bill's, split by their kWh.
   const devices = await getDevices(bill?.amount_total)
   if (!data || !devices || !activity || !alerts) return <NoHome />
@@ -88,8 +91,8 @@ async function Tiles() {
         alerts={alerts}
         now={data.now}
         brief
-        onSeen={acknowledgeAlertAction}
-        onFeedback={sendAlertFeedbackAction}
+        onSeen={viewer ? undefined : acknowledgeAlertAction}
+        onFeedback={viewer ? undefined : sendAlertFeedbackAction}
         mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
         className={data.latest ? TILE.alerts : "lg:col-span-12"}
       />

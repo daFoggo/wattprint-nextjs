@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+import { ApiError } from "@/lib/errors"
+
 vi.mock("server-only", () => ({}))
 vi.mock("next/cache", () => ({ updateTag: vi.fn() }))
 vi.mock("next/headers", () => ({ cookies: vi.fn() }))
@@ -15,70 +17,57 @@ vi.mock("next/navigation", () => ({ redirect: (u: string) => redirect(u) }))
 vi.mock("@/i18n/navigation", () => ({
   getPathname: ({ href }: { href: string }) => href,
 }))
-vi.mock("@/lib/dal", () => ({ SESSION_TAG: "session" }))
-vi.mock("@/lib/env.public", () => ({ publicEnv: {} }))
-const signInWithTokens = vi.fn()
-vi.mock("@/lib/auth", () => ({
-  getAuthProvider: async () => ({ signInWithTokens }),
+vi.mock("@/lib/dal", () => ({
+  SESSION_TAG: "session",
+  requirePermission: async () => ({ accessToken: "token" }),
 }))
-const createDemoSession = vi.fn()
+vi.mock("@/lib/env.public", () => ({ publicEnv: {} }))
+vi.mock("@/lib/auth", () => ({ getAuthProvider: async () => ({}) }))
+const viewDemoHome = vi.fn()
 const fetchDemoHomes = vi.fn()
 vi.mock("../server", () => ({
-  createDemoSession: (...a: unknown[]) => createDemoSession(...a),
+  viewDemoHome: (...a: unknown[]) => viewDemoHome(...a),
   fetchDemoHomes: () => fetchDemoHomes(),
 }))
 
-const { signInAsDemoHomeAction } = await import("../actions")
+const { viewDemoHomeAction } = await import("../actions")
 const { getDemoHomes } = await import("../queries")
 
-const tokens = {
-  access_token: "a",
-  refresh_token: "r",
-  id_token: "i",
-  expires_in: 300,
-  refresh_expires_in: 1800,
-}
-
-describe("signInAsDemoHomeAction", () => {
+describe("viewDemoHomeAction", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {})
-    for (const f of [signInWithTokens, createDemoSession, redirect])
-      f.mockClear()
+    for (const f of [viewDemoHome, redirect]) f.mockClear()
   })
 
-  it("stores the backend's tokens, then goes to the dashboard", async () => {
-    createDemoSession.mockResolvedValue(tokens)
-    await expect(signInAsDemoHomeAction("2")).rejects.toThrow(
+  it("makes the account a viewer of the home, then opens the dashboard", async () => {
+    viewDemoHome.mockResolvedValue(undefined)
+    await expect(viewDemoHomeAction("2")).rejects.toThrow(
       "NEXT_REDIRECT /dashboard"
     )
-    expect(createDemoSession).toHaveBeenCalledWith("2")
-    expect(signInWithTokens).toHaveBeenCalledWith(tokens)
+    expect(viewDemoHome).toHaveBeenCalledWith("token", "2")
   })
 
-  it("returns the error and stores nothing when the backend refuses", async () => {
-    createDemoSession.mockRejectedValue(new Error("503"))
-    await expect(signInAsDemoHomeAction("2")).resolves.toEqual({
-      error: "failed",
-    })
-    expect(signInWithTokens).not.toHaveBeenCalled()
-    expect(redirect).not.toHaveBeenCalled()
-  })
-
-  it("returns the error when the tokens are not valid for this app", async () => {
-    createDemoSession.mockResolvedValue(tokens)
-    signInWithTokens.mockRejectedValueOnce(new Error("rejected"))
-    await expect(signInAsDemoHomeAction("2")).resolves.toEqual({
-      error: "failed",
+  it("says why when the account already belongs to a home", async () => {
+    viewDemoHome.mockRejectedValue(
+      new ApiError(409, "Conflict", { code: "demo_not_for_members" })
+    )
+    await expect(viewDemoHomeAction("2")).resolves.toEqual({
+      error: "notForMembers",
     })
     expect(redirect).not.toHaveBeenCalled()
   })
 
-  it("refuses a malformed house before calling the backend", async () => {
-    for (const house of ["", "x".repeat(33)])
-      await expect(signInAsDemoHomeAction(house)).resolves.toEqual({
+  it("returns the error when the backend refuses otherwise", async () => {
+    viewDemoHome.mockRejectedValue(new ApiError(404, "Not Found", {}))
+    await expect(viewDemoHomeAction("2")).resolves.toEqual({ error: "failed" })
+  })
+
+  it("refuses a malformed key before calling the backend", async () => {
+    for (const key of ["", "x".repeat(33)])
+      await expect(viewDemoHomeAction(key)).resolves.toEqual({
         error: "failed",
       })
-    expect(createDemoSession).not.toHaveBeenCalled()
+    expect(viewDemoHome).not.toHaveBeenCalled()
   })
 })
 

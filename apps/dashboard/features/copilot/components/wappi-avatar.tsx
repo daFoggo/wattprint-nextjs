@@ -1,11 +1,14 @@
 "use client"
 
-import { useSyncExternalStore } from "react"
-import { createAvatar } from "@bible-strong/avatar-react"
+import { useEffect, useRef, useSyncExternalStore } from "react"
+import {
+  createAvatar,
+  type AvatarHandle,
+} from "@bible-strong/avatar-react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-import { answerState, MOODS } from "../moods"
+import { answerState, GESTURES, MOODS } from "../moods"
 import character from "../wappi.avatar.json"
 import { useCopilot } from "./copilot-provider"
 
@@ -29,7 +32,8 @@ export function useWappiState(): string {
 /**
  * Wappi's face: in the titles and the sidebar, on the opening screen, and beside each answer. `live` keeps it
  * moving; otherwise it plays its state, then settles (a page of past answers stays still). `follow` turns its head
- * to the pointer. The renderer needs `window`: on the server (and before hydration) the box stays empty at its size.
+ * to the pointer. Changing to a state with a GESTURES line plays that beat once. A number `size` is in px (voice mode
+ * sizes it to its stage). The renderer needs `window`: on the server (and before hydration) the box stays empty at its size.
  */
 export function WappiAvatar({
   size = "md",
@@ -38,7 +42,7 @@ export function WappiAvatar({
   follow = false,
   className,
 }: {
-  size?: keyof typeof SIZE
+  size?: keyof typeof SIZE | number
   state?: string
   live?: boolean
   follow?: boolean
@@ -49,7 +53,16 @@ export function WappiAvatar({
     () => true,
     () => false
   )
-  const px = SIZE[size]
+  const px = typeof size === "number" ? size : SIZE[size]
+  const avatar = useRef<AvatarHandle>(null)
+  // Only a change of state plays its beat: a page of past answers (all "approving", say) mounts still.
+  const shown = useRef(state)
+  useEffect(() => {
+    if (shown.current === state) return
+    shown.current = state
+    const gesture = GESTURES[state]
+    if (gesture) avatar.current?.poke(gesture)
+  }, [state])
   return (
     <span
       aria-hidden
@@ -58,6 +71,7 @@ export function WappiAvatar({
     >
       {client ? (
         <Wappi
+          ref={avatar}
           state={state}
           size={px}
           settleAfterMs={live ? 0 : 3000}

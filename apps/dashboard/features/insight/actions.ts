@@ -55,6 +55,7 @@ const REFUSALS = [
   "no_device",
   "ends_in_past",
   "bad_device",
+  "home_read_only", // a demo viewer
 ] as const
 type Refusal = (typeof REFUSALS)[number]
 export type SaveResult = { ok: true } | { ok: false; error: string }

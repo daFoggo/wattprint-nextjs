@@ -16,7 +16,7 @@ import {
 
 import { redact, type PersonalKind } from "../privacy"
 import { record, transcribeAudio, VoiceError } from "../voice"
-import { useCopilot } from "./copilot-provider"
+import { NEW, useCopilot } from "./copilot-provider"
 
 /** Dictation: the recording goes to the backend's speech to text, and its words land in the field. */
 function useDictation(onText: (text: string) => void) {
@@ -78,10 +78,33 @@ export function CopilotComposer({
 }) {
   const t = useTranslations("copilot")
   const locale = useLocale()
-  const { send, stop, status } = useCopilot()
-  const [text, setText] = useState("")
-  // A question with personal data waits here, hidden, until the user sends it so or edits it.
-  const [held, setHeld] = useState<{ text: string; found: PersonalKind[] }>()
+  const { send, stop, status, active, threads } = useCopilot()
+  // Each conversation keeps its own draft ("" is a new one): switching never carries text across.
+  const thread = active?.id ?? ""
+  const [drafts, setDrafts] = useState<Record<string, string>>({})
+  // A new conversation is renamed when the backend names it: its draft follows it. A switch away from it (the
+  // `new:` thread still listed) leaves the draft where it was.
+  const [named, setNamed] = useState(thread)
+  if (named !== thread) {
+    setNamed(thread)
+    if (named.startsWith(NEW) && !threads.some((th) => th.id === named))
+      setDrafts(({ [named]: moved, ...rest }) =>
+        moved ? { ...rest, [thread]: moved } : rest
+      )
+  }
+  const text = drafts[thread] ?? ""
+  const setText = (next: string | ((prev: string) => string)) =>
+    setDrafts((all) => ({
+      ...all,
+      [thread]: typeof next === "function" ? next(all[thread] ?? "") : next,
+    }))
+  // A question with personal data waits here, hidden, until the user sends it so or edits it (in its conversation).
+  const [hold, setHeld] = useState<{
+    thread: string
+    text: string
+    found: PersonalKind[]
+  }>()
+  const held = hold?.thread === thread ? hold : undefined
   const submit = (question: string) => {
     send(question)
     setText("")
@@ -136,7 +159,7 @@ export function CopilotComposer({
             phone: t("privacy.labels.phone"),
             account: t("privacy.labels.account"),
           })
-          if (hidden.found.length) setHeld(hidden)
+          if (hidden.found.length) setHeld({ thread, ...hidden })
           else submit(value.trim())
         }}
         onStop={stop}

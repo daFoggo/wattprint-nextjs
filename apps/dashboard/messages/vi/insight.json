@@ -115,7 +115,8 @@
       "no_tariff": "Nhà chưa có biểu giá điện nên chưa tính được tiền điện.",
       "no_device": "Không tìm thấy thiết bị này trong nhà.",
       "ends_in_past": "Ngày kết thúc đã qua.",
-      "bad_device": "Phần điện chưa nhận ra thiết bị luôn bật, không có lần chạy nào để báo."
+      "bad_device": "Phần điện chưa nhận ra thiết bị luôn bật, không có lần chạy nào để báo.",
+      "home_read_only": "Nhà demo chỉ để xem: không lưu cảnh báo được."
     },
     "approxMoney": "(≈ {money})",
     "lastFired": "Lần báo gần nhất: {at}.",

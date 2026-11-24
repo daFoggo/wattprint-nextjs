@@ -25,6 +25,10 @@ const hook = (file, line) =>
   )
 
 // The demo-home cards (apps/dashboard features/auth) draw their own isometric house with the EmptyState helpers.
+// Voice mode draws Wappi over a DitherHorizon (apps/dashboard features/copilot voice-mode.tsx) instead of the orb.
+const ORB =
+  "Voice mode shows Wappi (the app's character) on a dither field where the orb was: the plasma orb did not fit the brand."
+
 const SCENE = "Exported for the demo-home illustrations, drawn in the EmptyState style without copying its geometry or tokens."
 
 export const PATCHES = [
@@ -1499,12 +1503,45 @@ export const PATCHES = [
     '{listening ? t("Listening") : transcribing ? t("Transcribing") : ""}'
   ),
 
+  {
+    file: "voice-input.tsx",
+    why: "While transcribing, the timer and Cancel are invisible but kept their width, so the label (\"Đang chép lời\") was cut off in the composer's toolbar. They leave the layout then.",
+    from: "          {startedAt !== undefined && (",
+    to: "          {startedAt !== undefined && !transcribing /* patched (hairline/patch.mjs): no hidden width */ && (",
+  },
+  {
+    file: "voice-input.tsx",
+    why: "Cancel, as the timer above.",
+    from: "          {onCancel && (",
+    to: "          {onCancel && !transcribing /* patched (hairline/patch.mjs): no hidden width */ && (",
+  },
+
   // The error text comes from HELP here or from voice-session.ts's VoiceError messages; both are keys in the table.
   imports("voice-talk.tsx"),
-  hook(
-    "voice-talk.tsx",
-    'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {\n'
-  ),
+  {
+    file: "voice-talk.tsx",
+    why: `${ORB} Takes \`visual\`; also declares \`t\` (see TEXT).`,
+    from: 'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {\n',
+    to: 'export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", visual, /* patched (hairline/patch.mjs) */ ...options }: VoiceTalkProps) {\n  const t = useHairlineText(); // patched (hairline/patch.mjs)\n',
+  },
+  {
+    file: "voice-talk.tsx",
+    why: ORB,
+    from: '  /** The orb\'s diameter in px. */\n  size?: number;',
+    to: '  /** Drawn where the orb was (patched (hairline/patch.mjs)): the app\'s own character. */\n  visual?: React.ReactNode;\n  /** The orb\'s diameter in px. */\n  size?: number;',
+  },
+  {
+    file: "voice-talk.tsx",
+    why: ORB,
+    from: 'import { VoiceOrb } from "./voice-orb";\n',
+    to: '// patched (hairline/patch.mjs): no VoiceOrb, the caller draws `visual`.\n',
+  },
+  {
+    file: "voice-talk.tsx",
+    why: ORB,
+    from: '        <VoiceOrb state={session.state} getLevel={session.getLevel} getSpectrum={session.getSpectrum} size={size} colors={colors} tone={tone} label={label} />',
+    to: '        {visual /* patched (hairline/patch.mjs): in place of the orb */}',
+  },
   text(
     "voice-talk.tsx",
     '(HELP[error.kind] ?? error.message) : "";',

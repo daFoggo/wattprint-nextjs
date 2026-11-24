@@ -11,12 +11,3 @@ export const DemoHomesSchema = z.array(
 )
 
 export type DemoHome = z.infer<typeof DemoHomesSchema>[number]
-
-/** POST /demo/session: Keycloak tokens for the home's owner, minted for the web client. */
-export const DemoTokensSchema = z.object({
-  access_token: z.string(),
-  refresh_token: z.string(),
-  id_token: z.string(),
-  expires_in: z.number(),
-  refresh_expires_in: z.number(),
-})

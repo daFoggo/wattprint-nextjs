@@ -19,7 +19,7 @@ export const HomeSchema = z.object({
   occupants: z.number().int().nullable(),
   billing_cycle_day: z.number().int(),
   province_code: z.string().nullable(),
-  role: z.enum(["owner", "member"]),
+  role: z.enum(["owner", "member", "viewer"]),
 })
 export type Home = z.infer<typeof HomeSchema>
 

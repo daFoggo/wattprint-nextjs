@@ -5,6 +5,7 @@ import { Stagger } from "@/components/shared/stagger"
 import { CopilotToggle } from "@/features/copilot/components/copilot-entry"
 
 import { DashboardCrumbs } from "../_components/crumbs"
+import { DemoViewer } from "../_components/demo-viewer"
 
 /** The main column of the dashboard's pages: no header bar, the breadcrumb sits just above the page head and the page
  * scrolls with the document. Wappi's page has its own column ((chat)). */
@@ -26,6 +27,10 @@ export default function PagesLayout({
           </Suspense>
         </div>
       </MainHeaderStart>
+      {/* null: the strip is there only for a demo viewer, so nothing holds its place. */}
+      <Suspense fallback={null}>
+        <DemoViewer />
+      </Suspense>
       <Stagger className="flex flex-col gap-8">{children}</Stagger>
     </main>
   )

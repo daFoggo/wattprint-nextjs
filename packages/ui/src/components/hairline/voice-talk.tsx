@@ -5,7 +5,7 @@ import { useHairlineText } from "../hairline-text"; // patched (hairline/patch.m
 import { ArrowUp, Mic, RotateCcw, Square, X } from "lucide-react";
 import { TextMorph } from "./text-morph";
 import { EASE_OUT, INTERACTION_FOCUS, INTERACTION_PRESS, useInteractionReducedMotion } from "./ui-interaction-motion";
-import { VoiceOrb } from "./voice-orb";
+// patched (hairline/patch.mjs): no VoiceOrb, the caller draws `visual`.
 import { useVoiceSession, type VoiceError, type VoicePhase, type VoiceSession, type VoiceSessionOptions } from "./voice-session";
 
 /* ─────────────────────────────────────────────────────────
@@ -46,6 +46,8 @@ export interface VoiceTalkProps extends VoiceSessionOptions {
   session?: VoiceSession;
   /** Tap to talk (it sends when you stop talking, or when tapped), or hold to talk and let go to send. */
   mode?: "tap" | "hold";
+  /** Drawn where the orb was (patched (hairline/patch.mjs)): the app's own character. */
+  visual?: React.ReactNode;
   /** The orb's diameter in px. */
   size?: number;
   colors?: [string, string, string];
@@ -114,7 +116,7 @@ function Spinner() {
   );
 }
 
-export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", ...options }: VoiceTalkProps) {
+export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, tone, label = "Voice assistant", labels, className = "", visual, /* patched (hairline/patch.mjs) */ ...options }: VoiceTalkProps) {
   const t = useHairlineText(); // patched (hairline/patch.mjs)
   const own = useVoiceSession(options);
   const session = given ?? own;
@@ -165,7 +167,7 @@ export function VoiceTalk({ session: given, mode = "tap", size = 200, colors, to
   return (
     <div className={`flex flex-col items-center ${className}`}>
       <div className={mode === "tap" ? "cursor-pointer" : undefined} onClick={mode === "tap" ? () => session.toggle() : undefined}>
-        <VoiceOrb state={session.state} getLevel={session.getLevel} getSpectrum={session.getSpectrum} size={size} colors={colors} tone={tone} label={label} />
+        {visual /* patched (hairline/patch.mjs): in place of the orb */}
       </div>
 
       <div className="mt-5 flex items-center">

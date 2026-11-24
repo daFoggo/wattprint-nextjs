@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
+import { Button } from "@workspace/ui/components/hairline/button"
 import { Skeleton } from "@workspace/ui/components/hairline/skeleton"
 
 import { FormError } from "@/features/auth/components/form-error"
@@ -12,7 +13,6 @@ import { DemoHomesDialog } from "@/features/auth/components/demo-homes-dialog"
 import { getDemoHomes } from "@/features/auth/queries"
 
 import {
-  signInAsDemoHomeAction,
   signInWithEmailAction,
   signInWithGoogleAction,
 } from "@/features/auth/actions"
@@ -44,9 +44,20 @@ async function OAuthError({
 
 /** Only when the backend has a seeded demo home (it reads the database, so it streams in). */
 async function DemoHomes() {
-  const homes = await getDemoHomes()
+  const [homes, t] = await Promise.all([
+    getDemoHomes(),
+    getTranslations("auth.demo"),
+  ])
   if (homes.length === 0) return null
-  return <DemoHomesDialog homes={homes} action={signInAsDemoHomeAction} />
+  return (
+    <DemoHomesDialog homes={homes}>
+      <form action={signInWithEmailAction}>
+        <Button type="submit" size="lg" className="w-full">
+          {t("signIn")}
+        </Button>
+      </form>
+    </DemoHomesDialog>
+  )
 }
 
 export default function SignInPage({

@@ -4,6 +4,11 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
+- 2026-11-23 (demo sign-in, enabled on the running Keycloak): client `wattprint-web` has Direct Access Grants on, so
+  anyone holding its secret (server-side only: dashboard + API env) can password-grant any realm user, and the
+  `wattprint-demo-admin` service account (`manage-users`) can edit every user. Left because the demo needs instant
+  sign-in as a REFIT home owner now. Pay: replace with a safer flow (e.g. visitors sign up normally and pick a demo
+  home to view), then turn Direct Access Grants off and drop the service account.
 - 2026-11-23 (debt-watch-status R1 Minor): opening a stored chat that holds a watch widget also reads
   `/insights/watches`; when that read fails the whole chat fails to open (dashboard-data: a failed read throws).
   Pay: if the alerts endpoint is ever down more than the chat, or users report chats that will not open.

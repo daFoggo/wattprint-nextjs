@@ -1,0 +1,30 @@
+# Production: the dashboard (11082) and the landing page (11081) behind the host's nginx, restarted with Docker.
+#   docker compose up -d --build      (build reads apps/*/.env.local; never set EXPOSE_TESTING_API here)
+# Host network: `next start -H localhost` keeps next-intl's / → /vi rewrite internal (a 127.0.0.1 or 0.0.0.0 host
+# answered it with a redirect loop), and the API (localhost:11093) and Keycloak are reached as from the host.
+services:
+  dashboard:
+    build:
+      context: .
+      secrets: [dashboard_env, web_env]
+    image: wattprint-web:latest
+    container_name: wattprint-dashboard
+    command: ["pnpm", "-C", "apps/dashboard", "exec", "next", "start", "-H", "localhost", "-p", "11082"]
+    env_file: apps/dashboard/.env.local
+    network_mode: host
+    restart: unless-stopped
+
+  web:
+    image: wattprint-web:latest
+    container_name: wattprint-landing
+    depends_on: [dashboard] # its image is built by the dashboard service
+    command: ["pnpm", "-C", "apps/web", "exec", "next", "start", "-H", "localhost", "-p", "11081"]
+    env_file: apps/web/.env.local
+    network_mode: host
+    restart: unless-stopped
+
+secrets:
+  dashboard_env:
+    file: apps/dashboard/.env.local
+  web_env:
+    file: apps/web/.env.local

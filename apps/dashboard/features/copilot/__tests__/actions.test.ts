@@ -70,4 +70,14 @@ describe("loadConversationAction", () => {
     expect(fetchWatchStatuses).toHaveBeenCalledWith("token")
     expect(widgetsOf(messages)).toEqual([{ ...watch, ended: true }])
   })
+
+  it("still opens the chat when the watch statuses cannot be read", async () => {
+    fetchConversation.mockResolvedValue(conversation([watch]))
+    fetchWatchStatuses.mockRejectedValue(new Error("alerts down"))
+    const error = vi.spyOn(console, "error").mockImplementation(() => {})
+    const messages = await loadConversationAction(ID)
+    expect(widgetsOf(messages)).toEqual([watch]) // shown as live, without the "Ended" mark
+    expect(error).toHaveBeenCalled()
+    error.mockRestore()
+  })
 })

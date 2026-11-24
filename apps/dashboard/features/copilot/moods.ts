@@ -1,3 +1,5 @@
+import type { GestureName } from "@bible-strong/avatar-core"
+
 import type { Message } from "./schemas"
 
 /**
@@ -46,6 +48,19 @@ export const TOOL_STATES: Record<string, string> = {
   weather: "excited",
   query_data: "coding",
   propose_plan: "running",
+}
+
+/**
+ * A beat Wappi plays once on arriving in a state (avatar-core `gestureNames`: nod, bounce, spin), over what the state
+ * draws. A new one is one line; states without a line just play.
+ */
+export const GESTURES: Partial<Record<string, GestureName>> = {
+  [MOODS.answered]: "nod",
+  [MOODS.liked]: "nod",
+  [MOODS.celebrating]: "spin",
+  [MOODS.greeting]: "bounce",
+  surprised: "bounce", // an alert just came up (TOOL_STATES.alerts)
+  excited: "bounce", // the weather (TOOL_STATES.weather)
 }
 
 type Answer = Extract<Message, { role: "assistant" }>

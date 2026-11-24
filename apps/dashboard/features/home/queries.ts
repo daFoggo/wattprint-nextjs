@@ -13,14 +13,23 @@ const isNoHome = (error: unknown) =>
   error.status === 404 &&
   (error.body as { code?: string } | undefined)?.code === "home_not_found"
 
+/** The account's home and its role in it, fresh per request. Null when the account has no home. */
+export const getHome = cache(async () => {
+  const { accessToken } = await requirePermission("account:view")
+  return fetchHome(accessToken).catch((error: unknown) => {
+    if (isNoHome(error)) return null
+    throw error
+  })
+})
+
+/** A demo visitor: the backend refuses its writes to the home, so the pages leave out their controls. */
+export const isDemoViewer = async () => (await getHome())?.role === "viewer"
+
 /** The home and this account's choices, fresh per request. Null when the account has no home. */
 export const getHomeSettings = cache(async () => {
   const { accessToken } = await requirePermission("account:view")
   const [home, preferences] = await Promise.all([
-    fetchHome(accessToken).catch((error: unknown) => {
-      if (isNoHome(error)) return null
-      throw error
-    }),
+    getHome(),
     fetchPreferences(accessToken),
   ])
   return home && { home, preferences }

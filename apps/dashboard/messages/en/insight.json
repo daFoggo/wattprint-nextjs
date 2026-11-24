@@ -115,7 +115,8 @@
       "no_tariff": "The home has no tariff yet, so the bill cannot be priced.",
       "no_device": "That device is not in this home.",
       "ends_in_past": "The end date has passed.",
-      "bad_device": "The unknown remainder is always on, so it has no runs to tell about."
+      "bad_device": "The unknown remainder is always on, so it has no runs to tell about.",
+      "home_read_only": "Demo homes are read-only: alerts cannot be saved."
     },
     "approxMoney": "(≈ {money})",
     "lastFired": "Last told: {at}.",

@@ -150,45 +150,4 @@ describe("Keycloak AuthProvider & Proxy", () => {
       result.response.cookies.get("nmb-dashboard-auth.refresh")?.value
     ).toBe("existing-refresh-token")
   })
-
-  it("signInWithTokens stores the three cookies when the token verifies", async () => {
-    const jwksModule = await import("../keycloak/jwks")
-    const verify = vi.spyOn(jwksModule, "verifyKeycloakJwt").mockResolvedValue({
-      userId: "u-demo",
-      role: "customer",
-      name: "REFIT House 2",
-      email: "refit.house2@wattprint.local",
-      exp: Math.floor(Date.now() / 1000) + 300,
-    })
-    const { createKeycloakProvider } = await import("../keycloak/server")
-    const provider = createKeycloakProvider({ cookieName: "nmb-dashboard-auth" })
-    await provider.signInWithTokens({
-      access_token: "acc",
-      refresh_token: "ref",
-      id_token: "idt",
-      expires_in: 300,
-      refresh_expires_in: 1800,
-    })
-    expect(verify).toHaveBeenCalledWith("acc", expect.any(String), {
-      clientId: expect.any(String),
-    })
-    expect(cookieJar.get("nmb-dashboard-auth.access")).toBe("acc")
-    expect(cookieJar.get("nmb-dashboard-auth.refresh")).toBe("ref")
-    expect(cookieJar.get("nmb-dashboard-auth.id")).toBe("idt")
-  })
-
-  it("signInWithTokens throws and stores nothing when the token does not verify", async () => {
-    const jwksModule = await import("../keycloak/jwks")
-    vi.spyOn(jwksModule, "verifyKeycloakJwt").mockResolvedValue(null)
-    const { createKeycloakProvider } = await import("../keycloak/server")
-    const provider = createKeycloakProvider({ cookieName: "nmb-dashboard-auth" })
-    await expect(
-      provider.signInWithTokens({
-        access_token: "forged",
-        refresh_token: "ref",
-        expires_in: 300,
-      })
-    ).rejects.toThrow()
-    expect(cookieJar.size).toBe(0)
-  })
 })

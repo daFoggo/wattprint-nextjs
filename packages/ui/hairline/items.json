@@ -116,6 +116,7 @@
     "@hairline/model-picker",
     "@hairline/voice-input",
     "@hairline/voice-orb",
+    "@hairline/voice-bar",
     "@hairline/voice-note",
     "@hairline/thinking-indicator",
     "@hairline/thinking-trace",

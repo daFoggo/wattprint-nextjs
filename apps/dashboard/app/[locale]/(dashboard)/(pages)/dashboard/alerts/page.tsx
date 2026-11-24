@@ -16,7 +16,7 @@ import {
   getPower,
 } from "@/features/energy/queries"
 import { saveHomeSettingsAction } from "@/features/home/actions"
-import { getHomeSettings } from "@/features/home/queries"
+import { getHomeSettings, isDemoViewer } from "@/features/home/queries"
 import {
   acknowledgeAlertAction,
   cancelWatchAction,
@@ -44,6 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * (React.cache), shared with the lists below.
  */
 async function Add() {
+  if (await isDemoViewer()) return null // a demo home is read-only
   const [devices, data, power, bill, bills, locale] = await Promise.all([
     getDevices(),
     getDashboard(),
@@ -84,11 +85,12 @@ async function Add() {
 
 /** What fired, newest first. */
 async function Fired({ className }: { className?: string }) {
-  const [alerts, watches, data, t] = await Promise.all([
+  const [alerts, watches, data, t, viewer] = await Promise.all([
     getAlerts(),
     getWatches(),
     getDashboard(),
     getTranslations("insight.page"),
+    isDemoViewer(),
   ])
   if (!alerts || !data) return <NoHome />
   return (
@@ -96,8 +98,8 @@ async function Fired({ className }: { className?: string }) {
       title={t("fired")}
       alerts={alerts}
       now={data.now}
-      onSeen={acknowledgeAlertAction}
-      onFeedback={sendAlertFeedbackAction}
+      onSeen={viewer ? undefined : acknowledgeAlertAction}
+      onFeedback={viewer ? undefined : sendAlertFeedbackAction}
       // Only watches still listed below have a row to link to.
       mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
       className={className}

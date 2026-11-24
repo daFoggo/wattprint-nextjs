@@ -43,8 +43,10 @@ export async function proxy(request: NextRequest) {
     `proxy;dur=${duration};desc="Proxy Auth Check"`
   )
 
-  // Route Handlers under /auth (OAuth callback, expiry) are not localized.
-  if (request.nextUrl.pathname.startsWith("/auth/")) return response
+  // Route Handlers under /auth (OAuth callback, expiry) and /api are not localized; /api runs through here only so
+  // its session is refreshed like a page's (each handler still authorizes with the DAL).
+  const handler = request.nextUrl.pathname
+  if (handler.startsWith("/auth/") || handler.startsWith("/api/")) return response
 
   // Decoded as next-intl and the router will see it, so `/%64ashboard` is checked as `/dashboard`.
   let path = request.nextUrl.pathname
@@ -72,6 +74,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Assets (assetPrefix /dashboard-static, files with a dot) must not be rewritten to /[locale].
-    "/((?!api|_next/static|_next/image|__nextjs_font|dashboard-static|.*\\..*).*)",
+    "/((?!_next/static|_next/image|__nextjs_font|dashboard-static|.*\\..*).*)",
   ],
 }

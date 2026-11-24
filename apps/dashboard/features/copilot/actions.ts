@@ -36,7 +36,15 @@ export async function loadConversationAction(id: string) {
   const hasWatch = c.messages.some((m) =>
     m.reply?.widgets.some((w) => w.kind === "watch")
   )
-  return toMessages(c, hasWatch ? await fetchWatchStatuses(accessToken) : [])
+  // The statuses only mark ended watches: when they cannot be read the chat still opens, its watches shown as live
+  // (an exception to "a failed read throws", .claude/rules/dashboard-data.md).
+  const watches = hasWatch
+    ? await fetchWatchStatuses(accessToken).catch((error: unknown) => {
+        console.error("copilot: watch statuses unavailable", error)
+        return []
+      })
+    : []
+  return toMessages(c, watches)
 }
 
 export async function updateConversationAction(

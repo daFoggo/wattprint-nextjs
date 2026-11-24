@@ -86,7 +86,7 @@ export function usePanel() {
 }
 
 const id = () => crypto.randomUUID()
-const NEW = "new:" // a conversation the backend has not named yet
+export const NEW = "new:" // a conversation the backend has not named yet
 
 /** The backend's error code of a failed request ({ code } from the route handler). */
 async function codeOf(res: Response) {
@@ -198,13 +198,15 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
           lang: locale === "en" ? "en" : "vi",
         }),
         signal: controller.signal,
+        redirect: "manual", // an ended session redirects to /auth/expired: say so, never POST there
       })
       // A session that expired is redirected to an HTML page: not a stream either.
       const stream = res.headers
         .get("content-type")
         ?.startsWith("text/event-stream")
       if (!res.ok || !res.body || !stream) {
-        const code = res.ok ? "session" : await codeOf(res)
+        const code =
+          res.ok || res.type === "opaqueredirect" ? "session" : await codeOf(res)
         change((m) => ({ ...m, phase: "error", error: code }))
         return null
       }

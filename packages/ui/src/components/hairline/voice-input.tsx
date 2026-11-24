@@ -345,13 +345,13 @@ export function VoiceInput({
             </span>
           </span>
 
-          {startedAt !== undefined && (
+          {startedAt !== undefined && !transcribing /* patched (hairline/patch.mjs): no hidden width */ && (
             <span aria-hidden="true" className="flex shrink-0 items-baseline font-mono text-[11.5px] tabular-nums text-muted-foreground" style={appear(listening, reduced)}>
               <NumberRoll value={Math.floor(seconds / 60)} duration={500} />:
               <NumberRoll value={seconds % 60} format={TWO_DIGITS} direction="up" duration={500} />
             </span>
           )}
-          {onCancel && (
+          {onCancel && !transcribing /* patched (hairline/patch.mjs): no hidden width */ && (
             <button
               type="button"
               aria-label={t("Cancel")}

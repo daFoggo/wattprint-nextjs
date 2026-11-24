@@ -14,10 +14,11 @@ import {
 } from "@/config/routes"
 import { getPathname } from "@/i18n/navigation"
 import { getAuthProvider } from "@/lib/auth"
-import { SESSION_TAG } from "@/lib/dal"
+import { requirePermission, SESSION_TAG } from "@/lib/dal"
+import { isExpectedDataError } from "@/lib/errors"
 import { publicEnv } from "@/lib/env.public"
 
-import { createDemoSession } from "./server"
+import { viewDemoHome } from "./server"
 
 /**
  * Sends the browser to Keycloak in the page's language. With `provider` Keycloak goes straight to that identity
@@ -50,21 +51,24 @@ export async function signInWithEmailAction(): Promise<void> {
   await startSignIn()
 }
 
-/** Signs in as a demo home's owner: the backend does the password grant, we verify and store the tokens. */
-export async function signInAsDemoHomeAction(
-  house: string
+/** Views a demo home read-only from the signed-in account, then opens the dashboard on it. */
+export async function viewDemoHomeAction(
+  key: string
 ): Promise<{ error: string } | void> {
-  const locale = await getLocale()
+  const { accessToken } = await requirePermission("account:view")
+  const [locale, t] = await Promise.all([
+    getLocale(),
+    getTranslations("auth.demo"),
+  ])
+  const parsed = z.string().min(1).max(32).safeParse(key)
+  if (!parsed.success) return { error: t("failed") }
   try {
-    const tokens = await createDemoSession(
-      z.string().min(1).max(32).parse(house)
-    )
-    await (await getAuthProvider()).signInWithTokens(tokens)
+    await viewDemoHome(accessToken, parsed.data)
   } catch (error) {
-    console.error("demo sign-in failed", error)
-    return { error: (await getTranslations("auth.demo"))("failed") }
+    if (!isExpectedDataError(error)) throw error
+    const code = (error.body as { code?: string } | undefined)?.code
+    return { error: t(code === "demo_not_for_members" ? "notForMembers" : "failed") }
   }
-  updateTag(SESSION_TAG)
   redirect(getPathname({ href: DASHBOARD_PATH, locale }))
 }
 

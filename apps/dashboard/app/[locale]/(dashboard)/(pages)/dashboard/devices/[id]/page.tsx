@@ -27,6 +27,7 @@ import {
   setDeviceEventAction,
 } from "@/features/insight/actions"
 import { DeviceAlertTile } from "@/features/insight/components/device-alerts"
+import { isDemoViewer } from "@/features/home/queries"
 import { AlertList } from "@/features/insight/components/alert-list"
 import { getAlerts, getWatches } from "@/features/insight/queries"
 import { avgPrice } from "@/features/insight/sources"
@@ -227,14 +228,15 @@ async function Watches({
   params: Params
   className?: string
 }) {
-  const [device, watches, bill, t] = await Promise.all([
+  const [device, watches, bill, t, viewer] = await Promise.all([
     load(params),
     getWatches(),
     getCurrentBill(),
     getTranslations("insight.devices"),
+    isDemoViewer(),
   ])
-  // The unknown remainder is always on: no runs to tell about.
-  if (!device || !watches || device.type === "other") return null
+  // The unknown remainder is always on: no runs to tell about. A demo home is read-only: no alerts to set.
+  if (!device || !watches || device.type === "other" || viewer) return null
   return (
     <Tile
       title={t("tileTitle")}
