@@ -18,7 +18,7 @@ import { ApiError, isExpectedDataError } from "@/lib/errors"
 import { publicEnv } from "@/lib/env.public"
 
 import { DemoKeySchema } from "./schemas"
-import { createDemoGuest, viewDemoHome } from "./server"
+import { createDemoGuest, deleteAccount, viewDemoHome } from "./server"
 
 /**
  * Sends the browser to Keycloak in the page's language. With `provider` Keycloak goes straight to that identity
@@ -100,6 +100,34 @@ export async function viewDemoHomeAction(
   }
   refresh() // the layouts too: the sidebar's demo row shows the new home
   redirect(getPathname({ href: DASHBOARD_PATH, locale }))
+}
+
+/**
+ * Deletes the signed-in account for good. The backend refuses while other people belong to the home
+ * (`home_has_members`) and when Keycloak could not finish (503): both come back as words to show, and the session
+ * stays. On success the local session is cleared (the Keycloak one went with the account) and sign-in opens.
+ */
+export async function deleteAccountAction(): Promise<{ error: string } | void> {
+  const { accessToken } = await requirePermission("account:view")
+  const [locale, t] = await Promise.all([
+    getLocale(),
+    getTranslations("auth"),
+  ])
+  try {
+    await deleteAccount(accessToken)
+  } catch (error) {
+    if (!(error instanceof ApiError)) throw error
+    const code = (error.body as { code?: string } | undefined)?.code
+    if (code === "home_has_members")
+      return { error: t("deleteAccount.homeHasMembers") }
+    if (code === "account_delete_unavailable")
+      return { error: t("deleteAccount.unavailable") }
+    throw error
+  }
+  const signIn = getPathname({ href: SIGN_IN_PATH, locale })
+  await (await getAuthProvider()).signOut() // clears our cookies; the Keycloak session is gone with the account
+  updateTag(SESSION_TAG)
+  redirect(signIn)
 }
 
 export async function signOutAction(): Promise<void> {

@@ -58,7 +58,8 @@
         "body": "Reload the page to sign in again, then ask again."
       }
     },
-    "aiNote": "AI-generated from your home's data; it may be inaccurate."
+    "aiNote": "AI-generated from your home's data; it may be inaccurate.",
+    "sources": "Sources"
   },
   "widgets": {
     "devices": "Energy by device (estimated)",

@@ -8,7 +8,7 @@ import { ThemeProvider } from "@workspace/ui-patterns/theme-provider"
 import { cn } from "@workspace/ui/lib/utils"
 import { HairlineTextProvider } from "@workspace/ui/components/hairline-text"
 import { hairlineMessages } from "@workspace/ui/lib/hairline-messages"
-import { fontClassName, fontStyle } from "@workspace/ui/lib/fonts"
+import { fontStyle, landingFontClassName } from "@workspace/ui/lib/fonts"
 import { routing, type Locale } from "@/i18n/routing"
 import { publicEnv } from "@/lib/env.public"
 import { openGraphBase } from "@/lib/seo"
@@ -44,7 +44,7 @@ export default async function RootLayout({
       lang={lang}
       suppressHydrationWarning
       style={fontStyle}
-      className={cn("antialiased", "font-sans", fontClassName)}
+      className={cn("antialiased", "font-sans", landingFontClassName)}
     >
       <body className="bg-lp-ground text-lp-ink">
         <NextIntlClientProvider>

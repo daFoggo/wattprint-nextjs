@@ -13,6 +13,9 @@ export const fontClassName = [
   GeistPixelGrid.variable,
 ].join(" ")
 
+/** Sans and mono only, for the landing page: Next preloads each file of every font it loads, and the landing uses these two. */
+export const landingFontClassName = [GeistSans.variable, GeistMono.variable].join(" ")
+
 /** Maps Geist's own variables onto the theme tokens the UI kit reads (`font-sans`, `font-mono`, ...). */
 export const fontStyle = {
   "--font-sans": "var(--font-geist-sans)",

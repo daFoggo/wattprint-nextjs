@@ -2,131 +2,158 @@
   "terms": {
     "meta": {
       "title": "Terms of Service",
-      "description": "Terms of Service and developer agreement for WattPrint."
+      "description": "The terms for using WattPrint, a household electricity tracker and bill forecast."
     },
-    "badge": "Legal Agreement",
+    "badge": "Terms",
     "lastUpdated": "Last updated: {date, date, long}",
     "title": "Terms of Service",
-    "intro": "These Terms of Service (“Terms”) govern your access to and use of WattPrint, including the web landing site, dashboard, and associated software packages. By creating an account or continuing to use our services, you agree to be bound by these Terms.",
-    "license": {
-      "title": "1. Open Source License and Codebase",
-      "body": "The underlying WattPrint repository and architecture starter code are licensed under the MIT License. You are free to use, modify, and distribute the template code for personal or commercial projects, subject to the inclusion of the original copyright notice and permission notice."
+    "intro": "These terms (“Terms”) apply when you use WattPrint: the landing page and the dashboard. By creating an account or continuing to use the service, you agree to these Terms.",
+    "service": {
+      "title": "1. What WattPrint is",
+      "body": "WattPrint shows your home's electricity use, estimates how much each appliance uses, forecasts your electricity bill and suggests ways to save. Every figure is for information: per-appliance numbers are estimates made from the main meter, not separate measurements, and a forecast bill can differ from your utility's bill. The real bill is always the one your electricity company sends."
     },
     "accounts": {
-      "title": "2. User Accounts and Security",
-      "body": "When creating an account through our dashboard, you agree to:",
+      "title": "2. Accounts and security",
+      "body": "When you create an account, you agree to:",
       "items": {
-        "accurate": "Provide accurate, current, and complete registration information.",
-        "confidential": "Maintain the confidentiality and security of your authentication credentials.",
-        "notify": "Promptly notify us of any suspected breach of security or unauthorized access.",
-        "responsible": "Accept responsibility for all activities occurring under your account or credentials."
+        "accurate": "Give accurate, up-to-date sign-up details.",
+        "confidential": "Keep your sign-in details to yourself.",
+        "notify": "Tell us soon if you suspect someone else got into your account.",
+        "responsible": "Be responsible for everything done under your account."
       }
     },
     "acceptableUse": {
-      "title": "3. Acceptable Use Policy",
-      "body": "You agree not to misuse the platform or assist others in doing so. Specifically, you agree not to:",
+      "title": "3. Using it properly",
+      "body": "You agree not to misuse the service or help others to. In particular, you will not:",
       "items": {
-        "laws": "Violate applicable local, national, or international regulations, including the Law on Cybersecurity and Personal Data Protection Law.",
-        "security": "Attempt to bypass authentication, reverse engineer rate limits, or probe security boundaries without explicit authorization.",
-        "abuse": "Engage in denial-of-service, automated credential scraping, or unauthorized cross-tenant data access."
+        "laws": "Break Vietnamese law, including the rules on cybersecurity and personal data protection.",
+        "security": "Try to get past sign-in, rate limits or other safeguards without clear permission.",
+        "abuse": "Run denial-of-service attacks, guess passwords automatically or reach other people's data."
       }
     },
-    "workspace": {
-      "title": "4. Multi-Tenant Workspace & Resources",
-      "body": "Organizations and projects created within the Dashboard are isolated per user token and organization tenant. You maintain ownership of all project configurations and data created within your workspace. We reserve the right to suspend or prune demo resources that remain inactive for extended durations."
+    "home": {
+      "title": "4. Your home and its members",
+      "body": "Each account belongs to one home. The owner is the person who set the home up; members use the home's data together, and a viewer can only read. The sample homes on the sign-in page are public recordings from research datasets (REFIT, Plegma, ENERTALK) replayed for you to try, not homes of WattPrint users. Trial guest accounts are deleted after 24 hours, when the next trial guest arrives."
+    },
+    "assistant": {
+      "title": "5. The Wappi assistant",
+      "body": "Wappi is an automated system, not a person. Figures in its answers come from your home's data, but its explanations can be wrong or incomplete, so do not treat them as professional advice. Do not type sensitive details into the chat: phone numbers, ID numbers, emails, card and account numbers are replaced by a label before they are stored, but this only spots familiar number formats, not names or addresses."
     },
     "liability": {
-      "title": "5. Limitation of Liability and Disclaimers",
-      "body": "The software and services are provided “AS IS”, without warranty of any kind, express or implied. In no event shall WattPrint or its authors be liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use the software."
+      "title": "6. Limit of liability",
+      "body": "The service is provided “as is”, with no warranty of any kind, express or implied, as far as the law allows. We are not liable for indirect or consequential loss from using or not being able to use the service, including decisions about electricity or money made from estimated or forecast figures."
     },
     "termination": {
-      "title": "6. Termination and Account Erasure",
-      "body": "You may terminate these Terms at any time by requesting deletion of your account (see our Privacy Policy). We reserve the right to suspend or terminate accounts that breach these Terms. Upon termination, data erasure will be carried out in accordance with our Privacy Policy."
+      "title": "7. Ending and deleting your account",
+      "body": "You can end these Terms at any time by deleting your account from the account menu in the dashboard (see the Privacy Policy for what is erased). We may suspend or end accounts that break these Terms."
     },
     "law": {
-      "title": "7. Governing Law",
-      "body": "These Terms shall be governed by and construed in accordance with applicable laws, without giving effect to any principles of conflicts of law."
+      "title": "8. Governing law and contact",
+      "body": "These Terms are governed by Vietnamese law. For any question, contact ntgiang141105@gmail.com."
     }
   },
   "privacy": {
     "meta": {
       "title": "Privacy Policy",
-      "description": "Privacy Policy and personal data protection principles for WattPrint."
+      "description": "How WattPrint collects, uses, shares and deletes your data."
     },
-    "badge": "Compliance Standard 2026",
-    "effective": "Effective: {date, date, long}",
-    "title": "Privacy Policy & Data Protection",
-    "intro": "This Privacy Policy explains how WattPrint (“we”, “us”, or “our”) collects, processes, protects, and retains your personal data in accordance with applicable data protection laws, including the Personal Data Protection Law (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP, as well as international standards (GDPR and CCPA).",
+    "badge": "Privacy",
+    "effective": "Effective from: {date, date, long}",
+    "title": "Privacy Policy",
+    "intro": "This page says what data WattPrint collects, who receives it, how long it is kept and how you delete it. It is written with Vietnam's Personal Data Protection Law (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP in mind.",
     "controller": {
-      "title": "1. Data Controller and Contact Information",
-      "body": "WattPrint operates as the data controller for personal data processed through our website and dashboard. If you have any questions, requests, or concerns regarding your privacy or this policy, you may reach our Data Protection Officer (DPO) at:",
-      "organization": "Organization: WattPrint",
-      "email": "Email: privacy@wattprint.local",
-      "support": "Support: security@wattprint.local"
+      "title": "1. Who is responsible for your data",
+      "body": "Your data is managed, and answered for, by an individual:",
+      "name": "Nguyễn Trường Giang",
+      "email": "Email: ntgiang141105@gmail.com"
     },
     "collected": {
-      "title": "2. Categories of Personal Data Collected",
-      "body": "We collect only the minimum necessary data to provide secure authentication, workspace organization, and developer services:",
+      "title": "2. Data we collect",
+      "body": "Only what the service needs to run:",
       "items": {
-        "account": "<strong>Account & Profile Information:</strong> Full name, email address, and securely hashed passwords (argon2/bcrypt). We never store plaintext passwords.",
-        "session": "<strong>Authentication & Session Identifiers:</strong> Access tokens, session cookies (<code>nmb-dashboard-auth.access</code>, <code>SameSite=Lax</code>), and IP addresses required for session binding and defense against token theft.",
-        "workspace": "<strong>Workspace & Project Metadata:</strong> Organization slugs, project identifiers, and audit logs of configuration changes."
+        "account": "<strong>Account:</strong> email and name (typed at sign-up, or taken from your Google account if you sign in with Google). Keycloak keeps the password as a hash; we cannot read it.",
+        "session": "<strong>Sign-in session:</strong> an access token in a cookie, and the IP address that the server and Keycloak log to stop abuse.",
+        "home": "<strong>Your home:</strong> its name, province or city, number of people, floor area, home type, billing cycle day and the notification choices you set.",
+        "energy": "<strong>Electricity:</strong> your home's meter readings, per-appliance estimates computed from them, forecast bills, alerts and savings plans.",
+        "assistant": "<strong>Chats with Wappi:</strong> questions and answers are stored with your account. Phone numbers, ID numbers, emails, card and account numbers are replaced by a label before they are stored or sent on.",
+        "voice": "<strong>Voice:</strong> when you speak to Wappi, the audio is turned into text; when you listen to an answer, the spoken audio is kept so it need not be made again.",
+        "guest": "<strong>Trial guests:</strong> a temporary account with no real email, deleted after 24 hours (expired ones are cleared when a new guest arrives)."
       }
+    },
+    "sharing": {
+      "title": "3. Who receives your data",
+      "body": "Some parts of the service are handled by others. We send only what each needs, and some of them are outside Vietnam:",
+      "items": {
+        "ai": "<strong>OpenRouter and AstralX</strong> (Wappi's language models): your question with personal details masked, and the figures Wappi's tools look up from your home's data to answer it.",
+        "voice": "<strong>AstralX</strong> (voice): the audio you record to turn into text, and the answer to be read aloud.",
+        "weather": "<strong>OpenWeather</strong> (weather): only the province or city coordinates of your home, never your address or name.",
+        "google": "<strong>Google</strong> (sign-in, if you choose it): Google knows that you sign in to WattPrint its way."
+      },
+      "abroad": "Each of them has its own policy on the data it gets; read it if that matters to you. We do not use your data for advertising and we have built no advertising trackers into the service."
     },
     "bases": {
-      "title": "3. Purposes and Legal Bases for Processing",
-      "body": "In compliance with Article 9 of Law No. 91/2025/QH15 and GDPR Article 6, we process data only on clear legal grounds:",
+      "title": "4. Why we may handle your data",
+      "body": "Each use rests on a clear ground:",
       "contract": {
-        "title": "Performance of Contract",
-        "body": "Provisioning user accounts, authenticating sessions through Keycloak, and managing workspace resources."
+        "title": "To provide the service",
+        "body": "Creating your account, signing you in, showing electricity and bills, running Wappi."
       },
       "consent": {
-        "title": "Explicit Consent",
-        "body": "Affirmatively provided when registering an account. Silence or pre-ticked checkboxes are never deemed consent."
+        "title": "You agree",
+        "body": "You sign up yourself, turn email notifications on yourself and choose to talk to Wappi. Silence or a pre-ticked box is not agreement."
       },
       "interests": {
-        "title": "Legitimate Interests",
-        "body": "Protecting systems from denial-of-service, enforcing rate limits, preventing CSRF attacks, and detecting security breaches."
+        "title": "Protecting the service",
+        "body": "Rate limits, blocking attacks and spotting unusual access."
       },
       "statutory": {
-        "title": "Statutory Compliance",
-        "body": "Adhering to cybersecurity recordkeeping, regulatory investigations, and lawful audit requirements."
+        "title": "What the law requires",
+        "body": "Giving information when a competent authority makes a valid request."
       }
     },
-    "transfers": {
-      "title": "4. Cross-Border Data Transfers",
-      "body": "When utilizing cloud-hosted infrastructure (such as AWS, Vercel, or external OAuth providers), personal data may be transferred to or processed on secure servers located outside Vietnam. In accordance with Article 20 of Law No. 91/2025/QH15, we enforce strict standard contractual clauses (SCCs) and robust cryptographic safeguards ensuring transferred data receives the same level of legal protection as domestic processing."
-    },
     "cookies": {
-      "title": "5. Cookies and Technical Tracking",
-      "body": "We do not employ invasive third-party advertising or behavioral profiling cookies. We only use strictly necessary technical cookies:",
+      "title": "5. Cookies and browser storage",
+      "body": "We use no advertising or behaviour-tracking cookies. Only what the service needs to run:",
       "items": {
-        "session": "Session authentication cookies tagged with <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Lax</code>.",
-        "theme": "User theme preference stored in client-side storage (<code>theme</code>)."
+        "session": "Three sign-in cookies (<code>.access</code>, <code>.refresh</code>, <code>.id</code>), set <code>HttpOnly</code> and <code>SameSite=Lax</code>, plus <code>Secure</code> in production. While you sign in there is also a short-lived cookie (10 minutes) that confirms the sign-in, and Keycloak sets its own session cookies on its own domain.",
+        "language": "The <code>NEXT_LOCALE</code> cookie remembers your language.",
+        "theme": "Your light, dark or system choice is kept in your own browser."
+      }
+    },
+    "retention": {
+      "title": "6. How long we keep it",
+      "body": "Data is kept while the account exists, except for:",
+      "items": {
+        "readings": "Per-minute readings and per-appliance estimates: the last 400 days; older ones are deleted automatically.",
+        "rollups": "Hourly and daily totals: kept until you delete your account.",
+        "account": "Profile, chats, alerts and plans: kept until you delete your account.",
+        "guest": "Trial guest accounts: 24 hours, cleared when a new guest arrives."
       }
     },
     "rights": {
-      "title": "6. Your Rights and Statutory Response Timelines",
-      "body": "Under Article 4 of Law No. 91/2025/QH15 and Decree No. 356/2025/ND-CP, you hold fundamental rights over your data. We commit to the following concrete response service-level agreements (SLAs):",
+      "title": "7. Your rights",
+      "body": "Under Law No. 91/2025/QH15 and Decree No. 356/2025/ND-CP you have these rights over your data. Send a request to the email in section 1; we answer within the time the law sets.",
       "items": {
-        "acknowledge": "Acknowledgement of Receipt",
-        "access": "Right to Access, Inspect & Correct Data",
-        "withdraw": "Withdrawal of Consent & Restriction of Processing",
-        "erasure": "Right to Erasure (Complete Account Deletion)"
-      },
-      "within": "Within {days} business days"
+        "access": "To know and see your data.",
+        "correct": "To correct wrong data. You can edit your home and notification choices in settings; for your name or email, write to the email in section 1.",
+        "withdraw": "To withdraw consent, for example by turning email notifications off in settings.",
+        "erase": "To ask for your data to be deleted: do it yourself right away from the account menu, see section 8.",
+        "complain": "To complain, report or sue if you think your data was handled unlawfully."
+      }
     },
     "deletion": {
-      "title": "7. Account Deletion and Data Retention",
-      "body": "You may request account deletion by submitting a written request to <code>privacy@wattprint.local</code>. Upon confirmation, all personal data, active tokens, and workspace associations will be irreversibly purged within 20 business days."
+      "title": "8. Deleting your account",
+      "body": "Open the account menu at the bottom of the sidebar and choose <strong>Delete account</strong>. Your profile, chats, savings plans, the alerts you set, your choices and your sign-in account are deleted at once (if deleting the sign-in account fails, you are asked to try again). If you are the only person in your home, the home goes too, with its alerts, all its meter readings and its totals. The data is deleted from the running system.",
+      "limit": "If other people are still in your home we cannot delete it yet, because their data is not yours to delete: ask them to leave first. If you cannot use the menu, send the request to the email in section 1."
     },
     "ai": {
-      "title": "8. AI Transparency and Automated Processing",
-      "body": "In compliance with Vietnam's Law on Artificial Intelligence (Law No. 134/2025/QH15) and Decree No. 142/2026/ND-CP:",
+      "title": "9. The Wappi assistant and automated processing",
+      "body": "About the use of AI in WattPrint:",
       "items": {
-        "disclosure": "<strong>AI Role & Disclosure:</strong> Any AI-powered telemetry analysis, code assistance, or automated reporting tools are explicitly labeled. Interactive AI features identify themselves as automated systems and not human operators.",
-        "human": "<strong>Human-in-the-Loop:</strong> Critical system administration, account lifecycle terminations, and security revocations always require explicit human operator confirmation and are never delegated to unmonitored autonomous models.",
-        "training": "<strong>Training Data Safeguards:</strong> Customer workspace telemetry and user credentials are never used for public AI model training or shared with external model vendors without explicit affirmative consent."
+        "automated": "<strong>Wappi is an automated system.</strong> It is not a person, and nobody reads each answer before you see it.",
+        "estimates": "<strong>Per-appliance figures are estimates.</strong> They are worked out from the main meter by an appliance-recognition model, not from separate meters, and are labelled “estimated”.",
+        "providers": "<strong>Your question goes to the model providers</strong> (section 3) so Wappi can answer. We do not control what they do with it afterwards; weigh that before you ask.",
+        "training": "<strong>Our appliance-recognition models are trained on public datasets</strong> (REFIT, Plegma, ENERTALK), not on your data."
       }
     }
   }

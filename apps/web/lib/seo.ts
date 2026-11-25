@@ -21,7 +21,7 @@ export function alternatesFor(
 }
 
 /** The pages' last real edit, for the sitemap: a date that moves on every request teaches crawlers to ignore it. */
-export const LAST_EDITED = { home: "2026-11-25", legal: "2026-01-01" } as const
+export const LAST_EDITED = { home: "2026-11-25", legal: "2026-11-25" } as const
 
 /**
  * A section anchor on the home page from any page: `home` is the localized home path ("/" or "/en"), kept whole so

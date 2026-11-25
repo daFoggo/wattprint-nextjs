@@ -9,17 +9,22 @@ import type { Locale } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/seo"
 
 // Noon UTC keeps the same calendar day whatever the server's time zone.
-const EFFECTIVE = new Date("2026-01-01T12:00:00Z")
-const COLLECTED = ["account", "session", "workspace"] as const
-const BASES = ["contract", "consent", "interests", "statutory"] as const
-const COOKIES = ["session", "theme"] as const
-const RIGHTS = [
-  ["acknowledge", 2],
-  ["access", 10],
-  ["withdraw", 15],
-  ["erasure", 20],
+const EFFECTIVE = new Date("2026-11-25T12:00:00Z")
+const COLLECTED = [
+  "account",
+  "session",
+  "home",
+  "energy",
+  "assistant",
+  "voice",
+  "guest",
 ] as const
-const AI_RULES = ["disclosure", "human", "training"] as const
+const SHARING = ["ai", "voice", "weather", "google"] as const
+const BASES = ["contract", "consent", "interests", "statutory"] as const
+const COOKIES = ["session", "language", "theme"] as const
+const RETENTION = ["readings", "rollups", "account", "guest"] as const
+const RIGHTS = ["access", "correct", "withdraw", "erase", "complain"] as const
+const AI_RULES = ["automated", "estimates", "providers", "training"] as const
 
 const rich = {
   strong: (chunks: React.ReactNode) => (
@@ -66,7 +71,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* Section 1: Data Controller */}
+          {/* Section 1: Who is responsible */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("controller.title")}
@@ -75,9 +80,8 @@ export default function PrivacyPolicyPage() {
               {t("controller.body")}
             </p>
             <div className="rounded-2xl bg-card p-4 font-mono text-xs text-foreground">
-              <p>{t("controller.organization")}</p>
+              <p>{t("controller.name")}</p>
               <p>{t("controller.email")}</p>
-              <p>{t("controller.support")}</p>
             </div>
           </section>
 
@@ -96,7 +100,25 @@ export default function PrivacyPolicyPage() {
             </ul>
           </section>
 
-          {/* Section 3: Purposes and Legal Grounds */}
+          {/* Section 3: Who receives it */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("sharing.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("sharing.body")}
+            </p>
+            <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+              {SHARING.map((key) => (
+                <li key={key}>{t.rich(`sharing.items.${key}`, rich)}</li>
+              ))}
+            </ul>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("sharing.abroad")}
+            </p>
+          </section>
+
+          {/* Section 4: Purposes and Legal Grounds */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("bases.title")}
@@ -118,17 +140,7 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
 
-          {/* Section 4: Cross-Border Transfers */}
-          <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">
-              {t("transfers.title")}
-            </h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {t("transfers.body")}
-            </p>
-          </section>
-
-          {/* Section 5: Cookies and Tracking */}
+          {/* Section 5: Cookies and browser storage */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("cookies.title")}
@@ -143,35 +155,40 @@ export default function PrivacyPolicyPage() {
             </ul>
           </section>
 
-          {/* Section 6: User Rights & Concrete SLA (Key compliance item) */}
+          {/* Section 6: Retention */}
           <section className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <IconClock className="size-4 text-primary" />
               <h2 className="text-xl font-medium text-foreground">
-                {t("rights.title")}
+                {t("retention.title")}
               </h2>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {t("rights.body")}
+              {t("retention.body")}
             </p>
-            <div className="flex flex-col divide-y divide-border rounded-2xl bg-card font-mono text-xs">
-              {RIGHTS.map(([key, days]) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between p-3.5"
-                >
-                  <span className="text-foreground">
-                    {t(`rights.items.${key}`)}
-                  </span>
-                  <span className="font-medium text-foreground">
-                    {t("rights.within", { days })}
-                  </span>
-                </div>
+            <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+              {RETENTION.map((key) => (
+                <li key={key}>{t(`retention.items.${key}`)}</li>
               ))}
-            </div>
+            </ul>
           </section>
 
-          {/* Section 7: Account Deletion */}
+          {/* Section 7: Rights */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("rights.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("rights.body")}
+            </p>
+            <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+              {RIGHTS.map((key) => (
+                <li key={key}>{t(`rights.items.${key}`)}</li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Section 8: Account Deletion */}
           <section className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <IconFileCheck className="size-4 text-primary" />
@@ -182,9 +199,12 @@ export default function PrivacyPolicyPage() {
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t.rich("deletion.body", rich)}
             </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("deletion.limit")}
+            </p>
           </section>
 
-          {/* Section 8: AI Transparency & Processing (Law 134/2025/QH15) */}
+          {/* Section 9: The assistant and automated processing */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("ai.title")}

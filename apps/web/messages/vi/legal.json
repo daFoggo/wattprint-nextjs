@@ -2,131 +2,158 @@
   "terms": {
     "meta": {
       "title": "Điều khoản dịch vụ",
-      "description": "Điều khoản dịch vụ và thỏa thuận dành cho nhà phát triển của WattPrint."
+      "description": "Điều khoản sử dụng WattPrint, dịch vụ theo dõi điện năng và dự báo hóa đơn cho hộ gia đình."
     },
-    "badge": "Thỏa thuận pháp lý",
+    "badge": "Điều khoản",
     "lastUpdated": "Cập nhật lần cuối: {date, date, long}",
     "title": "Điều khoản dịch vụ",
-    "intro": "Các Điều khoản dịch vụ này (“Điều khoản”) điều chỉnh việc bạn truy cập và sử dụng WattPrint, bao gồm trang giới thiệu, bảng điều khiển và các gói phần mềm liên quan. Khi tạo tài khoản hoặc tiếp tục sử dụng dịch vụ của chúng tôi, bạn đồng ý chịu sự ràng buộc của các Điều khoản này.",
-    "license": {
-      "title": "1. Giấy phép mã nguồn mở và mã nguồn",
-      "body": "Kho mã nguồn WattPrint và mã khởi tạo kiến trúc được cấp phép theo Giấy phép MIT. Bạn được tự do sử dụng, sửa đổi và phân phối mã mẫu cho các dự án cá nhân hoặc thương mại, với điều kiện giữ nguyên thông báo bản quyền và thông báo cấp phép gốc."
+    "intro": "Các điều khoản này (“Điều khoản”) áp dụng khi bạn dùng WattPrint: trang giới thiệu và bảng điều khiển. Khi tạo tài khoản hoặc tiếp tục dùng dịch vụ, bạn đồng ý với các Điều khoản này.",
+    "service": {
+      "title": "1. WattPrint là gì",
+      "body": "WattPrint cho bạn xem điện năng của ngôi nhà, ước tính mỗi thiết bị dùng bao nhiêu, dự báo hóa đơn tiền điện và đưa ra gợi ý tiết kiệm. Mọi con số là thông tin tham khảo: số theo từng thiết bị là ước tính từ công tơ tổng, không phải đo riêng, và hóa đơn dự báo có thể khác hóa đơn của công ty điện lực. Hóa đơn thật luôn là hóa đơn do công ty điện lực gửi."
     },
     "accounts": {
-      "title": "2. Tài khoản người dùng và bảo mật",
-      "body": "Khi tạo tài khoản qua bảng điều khiển của chúng tôi, bạn đồng ý:",
+      "title": "2. Tài khoản và bảo mật",
+      "body": "Khi tạo tài khoản, bạn đồng ý:",
       "items": {
-        "accurate": "Cung cấp thông tin đăng ký chính xác, cập nhật và đầy đủ.",
-        "confidential": "Giữ bí mật và bảo mật thông tin xác thực của mình.",
-        "notify": "Thông báo kịp thời cho chúng tôi khi nghi ngờ có vi phạm bảo mật hoặc truy cập trái phép.",
-        "responsible": "Chịu trách nhiệm đối với mọi hoạt động diễn ra dưới tài khoản hoặc thông tin xác thực của bạn."
+        "accurate": "Cung cấp thông tin đăng ký chính xác và cập nhật.",
+        "confidential": "Giữ bí mật thông tin đăng nhập của mình.",
+        "notify": "Báo cho chúng tôi sớm khi nghi ngờ tài khoản bị truy cập trái phép.",
+        "responsible": "Chịu trách nhiệm về mọi hoạt động dưới tài khoản của bạn."
       }
     },
     "acceptableUse": {
-      "title": "3. Chính sách sử dụng được chấp nhận",
-      "body": "Bạn đồng ý không lạm dụng nền tảng hoặc hỗ trợ người khác làm điều đó. Cụ thể, bạn đồng ý không:",
+      "title": "3. Sử dụng đúng cách",
+      "body": "Bạn đồng ý không lạm dụng dịch vụ hoặc giúp người khác làm điều đó. Cụ thể, bạn không:",
       "items": {
-        "laws": "Vi phạm các quy định hiện hành của địa phương, quốc gia hoặc quốc tế, bao gồm Luật An ninh mạng và Luật Bảo vệ dữ liệu cá nhân.",
-        "security": "Tìm cách vượt qua cơ chế xác thực, dò ngược giới hạn tần suất truy cập hoặc thăm dò các ranh giới bảo mật khi chưa được cho phép rõ ràng.",
-        "abuse": "Thực hiện tấn công từ chối dịch vụ, thu thập tự động thông tin đăng nhập hoặc truy cập trái phép dữ liệu của tổ chức khác."
+        "laws": "Vi phạm pháp luật Việt Nam, bao gồm các quy định về an ninh mạng và bảo vệ dữ liệu cá nhân.",
+        "security": "Tìm cách vượt qua đăng nhập, giới hạn số lần gọi hoặc dò các lớp bảo mật khi chưa được cho phép rõ ràng.",
+        "abuse": "Tấn công từ chối dịch vụ, dò mật khẩu tự động hoặc truy cập dữ liệu của người khác."
       }
     },
-    "workspace": {
-      "title": "4. Không gian làm việc đa tổ chức và tài nguyên",
-      "body": "Các tổ chức và dự án được tạo trong bảng điều khiển được tách biệt theo mã truy cập của người dùng và theo từng tổ chức. Bạn giữ quyền sở hữu đối với mọi cấu hình dự án và dữ liệu được tạo trong không gian làm việc của mình. Chúng tôi có quyền tạm ngưng hoặc xóa các tài nguyên dùng thử không hoạt động trong thời gian dài."
+    "home": {
+      "title": "4. Ngôi nhà và các thành viên",
+      "body": "Mỗi tài khoản thuộc về một ngôi nhà. Chủ nhà là người tạo ngôi nhà; thành viên cùng xem và dùng dữ liệu của nhà đó, người xem chỉ được đọc. Các ngôi nhà mẫu trên trang đăng nhập là bản ghi công khai của các bộ dữ liệu nghiên cứu (REFIT, Plegma, ENERTALK) được phát lại để bạn dùng thử, không phải nhà của người dùng WattPrint. Tài khoản khách dùng thử bị xóa sau 24 giờ, vào lúc có khách mới đến dùng thử."
+    },
+    "assistant": {
+      "title": "5. Trợ lý Wappi",
+      "body": "Wappi là hệ thống tự động, không phải người thật. Con số trong câu trả lời lấy từ dữ liệu của nhà bạn, nhưng lời giải thích có thể sai hoặc thiếu, nên đừng xem đó là tư vấn chuyên môn. Đừng nhập thông tin nhạy cảm vào khung trò chuyện: số điện thoại, số căn cước, email, số thẻ hoặc tài khoản được thay bằng nhãn trước khi lưu, nhưng cách này chỉ nhận ra các dạng số quen thuộc, không nhận ra tên hay địa chỉ."
     },
     "liability": {
-      "title": "5. Giới hạn trách nhiệm và miễn trừ bảo đảm",
-      "body": "Phần mềm và dịch vụ được cung cấp “NGUYÊN TRẠNG”, không kèm bất kỳ bảo đảm nào, dù rõ ràng hay ngụ ý. Trong mọi trường hợp, WattPrint hoặc các tác giả không chịu trách nhiệm đối với bất kỳ thiệt hại trực tiếp, gián tiếp, ngẫu nhiên hoặc hệ quả nào phát sinh từ việc sử dụng hoặc không thể sử dụng phần mềm."
+      "title": "6. Giới hạn trách nhiệm",
+      "body": "Dịch vụ được cung cấp “nguyên trạng”, không kèm bảo đảm nào, dù rõ ràng hay ngụ ý, trong phạm vi pháp luật cho phép. Chúng tôi không chịu trách nhiệm cho thiệt hại gián tiếp hoặc hệ quả phát sinh từ việc dùng hoặc không dùng được dịch vụ, trong đó có quyết định về điện năng hay tiền điện dựa trên số liệu ước tính hoặc dự báo."
     },
     "termination": {
-      "title": "6. Chấm dứt và xóa tài khoản",
-      "body": "Bạn có thể chấm dứt các Điều khoản này bất cứ lúc nào bằng cách yêu cầu xóa tài khoản (xem Chính sách quyền riêng tư). Chúng tôi có quyền tạm ngưng hoặc chấm dứt các tài khoản vi phạm các Điều khoản này. Khi chấm dứt, việc xóa dữ liệu sẽ được thực hiện theo Chính sách quyền riêng tư của chúng tôi."
+      "title": "7. Chấm dứt và xóa tài khoản",
+      "body": "Bạn có thể chấm dứt bất cứ lúc nào bằng cách xóa tài khoản trong menu tài khoản của bảng điều khiển (xem Chính sách quyền riêng tư để biết dữ liệu nào bị xóa). Chúng tôi có thể tạm ngưng hoặc chấm dứt tài khoản vi phạm các Điều khoản này."
     },
     "law": {
-      "title": "7. Luật điều chỉnh",
-      "body": "Các Điều khoản này được điều chỉnh và giải thích theo pháp luật hiện hành, không áp dụng các nguyên tắc xung đột pháp luật."
+      "title": "8. Luật áp dụng và liên hệ",
+      "body": "Các Điều khoản này theo pháp luật Việt Nam. Mọi câu hỏi, vui lòng liên hệ ntgiang141105@gmail.com."
     }
   },
   "privacy": {
     "meta": {
       "title": "Chính sách quyền riêng tư",
-      "description": "Chính sách quyền riêng tư và các nguyên tắc bảo vệ dữ liệu cá nhân của WattPrint."
+      "description": "WattPrint thu thập, dùng, chia sẻ và xóa dữ liệu của bạn như thế nào."
     },
-    "badge": "Tiêu chuẩn tuân thủ 2026",
+    "badge": "Quyền riêng tư",
     "effective": "Có hiệu lực từ: {date, date, long}",
-    "title": "Chính sách quyền riêng tư và bảo vệ dữ liệu",
-    "intro": "Chính sách quyền riêng tư này giải thích cách WattPrint (“chúng tôi”) thu thập, xử lý, bảo vệ và lưu giữ dữ liệu cá nhân của bạn theo các quy định pháp luật hiện hành về bảo vệ dữ liệu, bao gồm Luật Bảo vệ dữ liệu cá nhân (Luật số 91/2025/QH15) và Nghị định số 356/2025/NĐ-CP, cũng như các tiêu chuẩn quốc tế (GDPR và CCPA).",
+    "title": "Chính sách quyền riêng tư",
+    "intro": "Trang này nói rõ WattPrint thu thập dữ liệu gì, gửi cho ai, giữ bao lâu và bạn xóa nó thế nào. Chúng tôi viết theo Luật Bảo vệ dữ liệu cá nhân (Luật số 91/2025/QH15) và Nghị định số 356/2025/NĐ-CP.",
     "controller": {
-      "title": "1. Bên kiểm soát dữ liệu và thông tin liên hệ",
-      "body": "WattPrint là bên kiểm soát dữ liệu đối với dữ liệu cá nhân được xử lý qua trang web và bảng điều khiển của chúng tôi. Nếu bạn có câu hỏi, yêu cầu hoặc mối lo ngại nào về quyền riêng tư hoặc chính sách này, vui lòng liên hệ Nhân sự phụ trách bảo vệ dữ liệu (DPO) của chúng tôi:",
-      "organization": "Tổ chức: WattPrint",
-      "email": "Email: privacy@wattprint.local",
-      "support": "Hỗ trợ: security@wattprint.local"
+      "title": "1. Ai chịu trách nhiệm về dữ liệu",
+      "body": "Dữ liệu của bạn do một cá nhân quản lý và chịu trách nhiệm:",
+      "name": "Nguyễn Trường Giang",
+      "email": "Email: ntgiang141105@gmail.com"
     },
     "collected": {
-      "title": "2. Các loại dữ liệu cá nhân được thu thập",
-      "body": "Chúng tôi chỉ thu thập lượng dữ liệu tối thiểu cần thiết để cung cấp xác thực an toàn, tổ chức không gian làm việc và các dịch vụ cho nhà phát triển:",
+      "title": "2. Dữ liệu chúng tôi thu thập",
+      "body": "Chỉ những gì cần để dịch vụ chạy:",
       "items": {
-        "account": "<strong>Thông tin tài khoản và hồ sơ:</strong> Họ tên, địa chỉ email và mật khẩu đã được băm an toàn (argon2/bcrypt). Chúng tôi không bao giờ lưu mật khẩu dưới dạng văn bản thuần.",
-        "session": "<strong>Định danh xác thực và phiên:</strong> Mã truy cập, cookie phiên (<code>nmb-dashboard-auth.access</code>, <code>SameSite=Lax</code>) và địa chỉ IP cần thiết để gắn kết phiên và phòng chống đánh cắp mã truy cập.",
-        "workspace": "<strong>Siêu dữ liệu không gian làm việc và dự án:</strong> Định danh rút gọn (slug) của tổ chức, mã định danh dự án và nhật ký kiểm tra các thay đổi cấu hình."
+        "account": "<strong>Tài khoản:</strong> email và tên (nhập khi đăng ký hoặc lấy từ tài khoản Google nếu bạn đăng nhập bằng Google). Mật khẩu do Keycloak giữ dưới dạng băm, chúng tôi không đọc được.",
+        "session": "<strong>Phiên đăng nhập:</strong> mã truy cập nằm trong cookie, và địa chỉ IP mà máy chủ và Keycloak ghi lại để chặn lạm dụng.",
+        "home": "<strong>Ngôi nhà:</strong> tên nhà, tỉnh hoặc thành phố, số người, diện tích, loại nhà, ngày chốt hóa đơn và các lựa chọn thông báo bạn đặt.",
+        "energy": "<strong>Điện năng:</strong> số đo công tơ của nhà, ước tính điện từng thiết bị tính từ số đo đó, hóa đơn dự báo, cảnh báo và kế hoạch tiết kiệm.",
+        "assistant": "<strong>Trò chuyện với Wappi:</strong> câu hỏi và câu trả lời được lưu cùng tài khoản. Số điện thoại, căn cước, email, số thẻ và số tài khoản được thay bằng nhãn trước khi lưu hoặc gửi đi.",
+        "voice": "<strong>Giọng nói:</strong> khi bạn nói với Wappi, âm thanh được chuyển thành chữ; khi bạn nghe câu trả lời, âm thanh đọc được lưu lại để lần sau nghe không phải tạo lại.",
+        "guest": "<strong>Khách dùng thử:</strong> một tài khoản tạm không có email thật, bị xóa sau 24 giờ (các tài khoản quá hạn được dọn khi có khách mới đến)."
       }
+    },
+    "sharing": {
+      "title": "3. Dữ liệu được gửi cho ai",
+      "body": "Một số phần của dịch vụ do bên khác xử lý. Chúng tôi chỉ gửi phần cần cho việc đó, và một số bên nằm ngoài Việt Nam:",
+      "items": {
+        "ai": "<strong>OpenRouter và AstralX</strong> (mô hình ngôn ngữ của Wappi): câu hỏi của bạn đã che thông tin cá nhân, cùng các con số mà công cụ của Wappi tra từ dữ liệu nhà bạn để trả lời.",
+        "voice": "<strong>AstralX</strong> (giọng nói): âm thanh bạn ghi âm để chuyển thành chữ, và câu trả lời để đọc thành tiếng.",
+        "weather": "<strong>OpenWeather</strong> (thời tiết): chỉ tọa độ cấp tỉnh hoặc thành phố của nhà, không gửi địa chỉ hay tên bạn.",
+        "google": "<strong>Google</strong> (đăng nhập, nếu bạn chọn): Google biết bạn đăng nhập WattPrint theo cách của Google."
+      },
+      "abroad": "Mỗi bên có chính sách riêng về dữ liệu họ nhận, hãy xem chính sách của họ nếu bạn quan tâm. Chúng tôi không dùng dữ liệu của bạn để quảng cáo và không gắn công cụ theo dõi quảng cáo nào vào dịch vụ."
     },
     "bases": {
-      "title": "3. Mục đích và căn cứ pháp lý của việc xử lý",
-      "body": "Tuân thủ Điều 9 Luật số 91/2025/QH15 và Điều 6 GDPR, chúng tôi chỉ xử lý dữ liệu khi có căn cứ pháp lý rõ ràng:",
+      "title": "4. Vì sao chúng tôi được xử lý dữ liệu",
+      "body": "Mỗi việc xử lý dựa trên một căn cứ rõ ràng:",
       "contract": {
-        "title": "Thực hiện hợp đồng",
-        "body": "Khởi tạo tài khoản người dùng, xác thực phiên qua Keycloak và quản lý tài nguyên không gian làm việc."
+        "title": "Để cung cấp dịch vụ",
+        "body": "Tạo tài khoản, đăng nhập, hiển thị điện năng và hóa đơn, chạy Wappi."
       },
       "consent": {
-        "title": "Sự đồng ý rõ ràng",
-        "body": "Được bạn chủ động đưa ra khi đăng ký tài khoản. Sự im lặng hoặc ô đánh dấu sẵn không bao giờ được coi là sự đồng ý."
+        "title": "Bạn đồng ý",
+        "body": "Bạn tự đăng ký, tự bật thông báo qua email và tự chọn nói với Wappi. Im lặng hay ô tích sẵn không phải là đồng ý."
       },
       "interests": {
-        "title": "Lợi ích hợp pháp",
-        "body": "Bảo vệ hệ thống trước tấn công từ chối dịch vụ, áp dụng giới hạn tần suất truy cập, ngăn chặn tấn công CSRF và phát hiện vi phạm bảo mật."
+        "title": "Bảo vệ dịch vụ",
+        "body": "Giới hạn số lần gọi, chặn tấn công và phát hiện truy cập bất thường."
       },
       "statutory": {
-        "title": "Tuân thủ quy định pháp luật",
-        "body": "Đáp ứng các yêu cầu lưu trữ hồ sơ về an ninh mạng, điều tra của cơ quan quản lý và kiểm toán hợp pháp."
+        "title": "Theo yêu cầu của pháp luật",
+        "body": "Cung cấp thông tin khi cơ quan có thẩm quyền yêu cầu hợp lệ."
       }
     },
-    "transfers": {
-      "title": "4. Chuyển dữ liệu ra nước ngoài",
-      "body": "Khi sử dụng hạ tầng đám mây (như AWS, Vercel hoặc các nhà cung cấp OAuth bên ngoài), dữ liệu cá nhân có thể được chuyển đến hoặc xử lý trên các máy chủ bảo mật đặt ngoài lãnh thổ Việt Nam. Theo Điều 20 Luật số 91/2025/QH15, chúng tôi áp dụng nghiêm ngặt các điều khoản hợp đồng mẫu (SCC) và các biện pháp bảo vệ mật mã vững chắc, bảo đảm dữ liệu được chuyển đi nhận được mức độ bảo vệ pháp lý tương đương với việc xử lý trong nước."
-    },
     "cookies": {
-      "title": "5. Cookie và theo dõi kỹ thuật",
-      "body": "Chúng tôi không sử dụng cookie quảng cáo xâm phạm của bên thứ ba hay cookie lập hồ sơ hành vi. Chúng tôi chỉ dùng các cookie kỹ thuật thực sự cần thiết:",
+      "title": "5. Cookie và lưu trữ trên trình duyệt",
+      "body": "Chúng tôi không dùng cookie quảng cáo hay cookie theo dõi hành vi. Chỉ có những thứ cần để dịch vụ chạy:",
       "items": {
-        "session": "Cookie xác thực phiên được gắn thuộc tính <code>HttpOnly</code>, <code>Secure</code> và <code>SameSite=Lax</code>.",
-        "theme": "Tùy chọn giao diện của người dùng được lưu ở bộ nhớ phía trình duyệt (<code>theme</code>)."
+        "session": "Ba cookie phiên đăng nhập (<code>.access</code>, <code>.refresh</code>, <code>.id</code>), đặt <code>HttpOnly</code> và <code>SameSite=Lax</code>, thêm <code>Secure</code> khi chạy thật. Lúc đăng nhập còn một cookie ngắn hạn (10 phút) để xác nhận lượt đăng nhập, và Keycloak đặt cookie phiên riêng trên tên miền của nó.",
+        "language": "Cookie <code>NEXT_LOCALE</code> nhớ ngôn ngữ bạn chọn.",
+        "theme": "Lựa chọn sáng, tối hoặc theo máy được lưu ngay trong trình duyệt của bạn."
+      }
+    },
+    "retention": {
+      "title": "6. Giữ dữ liệu bao lâu",
+      "body": "Dữ liệu được giữ trong lúc tài khoản còn, trừ những mục sau:",
+      "items": {
+        "readings": "Số đo theo phút và ước tính từng thiết bị: 400 ngày gần nhất, cũ hơn tự xóa.",
+        "rollups": "Tổng hợp theo giờ và theo ngày: giữ đến khi bạn xóa tài khoản.",
+        "account": "Hồ sơ, trò chuyện, cảnh báo và kế hoạch: giữ đến khi bạn xóa tài khoản.",
+        "guest": "Tài khoản khách dùng thử: 24 giờ, được dọn khi có khách mới đến."
       }
     },
     "rights": {
-      "title": "6. Quyền của bạn và thời hạn phản hồi theo luật định",
-      "body": "Theo Điều 4 Luật số 91/2025/QH15 và Nghị định số 356/2025/NĐ-CP, bạn có các quyền cơ bản đối với dữ liệu của mình. Chúng tôi cam kết các mức thời hạn phản hồi (SLA) cụ thể sau:",
+      "title": "7. Quyền của bạn",
+      "body": "Theo Luật số 91/2025/QH15 và Nghị định số 356/2025/NĐ-CP, bạn có các quyền sau với dữ liệu của mình. Gửi yêu cầu tới email ở mục 1; chúng tôi trả lời trong thời hạn pháp luật quy định.",
       "items": {
-        "acknowledge": "Xác nhận đã nhận yêu cầu",
-        "access": "Quyền truy cập, xem và chỉnh sửa dữ liệu",
-        "withdraw": "Rút lại sự đồng ý và hạn chế xử lý",
-        "erasure": "Quyền xóa dữ liệu (xóa hoàn toàn tài khoản)"
-      },
-      "within": "Trong vòng {days} ngày làm việc"
+        "access": "Được biết và xem dữ liệu của mình.",
+        "correct": "Chỉnh sửa dữ liệu sai. Ngôi nhà và các lựa chọn thông báo bạn tự sửa trong phần cài đặt; tên hoặc email thì gửi yêu cầu tới email ở mục 1.",
+        "withdraw": "Rút lại sự đồng ý, ví dụ tắt thông báo email trong phần cài đặt.",
+        "erase": "Yêu cầu xóa dữ liệu: tự làm ngay trong menu tài khoản, xem mục 8.",
+        "complain": "Khiếu nại, tố cáo hoặc khởi kiện khi cho rằng dữ liệu bị xử lý trái luật."
+      }
     },
     "deletion": {
-      "title": "7. Xóa tài khoản và lưu giữ dữ liệu",
-      "body": "Bạn có thể yêu cầu xóa tài khoản bằng cách gửi yêu cầu bằng văn bản đến <code>privacy@wattprint.local</code>. Sau khi xác nhận, toàn bộ dữ liệu cá nhân, mã truy cập đang hoạt động và các liên kết không gian làm việc sẽ bị xóa vĩnh viễn trong vòng 20 ngày làm việc."
+      "title": "8. Xóa tài khoản",
+      "body": "Mở menu tài khoản ở góc dưới thanh bên và chọn <strong>Xóa tài khoản</strong>. Hồ sơ, trò chuyện, kế hoạch tiết kiệm, cảnh báo bạn đã đặt, lựa chọn của bạn và tài khoản đăng nhập bị xóa ngay (nếu bước xóa tài khoản đăng nhập lỗi, bạn sẽ được báo thử lại). Nếu bạn là người duy nhất trong ngôi nhà, cả ngôi nhà cũng bị xóa cùng cảnh báo, toàn bộ số đo điện và các bản tổng hợp của nó. Dữ liệu được xóa khỏi hệ thống đang chạy.",
+      "limit": "Nếu còn người khác trong nhà của bạn, chúng tôi chưa xóa được, vì dữ liệu của họ không phải của bạn để xóa: hãy để họ rời nhà trước. Nếu không dùng được menu, bạn có thể gửi yêu cầu qua email ở mục 1."
     },
     "ai": {
-      "title": "8. Minh bạch về AI và xử lý tự động",
-      "body": "Tuân thủ Luật Trí tuệ nhân tạo của Việt Nam (Luật số 134/2025/QH15) và Nghị định số 142/2026/NĐ-CP:",
+      "title": "9. Trợ lý Wappi và xử lý tự động",
+      "body": "Về việc dùng AI trong WattPrint:",
       "items": {
-        "disclosure": "<strong>Vai trò và công bố về AI:</strong> Mọi công cụ phân tích dữ liệu đo lường, hỗ trợ lập trình hoặc báo cáo tự động sử dụng AI đều được gắn nhãn rõ ràng. Các tính năng AI tương tác tự nhận là hệ thống tự động, không phải người vận hành.",
-        "human": "<strong>Con người giám sát:</strong> Các tác vụ quản trị hệ thống quan trọng, chấm dứt vòng đời tài khoản và thu hồi quyền bảo mật luôn cần người vận hành xác nhận rõ ràng và không bao giờ được giao cho các mô hình tự hành không có giám sát.",
-        "training": "<strong>Bảo vệ dữ liệu huấn luyện:</strong> Dữ liệu đo lường trong không gian làm việc của khách hàng và thông tin xác thực của người dùng không bao giờ được dùng để huấn luyện mô hình AI công khai hoặc chia sẻ với nhà cung cấp mô hình bên ngoài khi chưa có sự đồng ý rõ ràng."
+        "automated": "<strong>Wappi là hệ thống tự động.</strong> Đó không phải người thật, và không ai đọc từng câu trả lời trước khi bạn thấy.",
+        "estimates": "<strong>Số theo từng thiết bị là ước tính.</strong> Chúng tính từ công tơ tổng bằng mô hình nhận diện thiết bị, không phải công tơ riêng, và được ghi rõ là “ước tính”.",
+        "providers": "<strong>Câu hỏi của bạn được gửi cho nhà cung cấp mô hình</strong> (mục 3) để Wappi trả lời. Chúng tôi không kiểm soát cách họ xử lý sau đó; đây là điều bạn nên cân nhắc trước khi hỏi.",
+        "training": "<strong>Mô hình nhận diện thiết bị của chúng tôi được huấn luyện trên bộ dữ liệu công khai</strong> (REFIT, Plegma, ENERTALK), không dùng dữ liệu của bạn."
       }
     }
   }

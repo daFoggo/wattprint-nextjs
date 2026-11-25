@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { IconPlayerStopFilled, IconTool, IconVolume } from "@tabler/icons-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import { Link } from "@/i18n/navigation"
+
 import { Alert } from "@workspace/ui/components/hairline/alert"
 import { Badge } from "@workspace/ui/components/hairline/badge"
 import { Button } from "@workspace/ui/components/hairline/button"
@@ -12,7 +14,6 @@ import {
   AnswerActions,
   FollowUps,
   StreamingText,
-  type AnswerSegment,
 } from "@workspace/ui/components/hairline/streaming-answer"
 import { ThinkingIndicator } from "@workspace/ui/components/hairline/thinking-indicator"
 import { ThinkingTrace } from "@workspace/ui/components/hairline/thinking-trace"
@@ -20,7 +21,8 @@ import { ToolCall } from "@workspace/ui/components/hairline/tool-call"
 import { Tooltip } from "@workspace/ui/components/hairline/tooltip"
 
 import { answerState } from "../moods"
-import type { DataTier, Reply } from "../schemas"
+import type { DataTier } from "../schemas"
+import { citedSegments, plainText } from "../text"
 import type { AssistantMessage } from "../threads"
 import { speechUrl } from "../voice"
 import { useCopilot } from "./copilot-provider"
@@ -43,20 +45,6 @@ type ErrorKey = (typeof ERRORS)[number] | "other"
 
 const errorKey = (code: string): ErrorKey =>
   (ERRORS as readonly string[]).includes(code) ? (code as ErrorKey) : "other"
-
-/** The text with each `[n]` as a citation chip for `sources[n - 1]`; without sources yet (streaming), the marks go. */
-function segments(
-  text: string,
-  sources: Reply["sources"] = []
-): AnswerSegment[] {
-  return text.split(/\[(\d+)\]/).flatMap((part, i): AnswerSegment[] => {
-    if (i % 2 === 0) return part ? [part] : []
-    const source = sources[Number(part) - 1]
-    return source
-      ? [{ type: "citation", label: source.title, href: source.url }]
-      : []
-  })
-}
 
 export function UserMessage({ text }: { text: string }) {
   return (
@@ -134,7 +122,8 @@ export function AssistantMessageView({
   const { reply, phase } = message
   const settled = phase === "done"
   const working = phase === "working"
-  const plain = message.text.replace(/\s*\[\d+\]/g, "")
+  const plain = plainText(message.text).replace(/\s*\[\d+\]/g, "")
+  const { segments, cited } = citedSegments(message.text, reply?.sources)
   const error = message.error ? errorKey(message.error) : undefined
 
   return (
@@ -182,7 +171,7 @@ export function AssistantMessageView({
 
       {message.text ? (
         <StreamingText
-          content={segments(message.text, reply?.sources)}
+          content={segments}
           status={
             phase === "streaming"
               ? "streaming"
@@ -192,6 +181,36 @@ export function AssistantMessageView({
           }
           className="text-base"
         />
+      ) : null}
+
+      {cited.length ? (
+        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs text-muted-foreground">
+          <span>{t("sources")}</span>
+          {cited.map((c) => {
+            const label = (
+              <>
+                <span className="font-mono text-foreground">{c.n}</span>{" "}
+                {c.title}
+              </>
+            )
+            const link = "underline-offset-2 hover:text-foreground hover:underline"
+            return c.url.startsWith("/") ? (
+              <Link key={c.n} href={c.url} className={link}>
+                {label}
+              </Link>
+            ) : (
+              <a
+                key={c.n}
+                href={c.url}
+                target="_blank"
+                rel="noreferrer"
+                className={link}
+              >
+                {label}
+              </a>
+            )
+          })}
+        </p>
       ) : null}
 
       {error ? (
@@ -223,7 +242,6 @@ export function AssistantMessageView({
             copyText={plain}
             feedback={message.feedback}
             onFeedback={(value) => rate(message.id, value)}
-            sources={reply.sources.map((s) => ({ name: s.title, href: s.url }))}
           />
           {plain ? <SpeakButton messageId={message.id} /> : null}
         </div>

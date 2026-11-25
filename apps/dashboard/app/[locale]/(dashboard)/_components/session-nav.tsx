@@ -1,11 +1,12 @@
 import { getTranslations } from "next-intl/server"
 import { hasPermission } from "@workspace/auth/permissions"
+import { DeleteAccount } from "@/features/auth/components/delete-account"
 import { SignOutButton } from "@/features/auth/components/sign-out-button"
 
 import { ScopedNav } from "@/components/layout/sidebar/scoped-nav"
 import { UserMenu } from "@/components/layout/sidebar/user-menu"
 import { NAV_SCOPES, filterNav } from "@/config/navigation"
-import { signOutAction } from "@/features/auth/actions"
+import { deleteAccountAction, signOutAction } from "@/features/auth/actions"
 import { getSession } from "@/lib/dal"
 
 /** Hides links (and whole sections) the role cannot open, in every scope; pages still enforce access. */
@@ -29,6 +30,7 @@ export async function SessionAccount() {
       role={session.role}
     >
       <SignOutButton action={signOutAction} />
+      <DeleteAccount action={deleteAccountAction} />
     </UserMenu>
   )
 }

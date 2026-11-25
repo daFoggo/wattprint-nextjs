@@ -9,7 +9,7 @@ import type { Locale } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/seo"
 
 // Noon UTC keeps the same calendar day whatever the server's time zone.
-const LAST_UPDATED = new Date("2026-01-01T12:00:00Z")
+const LAST_UPDATED = new Date("2026-11-25T12:00:00Z")
 const ACCOUNT_RULES = [
   "accurate",
   "confidential",
@@ -54,13 +54,13 @@ export default function TermsOfServicePage() {
             </p>
           </div>
 
-          {/* Section 1: Open Source & License */}
+          {/* Section 1: What WattPrint is */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
-              {t("license.title")}
+              {t("service.title")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {t("license.body")}
+              {t("service.body")}
             </p>
           </section>
 
@@ -97,17 +97,27 @@ export default function TermsOfServicePage() {
             </div>
           </section>
 
-          {/* Section 4: Multi-Tenant Workspace Rules */}
+          {/* Section 4: Home and members */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
-              {t("workspace.title")}
+              {t("home.title")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {t("workspace.body")}
+              {t("home.body")}
             </p>
           </section>
 
-          {/* Section 5: Limitation of Liability */}
+          {/* Section 5: The Wappi assistant */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("assistant.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {t("assistant.body")}
+            </p>
+          </section>
+
+          {/* Section 6: Limitation of Liability */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("liability.title")}
@@ -117,7 +127,7 @@ export default function TermsOfServicePage() {
             </p>
           </section>
 
-          {/* Section 6: Termination & Erasure */}
+          {/* Section 7: Termination & Erasure */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("termination.title")}
@@ -127,7 +137,7 @@ export default function TermsOfServicePage() {
             </p>
           </section>
 
-          {/* Section 7: Governing Law */}
+          {/* Section 8: Governing law and contact */}
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-medium text-foreground">
               {t("law.title")}

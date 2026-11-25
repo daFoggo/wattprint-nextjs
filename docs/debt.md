@@ -4,6 +4,41 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
+### Backlog xếp hạng (2026-11-25): góp ý của buổi review + việc dở của handoff + debt cũ
+
+Ưu tiên: P1 làm trước (rủi ro hoặc lợi nhiều, công nhỏ), P2 sau, P3 khi còn thời gian. Độ khó: Dễ (dưới nửa ngày),
+Vừa (1-2 ngày), Khó (nhiều ngày hoặc cần thứ ngoài code). Chi tiết kỹ thuật của từng việc nằm ở các mục dưới.
+Quy tắc cho phần số liệu: chỉ ghi số đo thật; chỗ chưa đo thì ghi "chưa đo", không điền số.
+
+| # | Việc | Ưu tiên | Khó | Hiện trạng (đã kiểm chứng trong code) |
+|---|------|---------|-----|----------------------------------------|
+| 1 | ~~Khởi động lại Keycloak để nạp trang đăng nhập mới~~ | Xong | Dễ | Đã khởi động lại 2026-11-25; theme mới nạp |
+| 2 | Mở rộng phép đo chatbot, đo trên người dùng thật, so trước/sau mỗi lần đổi prompt | P2 | Vừa | Đã có mốc đầu tiên (wattprint-backend `docs/chatbot-eval.md`): 84/84 câu đúng trên 7 loại câu × 4 nhà, chữ đầu ≈ 2 s, cả câu ≈ 3,2 s. Giới hạn: bộ câu tự chọn (chủ yếu số có công cụ), mọi câu đi qua AstralX vì OpenRouter trả 400, chưa có số "trước" để so. Từ nay mỗi câu thật lưu `first_ms`/`ms`. Việc còn lại: thêm câu hỏi (đặt cảnh báo, giải thích vì sao, câu mơ hồ), đọc số thật từ `usage` sau vài tuần |
+| 3 | ~~Phản hồi 👎 tới Telegram: bấm thử thật~~ | Xong | Dễ | Đã bấm 👎 thật trên bản chạy: API 204, không lỗi. Chưa có kênh GitHub Issue (cần token và repo), không làm |
+| 4 | Hiện căn cứ giá điện trên trang hóa đơn | P2 | Vừa | Privacy/Terms đã chốt xong (2026-11-25, không cần luật sư). Căn cứ giá điện đã tra (wattprint-backend `docs/legal-basis.md`); bảng giá trong DB khớp QĐ 2892. Chưa xác nhận VAT 8% từ văn bản chính thức. Còn lại: chuẩn hóa `source_doc` thành mã văn bản rồi hiện ở trang hóa đơn |
+| 5 | Tối ưu token | P2 | Vừa | Đã có: giới hạn 120 từ, đầu prompt cố định để cache. Đo: system prompt 2.209 ký tự, mô tả 16 công cụ 6.230 ký tự trong đó `create_watch` 1.956 (31%). Với OpenRouter: 3.857 token vào, 377 ra, 32% cache (71 câu); với AstralX: ≈ 6.700 vào, ≈ 420 ra, không báo cache (84 câu), không so được với nhau. Ứng viên: chỉ đưa `create_watch` cho câu có ý đặt cảnh báo (tiết kiệm ≈ 500 token mỗi vòng) nhưng rủi ro Wappi không đặt được cảnh báo khi diễn đạt lạ; cần thêm câu đặt cảnh báo vào bộ đo trước khi đổi |
+| 6 | Agent thao tác trên web | P2 | Vừa | Wappi đã tạo cảnh báo (`create_watch`), đề xuất kế hoạch (`propose_plan`, kèm link). Chưa mở trang, chưa đổi cài đặt thay người dùng |
+| 7 | Test case sinh bằng skill Claude / ensemble | P2 | Vừa | Chưa theo hướng này. Hiện có 674 test backend và 216 test dashboard viết tay |
+| 8 | Hiệu năng mobile (landing vi 85 so với en 94; trang dữ liệu 74-75) | P2 | Vừa | Cần profile CPU hydrate của `/` so với `/en` rồi tách chunk layout dùng chung |
+| 9 | Sidebar và page header sang Hairline | P2 | Vừa | `sidebar`, `page-header` đã cài, chưa dùng |
+| 10 | Storytelling, nhân văn, xã hội | P2 | Vừa | Landing đã viết lại giọng Sense; chưa có nội dung về tác động xã hội. Cần bạn quyết câu chuyện |
+| 11 | Chụp ảnh thì tự biết làm gì (hóa đơn, tem thiết bị) | P3 | Khó | Chưa có; cần mô hình đọc ảnh và quyết định chỗ nào dùng |
+| 12 | Video motion graphic giới thiệu | P3 | Vừa | Chưa có; việc ngoài code (kịch bản, dựng) |
+| 13 | RAG trên tài liệu | P3 | Khó | Bảng `Document`/`Chunk` có, chưa nối vào Wappi. Wappi đang tra DB bằng công cụ và text2sql có token phạm vi |
+| 14 | Nhận diện tên, địa chỉ trong PII (NER) | P3 | Khó | Hiện: regex và Luhn, báo trước khi gửi ở trình duyệt, thay bằng nhãn ở backend; không nhận ra tên, địa chỉ (`shortcut:` trong `privacy.py`) |
+| 15 | Guard prompt-injection: đo tỉ lệ chặn; vẫn chạy khi OpenRouter nghỉ | P3 | Vừa | Có regex, Llama Guard (OpenRouter), công cụ có phạm vi. Khi OpenRouter nghỉ thì guard bị bỏ qua; chưa có test đo |
+| 16 | Mô hình dự báo thua ở House 2, khoảng P10-P90 phủ thiếu | P3 | Khó | Người khác đang làm module forecast; xem mục 2026-11-22 |
+| 17 | NILM: chỉ 5/18 mô hình thiết bị thắng trung bình; run vỡ vụn; mặt nạ giờ đo | P3 | Khó | Xem các mục 2026-11-23, 2026-11-24 |
+| 18 | ~~Tên thiết bị REFIT còn tiếng Anh~~ | Xong | Dễ | Bạn chốt giữ tên gốc tiếng Anh (2026-11-25) |
+
+Đã xong trong checklist (7/15 điểm; Privacy/Terms, Keycloak, 👎 Telegram, tên REFIT cũng đã chốt): tra DB bằng công cụ và text2sql có phạm vi, giọng nói vào-ra (AstralX), báo PII trước khi gửi,
+chống prompt-injection, nhãn AI và độ chắc chắn Cao/Vừa/Thấp, xác thực và phân quyền (Keycloak, Google, chủ nhà/thành viên/người xem,
+nhà demo chỉ đọc, xóa tài khoản), đo chatbot (mốc đầu tiên, có giới hạn). Làm một phần: 5 điểm (kênh phản hồi: đã nối Telegram, chờ bấm thử;
+token; căn cứ pháp lý; storytelling; agent thao tác). Chưa làm: 3 điểm (test sinh tự động, ảnh, video). Cập nhật 2026-11-25: trích dẫn gọn,
+ảnh xem trước dashboard, đo chatbot và jar Keycloak đã build (chờ khởi động lại Keycloak).
+
+### Chi tiết các mục cũ
+
 - 2026-11-22 (docs/work/2026-11-21-ai-forecast-anomaly, R1 minors and accepted limits; T02 2026-11-23: skipped,
   the forecast module is being worked on by someone else):
   - The usage model still loses its backtest on House 2 (MAPE 14.8 % vs the weekday average's 9.3 %; House 5 now
@@ -14,7 +49,7 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   - Weak weather response: a −8 °C cold spell raises 3 days' expectation by ~4 % while the simulated heater adds
     ~13 kWh/day; the 7-day level absorbs the season. Pay: with the item above.
   - NILM backfill was cut (House 2 has 170 older days, House 5 none); `presence` is left out where unknown.
-  - Feedback buttons only on the Overview; mail has no link back.
+  - (Paid 2026-11-25) Feedback buttons are on the Overview, the alerts page and the device page; the alert mail now links to the alerts page.
   - `refresh_home` ~1.7 s per modelled home per hour, run serially in the insight worker: measure before more
     than a few hundred homes have a model.
 - 2026-11-23 (docs/work/2026-11-23-device-ai, change 1):
@@ -61,6 +96,23 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
   at the right season): its forecasts there stay weak until the recording has looped. Pay: a longer house, or accept.
 
 ## Paid
+
+- 2026-11-25 (docs/work/2026-11-25-delete-account, lane L, R1 + R2 ship; plus lane S/M items):
+  - `DELETE /users/me` erases an account: profile and what hangs on it, the home with its readings and the six
+    aggregates' stored rows when the owner is alone (409 `home_has_members` otherwise), the meter unlinked, a used invite
+    cleared, the Keycloak account last. Menu row "Xóa tài khoản" in the dashboard. Found by tests: Timescale's 100000-row
+    decompression limit on DELETE, and a 500 for a member who used an invite.
+  - Privacy and Terms rewritten from what the code does (no SLA days, DPO, SCC, GDPR or CCPA promises; the sharing with
+    OpenRouter, AstralX and OpenWeather named; retention 400 days). Still to be read by a lawyer (backlog).
+  - Wappi: no raw markdown (`plainText`, prompt), the copy button copies clean text, a source is marked once as a bare
+    number with one legend line under the answer (`citedSegments`, tested), the prompt asks to cite each source once.
+  - The landing preloads two Geist files instead of five; the production Docker build stops when
+    `apps/web/.env.local` lacks `NEXT_PUBLIC_APP_URL`; dashboard pages carry the Open Graph image (a link to
+    `/sign-in` previews; takes effect on the next deploy); the alert mail links to the alerts page.
+  - Measured, not guessed: `scripts/eval_wappi.py` and `docs/chatbot-eval.md` in the backend (84/84 right on 7 kinds of
+    question over 4 homes, first word about 2 s; its limits are written there); every stored answer now carries `first_ms`
+    and `ms`. A thumbs-down on Wappi reaches the maintainers' Telegram chat (`app/common/notify.py`, off until
+    `FEEDBACK_TELEGRAM_TOKEN` and `_CHAT` are set; a repeat adds nothing).
 
 - 2026-11-25 (docs/work/2026-11-25-demo-homes-debt): the replay plays the whole recording again past its end
   (whole weeks rounded down, weekday kept) instead of repeating its last week, and the home weather loops with it; Plegma's

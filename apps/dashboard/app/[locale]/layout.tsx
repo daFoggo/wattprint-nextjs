@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
 import { locale } from "next/root-params"
 
 import "@workspace/ui/globals.css"
@@ -19,12 +19,23 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("common.meta")
+  const [t, lang] = await Promise.all([
+    getTranslations("common.meta"),
+    getLocale(),
+  ])
   return {
     // Makes relative canonicals (`/some/path`) absolute.
     metadataBase: new URL(publicEnv.NEXT_PUBLIC_APP_URL),
     title: { default: "WattPrint", template: "%s | WattPrint" },
     description: t("description"),
+    // The landing page serves /og.png at the same domain: a link to a dashboard page (sign-in, dashboard) previews too.
+    openGraph: {
+      siteName: "WattPrint",
+      type: "website",
+      locale: lang === "en" ? "en_US" : "vi_VN",
+      images: [{ url: "/og.png", width: 1200, height: 630 }],
+    },
+    twitter: { card: "summary_large_image", images: ["/og.png"] },
   }
 }
 

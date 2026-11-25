@@ -19,6 +19,11 @@ export async function viewDemoHome(token: string, key: string) {
   })
 }
 
+/** Erases the account (and its home with every reading when it is the only member); the backend answers 204. */
+export async function deleteAccount(token: string) {
+  await apiFetch("/users/me", { token, method: "DELETE" })
+}
+
 /**
  * A new guest account viewing that demo home, signed in for this app. The backend makes guests only for us (our
  * client secret) and caps them per visitor, so it gets the address the edge proxy saw (nginx sets `X-Real-IP`).

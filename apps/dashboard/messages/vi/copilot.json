@@ -58,7 +58,8 @@
         "body": "Tải lại trang để đăng nhập lại rồi hỏi tiếp."
       }
     },
-    "aiNote": "Nội dung do AI tạo từ dữ liệu nhà bạn, có thể chưa chính xác."
+    "aiNote": "Nội dung do AI tạo từ dữ liệu nhà bạn, có thể chưa chính xác.",
+    "sources": "Nguồn"
   },
   "widgets": {
     "devices": "Điện theo thiết bị (ước tính)",
