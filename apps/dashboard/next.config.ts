@@ -42,9 +42,9 @@ const nextConfig: NextConfig = {
   // Recommended for all new apps from Next.js 16.4 (default in create-next-app).
   cacheComponents: true,
   partialPrefetching: true,
-  // Ajv compiles with `new Function`, which the CSP blocks: the browser gets an eval-free stub (lib/ajv-browser.ts).
+  // Ajv compiles with `new Function`, which the CSP blocks: the browser gets an eval-free stub (@workspace/ui-patterns/ajv-browser).
   turbopack: {
-    resolveAlias: { "ajv/dist/2020.js": { browser: "./lib/ajv-browser.ts" } },
+    resolveAlias: { "ajv/dist/2020.js": { browser: "@workspace/ui-patterns/ajv-browser" } },
   },
   // Enables forbidden() / forbidden.tsx, used by requirePermission() in lib/dal.ts.
   experimental: {

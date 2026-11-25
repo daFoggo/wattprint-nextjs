@@ -1,0 +1,479 @@
+/* Hallmark · direction: custom, after studying the 61 Hairline templates, Sense and Lunar Energy · type: Geist Sans (brand) · palette: forest, mint and one lime, tied to the brand green · signature: the real dashboard of the demo home, Plegma House 1 */
+/* critique: every figure is real (demo home, cited studies) except the savings plan, marked as sample; sections share one head (title left, sentence right) */
+
+/* apps/web only: the landing's own art direction (docs/design-system.md, Landing). The dashboard imports the shared
+   stylesheet directly and never sees these tokens. */
+@import "@workspace/ui/globals.css";
+
+:root {
+  --lp-ground: #f4f6f2;
+  --lp-surface: #e8eee7;
+  --lp-ink: #0f241b;
+  --lp-muted: #4e6158;
+  --lp-line: #c9d3cb;
+  --lp-accent: var(--chart-1);
+  --lp-accent-ink: #04140c;
+  --lp-mint: #cdebdc;
+  --lp-lime: #d8f57a;
+  --lp-field: #0f3a2b;
+  --lp-field-ink: #eaf4ee;
+
+  /* The hero stage and the footer: forest in both themes. */
+  --lp-stage: #0f3a2b;
+  --lp-stage-ink: #eaf4ee;
+  --lp-stage-muted: #a9c4b6;
+  --lp-stage-line: #1f4c3a;
+}
+
+.dark {
+  --lp-ground: #0b1210;
+  --lp-surface: #121d18;
+  --lp-ink: #ecf3ee;
+  --lp-muted: #9db1a6;
+  --lp-line: #24332c;
+  --lp-accent: var(--chart-1);
+  --lp-accent-ink: #04140c;
+  --lp-mint: #173528;
+  --lp-lime: #c6ec5c;
+  --lp-field: #d8efe2;
+  --lp-field-ink: #0b1210;
+  --lp-stage: #0c2c21;
+}
+
+/* Hairline and shadcn read these: on the landing they take its palette, so every block matches the page. */
+:root,
+.dark {
+  --background: var(--lp-ground);
+  --foreground: var(--lp-ink);
+  --card: var(--lp-surface);
+  --card-foreground: var(--lp-ink);
+  --popover: var(--lp-ground);
+  --popover-foreground: var(--lp-ink);
+  --muted: var(--lp-surface);
+  --muted-foreground: var(--lp-muted);
+  --border: var(--lp-line);
+  --input: var(--lp-line);
+}
+
+@theme inline {
+  --color-lp-ground: var(--lp-ground);
+  --color-lp-surface: var(--lp-surface);
+  --color-lp-ink: var(--lp-ink);
+  --color-lp-muted: var(--lp-muted);
+  --color-lp-line: var(--lp-line);
+  --color-lp-accent: var(--lp-accent);
+  --color-lp-accent-ink: var(--lp-accent-ink);
+  --color-lp-mint: var(--lp-mint);
+  --color-lp-lime: var(--lp-lime);
+  --color-lp-field: var(--lp-field);
+  --color-lp-field-ink: var(--lp-field-ink);
+  --color-lp-stage: var(--lp-stage);
+  --color-lp-stage-ink: var(--lp-stage-ink);
+  --color-lp-stage-muted: var(--lp-stage-muted);
+  --color-lp-stage-line: var(--lp-stage-line);
+
+  /* Five steps: small, body, lead, head, display. */
+  --text-lp-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --text-lp-small--line-height: 1.45;
+  --text-lp-body: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+  --text-lp-body--line-height: 1.55;
+  --text-lp-lead: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --text-lp-lead--line-height: 1.3;
+  --text-lp-head: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+  --text-lp-head--line-height: 1.04;
+  --text-lp-head--letter-spacing: -0.03em;
+  --text-lp-display: clamp(2.5rem, 1.5rem + 4.3vw, 5.25rem);
+  --text-lp-display--line-height: 0.98;
+  --text-lp-display--letter-spacing: -0.04em;
+
+  --spacing-lp-gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --container-lp: 84rem;
+}
+
+@layer base {
+  html,
+  body {
+    overflow-x: clip;
+  }
+  /* Clear the sticky header (64px bar + 0.75rem inset, components/site-header.tsx) with room to spare. */
+  [id] {
+    scroll-margin-top: calc(64px + 2.25rem);
+  }
+}
+
+/* Landing geometry and motion the Tailwind scale cannot say (lint bans arbitrary values in class strings). */
+@layer components {
+  /* The page's frame: hairline rails at the container's edges, like a drawing sheet. */
+  .lp-frame {
+    border-inline: 1px solid var(--lp-line);
+  }
+  .lp-rule {
+    border-top: 1px solid var(--lp-line);
+  }
+
+  /* CardNav (components/card-nav.tsx): a solid bar that opens into cards. */
+  .cn-root {
+    --cn-bar: 64px;
+    --cn-inset: 0.5rem;
+    position: relative;
+    width: 100%;
+    max-width: 60rem;
+    height: var(--cn-bar);
+    margin-inline: auto;
+    font-size: 0.875rem;
+  }
+  .cn-panel {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 30;
+    height: var(--cn-bar);
+    overflow: hidden;
+    border: 1px solid var(--lp-line);
+    border-radius: 1.25rem;
+    background: var(--lp-surface);
+    color: var(--lp-ink);
+  }
+  .cn-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: calc(var(--cn-bar) - 2px);
+    padding-inline: var(--cn-inset);
+  }
+  .cn-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    justify-self: start;
+    height: 2.75rem;
+    padding-inline: 0.875rem;
+    border-radius: 0.875rem;
+    font-weight: 500;
+    transition: background-color 150ms ease;
+  }
+  .cn-menu:hover {
+    background: var(--lp-ground);
+  }
+  .cn-menu:focus-visible,
+  .cn-logo:focus-visible,
+  .cn-link:focus-visible {
+    outline: 2px solid var(--lp-ink);
+    outline-offset: 2px;
+  }
+  .cn-burger {
+    position: relative;
+    width: 1.125rem;
+    height: 0.75rem;
+  }
+  .cn-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cn-line-top {
+    top: 2.25px;
+  }
+  .cn-line-bottom {
+    top: 8.25px;
+  }
+  [data-open] .cn-line-top {
+    transform: translateY(3px) rotate(45deg);
+  }
+  [data-open] .cn-line-bottom {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+  .cn-words {
+    display: inline-grid;
+    overflow: hidden;
+  }
+  .cn-word-open,
+  .cn-word-close {
+    grid-area: 1 / 1;
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cn-word-close {
+    transform: translateY(110%);
+  }
+  [data-open] .cn-word-open {
+    transform: translateY(-110%);
+  }
+  [data-open] .cn-word-close {
+    transform: none;
+  }
+  .cn-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    border-radius: 0.375rem;
+  }
+  .cn-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+  .cn-content {
+    visibility: hidden;
+    position: absolute;
+    inset: var(--cn-bar) 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cn-inset);
+    padding: 0 var(--cn-inset) var(--cn-inset);
+  }
+  [data-shown] .cn-content {
+    visibility: visible;
+  }
+  .cn-cards {
+    display: flex;
+    gap: var(--cn-inset);
+  }
+  .cn-card {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    min-height: 11rem;
+    padding: 1rem;
+    border-radius: 0.875rem;
+    background: var(--lp-ground);
+    color: var(--lp-ink);
+    will-change: transform, opacity;
+  }
+  .cn-card[data-tinted] {
+    background: var(--lp-stage);
+    color: var(--lp-stage-ink);
+  }
+  .cn-card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .cn-card-label {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .cn-card-text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    opacity: 0.72;
+  }
+  .cn-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin-top: auto;
+  }
+  .cn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.1875rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    opacity: 0.85;
+    transition: opacity 150ms ease;
+  }
+  .cn-link:hover {
+    opacity: 1;
+  }
+  /* Below 640px the bar holds the logo and Menu; locale, theme and the action move under the cards. */
+  .cn-narrow-end {
+    display: none;
+  }
+  @media (max-width: 39.99rem) {
+    .cn-bar {
+      grid-template-columns: auto 1fr;
+    }
+    .cn-menu {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: end;
+    }
+    .cn-logo {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+      padding-left: 0.5rem;
+    }
+    .cn-cards {
+      flex-direction: column;
+    }
+    .cn-card {
+      min-height: 0;
+      gap: 0.75rem;
+    }
+    .cn-links {
+      flex-flow: row wrap;
+      column-gap: 1rem;
+    }
+    .cn-end {
+      display: none;
+    }
+    .cn-narrow-end {
+      display: flex;
+    }
+  }
+  .cn-narrow-end {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.25rem 0.25rem;
+  }
+  /* Inside a forest plate, shared parts (linkButton outline) read the plate's colours. */
+  .lp-stage-scope {
+    --foreground: var(--lp-stage-ink);
+    --border: var(--lp-stage-muted);
+    --accent: var(--lp-stage-line);
+    --ring: var(--lp-lime);
+    --background: var(--lp-stage);
+  }
+  /* Wappi's question chips: a quiet pill, lime once asked. */
+  .lp-ask {
+    background: var(--lp-stage-line);
+    color: var(--lp-stage-ink);
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
+  }
+  .lp-ask:hover {
+    background: color-mix(
+      in oklab,
+      var(--lp-stage-line) 70%,
+      var(--lp-stage-ink)
+    );
+  }
+  .lp-ask[aria-pressed="true"] {
+    background: var(--lp-lime);
+    color: var(--lp-accent-ink);
+  }
+  .lp-ask:focus-visible {
+    outline: 2px solid var(--lp-lime);
+    outline-offset: 2px;
+  }
+  .lp-wappi {
+    cursor: pointer;
+  }
+  /* Wappi's answer arrives with one short rise. */
+  @media (prefers-reduced-motion: no-preference) {
+    .lp-answer {
+      animation: lp-rise 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+  @keyframes lp-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  /* The hero's stage rises into place just after the headline: it leads the eye from the promise to the product.
+     Strong ease-out (animate skill), transform and opacity only; reduced motion keeps the fade alone. */
+  .lp-stage-rise {
+    animation: lp-stage-rise 700ms cubic-bezier(0.23, 1, 0.32, 1) 300ms both;
+  }
+  @keyframes lp-stage-rise {
+    from {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lp-stage-rise {
+      animation-name: lp-fade;
+    }
+  }
+  @keyframes lp-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* A share bar: full width scaled to its share, so the fill never animates width. */
+  .lp-bar {
+    transform: scaleX(var(--lp-share, 0));
+    transform-origin: left;
+  }
+
+  /* Motion without script (it replaced React Bits' Blur Text, Decrypted Text and gsap's Animated Content, which cost
+     the mobile page most of its blocking time). Strong ease-out, transform/opacity (and one blur on the headline);
+     reduced motion keeps a fade. The headline plays on load; the rest is tied to scroll where the browser can
+     (`animation-timeline: view()`), and simply shows elsewhere. */
+  .lp-word {
+    display: inline-block;
+    animation: lp-word-in 700ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation-delay: calc(var(--i, 0) * 60ms + 80ms);
+  }
+  @keyframes lp-word-in {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(0.2em);
+    }
+  }
+  @supports (animation-timeline: view()) {
+    .lp-reveal {
+      animation: lp-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 6%) entry
+        calc(60% + var(--i, 0) * 6%);
+    }
+    .lp-bar {
+      animation: lp-fill linear both;
+      animation-timeline: view();
+      animation-range: entry calc(20% + var(--i, 0) * 8%) cover
+        calc(35% + var(--i, 0) * 8%);
+    }
+  }
+  @keyframes lp-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @keyframes lp-fill {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lp-word,
+    .lp-reveal {
+      animation-name: lp-fade;
+    }
+    .lp-bar {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cn-line,
+    .cn-word-open,
+    .cn-word-close {
+      transition: none;
+    }
+  }
+}
+
+/* Ridge footer: a forest plate in both themes, edge to edge, square. Unlayered on
+   purpose: the vendored block sets its width and radius with Tailwind utilities, which beat @layer components; the
+   block is restyled from this wrapper (hairline-ui skill), never edited. */
+.lp-footer {
+  --card: var(--lp-stage);
+  --card-foreground: var(--lp-stage-ink);
+  --muted-foreground: var(--lp-stage-muted);
+  --border: transparent;
+}
+.lp-footer footer {
+  max-width: none;
+}
+.lp-footer .group\/plate {
+  border-radius: 2rem 2rem 0 0;
+}

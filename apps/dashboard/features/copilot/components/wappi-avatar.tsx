@@ -1,20 +1,21 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useEffect, useRef, useSyncExternalStore } from "react"
-import {
-  createAvatar,
-  type AvatarHandle,
-} from "@bible-strong/avatar-react"
+import type { AvatarHandle } from "@bible-strong/avatar-react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
 import { answerState, GESTURES, MOODS } from "../moods"
-import character from "../wappi.avatar.json"
 import { useCopilot } from "./copilot-provider"
 
-// Wappi's character (features/copilot/wappi.avatar.json: a plug-headed sphere in the brand green), drawn and
-// animated by @bible-strong/avatar-react (MIT). Which state it plays is moods.ts's choice.
-const Wappi = createAvatar(character)
+// Wappi's character is shared with the landing (@workspace/ui-patterns/wappi). Which state it plays is moods.ts's choice.
+// The renderer draws nothing on the server, so it loads on its own after hydration instead of in the layout's chunk that
+// every dashboard page waits on (Lighthouse, mobile: about a second of script in front of the page's LCP).
+const Wappi = dynamic(
+  () => import("@workspace/ui-patterns/wappi").then((m) => m.Wappi),
+  { ssr: false }
+)
 
 // The character fills about 60 % of its box: a box reads as a glyph about two thirds its size.
 const SIZE = { sm: 16, md: 24, lg: 32, card: 40, xl: 72 } as const

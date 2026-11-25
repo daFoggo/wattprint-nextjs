@@ -10,6 +10,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@bible-strong/avatar-core": "1.2.1",
+    "@bible-strong/avatar-react": "1.2.1",
     "@workspace/ui": "workspace:*",
     "next-themes": "^0.4.6",
     "react": "19.3.0"
@@ -23,6 +25,7 @@
     "vitest": "^5.0.4"
   },
   "exports": {
+    "./ajv-browser": "./src/ajv-browser.ts",
     "./*": "./src/*.tsx"
   }
 }

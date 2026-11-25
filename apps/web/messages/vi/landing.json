@@ -1,14 +1,262 @@
 {
-  "home": {
-    "title": "Bảng điều khiển năng lượng của bạn",
-    "subtitle": "Theo dõi điện năng tiêu thụ của cả nhà ở một nơi.",
-    "openDashboard": "Mở bảng điều khiển",
+  "nav": {
+    "label": "Trang chính",
+    "home": "WattPrint, về đầu trang",
+    "how": "Cách hoạt động",
+    "product": "Sản phẩm",
+    "faq": "Hỏi đáp",
+    "demo": "Trải nghiệm hệ thống",
+    "menu": "Menu",
+    "close": "Đóng",
+    "wappi": "Wappi",
+    "productText": "Theo dõi điện từng thiết bị chỉ với một cảm biến.",
+    "demoTitle": "Trải nghiệm",
+    "demoText": "Xem WattPrint phân tích một hộ gia đình thật, không cần đăng ký.",
+    "legalText": "Cách WattPrint dùng và bảo vệ dữ liệu điện của bạn."
+  },
+  "hero": {
+    "sentence": "Gắn một lần ở tủ điện, xem từng thiết bị dùng bao nhiêu điện và tốn bao nhiêu tiền mỗi ngày.",
+    "primary": "Trải nghiệm hệ thống",
+    "shotAlt": "Trang tổng quan của WattPrint phân tích dữ liệu đo thực tế của một hộ gia đình trong bộ dữ liệu công khai Plegma: điện 7 ngày qua chia theo thiết bị, hóa đơn kỳ này 234.630 ₫ và bậc giá hiện tại",
+    "titleLines": [
+      "Biết thiết bị nào đang tốn tiền,",
+      "chỉ với một cảm biến."
+    ]
+  },
+  "wappi": {
+    "examplesLabel": "Thử hỏi Wappi",
+    "note": "Câu trả lời lấy từ dữ liệu đo thực tế của một hộ gia đình trong bộ dữ liệu công khai Plegma (Hy Lạp).",
+    "fallbackAction": "Trò chuyện với Wappi",
+    "examples": {
+      "costliest": {
+        "question": "Tháng này thiết bị nào tốn tiền nhất?",
+        "rows": [
+          {
+            "label": "Bình nóng lạnh",
+            "value": "50,8 kWh, 48%"
+          },
+          {
+            "label": "Tủ lạnh",
+            "value": "13,8 kWh, 13%"
+          },
+          {
+            "label": "Điều hòa",
+            "value": "13,5 kWh, 13%"
+          }
+        ]
+      },
+      "bill": {
+        "question": "Cuối kỳ tiền điện bao nhiêu?",
+        "rows": [
+          {
+            "label": "Dự kiến cuối kỳ",
+            "value": "292.799 ₫"
+          },
+          {
+            "label": "Điện năng",
+            "value": "135 kWh"
+          },
+          {
+            "label": "Kết thúc ở",
+            "value": "Bậc 2"
+          }
+        ]
+      },
+      "tier": {
+        "question": "Còn bao nhiêu kWh nữa thì sang bậc 3?",
+        "rows": [
+          {
+            "label": "Bậc hiện tại",
+            "value": "Bậc 2, 2.289 ₫/kWh"
+          },
+          {
+            "label": "Còn lại",
+            "value": "88,1 kWh"
+          },
+          {
+            "label": "Bậc 3",
+            "value": "2.894 ₫/kWh, cao hơn 26%"
+          }
+        ]
+      }
+    }
+  },
+  "features": {
+    "steps": {
+      "bill": {
+        "title": "Biết trước hóa đơn cuối kỳ",
+        "body": "Tiền điện tạm tính theo từng bậc và số dự kiến đến cuối kỳ, cập nhật mỗi ngày.",
+        "alt": "Màn hóa đơn của WattPrint: dự kiến cuối kỳ và điện đã dùng ở từng bậc"
+      },
+      "devices": {
+        "title": "Theo dõi tiêu thụ của từng thiết bị",
+        "body": "Biết bình nóng lạnh, điều hòa, tủ lạnh dùng bao nhiêu điện và tốn bao nhiêu tiền trong tháng.",
+        "alt": "Màn thiết bị của WattPrint: từng thiết bị với công suất, điện hôm nay và tiền tháng này"
+      },
+      "alerts": {
+        "title": "Nhận cảnh báo kịp thời",
+        "body": "Báo khi thiết bị chạy lâu bất thường, điện chờ ban đêm tăng cao hoặc sắp sang bậc giá đắt hơn.",
+        "alt": "Màn cảnh báo của WattPrint"
+      },
+      "plan": {
+        "title": "Tìm cách tiết kiệm phù hợp",
+        "body": "Chọn vài thay đổi nhỏ và xem mỗi thay đổi giúp bớt bao nhiêu tiền đến cuối kỳ."
+      }
+    }
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp",
+    "items": {
+      "install": {
+        "question": "Lắp đặt thế nào?",
+        "answer": "Một cảm biến gắn ở aptomat tổng, do đối tác kỹ thuật lắp tại tủ điện. Không phải đi dây hay cắm thiết bị đo cho từng máy."
+      },
+      "plugs": {
+        "question": "Có cần ổ cắm đo điện cho từng thiết bị không?",
+        "answer": "Không. Mười ổ cắm đo điện cùng bộ điều khiển tốn khoảng 4 đến 10 triệu đồng, và không đo được máy đấu thẳng vào điện như điều hòa. WattPrint ước tính từ một điểm đo."
+      },
+      "accuracy": {
+        "question": "Số liệu từng thiết bị chính xác đến đâu?",
+        "answer": "Đó là ước tính, và màn hình luôn ghi độ tin cậy. Điện chưa gán được cho thiết bị nào nằm ở mục Khác. Tổng điện và tiền điện tính từ công tơ tổng, theo đúng biểu giá bậc thang."
+      },
+      "privacy": {
+        "question": "Ai xem được dữ liệu điện nhà tôi?",
+        "answer": "Chỉ những người bạn mời vào nhà. Dữ liệu điện cho thấy giờ giấc sinh hoạt, nên WattPrint không bán và không chia sẻ nó để quảng cáo. Chi tiết ở Chính sách quyền riêng tư."
+      },
+      "price": {
+        "question": "Giá bao nhiêu?",
+        "answer": "WattPrint đang chuẩn bị thí điểm với 5 đến 10 hộ và chưa bán. Dự kiến là phí thuê bao hằng tháng gồm cả thiết bị, với gói thường và gói Pro có thêm Wappi."
+      },
+      "wappi": {
+        "question": "Wappi trả lời dựa vào đâu?",
+        "answer": "Dữ liệu điện của chính nhà bạn, thời tiết và biểu giá EVN. Con số do hệ thống tính, mô hình ngôn ngữ chỉ giải thích, và mỗi câu trả lời ghi rõ nguồn."
+      }
+    }
+  },
+  "cta": {
+    "title": "Xem WattPrint hoạt động trong một ngôi nhà thật.",
+    "body": "Mở ứng dụng với dữ liệu đo thực tế từ bộ dữ liệu công khai, không cần đăng ký.",
+    "action": "Trải nghiệm hệ thống"
+  },
+  "footer": {
+    "tagline": "Trợ lý tiết kiệm điện cho gia đình Việt.",
+    "product": "Sản phẩm",
+    "legal": "Pháp lý",
+    "project": "Dự án",
     "terms": "Điều khoản",
-    "privacy": "Quyền riêng tư"
+    "privacy": "Quyền riêng tư",
+    "signIn": "Đăng nhập",
+    "copyright": "© 2026 WattPrint, đội UDU.S4U"
   },
   "notFound": {
     "title": "Không tìm thấy trang",
     "description": "Trang bạn đang tìm không tồn tại hoặc đã được chuyển đi.",
     "backHome": "Về trang chủ"
+  },
+  "split": {
+    "title": "Minh bạch hóa đơn tiền điện.",
+    "muted": "Biết rõ tiền đi về đâu.",
+    "body": "Hóa đơn EVN chỉ ghi một con số tổng. WattPrint chia con số đó theo từng thiết bị để bạn biết nên tiết kiệm ở đâu.",
+    "billLabel": "Hóa đơn EVN kỳ này",
+    "billMeta": "111,9 kWh, tính đến ngày 25/11",
+    "billNo": [
+      "Không biết thiết bị nào tốn nhất",
+      "Cuối tháng mới biết số tiền"
+    ],
+    "splitLabel": "Cùng kỳ, chia theo thiết bị",
+    "rows": [
+      {
+        "label": "Bình nóng lạnh",
+        "kwh": "50,8 kWh",
+        "share": 45
+      },
+      {
+        "label": "Tủ lạnh",
+        "kwh": "13,8 kWh",
+        "share": 12
+      },
+      {
+        "label": "Điều hòa",
+        "kwh": "13,5 kWh",
+        "share": 12
+      }
+    ],
+    "rest": "Phần còn lại là máy giặt, đèn và các thiết bị nhỏ chưa nhận diện được.",
+    "note": "Dữ liệu đo thực tế của một hộ gia đình trong bộ dữ liệu công khai Plegma. Điện từng thiết bị do mô hình của WattPrint ước tính."
+  },
+  "how": {
+    "title": "Lắp một lần, dùng lâu dài.",
+    "muted": "Không cần đi lại dây điện.",
+    "body": "Không phải gắn ổ cắm đo cho từng máy. Chỉ cần một cảm biến ở aptomat tổng.",
+    "steps": [
+      {
+        "title": "Gắn cảm biến ở tủ điện",
+        "body": "Cảm biến đo điện năng của cả nhà mỗi 5 giây."
+      },
+      {
+        "title": "Nhận diện từng thiết bị",
+        "body": "AI nhận ra bình nóng lạnh, điều hòa, tủ lạnh trong dòng điện chung. Khoảng một phút sau đã thấy trên ứng dụng."
+      },
+      {
+        "title": "Quy ra tiền",
+        "body": "Mỗi kWh được tính theo đúng biểu giá điện sinh hoạt bậc thang của EVN."
+      }
+    ]
+  },
+  "tabs": {
+    "title": "Mọi thứ về điện nhà bạn,",
+    "muted": "gói gọn trong một ứng dụng.",
+    "body": "Ảnh chụp ứng dụng thật, phân tích dữ liệu đo thực tế của các hộ gia đình trong bộ dữ liệu công khai REFIT (Anh) và Plegma (Hy Lạp).",
+    "label": "Tính năng của WattPrint",
+    "bill": "Hóa đơn",
+    "devices": "Thiết bị",
+    "alerts": "Cảnh báo",
+    "statistics": "Thống kê",
+    "plan": "Kế hoạch tiết kiệm",
+    "statsTitle": "Theo dõi mức dùng theo thời gian",
+    "statsBody": "Xem điện năng theo ngày, tuần, tháng và giờ nào trong ngày dùng nhiều nhất.",
+    "statsAlt": "Màn thống kê của WattPrint: điện theo ngày và theo giờ",
+    "overview": "Tổng quan",
+    "overviewTitle": "Nắm tình hình cả kỳ trong một trang",
+    "overviewBody": "Tiền điện tạm tính, điện đang đi đâu và những gì cần để ý.",
+    "overviewAlt": "Trang tổng quan của WattPrint cho một hộ gia đình trong bộ dữ liệu Plegma",
+    "planAlt": "Màn kế hoạch tiết kiệm của WattPrint: chọn việc cần làm và xem số tiền tiết kiệm đến cuối kỳ",
+    "wappi": "Wappi",
+    "wappiTitle": "Hỏi Wappi về điện nhà bạn",
+    "wappiBody": "Wappi trả lời bằng số liệu của chính ngôi nhà, kèm biểu đồ và nguồn của từng con số.",
+    "wappiAlt": "Màn Wappi của WattPrint trả lời câu hỏi thiết bị nào tốn tiền nhất tháng này"
+  },
+  "stats": {
+    "title": "Thấy rõ thì dùng điện hợp lý hơn.",
+    "items": [
+      {
+        "value": "2,8 lần",
+        "label": "Người dùng thường đoán thấp hơn mức điện thật của thiết bị chừng này lần",
+        "source": "Attari và cộng sự, PNAS, 2010"
+      },
+      {
+        "value": "2–4%",
+        "label": "Điện năng giảm được khi các hộ theo dõi mức dùng của mình",
+        "source": "Buckley, Ecological Economics, 2020"
+      },
+      {
+        "value": "4–7%",
+        "label": "Điện năng giảm được trong thử nghiệm với khoảng 1.000 hộ tại Đà Nẵng",
+        "source": "Nguyen và cộng sự, Energy Policy, 2024"
+      }
+    ]
+  },
+  "wappiBand": {
+    "title": "Hỏi Wappi về điện nhà bạn.",
+    "body": "Wappi là trợ lý AI của WattPrint, trả lời dựa trên số liệu điện của chính nhà bạn, thời tiết và biểu giá EVN.",
+    "poke": "Chạm vào Wappi",
+    "pick": "Chọn một câu hỏi để xem Wappi trả lời.",
+    "reading": "Wappi đang đọc câu hỏi…",
+    "working": "Wappi đang tính toán…"
+  },
+  "meta": {
+    "title": "WattPrint: xem điện và tiền điện của từng thiết bị",
+    "description": "Gắn một cảm biến ở tủ điện, WattPrint tách điện của cả nhà ra từng thiết bị, tính thành tiền theo biểu giá EVN và trả lời câu hỏi qua trợ lý Wappi.",
+    "ogAlt": "Trang tổng quan của WattPrint: điện chia theo thiết bị và hóa đơn kỳ này"
   }
 }

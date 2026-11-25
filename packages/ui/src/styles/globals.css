@@ -35,6 +35,9 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-brand-field: var(--brand-field);
+  --color-brand-field-foreground: var(--brand-field-foreground);
+  --color-brand-field-muted: var(--brand-field-muted);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -307,6 +310,10 @@
   --popover-foreground: #262626;
   --primary: oklch(64.48% 0.1488 158.78);
   --primary-foreground: #0a0a0a;
+  /* The brand's forest plate (sign-in rail; the landing's --lp-stage is the same colour): the same in both themes. */
+  --brand-field: #0f3a2b;
+  --brand-field-foreground: #eaf4ee;
+  --brand-field-muted: #a9c4b6;
   --secondary: #ededed;
   --secondary-foreground: #262626;
   --muted: #f0f0f0;

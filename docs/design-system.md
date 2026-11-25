@@ -61,6 +61,9 @@ its `-foreground`), plus `--radius` (`0.625rem`). Both `:root` and `.dark` defin
 
 To add a semantic color (success, warning), add a token to both `:root` and `.dark` and map it in `@theme inline`.
 
+`brand-field` / `brand-field-foreground` / `brand-field-muted` is the brand's forest plate, the same in both themes (one
+definition on `:root`): the sign-in rail (dashboard and Keycloak) and, as `--lp-stage`, the landing's stages and footer.
+
 ### Surfaces
 
 Hairline-style plates. Depth comes from the surface stepping lighter (dark) or greyer (light), never from a shadow or an
@@ -252,9 +255,13 @@ Rules:
 
 ## Landing layout (apps/web)
 
-One centered screen: `SiteHeader` (logo, `ThemeToggle`; no borders), a display title, one plain line, the "Open dashboard"
-`linkButton()`, and a quiet Terms · Privacy footer. Terms and Privacy reuse `SiteHeader` and `CONTAINER`
-(`config/layout.ts`). No rails, no hairline bands: separate areas with space, not lines. Copy is plain.
+The landing has its own art direction in `apps/web/app/landing.css` (`lp-*` tokens on top of `globals.css`, which it imports;
+the dashboard never sees them). Sections share one head (`SectionHead`: title left, one sentence right) and one visual module:
+the real dashboard captured per page (`public/landing/<page>-{light,dark}.webp`, 2880×1800 from a 1920×1200 viewport), a
+forest plate (`bg-lp-stage`) or a surface card. Header: CardNav (React Bits, ported to `components/card-nav.tsx`). Actions:
+`EnergyButton`, the dashboard's PillLink at landing scale. Footer: Hairline `RidgeFooter`, edge to edge, restyled from
+`.lp-footer`. Motion is CSS where it can be (`.lp-word`, `.lp-reveal`, `.lp-bar`; scroll-driven where supported): per-word
+React components cost the mobile page its blocking time. Terms and Privacy reuse `SiteHeader` and `CONTAINER`.
 
 ---
 
@@ -493,7 +500,7 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
   the 16px logo in place of an icon, then "Wappi" and its role, muted ("Trợ lý năng lượng"). The header pill says "Hỏi
   Wappi", so the two never repeat. Only the logo stays in the icon rail; no menu link is current on Wappi's page.
 - Wappi is an animated character (`WappiAvatar`, `@bible-strong/avatar-react`, MIT): a plug-headed sphere in the brand
-  green (`features/copilot/wappi.avatar.json`, lowercase hex). It shows on what opens Wappi, the sidebar card (40px,
+  green (`packages/ui-patterns/src/wappi.avatar.json`, shared with the landing; lowercase hex). It shows on what opens Wappi, the sidebar card (40px,
   32px in the icon rail) and the header pill (32px), beside each answer (32px, live on the last answer only) and on the
   opening screen (72px, its head follows the pointer); not in the panel or page title, where the answers already show
   it. Its name is set in Geist Pixel (`font-pixel-square`) wherever it labels Wappi (sidebar card, title, answers). Which state it plays is `features/copilot/moods.ts`'s

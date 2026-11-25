@@ -1,41 +1,72 @@
 import type { Metadata } from "next"
-import { useLocale, useTranslations } from "next-intl"
+import { Suspense } from "react"
+import { getLocale, getTranslations } from "next-intl/server"
 
-import { linkButton } from "@workspace/ui-patterns/link-button"
-
+import { BillSplit } from "@/components/landing/bill-split"
+import { CtaBand } from "@/components/landing/cta-band"
+import { FaqSection } from "@/components/landing/faq-section"
+import { FeatureSection } from "@/components/landing/feature-section"
+import { Hero } from "@/components/landing/hero"
+import { HowSteps } from "@/components/landing/how-steps"
+import { ProofStats } from "@/components/landing/proof-stats"
+import { WappiBand } from "@/components/landing/wappi-band"
+import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { dashboardHref } from "@/config/site"
-import { Link } from "@/i18n/navigation"
+import { StructuredData } from "@/components/landing/structured-data"
+import type { Locale } from "@/i18n/routing"
+import { alternatesFor, localized, openGraphBase } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  alternates: { languages: { vi: "/", en: "/en" } },
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = (await getLocale()) as Locale
+  const t = await getTranslations("landing.meta")
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    alternates: alternatesFor("/", locale),
+    // A page's openGraph replaces the layout's whole: the shared part comes along.
+    openGraph: {
+      ...openGraphBase(locale, t("ogAlt")),
+      title: t("title"),
+      description: t("description"),
+      url: localized("/", locale),
+    },
+  }
+}
+
+/** A section-sized box, the fallback the boundaries below never show. */
+function Placeholder() {
+  return <div aria-hidden className="min-h-96" />
 }
 
 export default function HomePage() {
-  const locale = useLocale()
-  const t = useTranslations("landing.home")
   return (
-    <div className="flex min-h-svh flex-col">
+    <>
+      <StructuredData />
       <SiteHeader />
-      <main className="flex flex-1 flex-col items-center justify-center gap-8 px-5 text-center">
-        <h1 className="max-w-3xl text-5xl font-medium tracking-tight text-balance sm:text-6xl">
-          {t("title")}
-        </h1>
-        <p className="max-w-xl text-lg text-muted-foreground">
-          {t("subtitle")}
-        </p>
-        <a href={dashboardHref("/dashboard", locale)} className={linkButton()}>
-          {t("openDashboard")}
-        </a>
+      <main className="flex flex-col gap-28 lg:gap-40">
+        <Hero />
+        {/* Each boundary below the first screen hydrates on its own (React 19 selective hydration), so the page's
+            hydration is several short tasks instead of one long one (Lighthouse, mobile). They never suspend: the
+            HTML is prerendered, so the sized fallback is only there for the rule. */}
+        <Suspense fallback={<Placeholder />}>
+          <BillSplit />
+        </Suspense>
+        <HowSteps />
+        <Suspense fallback={<Placeholder />}>
+          <FeatureSection />
+        </Suspense>
+        <ProofStats />
+        <Suspense fallback={<Placeholder />}>
+          <WappiBand />
+        </Suspense>
+        <Suspense fallback={<Placeholder />}>
+          <FaqSection />
+        </Suspense>
+        <CtaBand />
       </main>
-      <footer className="flex justify-center gap-6 py-8 text-sm text-muted-foreground">
-        <Link href="/terms" className="hover:text-foreground">
-          {t("terms")}
-        </Link>
-        <Link href="/privacy" className="hover:text-foreground">
-          {t("privacy")}
-        </Link>
-      </footer>
-    </div>
+      <Suspense fallback={<Placeholder />}>
+        <SiteFooter />
+      </Suspense>
+    </>
   )
 }

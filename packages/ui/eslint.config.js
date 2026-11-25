@@ -5,6 +5,8 @@ export default [
   ...config,
   // Vendored from Hairline UI and kept unedited for `pnpm hairline` updates.
   { ignores: ["src/components/hairline/**"] },
+  // Vendored from React Bits through its shadcn registry (`@react-bits` in components.json), kept unedited for updates.
+  { ignores: ["src/components/react-bits/**"] },
   {
     // Vendored from shadcn and kept unmodified for upgrades; it syncs state with matchMedia on mount.
     files: ["src/hooks/use-mobile.ts"],

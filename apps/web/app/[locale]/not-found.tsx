@@ -11,9 +11,7 @@ export default function NotFound() {
       <h1 className="text-5xl leading-tight font-normal tracking-tighter">
         {t("title")}
       </h1>
-      <p className="text-muted-foreground">
-        {t("description")}
-      </p>
+      <p className="text-muted-foreground">{t("description")}</p>
       <Link href="/" className={linkButton()}>
         {t("backHome")}
       </Link>

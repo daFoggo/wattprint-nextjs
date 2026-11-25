@@ -23,12 +23,12 @@ import {
   AuthHeader,
   AuthHeading,
   AuthMain,
-  AuthPitch,
 } from "../_components/auth-frame"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("auth.signIn")
-  return { title: t("metaTitle") }
+  // A sign-in form has nothing to rank; the landing is the page to index.
+  return { title: t("metaTitle"), robots: { index: false, follow: true } }
 }
 
 async function OAuthError({
@@ -57,9 +57,7 @@ export default function SignInPage({
   const t = useTranslations("auth.signIn")
   return (
     <>
-      <AuthAside>
-        <AuthPitch title={t("pitchTitle")}>{t("pitchBody")}</AuthPitch>
-      </AuthAside>
+      <AuthAside title={t("pitchTitle")}>{t("pitchBody")}</AuthAside>
       <AuthMain>
         <AuthHeader />
         <AuthBody>

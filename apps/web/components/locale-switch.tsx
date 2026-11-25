@@ -15,14 +15,20 @@ const NAMES = { vi: "Tiếng Việt", en: "English" } as const
  * navigation: `[locale]` is the root layout, whose client re-render trips on next-themes' inline script,
  * and the reload also drops client caches holding the old language.
  */
-export function LocaleSwitch({ className }: { className?: string }) {
+export function LocaleSwitch({
+  className,
+  size = "sm",
+}: {
+  className?: string
+  size?: "sm" | "md"
+}) {
   const t = useTranslations("common")
   const locale = useLocale()
   const pathname = usePathname()
   return (
     <SegmentedControl
       label={t("language")}
-      size="sm"
+      size={size}
       className={className}
       value={locale}
       onValueChange={(next) =>

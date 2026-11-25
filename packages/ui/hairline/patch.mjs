@@ -3,6 +3,7 @@
 // fails; re-check the bug on the new code (upstream may have fixed it) and update or delete the patch.
 import { readFileSync, writeFileSync } from "node:fs"
 import process from "node:process"
+import { pathToFileURL } from "node:url"
 
 const DIR = new URL("../src/components/hairline/", import.meta.url)
 
@@ -1618,6 +1619,12 @@ export const PATCHES = [
     '<TextMorph>{expanded ? "Show less" : `Show ${hidden} more line${hidden === 1 ? "" : "s"}`}</TextMorph>',
     '<TextMorph>{expanded ? t("Show less") : t(hidden === 1 ? "Show {n} more line" : "Show {n} more lines", { n: hidden })}</TextMorph>'
   ),
+  imports("footer-parts.tsx"),
+  hook(
+    "footer-parts.tsx",
+    "export function FooterNav({ columns, onAim }: { columns: FooterColumn[]; onAim?: (column: HTMLElement | null, index: number) => void }) {\n"
+  ),
+  text("footer-parts.tsx", 'aria-label="Footer"', 'aria-label={t("Footer")}'),
 ]
 
 export function apply(read, write, patches = PATCHES) {
@@ -1635,7 +1642,8 @@ export function apply(read, write, patches = PATCHES) {
   return failed
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL: a hand-built `file://${argv[1]}` never matches on Windows (backslashes, no third slash), so the script did nothing there.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const failed = apply(
     (file) => readFileSync(new URL(file, DIR), "utf8"),
     (file, text) => writeFileSync(new URL(file, DIR), text)

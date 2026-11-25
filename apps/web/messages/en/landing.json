@@ -1,14 +1,262 @@
 {
-  "home": {
-    "title": "Your energy dashboard",
-    "subtitle": "Track your home's electricity use in one place.",
-    "openDashboard": "Open dashboard",
+  "nav": {
+    "label": "Main",
+    "home": "WattPrint, back to top",
+    "how": "How it works",
+    "product": "Product",
+    "faq": "Questions",
+    "demo": "Try it now",
+    "menu": "Menu",
+    "close": "Close",
+    "wappi": "Wappi",
+    "productText": "Track every appliance's energy with one sensor.",
+    "demoTitle": "Try it",
+    "demoText": "Watch WattPrint analyse a real household, no sign-up needed.",
+    "legalText": "How WattPrint uses and protects your energy data."
+  },
+  "hero": {
+    "sentence": "Install it once at the breaker box and see what each appliance uses and costs, every day.",
+    "primary": "Try it now",
+    "shotAlt": "WattPrint's overview analysing real measurements of a household from the public Plegma dataset: the last 7 days split by appliance, this cycle's bill of 234,630 ₫ and the current price tier",
+    "titleLines": [
+      "Know what each appliance costs,",
+      "with one sensor."
+    ]
+  },
+  "wappi": {
+    "examplesLabel": "Try asking Wappi",
+    "note": "Answers come from real measurements of a household in the public Plegma dataset (Greece).",
+    "fallbackAction": "Chat with Wappi",
+    "examples": {
+      "costliest": {
+        "question": "Which appliance costs the most this month?",
+        "rows": [
+          {
+            "label": "Water heater",
+            "value": "50.8 kWh, 48%"
+          },
+          {
+            "label": "Fridge",
+            "value": "13.8 kWh, 13%"
+          },
+          {
+            "label": "Air conditioner",
+            "value": "13.5 kWh, 13%"
+          }
+        ]
+      },
+      "bill": {
+        "question": "What will the bill be at the end of the cycle?",
+        "rows": [
+          {
+            "label": "Forecast at cycle end",
+            "value": "292,799 ₫"
+          },
+          {
+            "label": "Energy",
+            "value": "135 kWh"
+          },
+          {
+            "label": "Ends in",
+            "value": "Tier 2"
+          }
+        ]
+      },
+      "tier": {
+        "question": "How many kWh until tier 3?",
+        "rows": [
+          {
+            "label": "Current tier",
+            "value": "Tier 2, 2,289 ₫/kWh"
+          },
+          {
+            "label": "Left",
+            "value": "88.1 kWh"
+          },
+          {
+            "label": "Tier 3",
+            "value": "2,894 ₫/kWh, 26% more"
+          }
+        ]
+      }
+    }
+  },
+  "features": {
+    "steps": {
+      "bill": {
+        "title": "Know your bill before it arrives",
+        "body": "Your running bill by tier and the forecast to the end of the cycle, updated daily.",
+        "alt": "WattPrint's bill screen: the expected amount and the energy used in each tier"
+      },
+      "devices": {
+        "title": "Track each appliance's use",
+        "body": "Know what the water heater, air conditioner and fridge use and cost this month.",
+        "alt": "WattPrint's appliance screen: each appliance with its power, today's energy and this month's cost"
+      },
+      "alerts": {
+        "title": "Get timely alerts",
+        "body": "Hear when an appliance runs unusually long, standby power climbs at night or you are about to hit a pricier tier.",
+        "alt": "WattPrint's alerts screen"
+      },
+      "plan": {
+        "title": "Find savings that fit",
+        "body": "Pick a few small changes and see how much each saves by the end of the cycle."
+      }
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": {
+      "install": {
+        "question": "How is it installed?",
+        "answer": "One sensor at the main breaker, fitted in the fuse box by a technical partner. No new wiring and no meter per appliance."
+      },
+      "plugs": {
+        "question": "Do I need a smart plug for each appliance?",
+        "answer": "No. Ten metering plugs and a hub cost about 4 to 10 million dong, and cannot measure hard-wired machines such as air conditioners. WattPrint estimates from one point."
+      },
+      "accuracy": {
+        "question": "How accurate are the per-appliance figures?",
+        "answer": "They are estimates, and the screen always shows how sure they are. Energy not yet matched to an appliance is shown as Other. The home's total and the bill come from the main meter, on the tiered tariff."
+      },
+      "privacy": {
+        "question": "Who can see my home's electricity data?",
+        "answer": "Only the people you invite to your home. Electricity data shows your daily routine, so WattPrint does not sell it or share it for advertising. Details are in the Privacy policy."
+      },
+      "price": {
+        "question": "What does it cost?",
+        "answer": "WattPrint is preparing a pilot with 5 to 10 homes and is not on sale yet. The plan is a monthly subscription that includes the device, in a standard plan and a Pro plan that adds Wappi."
+      },
+      "wappi": {
+        "question": "What does Wappi base its answers on?",
+        "answer": "Your own home's electricity data, the weather and the EVN tariff. The figures are computed by the system, the language model only explains them, and every answer names its sources."
+      }
+    }
+  },
+  "cta": {
+    "title": "See WattPrint at work in a real home.",
+    "body": "Open the app with real measurements from public datasets, no sign-up needed.",
+    "action": "Try it now"
+  },
+  "footer": {
+    "tagline": "The energy-saving assistant for Vietnamese homes.",
+    "product": "Product",
+    "legal": "Legal",
+    "project": "Project",
     "terms": "Terms",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "signIn": "Sign in",
+    "copyright": "© 2026 WattPrint, team UDU.S4U"
   },
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for does not exist or has moved.",
     "backHome": "Back to home"
+  },
+  "split": {
+    "title": "A clear electricity bill.",
+    "muted": "Know where the money goes.",
+    "body": "Your EVN bill shows one total. WattPrint splits it by appliance so you know where to save.",
+    "billLabel": "This cycle's EVN bill",
+    "billMeta": "111.9 kWh, as of 25 November",
+    "billNo": [
+      "No idea which appliance costs most",
+      "The amount arrives at the end of the month"
+    ],
+    "splitLabel": "Same cycle, by appliance",
+    "rows": [
+      {
+        "label": "Water heater",
+        "kwh": "50.8 kWh",
+        "share": 45
+      },
+      {
+        "label": "Fridge",
+        "kwh": "13.8 kWh",
+        "share": 12
+      },
+      {
+        "label": "Air conditioner",
+        "kwh": "13.5 kWh",
+        "share": 12
+      }
+    ],
+    "rest": "The rest is the washer, lights and small devices not yet recognised.",
+    "note": "Real measurements of a household in the public Plegma dataset. Per-appliance energy is estimated by WattPrint's model."
+  },
+  "how": {
+    "title": "Install once, use for years.",
+    "muted": "No rewiring.",
+    "body": "No smart plug on every appliance. Just one sensor at the main breaker.",
+    "steps": [
+      {
+        "title": "Fit the sensor at the breaker box",
+        "body": "It measures the whole home's power every 5 seconds."
+      },
+      {
+        "title": "Recognise each appliance",
+        "body": "AI picks out the water heater, air conditioner and fridge in the shared signal. About a minute later, it is in the app."
+      },
+      {
+        "title": "Turn it into money",
+        "body": "Every kWh is priced on EVN's tiered household tariff."
+      }
+    ]
+  },
+  "tabs": {
+    "title": "Everything about your home's energy,",
+    "muted": "in one app.",
+    "body": "Captured from the real app, analysing real measurements of households in the public REFIT (UK) and Plegma (Greece) datasets.",
+    "label": "WattPrint features",
+    "bill": "Bill",
+    "devices": "Appliances",
+    "alerts": "Alerts",
+    "statistics": "Statistics",
+    "plan": "Savings plan",
+    "statsTitle": "Track your use over time",
+    "statsBody": "See energy by day, week and month, and which hours use the most.",
+    "statsAlt": "WattPrint's statistics screen: energy by day and by hour",
+    "overview": "Overview",
+    "overviewTitle": "See the whole cycle on one page",
+    "overviewBody": "Your running bill, where the energy goes and what needs a look.",
+    "overviewAlt": "WattPrint's overview for a household in the Plegma dataset",
+    "planAlt": "WattPrint's savings plan: pick what to do and see the money saved by the end of the cycle",
+    "wappi": "Wappi",
+    "wappiTitle": "Ask Wappi about your home",
+    "wappiBody": "Wappi answers from your own home's data, with a chart and the source of every number.",
+    "wappiAlt": "WattPrint's Wappi screen answering which appliance cost the most this month"
+  },
+  "stats": {
+    "title": "When you can see it, you use it better.",
+    "items": [
+      {
+        "value": "2.8×",
+        "label": "How far people underestimate what their appliances really use",
+        "source": "Attari et al., PNAS, 2010"
+      },
+      {
+        "value": "2–4%",
+        "label": "Less energy used when households track their own use",
+        "source": "Buckley, Ecological Economics, 2020"
+      },
+      {
+        "value": "4–7%",
+        "label": "Less energy used in a trial with about 1,000 homes in Da Nang",
+        "source": "Nguyen et al., Energy Policy, 2024"
+      }
+    ]
+  },
+  "wappiBand": {
+    "title": "Ask Wappi about your energy.",
+    "body": "Wappi is WattPrint's AI assistant. It answers from your own home's data, the weather and the EVN tariff.",
+    "poke": "Poke Wappi",
+    "pick": "Pick a question to see Wappi answer.",
+    "reading": "Wappi is reading the question…",
+    "working": "Wappi is working it out…"
+  },
+  "meta": {
+    "title": "WattPrint: see what each appliance uses and costs",
+    "description": "One sensor at the breaker box. WattPrint splits your home's energy by appliance, prices it on the EVN tariff and answers questions through the Wappi assistant.",
+    "ogAlt": "WattPrint's overview: energy split by appliance and this cycle's bill"
   }
 }

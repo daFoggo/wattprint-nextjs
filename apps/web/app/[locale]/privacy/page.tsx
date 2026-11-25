@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
 import { useTranslations } from "next-intl"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
 import { IconShieldCheck, IconClock, IconFileCheck } from "@tabler/icons-react"
-
 
 import { CONTAINER } from "@/config/layout"
 import { SiteHeader } from "@/components/site-header"
+import type { Locale } from "@/i18n/routing"
+import { alternatesFor } from "@/lib/seo"
 
 // Noon UTC keeps the same calendar day whatever the server's time zone.
 const EFFECTIVE = new Date("2026-01-01T12:00:00Z")
@@ -22,7 +23,7 @@ const AI_RULES = ["disclosure", "human", "training"] as const
 
 const rich = {
   strong: (chunks: React.ReactNode) => (
-    <strong className="text-foreground font-medium">{chunks}</strong>
+    <strong className="font-medium text-foreground">{chunks}</strong>
   ),
   code: (chunks: React.ReactNode) => (
     <code className="font-mono text-xs">{chunks}</code>
@@ -34,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
-    alternates: { languages: { vi: "/privacy", en: "/en/privacy" } },
+    alternates: alternatesFor("/privacy", (await getLocale()) as Locale),
   }
 }
 
@@ -60,15 +61,17 @@ export default function PrivacyPolicyPage() {
             <h1 className="text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
               {t("title")}
             </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
+            <p className="text-base leading-relaxed text-muted-foreground">
               {t("intro")}
             </p>
           </div>
 
           {/* Section 1: Data Controller */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("controller.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("controller.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("controller.body")}
             </p>
             <div className="rounded-2xl bg-card p-4 font-mono text-xs text-foreground">
@@ -80,11 +83,13 @@ export default function PrivacyPolicyPage() {
 
           {/* Section 2: Data We Collect */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("collected.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("collected.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("collected.body")}
             </p>
-            <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground leading-relaxed">
+            <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
               {COLLECTED.map((key) => (
                 <li key={key}>{t.rich(`collected.items.${key}`, rich)}</li>
               ))}
@@ -93,15 +98,19 @@ export default function PrivacyPolicyPage() {
 
           {/* Section 3: Purposes and Legal Grounds */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("bases.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("bases.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("bases.body")}
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {BASES.map((key) => (
                 <div key={key} className="rounded-2xl bg-card p-4">
-                  <span className="font-medium text-xs text-foreground uppercase tracking-wider font-mono">{t(`bases.${key}.title`)}</span>
-                  <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                  <span className="font-mono text-xs font-medium tracking-wider text-foreground uppercase">
+                    {t(`bases.${key}.title`)}
+                  </span>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                     {t(`bases.${key}.body`)}
                   </p>
                 </div>
@@ -111,19 +120,23 @@ export default function PrivacyPolicyPage() {
 
           {/* Section 4: Cross-Border Transfers */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("transfers.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("transfers.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("transfers.body")}
             </p>
           </section>
 
           {/* Section 5: Cookies and Tracking */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("cookies.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("cookies.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("cookies.body")}
             </p>
-            <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground leading-relaxed">
+            <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               {COOKIES.map((key) => (
                 <li key={key}>{t.rich(`cookies.items.${key}`, rich)}</li>
               ))}
@@ -134,16 +147,25 @@ export default function PrivacyPolicyPage() {
           <section className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <IconClock className="size-4 text-primary" />
-              <h2 className="text-xl font-medium text-foreground">{t("rights.title")}</h2>
+              <h2 className="text-xl font-medium text-foreground">
+                {t("rights.title")}
+              </h2>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("rights.body")}
             </p>
             <div className="flex flex-col divide-y divide-border rounded-2xl bg-card font-mono text-xs">
               {RIGHTS.map(([key, days]) => (
-                <div key={key} className="flex items-center justify-between p-3.5">
-                  <span className="text-foreground">{t(`rights.items.${key}`)}</span>
-                  <span className="font-medium text-foreground">{t("rights.within", { days })}</span>
+                <div
+                  key={key}
+                  className="flex items-center justify-between p-3.5"
+                >
+                  <span className="text-foreground">
+                    {t(`rights.items.${key}`)}
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {t("rights.within", { days })}
+                  </span>
                 </div>
               ))}
             </div>
@@ -153,20 +175,24 @@ export default function PrivacyPolicyPage() {
           <section className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <IconFileCheck className="size-4 text-primary" />
-              <h2 className="text-xl font-medium text-foreground">{t("deletion.title")}</h2>
+              <h2 className="text-xl font-medium text-foreground">
+                {t("deletion.title")}
+              </h2>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t.rich("deletion.body", rich)}
             </p>
           </section>
 
           {/* Section 8: AI Transparency & Processing (Law 134/2025/QH15) */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-medium text-foreground">{t("ai.title")}</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-xl font-medium text-foreground">
+              {t("ai.title")}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {t("ai.body")}
             </p>
-            <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground leading-relaxed">
+            <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               {AI_RULES.map((key) => (
                 <li key={key}>{t.rich(`ai.items.${key}`, rich)}</li>
               ))}

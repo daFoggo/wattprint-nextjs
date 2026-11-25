@@ -148,6 +148,11 @@
     "@hairline/message-edit",
     "@hairline/chat-history",
     "@hairline/agent-playback",
-    "@hairline/compare-bars"
+    "@hairline/compare-bars",
+    "@hairline/sidebar",
+    "@hairline/page-header",
+    "@hairline/faq-accordion",
+    "@hairline/page-outline",
+    "@hairline/ridge-footer"
   ]
 }

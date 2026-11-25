@@ -175,7 +175,7 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
     to its month); in-app device on/off alerts show the run's time; `bad_device` has its own words.
   - wattprint-backend `DilatedResidualBlock`: a dilation list other than the trained (1, 2, 4, 8) is refused, not
     silently ignored (tests/test_nilm_block.py; torch runs in the nilm image).
-- 2026-11-22 `apps/dashboard/lib/ajv-browser.ts`: browser stub for `ajv/dist/2020.js` accepts any data (shortcut:
+- 2026-11-22 `packages/ui-patterns/src/ajv-browser.ts`: browser stub for `ajv/dist/2020.js` accepts any data (shortcut:
   only avatar-core validates our bundled Wappi character in the client). The alias key matches avatar-core 1.2.1's exact
   specifier; on an avatar-core upgrade, re-grep the client chunks for Ajv codegen, since a changed specifier brings the
   CSP crash back while the config test still passes. (R1 Minor)

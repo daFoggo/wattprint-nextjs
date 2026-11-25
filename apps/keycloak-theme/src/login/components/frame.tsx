@@ -1,7 +1,19 @@
+import {
+  IconDevices,
+  IconMessageCircle,
+  IconReceipt,
+} from "@tabler/icons-react"
+
 import { AppLogo } from "@workspace/ui-patterns/app-logo"
 
 import type { I18n } from "../i18n"
 import { LocaleSwitch } from "./locale-switch"
+
+const POINTS = [
+  ["railDevices", IconDevices],
+  ["railBill", IconReceipt],
+  ["railWappi", IconMessageCircle],
+] as const
 
 /**
  * The dashboard's sign-in frame (apps/dashboard/app/[locale]/(auth)/_components/auth-frame.tsx), rebuilt for Keycloak's
@@ -17,7 +29,7 @@ export function Frame({
   landingUrl: string
   children: React.ReactNode
 }) {
-  const { msg } = i18n
+  const { msg, msgStr } = i18n
   const link = (path: string, label: React.ReactNode) => (
     <a
       href={`${landingUrl}${path}`}
@@ -30,25 +42,43 @@ export function Frame({
   )
   return (
     <div className="grid min-h-svh grid-cols-1 bg-background text-foreground lg:grid-cols-12">
-      <aside className="hidden lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col lg:p-2 xl:col-span-7">
-        <div className="flex flex-1 flex-col rounded-3xl bg-card px-7">
+      {/* The same rail as the dashboard's sign-in: forest plate, pitch, three points, a real capture framed by the
+          forest like the landing hero. Dark only, like the rest of this theme. */}
+      <aside className="hidden lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col xl:col-span-7">
+        <div className="flex flex-1 flex-col overflow-hidden bg-brand-field px-12 text-brand-field-foreground">
           <div className="flex h-24 shrink-0 items-center">
             <a href={landingUrl}>
               <AppLogo size="lg" />
             </a>
           </div>
-          <div className="flex flex-1 flex-col justify-center">
-            <div className="flex max-w-xl flex-col gap-3">
-              <p className="text-3xl leading-tight font-medium text-balance md:text-4xl">
+          <div className="flex max-w-xl flex-col gap-8">
+            <div className="flex flex-col gap-3">
+              <p className="text-4xl leading-tight font-medium text-balance">
                 {msg("pitchTitle")}
               </p>
-              <p className="text-lg leading-relaxed text-muted-foreground">
+              <p className="text-lg leading-relaxed text-brand-field-muted">
                 {msg("pitchBody")}
               </p>
             </div>
+            <ul className="flex flex-col gap-3">
+              {POINTS.map(([key, PointIcon]) => (
+                <li key={key} className="flex items-center gap-3">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <PointIcon aria-hidden className="size-4" />
+                  </span>
+                  {msg(key)}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="flex h-24 shrink-0 items-center text-sm text-muted-foreground">
-            © 2026 WattPrint
+          <div className="mt-12 min-h-0 flex-1 overflow-hidden rounded-t-2xl">
+            <img
+              src={`${import.meta.env.BASE_URL}auth/overview-dark.webp`}
+              alt={msgStr("railShotAlt")}
+              width={2880}
+              height={1800}
+              className="size-full object-cover object-left-top"
+            />
           </div>
         </div>
       </aside>

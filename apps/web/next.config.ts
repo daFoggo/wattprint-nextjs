@@ -38,7 +38,12 @@ const DASHBOARD_PATHS = [
 const nextConfig: NextConfig = {
   // Recommended for all new apps from Next.js 16.4 (default in create-next-app).
   cacheComponents: true,
+  poweredByHeader: false,
   partialPrefetching: true,
+  // Ajv (in Wappi's avatar-core) compiles with `new Function`, which the CSP blocks: the browser gets an eval-free stub.
+  turbopack: {
+    resolveAlias: { "ajv/dist/2020.js": { browser: "@workspace/ui-patterns/ajv-browser" } },
+  },
   experimental: {
     optimizePackageImports: ["@tabler/icons-react"],
   },

@@ -9,7 +9,7 @@ export function LocaleSwitch({ i18n }: { i18n: I18n }) {
   return (
     <SegmentedControl
       label={msgStr("languageLabel")}
-      size="sm"
+      size="md"
       className="ml-auto"
       value={currentLanguage.languageTag}
       onValueChange={(tag) => {

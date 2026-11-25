@@ -1,3 +1,9 @@
+import {
+  IconDevices,
+  IconMessageCircle,
+  IconReceipt,
+} from "@tabler/icons-react"
+import Image from "next/image"
 import { useTranslations } from "next-intl"
 
 import { ThemeToggle } from "@workspace/ui-patterns/theme-toggle"
@@ -8,49 +14,76 @@ import { useLandingHref } from "@/lib/use-landing-href"
 
 // The landing page lives in apps/web, another origin: a plain `<a>`, not `next/link`.
 
-/** Left rail from lg: wordmark, page-specific showcase centered, footer. Hidden below lg. */
-export function AuthAside({ children }: { children: React.ReactNode }) {
-  const landing = useLandingHref()
-  return (
-    <aside className="hidden lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col lg:p-2 xl:col-span-7">
-      {/* A section plate: set apart by its surface, not a rule (docs/design-system.md, Surfaces). */}
-      <div className="flex flex-1 flex-col rounded-3xl bg-card px-7 text-foreground">
-        <div className="relative flex h-24 shrink-0 items-center">
-          <a href={landing()}>
-            <AppLogo size="lg" />
-          </a>
-        </div>
-        <div className="relative flex flex-1 flex-col justify-center">
-          <div className="flex flex-col gap-8 text-foreground">{children}</div>
-        </div>
-        {/* Same height as the header so the showcase stays vertically centered. */}
-        <div className="relative flex h-24 shrink-0 items-center justify-between text-sm text-muted-foreground">
-          {/* eslint-disable-next-line no-restricted-syntax -- the brand name, the same in vi and en (docs/internationalization.md) */}
-          <span>© 2026 WattPrint</span>
-          <ThemeToggle />
-        </div>
-      </div>
-    </aside>
-  )
-}
+const POINTS = [
+  ["devices", IconDevices],
+  ["bill", IconReceipt],
+  ["wappi", IconMessageCircle],
+] as const
 
-/** Rail headline: title plus a one-line standfirst. */
-export function AuthPitch({
+/**
+ * Left rail from lg, in the landing's colours: a forest plate (`brand-field`, globals.css) with the wordmark, the
+ * pitch, three things the app does, and a real capture of the dashboard bleeding off the bottom right. Hidden below lg.
+ */
+export function AuthAside({
   title,
   children,
 }: {
   title: string
   children: React.ReactNode
 }) {
+  const t = useTranslations("auth.rail")
+  const landing = useLandingHref()
   return (
-    <div className="flex max-w-xl flex-col gap-3">
-      <p className="text-3xl leading-tight font-medium text-balance md:text-4xl">
-        {title}
-      </p>
-      <p className="text-lg leading-relaxed text-muted-foreground">
-        {children}
-      </p>
-    </div>
+    <aside className="hidden lg:sticky lg:top-0 lg:col-span-6 lg:flex lg:h-svh lg:flex-col xl:col-span-7">
+      <div className="relative flex flex-1 flex-col overflow-hidden bg-brand-field px-12 text-brand-field-foreground">
+        <div className="flex h-24 shrink-0 items-center">
+          <a href={landing()}>
+            <AppLogo size="lg" />
+          </a>
+        </div>
+        <div className="flex max-w-xl flex-col gap-8">
+          <div className="flex flex-col gap-3">
+            <p className="text-4xl leading-tight font-medium text-balance">
+              {title}
+            </p>
+            <p className="text-lg leading-relaxed text-brand-field-muted">
+              {children}
+            </p>
+          </div>
+          <ul className="flex flex-col gap-3">
+            {POINTS.map(([key, PointIcon]) => (
+              <li key={key} className="flex items-center gap-3">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <PointIcon aria-hidden className="size-4" />
+                </span>
+                {t(key)}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* The real app rising out of the forest like the landing's hero stage: rounded on top, the same inset on
+            both sides, cut by the bottom of the screen. The rail runs edge to edge, so no edge of the capture meets
+            the page behind it (where its own page colour used to swallow the plate's corner). */}
+        <div className="mt-12 min-h-0 flex-1 overflow-hidden rounded-t-2xl">
+          <Image
+            src="/auth/overview-light.webp"
+            alt={t("shotAlt")}
+            width={2880}
+            height={1800}
+            sizes="(min-width: 1280px) 50vw, 45vw"
+            className="size-full object-cover object-left-top dark:hidden"
+          />
+          <Image
+            src="/auth/overview-dark.webp"
+            alt={t("shotAlt")}
+            width={2880}
+            height={1800}
+            sizes="(min-width: 1280px) 50vw, 45vw"
+            className="hidden size-full object-cover object-left-top dark:block"
+          />
+        </div>
+      </div>
+    </aside>
   )
 }
 
@@ -96,7 +129,10 @@ export function AuthHeader() {
       >
         {t("goHome")}
       </a>
-      <LocaleSwitch />
+      <div className="flex items-center gap-2">
+        <LocaleSwitch size="md" />
+        <ThemeToggle />
+      </div>
     </header>
   )
 }

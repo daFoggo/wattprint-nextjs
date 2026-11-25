@@ -11,6 +11,7 @@ export const hairlineMessages: Record<string, Record<string, string>> = {
     Day: "Ngày",
     Done: "Xong",
     "Try again": "Thử lại",
+    Footer: "Chân trang",
     waiting: "đang chờ",
     of: "/",
     "{left} of {limit} {unit} left": "Còn {left}/{limit} {unit}",

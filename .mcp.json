@@ -12,6 +12,16 @@
         "awwwards-mcp"
       ],
       "env": {}
+    },
+    "shadcn": {
+      "type": "stdio",
+      "command": "pnpm",
+      "args": [
+        "dlx",
+        "shadcn@4.23.0",
+        "mcp"
+      ],
+      "env": {}
     }
   }
 }
