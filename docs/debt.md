@@ -62,7 +62,7 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
 - Plegma's timestamps are assumed to be Greek wall clock (the boiler peaks at 05–06 and 17 could also be UTC); no README was read. Check against the metadata or the paper before quoting the weather link for that home.
 - ENERTALK House 0 is live only until about Jan 2027 (a 3-month recording shifted 10 years); after that the replay loops its last week. Replace it with a longer house or a week-level shift before then.
 - The expected-usage model has little history for both new homes (120 and 30 days): its forecasts there are weak until months pass.
-- Keycloak still has the account `refit.house5.heat@wattprint.local` (only the database row was removed); the heater scenario code and `5-heat` keys stay as dead code.
+- The heater scenario code and the `5-heat` variant keys stay as dead code now that no home uses them.
 
 ## Paid
 
