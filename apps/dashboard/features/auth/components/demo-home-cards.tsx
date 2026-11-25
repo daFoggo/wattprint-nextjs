@@ -8,7 +8,7 @@ import type { DemoHome } from "../schemas"
 import { DemoHouseScene } from "./demo-house-scene"
 
 /**
- * A row per seeded REFIT home: a small drawing, its name and appliances, compact enough that a dialog shows every
+ * A row per seeded demo home: a small drawing, its name and appliances, compact enough that a dialog shows every
  * home and its button without scrolling. With `onPick` each row is a button (the picked one says it is opening);
  * without, the rows only show what there is to see.
  */
@@ -26,6 +26,11 @@ export function DemoHomeCards({
   className?: string
 }) {
   const t = useTranslations("auth.demo")
+  // The home's own line is keyed by the home (messages `homes.<key>`), which the typed keys cannot express.
+  const about = (key: string, count: number) =>
+    (t as unknown as (k: string, v: { count: number }) => string)(key, {
+      count,
+    })
   return (
     <ul className={cn("grid gap-2", className)}>
       {homes.map((home) => {
@@ -46,7 +51,9 @@ export function DemoHomeCards({
               <span className="text-sm text-muted-foreground">
                 {busy
                   ? t("opening")
-                  : t("devices", { count: home.devices.length })}
+                  : t.has(`homes.${home.key}` as never)
+                    ? about(`homes.${home.key}`, home.devices.length)
+                    : t("devices", { count: home.devices.length })}
               </span>
             </span>
           </>

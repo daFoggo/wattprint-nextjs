@@ -151,6 +151,9 @@
     "dishwasher": "Run only full loads on the eco programme, and skip heated drying when you can.",
     "microwave": "For small portions a microwave uses less energy than the hob or the oven.",
     "toaster": "High power in short bursts; unplug it when not in use.",
+    "ac": "Set it to 26 °C or higher; each degree lower adds about 6 to 8 percent to its energy use.",
+    "waterHeater": "Lower the thermostat and switch it off when no one needs hot water.",
+    "riceCooker": "Cook only what you need and unplug it once the rice is done instead of keeping it warm.",
     "other": "Energy not yet put down to a device. It shrinks as the system learns more of the home's devices."
   }
 }

@@ -151,6 +151,9 @@
     "dishwasher": "Chỉ chạy khi đầy và dùng chế độ tiết kiệm (eco); bỏ bước sấy nóng nếu có thể.",
     "microwave": "Hâm phần ăn nhỏ bằng lò vi sóng tốn ít điện hơn bếp hoặc lò nướng.",
     "toaster": "Công suất cao nhưng chạy ngắn; rút phích khi không dùng.",
+    "ac": "Đặt 26 °C trở lên; mỗi độ thấp hơn tốn thêm khoảng 6–8 % điện.",
+    "waterHeater": "Hạ nhiệt độ đặt và tắt khi không ai cần nước nóng.",
+    "riceCooker": "Nấu vừa đủ và rút phích sau khi cơm chín thay vì để chế độ giữ ấm.",
     "other": "Phần điện chưa gán được cho thiết bị nào. Con số này nhỏ dần khi hệ thống nhận ra thêm thiết bị trong nhà."
   }
 }

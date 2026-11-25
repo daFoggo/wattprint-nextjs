@@ -145,6 +145,7 @@ type DeviceKey = keyof (typeof messages)["tips"]
 const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
   always_on: "alwaysOn",
   fridge_freezer: "fridge",
+  fridge: "fridge",
   freezer: "fridge",
   kettle: "kettle",
   washing_machine: "washer",
@@ -153,6 +154,9 @@ const TYPE_KEYS: Partial<Record<string, DeviceKey>> = {
   dishwasher: "dishwasher",
   microwave: "microwave",
   toaster: "toaster",
+  ac: "ac",
+  water_heater: "waterHeater",
+  rice_cooker: "riceCooker",
   other: "other",
 }
 
