@@ -11,7 +11,9 @@
     "today": "Today <amount></amount> · {kwh} kWh",
     "viewDetails": "View bill details",
     "vsUsual": "Today is {pct} {higher, select, true {above} other {below}} your usual (≈ {amount})",
-    "asUsual": "Today is about your usual"
+    "asUsual": "Today is about your usual",
+    "topTierUsed": "{kwh} kWh used in this tier so far.",
+    "topTierNote": "Every extra kWh this cycle costs this much, before VAT."
   },
   "forecast": {
     "title": "Bill forecast for the end of the cycle",
@@ -71,7 +73,7 @@
     "lastMonth": "Last cycle {amount}",
     "partial": "Missing data",
     "straddle": "Tariff changed this cycle",
-    "forecastRange": "About {low} – {high}",
+    "forecastRange": "About {low} – {high}, or {kwhLow}–{kwhHigh} kWh",
     "cycleDay": "Day {day} of {total}, {left, plural, one {# day} other {# days}} left",
     "partialBody": "The meter missed some hours this cycle, so the bill may read lower than it is.",
     "straddleBody": "The tariff changed mid-cycle: the days before and after are priced at each period’s rates, as the utility does.",
@@ -119,7 +121,6 @@
     },
     "saves": "Saves {amount} ({kwh} kWh) by the end of the cycle",
     "avoidsTier": "keeps you out of tier {tier}",
-    "simulated": "Simulated",
     "week": "About {kwh} kWh · {amount} over the next 7 days",
     "versus": "{dir, select, up {{pct}% above usual} down {{pct}% below usual} other {About usual}}",
     "toEnd": "To the end of {end}: {amount} · {kwh} kWh",

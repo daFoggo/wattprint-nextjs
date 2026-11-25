@@ -62,6 +62,8 @@ export function BillOverview({
             ? t("overview.forecastRange", {
                 low: vnd.format(p.amount_p10),
                 high: vnd.format(p.amount_p90),
+                kwhLow: kwh.format(Math.round(p.kwh_p10)),
+                kwhHigh: kwh.format(Math.round(p.kwh_p90)),
               })
             : t("overview.forecastNote", {
                 kwh: kwh.format(Math.round(p.kwh)),

@@ -17,7 +17,6 @@ export type Opportunity = {
   type: string
   /** The advice in the page's language, with its numbers. */
   label: string
-  simulated: boolean
   kwh: number
   amount: number
   avoidsTier: number | null

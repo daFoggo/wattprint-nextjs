@@ -11,7 +11,9 @@
     "today": "Hôm nay <amount></amount> · {kwh} kWh",
     "viewDetails": "Xem chi tiết hóa đơn",
     "vsUsual": "Hôm nay đang {higher, select, true {cao hơn} other {thấp hơn}} thường lệ {pct} (≈ {amount})",
-    "asUsual": "Hôm nay dùng điện như thường lệ"
+    "asUsual": "Hôm nay dùng điện như thường lệ",
+    "topTierUsed": "Đã dùng {kwh} kWh trong bậc này.",
+    "topTierNote": "Mỗi kWh dùng thêm trong kỳ tính giá này, chưa gồm VAT."
   },
   "forecast": {
     "title": "Dự báo hóa đơn cuối kỳ",
@@ -71,7 +73,7 @@
     "lastMonth": "Kỳ trước {amount}",
     "partial": "Thiếu dữ liệu",
     "straddle": "Giá điện thay đổi trong kỳ",
-    "forecastRange": "Khoảng {low} – {high}",
+    "forecastRange": "Khoảng {low} – {high}, tức {kwhLow}–{kwhHigh} kWh",
     "cycleDay": "Ngày {day}/{total} của kỳ, còn {left} ngày",
     "partialBody": "Công tơ thiếu số đo một số giờ trong kỳ, nên tiền điện có thể thấp hơn thực tế.",
     "straddleBody": "Biểu giá đổi giữa kỳ: các ngày trước và sau được tính theo giá của từng giai đoạn, như điện lực làm.",
@@ -119,7 +121,6 @@
     },
     "saves": "Tiết kiệm {amount} ({kwh} kWh) đến cuối kỳ",
     "avoidsTier": "tránh được bậc {tier}",
-    "simulated": "Mô phỏng",
     "week": "Khoảng {kwh} kWh · {amount} trong 7 ngày tới",
     "versus": "{dir, select, up {Cao hơn bình thường {pct}%} down {Thấp hơn bình thường {pct}%} other {Gần như bình thường}}",
     "toEnd": "Đến hết {end}: {amount} · {kwh} kWh",

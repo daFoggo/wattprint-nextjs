@@ -94,7 +94,6 @@ async function Content() {
         device: d.name,
         type: d.type,
         label: advice(`tip.${a.key}`, a.params),
-        simulated: d.simulated,
         kwh: a.saved_kwh,
         amount: a.saved_amount,
         avoidsTier: a.avoids_tier,

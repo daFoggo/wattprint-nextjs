@@ -53,7 +53,6 @@ export function PlanBuilder({
   preselect: string[]
 }) {
   const t = useTranslations("plan")
-  const bf = useTranslations("billing.deviceForecast")
   const locale = useLocale()
   const f = formats(locale)
   const steps = alwaysOnSteps(data.alwaysOnW)
@@ -173,11 +172,6 @@ export function PlanBuilder({
                   meta={
                     <>
                       <span>{a.device}</span>
-                      {a.simulated ? (
-                        <Badge size="sm" outline>
-                          {bf("simulated")}
-                        </Badge>
-                      ) : null}
                       {a.avoidsTier ? (
                         <Badge size="sm" tone="success">
                           {t("summary.avoidsTier", { tier: a.avoidsTier })}

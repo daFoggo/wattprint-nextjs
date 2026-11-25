@@ -143,12 +143,20 @@ export function BillSummary({
           locales={locale}
         />
       ) : (
-        <div className="flex flex-1 flex-col gap-1.5 rounded-xl border bg-background p-4">
+        <div className="flex flex-1 flex-col justify-center gap-1.5 rounded-xl border bg-background p-4">
           <p className="text-sm text-muted-foreground">
             {t("billSummary.topTier", { tier: bill.tier_no })}
           </p>
           <p className="text-lg font-medium">
             {vnd.format(tier?.price_per_kwh ?? 0)}/kWh
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {t("billSummary.topTierUsed", {
+              kwh: kwh.format(bill.kwh - (tier?.from_kwh ?? 0)),
+            })}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {t("billSummary.topTierNote")}
           </p>
         </div>
       )}

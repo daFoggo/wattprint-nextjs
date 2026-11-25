@@ -320,11 +320,6 @@ export function DeviceForecastCard({
             : `${f.kwh.format(d.kwh)} kWh`}
           {vs ? ` · ${vs}` : null}
         </p>
-        {d.simulated ? (
-          <Badge size="sm" outline className="self-start">
-            {t("simulatedNote")}
-          </Badge>
-        ) : null}
       </div>
       {top ? (
         <div className="flex flex-col gap-2 rounded-xl bg-muted p-3">
