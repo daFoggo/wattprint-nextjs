@@ -5,6 +5,7 @@
   "vat": "VAT {vat}%",
   "billSummary": {
     "caption": "So far this cycle, {kwh} kWh",
+    "captionDoc": "So far this cycle, {kwh} kWh, priced by {doc}",
     "part": "Tier {tier}, {kwh} kWh",
     "nextTier": "Tier {tier} from {kwh} kWh",
     "topTier": "Tier {tier}, the top one",

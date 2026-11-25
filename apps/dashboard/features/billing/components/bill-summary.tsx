@@ -122,7 +122,14 @@ export function BillSummary({
     >
       <ShareBar
         title={t("title")}
-        caption={t("billSummary.caption", { kwh: kwh.format(bill.kwh) })}
+        caption={
+          bill.tariff_doc
+            ? t("billSummary.captionDoc", {
+                kwh: kwh.format(bill.kwh),
+                doc: bill.tariff_doc,
+              })
+            : t("billSummary.caption", { kwh: kwh.format(bill.kwh) })
+        }
         items={parts}
         format={VND}
         locales={locale}

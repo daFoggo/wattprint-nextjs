@@ -5,6 +5,7 @@
   "vat": "VAT {vat}%",
   "billSummary": {
     "caption": "Tính đến nay trong kỳ, {kwh} kWh",
+    "captionDoc": "Tính đến nay trong kỳ, {kwh} kWh, giá theo {doc}",
     "part": "Bậc {tier}, {kwh} kWh",
     "nextTier": "Bậc {tier} từ {kwh} kWh",
     "topTier": "Bậc {tier}, bậc cao nhất",

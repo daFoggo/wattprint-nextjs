@@ -18,6 +18,8 @@ export const CurrentBillSchema = z.object({
   status: z.enum(["open", "partial", "closed"]),
   tariff_straddle: z.boolean(),
   vat_rate: z.number(),
+  // The decision behind the prices ("QĐ 2892/QĐ-BCT"); absent or null when the backend has none.
+  tariff_doc: z.string().nullish(),
   kwh: z.number(),
   amount_before_vat: z.number(),
   vat_amount: z.number(),

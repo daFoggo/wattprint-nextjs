@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { bandPosition, changeSentence, cycleDay, tierPath } from "../forecast"
-import { ForecastSchema, PastBillSchema } from "../schemas"
+import { CurrentBillSchema, ForecastSchema, PastBillSchema } from "../schemas"
 
 /** What every forecast carries besides its own figures (a weekday one: a point, no reasons). */
 const WEEKDAY = {
@@ -219,5 +219,34 @@ describe("bandPosition", () => {
     expect(bandPosition(90, 100, 200)).toBe(0)
     expect(bandPosition(260, 100, 200)).toBe(100)
     expect(bandPosition(100, 100, 100)).toBe(50)
+  })
+})
+
+describe("current bill", () => {
+  const BILL = {
+    period_start: "2026-11-01",
+    period_end: "2026-11-30",
+    status: "open",
+    tariff_straddle: false,
+    vat_rate: 0.08,
+    kwh: 120,
+    amount_before_vat: 300_000,
+    vat_amount: 24_000,
+    amount_total: 324_000,
+    tier_no: 2,
+    tiers: [],
+    today_kwh: 3,
+    today_amount: 9_000,
+  }
+
+  it("keeps the decision behind the prices", () => {
+    const b = CurrentBillSchema.parse({ ...BILL, tariff_doc: "QĐ 2892/QĐ-BCT" })
+    expect(b.tariff_doc).toBe("QĐ 2892/QĐ-BCT")
+  })
+
+  it("accepts a version with no decision code", () => {
+    expect(
+      CurrentBillSchema.parse({ ...BILL, tariff_doc: null }).tariff_doc
+    ).toBeNull()
   })
 })
