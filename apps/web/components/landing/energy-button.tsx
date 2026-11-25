@@ -10,9 +10,10 @@ import { cn } from "@workspace/ui/lib/utils"
  */
 const TONE = {
   // Mint stands off both the page ground and the header surface (both are near-white or near-black).
-  ground: "bg-lp-mint text-lp-ink hover:bg-lp-lime",
+  ground:
+    "bg-lp-mint text-lp-ink hover:bg-lp-lime hover:text-lp-accent-ink",
   stage:
-    "bg-lp-stage-line text-lp-stage-ink hover:bg-lp-accent hover:text-lp-accent-ink",
+    "bg-lp-stage-line text-lp-stage-ink hover:bg-lp-lime hover:text-lp-accent-ink",
   lime: "bg-lp-ground text-lp-ink hover:bg-lp-surface",
 } as const
 
