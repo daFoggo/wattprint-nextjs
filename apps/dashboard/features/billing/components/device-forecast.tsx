@@ -149,7 +149,19 @@ export function DeviceForecastTile({
                 ) : (
                   <>
                     <span className="sr-only">
-                      {t("day", { date: label, kwh: f.kwh.format(day.kwh) })}
+                      {day.kwh_p10 !== null && day.kwh_p90 !== null
+                        ? t("day", {
+                            date: label,
+                            kwh: f.kwh.format(day.kwh),
+                            amount: f.vnd.format(day.amount ?? 0),
+                            low: f.kwh.format(day.kwh_p10),
+                            high: f.kwh.format(day.kwh_p90),
+                          })
+                        : t("dayNoRange", {
+                            date: label,
+                            kwh: f.kwh.format(day.kwh),
+                            amount: f.vnd.format(day.amount ?? 0),
+                          })}
                     </span>
                     <span aria-hidden>
                       {f.kwh.format(day.kwh)} kWh

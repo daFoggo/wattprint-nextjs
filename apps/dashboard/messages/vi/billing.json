@@ -105,7 +105,8 @@
   "deviceForecast": {
     "title": "Dự báo 7 ngày tới",
     "range": "Khoảng {low}–{high} kWh",
-    "day": "{date}: khoảng {kwh} kWh",
+    "day": "{date}: khoảng {kwh} kWh, {amount}, có thể từ {low} đến {high} kWh",
+    "dayNoRange": "{date}: khoảng {kwh} kWh, {amount}",
     "confidence": {
       "high": "Chắc chắn cao",
       "medium": "Chắc chắn vừa",

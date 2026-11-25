@@ -29,12 +29,9 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
   - The advice range reuses the device forecast's error %; the always-on default cut is a quarter of the load
     (`shortcut:` in `features/plan/math.ts`). Pay: when real plans show what is usual.
 - 2026-11-24 (docs/work/2026-11-23-device-ai, change 2, R1 Minors):
-  - Screen readers hear a day's date and kWh, not its ₫ or P10–P90 range (the bar and the visible figures are
-    aria-hidden).
   - The weekday fallback's 4-week history keeps demo-event hours (`echo_run`), which training and the holdout drop.
   - `/billing/devices/forecast` is cached per home and hour in each API process (`_CACHE`, shortcut); move it to the
     insight worker's hourly job when there are more than a few dozen homes.
-  - The holdout's wiring to `tail_as_of` has no test of its own (the test calls the helper directly). (R2 Minor)
 - 2026-11-24 (change 3, explanation, R1 Minors):
   - The usual sums a day's known hours (days with 22+) and keeps demo-event hours; the model's past covers all 24 hours
     of all 28 days, so NILM gaps and scenario windows land in "other". Pay: mask both alike (`excluded_hours`).
@@ -59,12 +56,17 @@ torch index, on/off thresholds from the NILM bundle; wattprint-web: the Hairline
 ### NILM datasets and demo homes (2026-11-24)
 - `shortcut:` ENERTALK `EXCESS_W = 100` is one fixed margin for the Issues flag (`scripts/enertalk_to_refit.py`); upgrade when a per-device meter error is known.
 - `shortcut:` `FP_GAIN`, `W_MAX`, `EXCL_GAIN` in `dataset/research_v4/onoff_v4.py` are untuned; the variants gave no gain, so tune only if that line of work resumes.
-- Plegma's timestamps are assumed to be Greek wall clock (the boiler peaks at 05–06 and 17 could also be UTC); no README was read. Check against the metadata or the paper before quoting the weather link for that home.
-- ENERTALK House 0 is live only until about Jan 2027 (a 3-month recording shifted 10 years); after that the replay loops its last week. Replace it with a longer house or a week-level shift before then.
-- The expected-usage model has little history for both new homes (120 and 30 days): its forecasts there are weak until months pass.
-- The heater scenario code and the `5-heat` variant keys stay as dead code now that no home uses them.
+- `shortcut:` Plegma's summer-time repeated hour keeps two rows per local time, once a year (`scripts/plegma_to_refit.py`).
+- The expected-usage model has little history for the two new homes (120 and 30 days: only a short recording exists
+  at the right season): its forecasts there stay weak until the recording has looped. Pay: a longer house, or accept.
 
 ## Paid
+
+- 2026-11-25 (docs/work/2026-11-25-demo-homes-debt): the replay plays the whole recording again past its end
+  (whole weeks rounded down, weekday kept) instead of repeating its last week, and the home weather loops with it; Plegma's
+  clock is UTC (checked against ERA5, r 0.95) and now becomes Athens wall clock before training; "Other" is named
+  "Khác" in every demo home; screen readers hear each forecast day's ₫ and range; the holdout's `tail_as_of`
+  wiring has a test. The heater scenario code stays: it is a supported, tested feature, not dead code.
 
 - 2026-11-24 (docs/work/2026-11-24-demo-readiness, lane L, R1 ship after one fix pass): the REFIT replay is its own
   `replay` container (restarts with Docker); staged demo runs (`train = false` scenarios) are left out of D2/D3

@@ -105,7 +105,8 @@
   "deviceForecast": {
     "title": "Next 7 days",
     "range": "Between {low} and {high} kWh",
-    "day": "{date}: about {kwh} kWh",
+    "day": "{date}: about {kwh} kWh, {amount}, likely between {low} and {high} kWh",
+    "dayNoRange": "{date}: about {kwh} kWh, {amount}",
     "confidence": {
       "high": "High certainty",
       "medium": "Medium certainty",
