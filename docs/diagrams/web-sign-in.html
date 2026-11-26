@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập và lấy dữ liệu trên dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75; --color-accent:#bf4520;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Noto Serif',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color: var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.15; color: var(--color-ink); margin-bottom:1.5rem; }
+    svg { width: 100%; min-width: 960px; display:block; }
+    @media (max-width: 1024px) { svg { min-width: 0; } }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Sequence · Diagram Design</p>
+    <h1>Đăng nhập và lấy dữ liệu trên dashboard</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 590" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="web-sign-in-title web-sign-in-desc">
+        <title id="web-sign-in-title">Đăng nhập và lấy dữ liệu trên dashboard</title>
+        <desc id="web-sign-in-desc">Dashboard chuyển trình duyệt sang Keycloak, đổi mã lấy token, ghi cookie httpOnly rồi gọi API bằng Bearer token.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+          <marker id="arrow-open" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polyline points="0 0, 8 3, 0 6" fill="none" stroke="#4f5d75" stroke-width="1.2"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+<line x1="110" y1="94" x2="110" y2="524" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="360" y1="94" x2="360" y2="524" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="620" y1="94" x2="620" y2="524" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="840" y1="94" x2="840" y2="524" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+<path d="M110,140 L360,140" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="211" y="122" width="49" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="131" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">SIGN IN</text>
+<path d="M360,172 L110,172" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="203" y="154" width="65" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="163" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">302 + PKCE</text>
+<path d="M110,204 L620,204" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="455" y="186" width="71" height="12" rx="2" fill="#f5f5f5"/>
+<text x="490" y="195" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">CREDENTIALS</text>
+<path d="M620,236 L110,236" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="458" y="218" width="65" height="12" rx="2" fill="#f5f5f5"/>
+<text x="490" y="227" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">302 + CODE</text>
+<path d="M110,268 L360,268" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="194" y="250" width="82" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="259" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">GET /CALLBACK</text>
+<path d="M360,300 L620,300" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="449" y="282" width="82" height="12" rx="2" fill="#f5f5f5"/>
+<text x="490" y="291" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">EXCHANGE CODE</text>
+<path d="M620,332 L360,332" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="469" y="314" width="43" height="12" rx="2" fill="#f5f5f5"/>
+<text x="490" y="323" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">TOKENS</text>
+<path d="M360,364 L110,364" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="194" y="346" width="82" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="355" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">COOKIES + 302</text>
+<path d="M110,396 L360,396" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="192" y="378" width="87" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="387" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">GET /DASHBOARD</text>
+<path d="M360,428 L840,428" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+<rect x="692" y="410" width="76" height="12" rx="2" fill="#f5f5f5"/>
+<text x="730" y="419" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">BEARER TOKEN</text>
+<path d="M840,460 L360,460" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="714" y="442" width="32" height="12" rx="2" fill="#f5f5f5"/>
+<text x="730" y="451" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">JSON</text>
+<path d="M360,492 L110,492" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+<rect x="219" y="474" width="32" height="12" rx="2" fill="#f5f5f5"/>
+<text x="235" y="483" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">HTML</text>
+<rect x="40" y="50" width="140" height="44" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="50" width="140" height="44" rx="6" fill="rgba(79,93,117,0.10)" stroke="#5a6580" stroke-width="1"/>
+<text x="110" y="69.5" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">trình duyệt</text>
+<text x="110" y="84.5" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">cookie httpOnly</text>
+<rect x="290" y="50" width="140" height="44" rx="6" fill="#f5f5f5"/>
+<rect x="290" y="50" width="140" height="44" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+<text x="360" y="69.5" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">dashboard</text>
+<text x="360" y="84.5" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Next.js server</text>
+<rect x="550" y="50" width="140" height="44" rx="6" fill="#f5f5f5"/>
+<rect x="550" y="50" width="140" height="44" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="620" y="69.5" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Keycloak</text>
+<text x="620" y="84.5" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">realm wattprint</text>
+<rect x="770" y="50" width="140" height="44" rx="6" fill="#f5f5f5"/>
+<rect x="770" y="50" width="140" height="44" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="840" y="69.5" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">API</text>
+<text x="840" y="84.5" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">FastAPI</text>
+<line x1="30" y1="548" x2="930" y2="548" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+<text x="30" y="564" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start" letter-spacing="0.14em">LEGEND</text>
+<line x1="100" y1="561" x2="128" y2="561" stroke="#2e5aa8" stroke-width="1.2"/>
+<text x="134" y="564" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">yêu cầu</text>
+<line x1="198.4" y1="561" x2="226.4" y2="561" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="232.4" y="564" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">chuyển hướng / trả về</text>
+<line x1="369.6" y1="561" x2="397.6" y2="561" stroke="#bf4520" stroke-width="1.2"/>
+<text x="403.6" y="564" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">trang đã dựng</text>
+
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="web-architecture-title web-architecture-desc" id="web-architecture-root">
+        <title id="web-architecture-title">Kiến trúc monorepo wattprint-web</title>
+        <desc id="web-architecture-desc">Ba app Next.js và Vite dùng chung hai package; dashboard gọi API FastAPI và Keycloak, trang đăng nhập của Keycloak được build thành file jar.</desc>
+        <defs>
+      <style>#web-architecture-root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75; --color-accent:#bf4520;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Noto Serif',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+      #web-architecture-root { font-family: var(--font-sans); color: var(--color-ink); }
+      #web-architecture-root .diagram-container { width: 100%; overflow-x: auto; }
+      @media print {
+#web-architecture-root .diagram-container { overflow-x: visible; }
+}</style>
+          <marker id="web-architecture-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="web-architecture-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="web-architecture-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+<rect x="234" y="60" width="206" height="360" rx="8" fill="#2d3142" stroke="rgba(45,49,66,0.10)" stroke-width="0.8" fill-opacity="0.02"/>
+<rect x="246" y="64" width="42" height="12" rx="2" fill="#f5f5f5"/>
+<text x="267" y="73" fill="#5a6580" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.14em">APPS/</text>
+<rect x="234" y="436" width="446" height="120" rx="8" fill="#2d3142" stroke="rgba(45,49,66,0.10)" stroke-width="0.8" fill-opacity="0.02"/>
+<rect x="246" y="440" width="64.4" height="12" rx="2" fill="#f5f5f5"/>
+<text x="278.2" y="449" fill="#5a6580" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.14em">PACKAGES/</text>
+<path d="M105,216 L105,136 Q105,128 113,128 L250,128" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#web-architecture-arrow-link)"/>
+<rect x="151" y="104" width="38" height="12" rx="2" fill="#f5f5f5"/>
+<text x="170" y="113" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">HTTPS</text>
+<path d="M180,248 L250,248" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#web-architecture-arrow-link)"/>
+<rect x="196" y="224" width="38" height="12" rx="2" fill="#f5f5f5"/>
+<text x="215" y="233" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">HTTPS</text>
+<path d="M337,160 L337,216" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#web-architecture-arrow)"/>
+<rect x="363" y="182" width="54" height="12" rx="2" fill="#f5f5f5"/>
+<text x="390" y="191" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">REWRITES</text>
+<path d="M424,232 L700,232" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#web-architecture-arrow-accent)"/>
+<rect x="530" y="214" width="65" height="12" rx="2" fill="#f5f5f5"/>
+<text x="562" y="223" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">REST + SSE</text>
+<path d="M424,264 L552,264 Q560,264 560,272 L560,344 Q560,352 568,352 L700,352" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#web-architecture-arrow-link)"/>
+<rect x="614" y="334" width="32" height="12" rx="2" fill="#f5f5f5"/>
+<text x="630" y="343" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">OIDC</text>
+<path d="M424,384 L700,384" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#web-architecture-arrow)"/>
+<rect x="487" y="366" width="27" height="12" rx="2" fill="#f5f5f5"/>
+<text x="500" y="375" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">JAR</text>
+<rect x="30" y="216" width="150" height="64" rx="6" fill="#f5f5f5"/>
+<rect x="30" y="216" width="150" height="64" rx="6" fill="#4f5d75" stroke="#5a6580" stroke-width="1" fill-opacity="0.10"/>
+<text x="105" y="245.5" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Trình duyệt</text>
+<text x="105" y="260.5" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">vi (mặc định) · en</text>
+<rect x="250" y="96" width="174" height="64" rx="6" fill="#f5f5f5"/>
+<rect x="250" y="96" width="174" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="258" y="102" width="36" height="12" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="276" y="111" fill="#2d3142" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">NEXT</text>
+<text x="337" y="123" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">apps/web</text>
+<text x="337" y="138" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">landing · :11091</text>
+<text x="337" y="151" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Next.js 16 · React 19</text>
+<rect x="250" y="216" width="174" height="64" rx="6" fill="#f5f5f5"/>
+<rect x="250" y="216" width="174" height="64" rx="6" fill="#bf4520" stroke="#bf4520" stroke-width="1" fill-opacity="0.08"/>
+<rect x="258" y="222" width="36" height="12" rx="2" fill="none" stroke="#bf4520" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="276" y="231" fill="#bf4520" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">NEXT</text>
+<text x="337" y="243" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">apps/dashboard</text>
+<text x="337" y="258" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">đăng nhập + dashboard</text>
+<text x="337" y="271" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Next.js 16 · :11092</text>
+<rect x="250" y="336" width="174" height="72" rx="6" fill="#f5f5f5"/>
+<rect x="250" y="336" width="174" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="258" y="342" width="36" height="12" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="276" y="351" fill="#2d3142" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">VITE</text>
+<text x="337" y="367" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">apps/keycloak-theme</text>
+<text x="337" y="382" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">trang đăng nhập</text>
+<text x="337" y="395" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Keycloakify · Vite</text>
+<rect x="700" y="216" width="170" height="64" rx="6" fill="#f5f5f5"/>
+<rect x="700" y="216" width="170" height="64" rx="6" fill="#2d3142" stroke="rgba(45,49,66,0.30)" stroke-width="1" fill-opacity="0.03"/>
+<rect x="708" y="222" width="30" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.30)" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="723" y="231" fill="#2d3142" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em" fill-opacity="0.30">API</text>
+<text x="785" y="243" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">wattprint-backend</text>
+<text x="785" y="258" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">FastAPI</text>
+<text x="785" y="271" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">API_BASE_URL :11093</text>
+<rect x="700" y="336" width="170" height="64" rx="6" fill="#f5f5f5"/>
+<rect x="700" y="336" width="170" height="64" rx="6" fill="#2d3142" stroke="rgba(45,49,66,0.30)" stroke-width="1" fill-opacity="0.03"/>
+<rect x="708" y="342" width="30" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.30)" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="723" y="351" fill="#2d3142" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em" fill-opacity="0.30">IDP</text>
+<text x="785" y="363" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Keycloak</text>
+<text x="785" y="378" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">realm wattprint</text>
+<text x="785" y="391" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">OIDC + PKCE</text>
+<rect x="250" y="468" width="190" height="72" rx="6" fill="#f5f5f5"/>
+<rect x="250" y="468" width="190" height="72" rx="6" fill="#2d3142" stroke="#4f5d75" stroke-width="1" fill-opacity="0.05"/>
+<rect x="258" y="474" width="30" height="12" rx="2" fill="none" stroke="#4f5d75" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="273" y="483" fill="#4f5d75" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">PKG</text>
+<text x="345" y="499" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">packages/auth</text>
+<text x="345" y="514" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Keycloak, cookie, JWT</text>
+<text x="345" y="527" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">chỉ dashboard import</text>
+<rect x="470" y="468" width="190" height="72" rx="6" fill="#f5f5f5"/>
+<rect x="470" y="468" width="190" height="72" rx="6" fill="#2d3142" stroke="#4f5d75" stroke-width="1" fill-opacity="0.05"/>
+<rect x="478" y="474" width="30" height="12" rx="2" fill="none" stroke="#4f5d75" stroke-opacity="0.4" stroke-width="0.8"/>
+<text x="493" y="483" fill="#4f5d75" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">PKG</text>
+<text x="565" y="499" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">packages/ui · ui-patterns</text>
+<text x="565" y="514" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">Hairline, shadcn</text>
+<text x="565" y="527" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">cả 3 app dùng</text>
+<line x1="30" y1="572" x2="930" y2="572" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+<text x="30" y="588" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start" letter-spacing="0.14em">LEGEND</text>
+<rect x="100" y="579" width="22" height="12" rx="3" fill="#bf4520" stroke="#bf4520" stroke-width="1" fill-opacity="0.08"/>
+<text x="128" y="588" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">app chính</text>
+<line x1="202.8" y1="585" x2="230.8" y2="585" stroke="#2e5aa8" stroke-width="1.2"/>
+<text x="236.8" y="588" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">HTTP / OIDC</text>
+<line x1="322" y1="585" x2="350" y2="585" stroke="#bf4520" stroke-width="1.2"/>
+<text x="356" y="588" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">dữ liệu</text>
+<line x1="420.4" y1="585" x2="448.4" y2="585" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="4,3"/>
+<text x="454.4" y="588" fill="#5a6580" font-size="8" font-weight="400" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="start">build</text>
+
+      </svg>
