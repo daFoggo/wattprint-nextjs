@@ -6,7 +6,6 @@ import { requirePermission } from "@/lib/dal"
 
 import { toMessages } from "./schemas"
 import {
-  deleteConversation,
   fetchConversation,
   fetchConversations,
   fetchWatchStatuses,
@@ -59,11 +58,6 @@ export async function updateConversationAction(
     .strict()
     .parse(patch)
   await patchConversation(accessToken, Id.parse(id), valid)
-}
-
-export async function deleteConversationAction(id: string) {
-  const { accessToken } = await requirePermission("account:view")
-  await deleteConversation(accessToken, Id.parse(id))
 }
 
 export async function rateAnswerAction(

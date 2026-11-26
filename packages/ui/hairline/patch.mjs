@@ -1268,6 +1268,24 @@ export const PATCHES = [
     from: "bucket(new Date(chat.updatedAt), today)",
     to: 'bucket(new Date(chat.updatedAt), today, t("en-US") /* patched (hairline/patch.mjs) */)',
   },
+  {
+    file: "chat-history.tsx",
+    why: "A delete waits out its undo window; the unmount cleanup cleared it, so leaving the page (or closing the history sheet) within it dropped the delete and the chat came back. Leaving now commits it: on unmount and on pagehide (a reload or a closed tab).",
+    from: "  React.useEffect(() => {\n    const all = timers.current;\n    return () => all.forEach((t) => window.clearTimeout(t));\n  }, []);\n",
+    to: "  // patched (hairline/patch.mjs): leaving commits the deletes still pending; clearing them brought the chats back.\n  // pagehide also fires into the bfcache: a page restored from it has already sent its pending deletes.\n  const flush = React.useEffectEvent(() => {\n    timers.current.forEach((t, id) => {\n      window.clearTimeout(t);\n      onDelete?.(id);\n    });\n    timers.current.clear();\n  });\n  React.useEffect(() => {\n    const hide = () => flush();\n    window.addEventListener(\"pagehide\", hide);\n    return () => {\n      window.removeEventListener(\"pagehide\", hide);\n      flush();\n    };\n  }, []);\n",
+  },
+  {
+    file: "chat-history.tsx",
+    why: "The row's fold (after the undo window) stays pending until onDelete runs, so leaving during it commits the delete too (patch above).",
+    from: "      window.setTimeout(() => {\n        timers.current.delete(id);\n        setGone((g) => new Set(g).add(id));\n        // Let the row fold away before the parent drops it.\n        window.setTimeout(() => onDelete?.(id), reduced ? 0 : 360);\n      }, undoWindow)",
+    to: "      window.setTimeout(() => {\n        setGone((g) => new Set(g).add(id));\n        // Let the row fold away before the parent drops it (still pending: leaving commits it). patched (hairline/patch.mjs)\n        timers.current.set(\n          id,\n          window.setTimeout(() => {\n            timers.current.delete(id);\n            onDelete?.(id);\n          }, reduced ? 0 : 360)\n        );\n      }, undoWindow)",
+  },
+  {
+    file: "chat-history.tsx",
+    why: "Undo ends with the undo window: a folding row is already on its way out (its timer is the fold's now, patch above).",
+    from: "  const undo = (id: string) => {\n    window.clearTimeout",
+    to: "  const undo = (id: string) => {\n    if (gone.has(id)) return; // patched (hairline/patch.mjs)\n    window.clearTimeout",
+  },
   hook("chat-history.tsx", "  onUndo: () => void;\n}) {\n"),
   text(
     "chat-history.tsx",

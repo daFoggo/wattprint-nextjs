@@ -14,7 +14,6 @@ import { useLocale } from "next-intl"
 import { DASHBOARD_PATH } from "@/config/routes"
 
 import {
-  deleteConversationAction,
   listConversationsAction,
   loadConversationAction,
   rateAnswerAction,
@@ -301,8 +300,17 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
         abortRef.current?.abort()
         setActiveId(undefined)
       }
+      // keepalive: ChatHistory also commits a pending delete as the page unloads (the route says why).
       if (!threadId.startsWith(NEW))
-        deleteConversationAction(threadId).catch(resync)
+        fetch(`/api/copilot/conversations/${encodeURIComponent(threadId)}`, {
+          method: "DELETE",
+          keepalive: true,
+          redirect: "manual", // an ended session redirects: not a delete
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error(`Delete failed: ${res.status}`)
+          })
+          .catch(resync)
     },
     pin: (threadId, pinned) => {
       setThread(threadId, { pinned })

@@ -414,9 +414,22 @@ export function ChatHistory({
     });
   });
 
+  // patched (hairline/patch.mjs): leaving commits the deletes still pending; clearing them brought the chats back.
+  // pagehide also fires into the bfcache: a page restored from it has already sent its pending deletes.
+  const flush = React.useEffectEvent(() => {
+    timers.current.forEach((t, id) => {
+      window.clearTimeout(t);
+      onDelete?.(id);
+    });
+    timers.current.clear();
+  });
   React.useEffect(() => {
-    const all = timers.current;
-    return () => all.forEach((t) => window.clearTimeout(t));
+    const hide = () => flush();
+    window.addEventListener("pagehide", hide);
+    return () => {
+      window.removeEventListener("pagehide", hide);
+      flush();
+    };
   }, []);
 
   // Regroup at midnight.
@@ -430,15 +443,21 @@ export function ChatHistory({
     timers.current.set(
       id,
       window.setTimeout(() => {
-        timers.current.delete(id);
         setGone((g) => new Set(g).add(id));
-        // Let the row fold away before the parent drops it.
-        window.setTimeout(() => onDelete?.(id), reduced ? 0 : 360);
+        // Let the row fold away before the parent drops it (still pending: leaving commits it). patched (hairline/patch.mjs)
+        timers.current.set(
+          id,
+          window.setTimeout(() => {
+            timers.current.delete(id);
+            onDelete?.(id);
+          }, reduced ? 0 : 360)
+        );
       }, undoWindow)
     );
   };
 
   const undo = (id: string) => {
+    if (gone.has(id)) return; // patched (hairline/patch.mjs)
     window.clearTimeout(timers.current.get(id));
     timers.current.delete(id);
     setDeleted((d) => {
