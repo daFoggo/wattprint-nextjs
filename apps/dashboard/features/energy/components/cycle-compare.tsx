@@ -2,6 +2,7 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { TrendChart } from "@workspace/ui/components/hairline/trend-chart"
 
+import { ChartKey } from "@/components/shared/chart-key"
 import { Tile } from "@/components/shared/tile"
 
 import { dateStart, DAY, localDate, monthBefore, type Day } from "../days"
@@ -28,6 +29,7 @@ export function CycleCompare({
   className?: string
 }) {
   const t = useTranslations("energy.cycleCompare")
+  const k = useTranslations("energy.chartKey")
   const locale = useLocale()
   const current = days.filter((d) => d.date >= start)
   if (!current.length) return null
@@ -57,18 +59,27 @@ export function CycleCompare({
       }
       className={className}
     >
-      <TrendChart
-        label={t("title")}
-        buckets={current.map((d) => dateStart(d.date))}
-        values={total}
-        previous={was}
-        previousLabel={t("previous")}
-        interval="day"
-        unit="kWh"
-        format={{ maximumFractionDigits: 1 }}
-        now={now}
-        locale={locale}
-      />
+      <>
+        <TrendChart
+          label={t("title")}
+          buckets={current.map((d) => dateStart(d.date))}
+          values={total}
+          previous={was}
+          previousLabel={t("previous")}
+          interval="day"
+          unit="kWh"
+          format={{ maximumFractionDigits: 1 }}
+          now={now}
+          locale={locale}
+        />
+        <ChartKey
+          items={[
+            { label: k("now") },
+            { label: k("previous"), dashed: true, muted: true },
+            { label: k("unfinished"), dashed: true },
+          ]}
+        />
+      </>
     </Tile>
   )
 }

@@ -7,6 +7,7 @@ import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { SegmentedControl } from "@workspace/ui/components/hairline/segmented-control"
 import { TrendChart } from "@workspace/ui/components/hairline/trend-chart"
 
+import { ChartKey } from "@/components/shared/chart-key"
 import { Tile } from "@/components/shared/tile"
 
 import { startRange, type Point, type Range } from "../power"
@@ -38,6 +39,7 @@ export function PowerChart({
   className?: string
 }) {
   const t = useTranslations("energy.power")
+  const k = useTranslations("energy.chartKey")
   const locale = useLocale()
   const keys = Object.keys(ranges) as Range[]
   const [range, setRange] = useState(() => startRange(ranges))
@@ -60,18 +62,29 @@ export function PowerChart({
       }
     >
       {points.length ? (
-        <TrendChart
-          label={title}
-          buckets={points.map((p) => p.ts)}
-          values={points.map((p) => p.watts)}
-          previous={usual?.[range] ?? null}
-          previousLabel={t("usual")}
-          interval={INTERVAL[range]}
-          unit="W"
-          format={{ maximumFractionDigits: 0 }}
-          now={now}
-          locale={locale}
-        />
+        <>
+          <TrendChart
+            label={title}
+            buckets={points.map((p) => p.ts)}
+            values={points.map((p) => p.watts)}
+            previous={usual?.[range] ?? null}
+            previousLabel={t("usual")}
+            interval={INTERVAL[range]}
+            unit="W"
+            format={{ maximumFractionDigits: 0 }}
+            now={now}
+            locale={locale}
+          />
+          <ChartKey
+            items={[
+              { label: k("now") },
+              ...(usual?.[range]
+                ? [{ label: t("usual"), dashed: true, muted: true }]
+                : []),
+              { label: k("unfinished"), dashed: true },
+            ]}
+          />
+        </>
       ) : (
         <EmptyState
           scene="chart"

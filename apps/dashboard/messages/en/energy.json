@@ -133,6 +133,11 @@
     "more": "Up to yesterday, {pct} more than at this point last cycle.",
     "noChange": "A new cycle: no whole day to compare yet."
   },
+  "chartKey": {
+    "now": "Now",
+    "previous": "Last cycle",
+    "unfinished": "Not over yet (figures still coming in)"
+  },
   "standby": {
     "title": "Standby power",
     "description": "The home’s lowest draw each day: what it uses with nobody using anything, such as the router, chargers and devices on standby.",

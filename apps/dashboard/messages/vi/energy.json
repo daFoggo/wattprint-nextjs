@@ -133,6 +133,11 @@
     "more": "Đến hôm qua dùng nhiều hơn {pct} so với cùng thời điểm kỳ trước.",
     "noChange": "Kỳ mới bắt đầu: chưa có ngày trọn vẹn để so sánh."
   },
+  "chartKey": {
+    "now": "Hiện tại",
+    "previous": "Kỳ trước",
+    "unfinished": "Chưa kết thúc (số liệu còn thiếu)"
+  },
   "standby": {
     "title": "Điện nền",
     "description": "Mức thấp nhất mỗi ngày của cả nhà: phần điện tốn cả khi không ai dùng gì, như modem, bộ sạc và thiết bị ở chế độ chờ.",

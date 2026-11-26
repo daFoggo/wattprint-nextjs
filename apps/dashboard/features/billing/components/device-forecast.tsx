@@ -178,6 +178,19 @@ export function DeviceForecastTile({
           )
         })}
       </ul>
+      <p
+        aria-hidden
+        className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground"
+      >
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-1 rounded-full bg-primary" />
+          {t("keyMid")}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-4 rounded-full bg-primary/30" />
+          {t("keyBand")}
+        </span>
+      </p>
       {e ? (
         <section className="flex flex-col gap-3">
           <div className="flex flex-col gap-0.5">
