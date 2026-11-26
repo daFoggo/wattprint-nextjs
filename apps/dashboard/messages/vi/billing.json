@@ -3,6 +3,7 @@
   "tier": "Bậc {tier}",
   "now": "Hiện tại",
   "vat": "VAT {vat}%",
+  "vatMixed": "VAT, mỗi giai đoạn theo mức riêng",
   "billSummary": {
     "caption": "Tính đến nay trong kỳ, {kwh} kWh",
     "captionDoc": "Tính đến nay trong kỳ, {kwh} kWh, giá theo {doc}",

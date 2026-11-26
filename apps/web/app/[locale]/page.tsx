@@ -7,6 +7,7 @@ import { CtaBand } from "@/components/landing/cta-band"
 import { FaqSection } from "@/components/landing/faq-section"
 import { FeatureSection } from "@/components/landing/feature-section"
 import { Hero } from "@/components/landing/hero"
+import { ImpactLedger } from "@/components/landing/impact-ledger"
 import { HowSteps } from "@/components/landing/how-steps"
 import { ProofStats } from "@/components/landing/proof-stats"
 import { WappiBand } from "@/components/landing/wappi-band"
@@ -59,6 +60,7 @@ export default function HomePage() {
         <Suspense fallback={<Placeholder />}>
           <WappiBand />
         </Suspense>
+        <ImpactLedger />
         <Suspense fallback={<Placeholder />}>
           <FaqSection />
         </Suspense>

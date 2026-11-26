@@ -111,7 +111,10 @@ export function BillSummary({
   const price = bill.kwh > 0 ? bill.amount_total / bill.kwh : 0
   parts.push({
     key: "vat",
-    label: t("vat", { vat: Math.round(bill.vat_rate * 100) }),
+    // Over a VAT change the amount mixes two rates: never name just today's.
+    label: bill.tariff_straddle
+      ? t("vatMixed")
+      : t("vat", { vat: Math.round(bill.vat_rate * 100) }),
     value: bill.vat_amount,
     color: "var(--muted-foreground)",
   })

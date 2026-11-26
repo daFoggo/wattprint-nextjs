@@ -121,7 +121,7 @@ export function TierLadder({
           </tr>
           <tr className="text-muted-foreground">
             <td colSpan={2} className="pt-1">
-              {t("vat", { vat })}
+              {bill.tariff_straddle ? t("vatMixed") : t("vat", { vat })}
             </td>
             <td className="pt-1 text-right">{vnd.format(bill.vat_amount)}</td>
           </tr>

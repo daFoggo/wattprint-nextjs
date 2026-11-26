@@ -3,6 +3,7 @@
   "tier": "Tier {tier}",
   "now": "Now",
   "vat": "VAT {vat}%",
+  "vatMixed": "VAT, each period at its own rate",
   "billSummary": {
     "caption": "So far this cycle, {kwh} kWh",
     "captionDoc": "So far this cycle, {kwh} kWh, priced by {doc}",

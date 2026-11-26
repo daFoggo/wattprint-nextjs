@@ -246,6 +246,27 @@
       }
     ]
   },
+  "impact": {
+    "title": "Gia đình tiết kiệm năng lượng, xã hội tiết kiệm tài nguyên.",
+    "rows": [
+      {
+        "value": "0,7–2 triệu kWh",
+        "label": "Tiết kiệm mỗi năm nếu 10.000 hộ giảm 2–6%, mỗi hộ dùng khoảng 3.500 kWh/năm",
+        "source": "Ước tính của nhóm"
+      },
+      {
+        "value": "500–1.400 tấn CO₂",
+        "label": "Tương đương, theo hệ số phát thải lưới điện 0,681 tCO₂/MWh",
+        "source": "Hệ số 0,681 theo Viet Nam News, 18/04/2025; số tấn do nhóm tính"
+      },
+      {
+        "value": "8–10%",
+        "label": "Mục tiêu tiết kiệm năng lượng đến năm 2030: đóng góp nhỏ nhưng cùng hướng với chính sách quốc gia",
+        "source": "Quyết định 280/QĐ-TTg, 2019"
+      }
+    ],
+    "note": "Hai số đầu là dự tính từ nghiên cứu trước, sẽ được đo lại trong thí điểm. Tiết kiệm không có nghĩa là phải chịu nóng: Wappi gợi ý cách dùng điều hòa theo thời tiết thực tế."
+  },
   "wappiBand": {
     "title": "Hỏi Wappi về điện nhà bạn.",
     "body": "Wappi là trợ lý AI của WattPrint, trả lời dựa trên số liệu điện của chính nhà bạn, thời tiết và biểu giá EVN.",
