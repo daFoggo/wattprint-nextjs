@@ -26,9 +26,19 @@ describe("citedSegments", () => {
     ])
   })
 
-  it("lists sources in the order they are first used, under their own numbers", () => {
-    const { cited } = citedSegments("A [2] rồi B [1].", sources)
-    expect(cited.map((c) => c.n)).toEqual([2, 1])
+  it("renumbers sources 1, 2, 3 in the order the answer cites them", () => {
+    const { segments, cited } = citedSegments("A [2] rồi B [1].", sources)
+    expect(segments).toEqual([
+      "A",
+      { type: "citation", label: "1" },
+      " rồi B",
+      { type: "citation", label: "2" },
+      ".",
+    ])
+    expect(cited).toEqual([
+      { n: 1, ...sources[1] },
+      { n: 2, ...sources[0] },
+    ])
   })
 
   it("drops marks with no source behind them (still streaming, or a wrong number)", () => {

@@ -19,6 +19,19 @@ const done = (url: string) => ({
   },
 })
 
+describe("reply tier", () => {
+  it("accepts every tier the backend sends, documents included", () => {
+    for (const tier of ["measured", "document", "estimated", "inferred"]) {
+      const event = done("/dashboard/bill")
+      event.data.reply.tier = tier
+      expect(ChatEventSchema.safeParse(event).success).toBe(true)
+    }
+    const bad = done("/dashboard/bill")
+    bad.data.reply.tier = "guess"
+    expect(ChatEventSchema.safeParse(bad).success).toBe(false)
+  })
+})
+
 describe("reply sources", () => {
   it("link only to web pages and the app's own paths", () => {
     expect(

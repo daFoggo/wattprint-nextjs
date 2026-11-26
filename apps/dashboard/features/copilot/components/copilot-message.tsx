@@ -29,8 +29,9 @@ import { useCopilot } from "./copilot-provider"
 import { WappiAvatar } from "./wappi-avatar"
 import { CopilotWidget } from "./widgets"
 
-const TIER_TONE: Record<DataTier, "success" | "primary" | "warning"> = {
+const TIER_TONE: Record<DataTier, "success" | "neutral" | "primary" | "warning"> = {
   measured: "success",
+  document: "neutral",
   estimated: "primary",
   inferred: "warning",
 }

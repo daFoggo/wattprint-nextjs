@@ -6,7 +6,7 @@ import { DEVICE_ADVICE } from "@/config/advice"
 // parsed with these on the client too, so a change on either side fails loudly.
 
 /** Data tiering (hồ sơ §4.2): every answer says how its figures were obtained. */
-const DataTierSchema = z.enum(["measured", "estimated", "inferred"])
+const DataTierSchema = z.enum(["measured", "document", "estimated", "inferred"])
 export type DataTier = z.infer<typeof DataTierSchema>
 
 const StepSchema = z.object({

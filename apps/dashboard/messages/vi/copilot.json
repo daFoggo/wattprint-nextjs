@@ -33,6 +33,7 @@
     "followUps": "Hỏi tiếp",
     "tiers": {
       "measured": "Đo trực tiếp",
+      "document": "Theo văn bản",
       "estimated": "Ước tính",
       "inferred": "Suy luận bối cảnh"
     },

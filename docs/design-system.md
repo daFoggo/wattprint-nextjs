@@ -519,8 +519,8 @@ It has two views over one conversation, both from `CopilotProvider`, which wraps
 - An answer follows the agent's work, all Hairline: `ThinkingIndicator` → `ThinkingTrace` (one step per tool call) →
   `StreamingText` with inline citations → `ToolCall` with the read-only SQL (`CodeBlock`) → data drawn with the
   dashboard's own charts (`DonutChart`, `CompareBars`, `BalanceMeter`, `UsageMeter`, `Sparkline`, `Plan` + `ApprovalCard`)
-  → `AnswerActions` (+ read aloud) → `FollowUps`. A tier `Badge` says how the figures were obtained: measured, NILM
-  estimate or inferred (hồ sơ §4.2, data tiering). Unclear questions get a `ClarifyingQuestion`.
+  → `AnswerActions` (+ read aloud) → `FollowUps`. A tier `Badge` says how the figures were obtained: measured, from a stored
+  document (laws, tariff decisions: quoted, not measured), NILM estimate or inferred (hồ sơ §4.2, data tiering). Unclear questions get a `ClarifyingQuestion`.
 - Input: `PromptComposer` with `VoiceInput` dictation (browser speech recognition) and a voice mode on `VoiceTalk`
   (the fluid voice orb). Answers can be read aloud with the browser's speech synthesis.
 

@@ -33,6 +33,7 @@
     "followUps": "Ask next",
     "tiers": {
       "measured": "Measured",
+      "document": "From documents",
       "estimated": "Estimated",
       "inferred": "Inferred from context"
     },

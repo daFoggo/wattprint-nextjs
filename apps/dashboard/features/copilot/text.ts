@@ -16,10 +16,14 @@ type Source = { title: string; url: string }
  */
 export function citedSegments(text: string, sources: Source[] = []) {
   const cited: (Source & { n: number })[] = []
+  const seen = new Set<number>()
   const kept = plainText(text).replace(/\s*\[(\d+)\]/g, (_, digits: string) => {
-    const n = Number(digits)
-    const source = sources[n - 1]
-    if (!source || cited.some((c) => c.n === n)) return ""
+    const k = Number(digits)
+    const source = sources[k - 1]
+    if (!source || seen.has(k)) return ""
+    seen.add(k)
+    // numbered by first use in the text, not by the order the tools ran, so marks always read 1, 2, 3
+    const n = cited.length + 1
     cited.push({ n, ...source })
     return `[${n}]`
   })
