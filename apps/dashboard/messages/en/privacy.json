@@ -68,7 +68,7 @@
     "readings": "Meter readings, per-device figures, alerts, forecasts and suggestions in that time are deleted.",
     "bills": "Bills of cycles wholly in that time are deleted. A cycle cut in two shows as incomplete.",
     "stays": "The device list and device recognition stay.",
-    "sent": "Copies already sent to outside services cannot be deleted from here; each keeps them by its own rules.",
+    "sent": "Copies already sent to outside services cannot be deleted from here; each keeps them by its own rules. AstralX (voice, Wappi's fallback) has not published to us how long it keeps them.",
     "cannot": "Only the home owner can delete it. Demo homes cannot be deleted.",
     "plans": "Savings plans stay, but lose the figures of the deleted days.",
     "openrouter": "OpenRouter privacy policy",
@@ -80,7 +80,7 @@
     "open": "Delete chats",
     "question": "Delete every conversation?",
     "loses": "All questions, answers and read-aloud audio are deleted.",
-    "sent": "What was already sent to outside services cannot be recalled."
+    "sent": "What was already sent to outside services cannot be recalled. AstralX (voice, Wappi's fallback) has not published to us how long it keeps them."
   },
   "account": {
     "title": "My account",
@@ -89,7 +89,7 @@
     "question": "Delete the account?",
     "loses": "Your profile, chats, savings plans, the alerts you set and your sign-in are deleted.",
     "home": "If you are the only one in the home, the home and all its electricity figures are deleted too.",
-    "sent": "What was already sent to outside services cannot be recalled."
+    "sent": "What was already sent to outside services cannot be recalled. AstralX (voice, Wappi's fallback) has not published to us how long it keeps them."
   },
   "ai": {
     "title": "How AI uses your data",
@@ -122,7 +122,7 @@
     "removing": "Removing",
     "removed": "Removed",
     "removeLoses": "Removing someone deletes their chats, alerts and plans in this home.",
-    "toDaily": "Switching someone to \"By day\" deletes their moment-by-moment and custom alerts.",
+    "toDaily": "Switching someone to \"By day\" deletes their chats in this home (old answers may name hours) and their moment-by-moment and custom alerts.",
     "leave": "Leave the home",
     "leaveLoses": "Your chats, alerts and plans in this home will be deleted.",
     "leaveConfirm": "Leave",

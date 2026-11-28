@@ -93,6 +93,8 @@ export const getDashboard = cache(async () => {
     : daily
         .filter((p) => p.min_w > 0)
         .map((p) => ({ date: localDate(Date.parse(p.ts)), watts: p.min_w }))
+  // By day only the series stops at the days already over: today is the overview's (as of its last 6-hour block).
+  if (overview.byDay) kwh.set(localDate(today), overview.today?.kwh ?? 0)
   const first = daily[0] ? localMidnight(Date.parse(daily[0].ts)) : today
   const days = Array.from(
     { length: Math.round((today - first) / DAY) + 1 },

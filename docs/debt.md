@@ -17,17 +17,9 @@ Chi tiết: wattprint-backend `docs/evidence/privacy.md` mục "Chưa làm", `do
 - **Dọn bảng thường theo bậc đang tắt** (`RETENTION_TIERS=false`): cảnh báo, kết quả công cụ, nhật ký NILM, lô công
   tơ chưa bị xóa theo hạn mới. Để vì việc xóa không lấy lại được và prod cũ dùng chung database. Trả khi chủ dự án
   duyệt: đặt `RETENTION_TIERS=true`, dựng lại `insight`, xem log đêm đầu.
-- **Database mới phải chạy tay `scripts/apply_retention.py --apply`**: `alembic upgrade head` chỉ tạo thời hạn cũ (400
-  ngày cho số thô), cố ý không để migration xóa dữ liệu khi container khởi động. Trả khi có quy trình dựng máy mới
-  (ghi vào README hoặc bước deploy).
-- **Cảnh báo cũ còn mã UUIDv7** (mã lộ thời điểm tạo). Hết khi bật dọn hằng đêm (hạn 400 ngày), hoặc đổi mã một
-  lần nếu cần sớm hơn.
-- **Hội thoại cũ của người bị hạ xuống "theo ngày"** vẫn mở được, câu trả lời cũ có thể nêu giờ. Không xóa vì mất
-  hội thoại của họ. Hướng: ẩn biểu đồ theo giờ trong hội thoại cũ (web).
-- **`copilot_ro.alert` ở mức theo giờ vẫn đưa giờ phút** (`ts`, `at`) của cảnh báo bật/tắt; test cũ chủ ý giữ phút,
-  cần chủ dự án quyết. Sửa: view cắt `ts` về giờ, bỏ `at` ở mức theo giờ.
-- **Tổng "hôm nay" và điểm ngày đang chạy của `/energy/series`** cập nhật liên tục, người "theo ngày" hỏi nhiều lần
-  vẫn dựng được đường cộng dồn trong ngày. Đã chấp nhận theo thiết kế; nếu cần chặt hơn thì chỉ cập nhật theo giờ.
+- **Người "theo ngày": số hôm nay của từng thiết bị và tiền điện hôm nay vẫn chạy liên tục** (`/energy/devices`,
+  `/billing/current`, cảnh báo `bill_*`): đọc ô ngày của `*_1d` nên chưa cắt theo mốc 6 giờ như tổng hôm nay
+  (`daily_now`, backend `energy/services/meter.py`). Trả khi cần chặt hơn: đọc phần hôm nay từ `*_1h` tới `daily_now`.
 
 ### Backlog (cập nhật 2026-11-26)
 

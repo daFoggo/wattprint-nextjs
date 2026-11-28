@@ -68,7 +68,7 @@
     "readings": "Số đo điện, số liệu từng thiết bị, cảnh báo, dự báo và gợi ý trong khoảng này bị xóa.",
     "bills": "Hóa đơn của kỳ nằm trọn trong khoảng này bị xóa. Kỳ bị cắt ngang sẽ ghi là thiếu số liệu.",
     "stays": "Danh sách thiết bị và khả năng nhận ra thiết bị vẫn giữ.",
-    "sent": "Bản đã gửi cho dịch vụ bên ngoài không xóa được từ đây; mỗi nơi giữ theo quy định riêng của họ.",
+    "sent": "Bản đã gửi cho dịch vụ bên ngoài không xóa được từ đây; mỗi nơi giữ theo quy định riêng của họ. AstralX (giọng nói, dự phòng cho Wappi) chưa công bố cho chúng tôi họ giữ bao lâu.",
     "cannot": "Chỉ chủ nhà xóa được. Nhà demo không xóa được.",
     "plans": "Kế hoạch tiết kiệm vẫn giữ, nhưng mất số liệu của các ngày bị xóa.",
     "openrouter": "Chính sách của OpenRouter (tiếng Anh)",
@@ -80,7 +80,7 @@
     "open": "Xóa trò chuyện",
     "question": "Xóa mọi cuộc trò chuyện?",
     "loses": "Toàn bộ câu hỏi, câu trả lời và bản đọc thành tiếng bị xóa.",
-    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được."
+    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được. AstralX (giọng nói, dự phòng cho Wappi) chưa công bố cho chúng tôi họ giữ bao lâu."
   },
   "account": {
     "title": "Tài khoản của tôi",
@@ -89,7 +89,7 @@
     "question": "Xóa tài khoản?",
     "loses": "Hồ sơ, trò chuyện, kế hoạch tiết kiệm, cảnh báo bạn đặt và đăng nhập bị xóa.",
     "home": "Nếu chỉ có bạn trong nhà, cả nhà và toàn bộ số liệu điện cũng bị xóa.",
-    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được."
+    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được. AstralX (giọng nói, dự phòng cho Wappi) chưa công bố cho chúng tôi họ giữ bao lâu."
   },
   "ai": {
     "title": "AI dùng dữ liệu của bạn thế nào",
@@ -122,7 +122,7 @@
     "removing": "Đang gỡ",
     "removed": "Đã gỡ",
     "removeLoses": "Gỡ một người sẽ xóa trò chuyện, cảnh báo và kế hoạch của họ ở nhà này.",
-    "toDaily": "Chuyển một người sang \"Theo ngày\" sẽ xóa các cảnh báo theo từng lúc và cảnh báo tùy chỉnh của người đó.",
+    "toDaily": "Chuyển một người sang \"Theo ngày\" sẽ xóa trò chuyện của họ ở nhà này (câu trả lời cũ có thể nêu giờ), các cảnh báo theo từng lúc và cảnh báo tùy chỉnh của họ.",
     "leave": "Rời nhà",
     "leaveLoses": "Trò chuyện, cảnh báo và kế hoạch của bạn ở nhà này sẽ bị xóa.",
     "leaveConfirm": "Rời nhà",

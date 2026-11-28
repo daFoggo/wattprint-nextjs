@@ -66,14 +66,15 @@ describe("getDevice", () => {
 })
 
 describe("a member who sees days only", () => {
-  it("gets the days of the series and no by-the-moment figures", async () => {
-    // The backend answers a daily member's series with day buckets.
+  it("gets the days of the series, today from the overview, and no by-the-moment figures", async () => {
+    // The backend answers a daily member's series with the day buckets already over.
+    const yesterday = new Date(Date.now() - 86_400_000).toISOString()
     fetchSeries.mockResolvedValueOnce([
-      { ts: new Date().toISOString(), avg_w: 1, min_w: 90, energy_wh: 3000 },
+      { ts: yesterday, avg_w: 1, min_w: 90, energy_wh: 5000 },
     ])
     const data = await getDashboard()
     expect(data?.byDay).toBe(true)
-    expect(data?.days.map((d) => d.value)).toEqual([3])
+    expect(data?.days.map((d) => d.value)).toEqual([5, 3])
     expect(data?.baseline).toEqual([])
     expect(await getPower()).toBeNull()
     expect(await getActivity()).toEqual([])
