@@ -100,7 +100,7 @@
       },
       "consent": {
         "title": "Bạn đồng ý",
-        "body": "Bạn tự đăng ký, tự bật thông báo qua email và tự chọn nói với Wappi. Ở Cài đặt > Quyền riêng tư có công tắc đồng ý cho Wappi, giọng nói và email, mỗi lần đổi được ghi lại. Hiện máy chủ chưa chặn việc gửi dữ liệu theo các công tắc này: nếu không muốn gửi, đừng dùng Wappi hay giọng nói, và tắt thông báo email trong Cài đặt."
+        "body": "Bạn tự đăng ký, tự bật thông báo qua email và tự chọn nói với Wappi. Ở Cài đặt > Quyền riêng tư có công tắc đồng ý cho Wappi, giọng nói và email, mỗi lần đổi được ghi lại. Khi bạn chưa đồng ý hoặc đã rút lại, máy chủ từ chối: Wappi và giọng nói không gửi gì đi, email cảnh báo và tóm tắt tuần không được gửi."
       },
       "interests": {
         "title": "Bảo vệ dịch vụ",
@@ -125,8 +125,8 @@
       "body": "Số đo càng chi tiết thì giữ càng ngắn. Chủ nhà có thể xóa lịch sử điện bất cứ lúc nào (mục 8).",
       "items": {
         "readings": "Số đo công tơ (khoảng 10 giây một lần) và ước tính từng thiết bị: 30 ngày. Tổng theo phút và lượt bật tắt thiết bị: 90 ngày. Cũ hơn tự xóa.",
-        "rollups": "Tổng theo giờ: 400 ngày. Tổng theo ngày: 800 ngày. Mức dùng dự đoán theo giờ: 400 ngày. Dự báo và cảnh báo: chưa tự xóa, giữ đến khi bị xóa (mục 8). Hóa đơn: 25 kỳ gần nhất.",
-        "account": "Hồ sơ, kế hoạch và trò chuyện (kèm số liệu, câu lệnh truy vấn): giữ đến khi bạn xóa. Âm thanh đọc: 30 ngày. Lời nhắc theo dõi đã kết thúc: 90 ngày. Nhật ký gửi ra ngoài: 90 ngày.",
+        "rollups": "Tổng theo giờ: 400 ngày. Tổng theo ngày: 800 ngày. Mức dùng dự đoán theo giờ: 400 ngày. Cảnh báo: 400 ngày. Dự báo: chưa tự xóa, giữ đến khi bị xóa (mục 8). Hóa đơn: 25 kỳ gần nhất.",
+        "account": "Hồ sơ, kế hoạch và trò chuyện (kèm số liệu, câu lệnh truy vấn): giữ đến khi bạn xóa. Bản ghi chi tiết từng lần Wappi tra cứu: 30 ngày. Nhật ký xử lý số đo của hệ thống: 90 ngày (giữ lại lần chạy tốt mới nhất của mỗi nhà). Âm thanh đọc: 30 ngày. Lời nhắc theo dõi đã kết thúc: 90 ngày. Nhật ký gửi ra ngoài: 90 ngày.",
         "guest": "Tài khoản khách dùng thử: 24 giờ, được dọn khi có khách mới đến."
       }
     },
@@ -136,7 +136,7 @@
       "items": {
         "access": "Được biết và xem dữ liệu của mình. Cài đặt > Quyền riêng tư cho biết đang giữ gì, từ ngày nào, và đã gửi gì ra ngoài.",
         "correct": "Chỉnh sửa dữ liệu sai. Ngôi nhà và các lựa chọn thông báo bạn tự sửa trong phần cài đặt; tên hoặc email thì gửi yêu cầu tới email ở mục 1.",
-        "withdraw": "Rút lại sự đồng ý bằng công tắc ở Cài đặt > Quyền riêng tư (xem giới hạn ở mục 4), hoặc tắt thông báo email trong Cài đặt.",
+        "withdraw": "Rút lại sự đồng ý bằng công tắc ở Cài đặt > Quyền riêng tư, hoặc tắt thông báo email trong Cài đặt.",
         "erase": "Xóa dữ liệu: tự làm trong ứng dụng, xem mục 8.",
         "complain": "Khiếu nại, tố cáo hoặc khởi kiện khi cho rằng dữ liệu bị xử lý trái luật."
       }

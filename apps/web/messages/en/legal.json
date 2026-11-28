@@ -100,7 +100,7 @@
       },
       "consent": {
         "title": "You agree",
-        "body": "You sign up yourself, turn email notifications on yourself and choose to talk to Wappi. Settings > Privacy has consent switches for Wappi, voice and email, and each change is recorded. The server does not currently block sending based on these switches: if you do not want data sent, do not use Wappi or voice, and turn email notifications off in Settings."
+        "body": "You sign up yourself, turn email notifications on yourself and choose to talk to Wappi. Settings > Privacy has consent switches for Wappi, voice and email, and each change is recorded. Until you consent, or after you withdraw, the server refuses: Wappi and voice send nothing out, and alert and weekly summary emails are not sent."
       },
       "interests": {
         "title": "Protecting the service",
@@ -125,8 +125,8 @@
       "body": "The more detailed the data, the shorter it is kept. The owner can erase the electricity history at any time (section 8).",
       "items": {
         "readings": "Meter readings (about every 10 seconds) and per-appliance estimates: 30 days. Per-minute totals and appliance on/off runs: 90 days. Older ones are deleted automatically.",
-        "rollups": "Hourly totals: 400 days. Daily totals: 800 days. Hourly expected use: 400 days. Forecasts and alerts: not yet deleted automatically, kept until erased (section 8). Bills: the last 25 cycles.",
-        "account": "Profile, plans and chats (with their figures and queries): kept until you delete them. Spoken audio: 30 days. Ended watches: 90 days. Outbound log: 90 days.",
+        "rollups": "Hourly totals: 400 days. Daily totals: 800 days. Hourly expected use: 400 days. Alerts: 400 days. Forecasts: not yet deleted automatically, kept until erased (section 8). Bills: the last 25 cycles.",
+        "account": "Profile, plans and chats (with their figures and queries): kept until you delete them. Detailed records of each of Wappi's lookups: 30 days. The system's meter-processing logs: 90 days (the latest successful run of each home is kept). Spoken audio: 30 days. Ended watches: 90 days. Outbound log: 90 days.",
         "guest": "Trial guest accounts: 24 hours, cleared when a new guest arrives."
       }
     },
@@ -136,7 +136,7 @@
       "items": {
         "access": "To know and see your data. Settings > Privacy shows what is kept, since when, and what was sent outside.",
         "correct": "To correct wrong data. You can edit your home and notification choices in settings; for your name or email, write to the email in section 1.",
-        "withdraw": "To withdraw consent with the switches in Settings > Privacy (see the limit in section 4), or by turning email notifications off in Settings.",
+        "withdraw": "To withdraw consent with the switches in Settings > Privacy, or by turning email notifications off in Settings.",
         "erase": "To delete your data: do it yourself in the app, see section 8.",
         "complain": "To complain, report or sue if you think your data was handled unlawfully."
       }

@@ -4,19 +4,10 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
-### Đồng ý đang chưa chặn (2026-11-28)
-
-`consent_enforced` (wattprint-backend `app/config.py`) đang tắt: chưa từ chối lời gọi nào khi chưa đồng ý, vì dev và
-prod chung API mà dashboard prod cũ chưa có hộp đồng ý. Trả khi triển khai dashboard mới: đặt
-`CONSENT_ENFORCED=true` trong `.env` backend, dựng lại container `api`, thử chat bằng tài khoản chưa đồng ý (403).
-
 ### Quyền riêng tư: phần còn hoãn (2026-11-28, nhánh backend `feat/privacy-load-data`)
 
 Chi tiết: wattprint-backend `docs/evidence/privacy.md` mục "Chưa làm", `docs/evidence/privacy/attacks.md` "Còn mở".
 
-- **Dọn bảng thường theo bậc đang tắt** (`RETENTION_TIERS=false`): cảnh báo, kết quả công cụ, nhật ký NILM, lô công
-  tơ chưa bị xóa theo hạn mới. Để vì việc xóa không lấy lại được và prod cũ dùng chung database. Trả khi chủ dự án
-  duyệt: đặt `RETENTION_TIERS=true`, dựng lại `insight`, xem log đêm đầu.
 - **Người "theo ngày": số hôm nay của từng thiết bị và tiền điện hôm nay vẫn chạy liên tục** (`/energy/devices`,
   `/billing/current`, cảnh báo `bill_*`): đọc ô ngày của `*_1d` nên chưa cắt theo mốc 6 giờ như tổng hôm nay
   (`daily_now`, backend `energy/services/meter.py`). Trả khi cần chặt hơn: đọc phần hôm nay từ `*_1h` tới `daily_now`.
