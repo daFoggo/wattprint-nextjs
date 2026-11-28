@@ -122,10 +122,10 @@
     },
     "retention": {
       "title": "6. Giữ dữ liệu bao lâu",
-      "body": "Hiện chưa có thời hạn rút ngắn dần theo độ chi tiết. Chủ nhà có thể xóa lịch sử điện bất cứ lúc nào (mục 8).",
+      "body": "Số đo càng chi tiết thì giữ càng ngắn. Chủ nhà có thể xóa lịch sử điện bất cứ lúc nào (mục 8).",
       "items": {
-        "readings": "Số đo công tơ (khoảng 10 giây một lần), ước tính từng thiết bị và các bản tổng theo phút: 400 ngày, cũ hơn tự xóa.",
-        "rollups": "Tổng theo giờ và theo ngày, lượt bật tắt thiết bị, mức dùng dự đoán, dự báo và cảnh báo: không tự xóa, giữ đến khi bị xóa (mục 8). Hóa đơn: 25 kỳ gần nhất.",
+        "readings": "Số đo công tơ (khoảng 10 giây một lần) và ước tính từng thiết bị: 30 ngày. Tổng theo phút và lượt bật tắt thiết bị: 90 ngày. Cũ hơn tự xóa.",
+        "rollups": "Tổng theo giờ: 400 ngày. Tổng theo ngày: 800 ngày. Mức dùng dự đoán theo giờ: 400 ngày. Dự báo và cảnh báo: chưa tự xóa, giữ đến khi bị xóa (mục 8). Hóa đơn: 25 kỳ gần nhất.",
         "account": "Hồ sơ, kế hoạch và trò chuyện (kèm số liệu, câu lệnh truy vấn): giữ đến khi bạn xóa. Âm thanh đọc: 30 ngày. Lời nhắc theo dõi đã kết thúc: 90 ngày. Nhật ký gửi ra ngoài: 90 ngày.",
         "guest": "Tài khoản khách dùng thử: 24 giờ, được dọn khi có khách mới đến."
       }
