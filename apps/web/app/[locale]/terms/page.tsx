@@ -9,7 +9,7 @@ import type { Locale } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/seo"
 
 // Noon UTC keeps the same calendar day whatever the server's time zone.
-const LAST_UPDATED = new Date("2026-11-25T12:00:00Z")
+const LAST_UPDATED = new Date("2026-11-28T12:00:00Z")
 const ACCOUNT_RULES = [
   "accurate",
   "confidential",

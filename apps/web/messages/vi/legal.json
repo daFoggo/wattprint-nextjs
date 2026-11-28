@@ -33,11 +33,11 @@
     },
     "home": {
       "title": "4. Ngôi nhà và các thành viên",
-      "body": "Mỗi tài khoản thuộc về một ngôi nhà. Chủ nhà là người tạo ngôi nhà; thành viên cùng xem và dùng dữ liệu của nhà đó, người xem chỉ được đọc. Các ngôi nhà mẫu trên trang đăng nhập là bản ghi công khai của các bộ dữ liệu nghiên cứu (REFIT, Plegma, ENERTALK) được phát lại để bạn dùng thử, không phải nhà của người dùng WattPrint. Tài khoản khách dùng thử bị xóa sau 24 giờ, vào lúc có khách mới đến dùng thử."
+      "body": "Mỗi tài khoản thuộc về một ngôi nhà. Chủ nhà là người tạo ngôi nhà và có thể mời người khác làm thành viên, với mức xem đầy đủ hoặc chỉ theo ngày; người xem nhà mẫu chỉ được đọc. Các ngôi nhà mẫu trên trang đăng nhập là bản ghi công khai của các bộ dữ liệu nghiên cứu (REFIT, Plegma, ENERTALK) được phát lại để bạn dùng thử, không phải nhà của người dùng WattPrint. Tài khoản khách dùng thử bị xóa sau 24 giờ, vào lúc có khách mới đến dùng thử."
     },
     "assistant": {
       "title": "5. Trợ lý Wappi",
-      "body": "Wappi là hệ thống tự động, không phải người thật. Con số trong câu trả lời lấy từ dữ liệu của nhà bạn, nhưng lời giải thích có thể sai hoặc thiếu, nên đừng xem đó là tư vấn chuyên môn. Đừng nhập thông tin nhạy cảm vào khung trò chuyện: số điện thoại, số căn cước, email, số thẻ hoặc tài khoản được thay bằng nhãn trước khi lưu, nhưng cách này chỉ nhận ra các dạng số quen thuộc, không nhận ra tên hay địa chỉ."
+      "body": "Wappi là hệ thống tự động, không phải người thật. Con số trong câu trả lời lấy từ dữ liệu của nhà bạn, nhưng lời giải thích có thể sai hoặc thiếu, nên đừng xem đó là tư vấn chuyên môn. Đừng nhập hay đọc thông tin nhạy cảm cho Wappi: trong câu hỏi dạng chữ, số điện thoại, số căn cước, email, số thẻ hoặc tài khoản được thay bằng nhãn trước khi lưu và gửi, nhưng cách này chỉ nhận ra các dạng quen thuộc, không nhận ra tên hay địa chỉ. Bản ghi âm giọng nói được gửi đi nguyên vẹn."
     },
     "liability": {
       "title": "6. Giới hạn trách nhiệm",
@@ -73,23 +73,23 @@
       "items": {
         "account": "<strong>Tài khoản:</strong> email và tên (nhập khi đăng ký hoặc lấy từ tài khoản Google nếu bạn đăng nhập bằng Google). Mật khẩu do Keycloak giữ dưới dạng băm, chúng tôi không đọc được.",
         "session": "<strong>Phiên đăng nhập:</strong> mã truy cập nằm trong cookie, và địa chỉ IP mà máy chủ và Keycloak ghi lại để chặn lạm dụng.",
-        "home": "<strong>Ngôi nhà:</strong> tên nhà, tỉnh hoặc thành phố, số người, diện tích, loại nhà, ngày chốt hóa đơn và các lựa chọn thông báo bạn đặt.",
-        "energy": "<strong>Điện năng:</strong> số đo công tơ của nhà, ước tính điện từng thiết bị tính từ số đo đó, hóa đơn dự báo, cảnh báo và kế hoạch tiết kiệm.",
-        "assistant": "<strong>Trò chuyện với Wappi:</strong> câu hỏi và câu trả lời được lưu cùng tài khoản. Số điện thoại, căn cước, email, số thẻ và số tài khoản được thay bằng nhãn trước khi lưu hoặc gửi đi.",
-        "voice": "<strong>Giọng nói:</strong> khi bạn nói với Wappi, âm thanh được chuyển thành chữ; khi bạn nghe câu trả lời, âm thanh đọc được lưu lại để lần sau nghe không phải tạo lại.",
+        "home": "<strong>Ngôi nhà:</strong> tên nhà, tỉnh hoặc thành phố, số người, diện tích, loại nhà, ngày chốt hóa đơn, danh sách thành viên và mức xem của họ, và các lựa chọn thông báo bạn đặt.",
+        "energy": "<strong>Điện năng:</strong> số đo công tơ của nhà (khoảng 10 giây một lần), các bản tổng hợp, ước tính điện và giờ bật tắt từng thiết bị, mức dùng dự đoán, hóa đơn dự báo, cảnh báo và kế hoạch tiết kiệm. Dữ liệu này có thể cho thấy nếp sinh hoạt của gia đình.",
+        "assistant": "<strong>Trò chuyện với Wappi:</strong> câu hỏi và câu trả lời được lưu cùng tài khoản, kèm số liệu và câu lệnh truy vấn đã dùng để trả lời. Trong câu hỏi, số điện thoại, căn cước, email, số thẻ và số tài khoản được thay bằng nhãn trước khi lưu và gửi đi; tên và địa chỉ không được nhận ra.",
+        "voice": "<strong>Giọng nói:</strong> khi bạn nói với Wappi, bản ghi âm được gửi nguyên vẹn (không che được) để chuyển thành chữ; khi bạn nghe câu trả lời, âm thanh đọc được lưu 30 ngày để nghe lại không phải tạo lại.",
         "guest": "<strong>Khách dùng thử:</strong> một tài khoản tạm không có email thật, bị xóa sau 24 giờ (các tài khoản quá hạn được dọn khi có khách mới đến)."
       }
     },
     "sharing": {
       "title": "3. Dữ liệu được gửi cho ai",
-      "body": "Một số phần của dịch vụ do bên khác xử lý. Chúng tôi chỉ gửi phần cần cho việc đó, và một số bên nằm ngoài Việt Nam:",
+      "body": "Một số phần của dịch vụ do bên khác xử lý, và có bên ở ngoài Việt Nam. WattPrint ghi nhật ký các lần máy chủ của mình gửi đi (bên nhận, mục đích, loại dữ liệu, mức chi tiết, không ghi nội dung); phần liên quan đến bạn trong 30 ngày gần nhất xem được ở Cài đặt > Quyền riêng tư:",
       "items": {
-        "ai": "<strong>OpenRouter và AstralX</strong> (mô hình ngôn ngữ của Wappi): câu hỏi của bạn đã che thông tin cá nhân, cùng các con số mà công cụ của Wappi tra từ dữ liệu nhà bạn để trả lời.",
-        "voice": "<strong>AstralX</strong> (giọng nói): âm thanh bạn ghi âm để chuyển thành chữ, và câu trả lời để đọc thành tiếng.",
+        "ai": "<strong>OpenRouter (ngoài Việt Nam), và AstralX khi OpenRouter lỗi</strong> (mô hình AI của Wappi, gồm cả bước kiểm duyệt câu hỏi, tìm tài liệu và xếp hạng kết quả): câu hỏi, cuộc trò chuyện đang mở và kết quả Wappi tra từ dữ liệu nhà bạn, như số điện theo ngày hoặc theo giờ, tên thiết bị, hóa đơn, cảnh báo và một số thông tin về nhà. Mặc định Wappi chỉ xem theo ngày (nhà mẫu: theo giờ); chủ nhà có thể cho xem theo giờ, khi đó kết quả về điện chờ theo từng đêm cũng có thể được gửi. WattPrint yêu cầu OpenRouter chỉ dùng nơi xử lý không lưu dữ liệu và không dùng để huấn luyện; yêu cầu này chưa áp dụng cho AstralX. Chúng tôi chưa xác nhận được AstralX đặt máy chủ ở đâu, giữ dữ liệu bao lâu và có chuyển tiếp cho bên nào khác.",
+        "voice": "<strong>AstralX</strong> (giọng nói): bản ghi âm nguyên vẹn để chuyển thành chữ, và chữ của câu trả lời để đọc thành tiếng.",
         "weather": "<strong>OpenWeather</strong> (thời tiết): chỉ tọa độ cấp tỉnh hoặc thành phố của nhà, không gửi địa chỉ hay tên bạn.",
-        "google": "<strong>Google</strong> (đăng nhập, nếu bạn chọn): Google biết bạn đăng nhập WattPrint theo cách của Google."
+        "google": "<strong>Google</strong> (đăng nhập, nếu bạn chọn): Google biết bạn đăng nhập WattPrint theo cách của Google. <strong>Telegram</strong> (góp ý): khi bạn bấm 👎, đánh giá và mã câu trả lời được gửi cho người bảo trì. Chỉ khi bạn tích “Gửi kèm nội dung”, câu hỏi và câu trả lời (có thể chứa số liệu nhà bạn) mới được gửi theo, và người bảo trì đọc được. <strong>Máy chủ email</strong>: địa chỉ email của bạn, cùng cảnh báo, tóm tắt tuần, thư xác minh hoặc đặt lại tài khoản. Thư tài khoản do Keycloak gửi và việc đăng nhập Google không có trong nhật ký."
       },
-      "abroad": "Mỗi bên có chính sách riêng về dữ liệu họ nhận, hãy xem chính sách của họ nếu bạn quan tâm. Chúng tôi không dùng dữ liệu của bạn để quảng cáo và không gắn công cụ theo dõi quảng cáo nào vào dịch vụ."
+      "abroad": "Mỗi bên có chính sách riêng về dữ liệu họ nhận. Dữ liệu đã gửi cho họ không xóa được từ WattPrint. Chúng tôi không dùng dữ liệu của bạn để quảng cáo và không gắn công cụ theo dõi quảng cáo nào vào dịch vụ."
     },
     "bases": {
       "title": "4. Vì sao chúng tôi được xử lý dữ liệu",
@@ -100,7 +100,7 @@
       },
       "consent": {
         "title": "Bạn đồng ý",
-        "body": "Bạn tự đăng ký, tự bật thông báo qua email và tự chọn nói với Wappi. Im lặng hay ô tích sẵn không phải là đồng ý."
+        "body": "Bạn tự đăng ký, tự bật thông báo qua email và tự chọn nói với Wappi. Ở Cài đặt > Quyền riêng tư có công tắc đồng ý cho Wappi, giọng nói và email, mỗi lần đổi được ghi lại. Hiện máy chủ chưa chặn việc gửi dữ liệu theo các công tắc này: nếu không muốn gửi, đừng dùng Wappi hay giọng nói, và tắt thông báo email trong Cài đặt."
       },
       "interests": {
         "title": "Bảo vệ dịch vụ",
@@ -122,11 +122,11 @@
     },
     "retention": {
       "title": "6. Giữ dữ liệu bao lâu",
-      "body": "Dữ liệu được giữ trong lúc tài khoản còn, trừ những mục sau:",
+      "body": "Hiện chưa có thời hạn rút ngắn dần theo độ chi tiết. Chủ nhà có thể xóa lịch sử điện bất cứ lúc nào (mục 8).",
       "items": {
-        "readings": "Số đo theo phút và ước tính từng thiết bị: 400 ngày gần nhất, cũ hơn tự xóa.",
-        "rollups": "Tổng hợp theo giờ và theo ngày: giữ đến khi bạn xóa tài khoản.",
-        "account": "Hồ sơ, trò chuyện, cảnh báo và kế hoạch: giữ đến khi bạn xóa tài khoản.",
+        "readings": "Số đo công tơ (khoảng 10 giây một lần), ước tính từng thiết bị và các bản tổng theo phút: 400 ngày, cũ hơn tự xóa.",
+        "rollups": "Tổng theo giờ và theo ngày, lượt bật tắt thiết bị, mức dùng dự đoán, dự báo và cảnh báo: không tự xóa, giữ đến khi bị xóa (mục 8). Hóa đơn: 25 kỳ gần nhất.",
+        "account": "Hồ sơ, kế hoạch và trò chuyện (kèm số liệu, câu lệnh truy vấn): giữ đến khi bạn xóa. Âm thanh đọc: 30 ngày. Lời nhắc theo dõi đã kết thúc: 90 ngày. Nhật ký gửi ra ngoài: 90 ngày.",
         "guest": "Tài khoản khách dùng thử: 24 giờ, được dọn khi có khách mới đến."
       }
     },
@@ -134,17 +134,17 @@
       "title": "7. Quyền của bạn",
       "body": "Theo Luật số 91/2025/QH15 và Nghị định số 356/2025/NĐ-CP, bạn có các quyền sau với dữ liệu của mình. Gửi yêu cầu tới email ở mục 1; chúng tôi trả lời trong thời hạn pháp luật quy định.",
       "items": {
-        "access": "Được biết và xem dữ liệu của mình.",
+        "access": "Được biết và xem dữ liệu của mình. Cài đặt > Quyền riêng tư cho biết đang giữ gì, từ ngày nào, và đã gửi gì ra ngoài.",
         "correct": "Chỉnh sửa dữ liệu sai. Ngôi nhà và các lựa chọn thông báo bạn tự sửa trong phần cài đặt; tên hoặc email thì gửi yêu cầu tới email ở mục 1.",
-        "withdraw": "Rút lại sự đồng ý, ví dụ tắt thông báo email trong phần cài đặt.",
-        "erase": "Yêu cầu xóa dữ liệu: tự làm ngay trong menu tài khoản, xem mục 8.",
+        "withdraw": "Rút lại sự đồng ý bằng công tắc ở Cài đặt > Quyền riêng tư (xem giới hạn ở mục 4), hoặc tắt thông báo email trong Cài đặt.",
+        "erase": "Xóa dữ liệu: tự làm trong ứng dụng, xem mục 8.",
         "complain": "Khiếu nại, tố cáo hoặc khởi kiện khi cho rằng dữ liệu bị xử lý trái luật."
       }
     },
     "deletion": {
-      "title": "8. Xóa tài khoản",
-      "body": "Mở menu tài khoản ở góc dưới thanh bên và chọn <strong>Xóa tài khoản</strong>. Hồ sơ, trò chuyện, kế hoạch tiết kiệm, cảnh báo bạn đã đặt, lựa chọn của bạn và tài khoản đăng nhập bị xóa ngay (nếu bước xóa tài khoản đăng nhập lỗi, bạn sẽ được báo thử lại). Nếu bạn là người duy nhất trong ngôi nhà, cả ngôi nhà cũng bị xóa cùng cảnh báo, toàn bộ số đo điện và các bản tổng hợp của nó. Dữ liệu được xóa khỏi hệ thống đang chạy.",
-      "limit": "Nếu còn người khác trong nhà của bạn, chúng tôi chưa xóa được, vì dữ liệu của họ không phải của bạn để xóa: hãy để họ rời nhà trước. Nếu không dùng được menu, bạn có thể gửi yêu cầu qua email ở mục 1."
+      "title": "8. Xóa dữ liệu và tài khoản",
+      "body": "Ở Cài đặt > Quyền riêng tư: chủ nhà xóa được lịch sử điện trước một ngày hoặc tất cả (không áp dụng cho nhà mẫu; trò chuyện không bị xóa theo và có thể còn số liệu cũ); mỗi người xóa được mọi trò chuyện của mình trong nhà kèm âm thanh. Để xóa tài khoản, chọn <strong>Xóa tài khoản</strong> ở trang đó hoặc trong menu tài khoản. Hồ sơ, trò chuyện, kế hoạch tiết kiệm, lời nhắc bạn đặt, lựa chọn của bạn và tài khoản đăng nhập bị xóa (nếu bước xóa tài khoản đăng nhập lỗi, bạn sẽ được báo thử lại). Nếu bạn là người duy nhất trong ngôi nhà, nhà cùng số đo, các bản tổng hợp và cảnh báo cũng bị xóa; công tơ được gỡ khỏi nhà chứ không bị xóa. Việc xóa áp dụng cho hệ thống đang chạy, không gồm những gì đã gửi cho bên ngoài.",
+      "limit": "Chủ nhà còn thành viên khác thì chưa xóa được tài khoản: trước đó thành viên cần rời nhà hoặc được chủ nhà gỡ. Máy chủ đã hỗ trợ mời, đổi mức xem, gỡ và rời nhà, nhưng ứng dụng chưa có màn hình cho các việc này; hãy gửi yêu cầu tới email ở mục 1."
     },
     "ai": {
       "title": "9. Trợ lý Wappi và xử lý tự động",
@@ -152,8 +152,8 @@
       "items": {
         "automated": "<strong>Wappi là hệ thống tự động.</strong> Đó không phải người thật, và không ai đọc từng câu trả lời trước khi bạn thấy.",
         "estimates": "<strong>Số theo từng thiết bị là ước tính.</strong> Chúng tính từ công tơ tổng bằng mô hình nhận diện thiết bị, không phải công tơ riêng, và được ghi rõ là “ước tính”.",
-        "providers": "<strong>Câu hỏi của bạn được gửi cho nhà cung cấp mô hình</strong> (mục 3) để Wappi trả lời. Chúng tôi không kiểm soát cách họ xử lý sau đó; đây là điều bạn nên cân nhắc trước khi hỏi.",
-        "training": "<strong>Mô hình nhận diện thiết bị của chúng tôi được huấn luyện trên bộ dữ liệu công khai</strong> (REFIT, Plegma, ENERTALK), không dùng dữ liệu của bạn."
+        "providers": "<strong>Câu hỏi và số liệu được gửi cho nhà cung cấp mô hình</strong> (mục 3) để Wappi trả lời. Chúng tôi không kiểm soát được cách họ xử lý sau đó; bạn nên cân nhắc trước khi hỏi.",
+        "training": "<strong>Mô hình nhận diện thiết bị được huấn luyện trên bộ dữ liệu công khai</strong> (REFIT, Plegma, ENERTALK). Riêng mô hình dự đoán mức dùng được huấn luyện trên dữ liệu của chính nhà bạn. <strong>Ai xem được dữ liệu nhà:</strong> chủ nhà và thành viên theo mức xem được cấp (thành viên “chỉ theo ngày” không xem được số chi tiết hơn một ngày). Người vận hành có quyền vào máy chủ và cơ sở dữ liệu vẫn đọc được."
       }
     }
   }

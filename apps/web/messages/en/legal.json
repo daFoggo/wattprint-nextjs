@@ -33,11 +33,11 @@
     },
     "home": {
       "title": "4. Your home and its members",
-      "body": "Each account belongs to one home. The owner is the person who set the home up; members use the home's data together, and a viewer can only read. The sample homes on the sign-in page are public recordings from research datasets (REFIT, Plegma, ENERTALK) replayed for you to try, not homes of WattPrint users. Trial guest accounts are deleted after 24 hours, when the next trial guest arrives."
+      "body": "Each account belongs to one home. The owner is the person who set the home up and can invite others as members, who see either everything or daily figures only; a sample-home viewer can only read. The sample homes on the sign-in page are public recordings from research datasets (REFIT, Plegma, ENERTALK) replayed for you to try, not homes of WattPrint users. Trial guest accounts are deleted after 24 hours, when the next trial guest arrives."
     },
     "assistant": {
       "title": "5. The Wappi assistant",
-      "body": "Wappi is an automated system, not a person. Figures in its answers come from your home's data, but its explanations can be wrong or incomplete, so do not treat them as professional advice. Do not type sensitive details into the chat: phone numbers, ID numbers, emails, card and account numbers are replaced by a label before they are stored, but this only spots familiar number formats, not names or addresses."
+      "body": "Wappi is an automated system, not a person. Figures in its answers come from your home's data, but its explanations can be wrong or incomplete, so do not treat them as professional advice. Do not type or speak sensitive details to Wappi: in a written question, phone numbers, ID numbers, emails, card and account numbers are replaced by a label before it is stored and sent, but this only spots familiar formats, not names or addresses. Voice recordings are sent as they are."
     },
     "liability": {
       "title": "6. Limit of liability",
@@ -73,23 +73,23 @@
       "items": {
         "account": "<strong>Account:</strong> email and name (typed at sign-up, or taken from your Google account if you sign in with Google). Keycloak keeps the password as a hash; we cannot read it.",
         "session": "<strong>Sign-in session:</strong> an access token in a cookie, and the IP address that the server and Keycloak log to stop abuse.",
-        "home": "<strong>Your home:</strong> its name, province or city, number of people, floor area, home type, billing cycle day and the notification choices you set.",
-        "energy": "<strong>Electricity:</strong> your home's meter readings, per-appliance estimates computed from them, forecast bills, alerts and savings plans.",
-        "assistant": "<strong>Chats with Wappi:</strong> questions and answers are stored with your account. Phone numbers, ID numbers, emails, card and account numbers are replaced by a label before they are stored or sent on.",
-        "voice": "<strong>Voice:</strong> when you speak to Wappi, the audio is turned into text; when you listen to an answer, the spoken audio is kept so it need not be made again.",
+        "home": "<strong>Your home:</strong> its name, province or city, number of people, floor area, home type, billing cycle day, its members and what they may see, and the notification choices you set.",
+        "energy": "<strong>Electricity:</strong> your home's meter readings (about every 10 seconds), totals, per-appliance estimates and on/off times, expected use, forecast bills, alerts and savings plans. This data can reveal your household's daily routine.",
+        "assistant": "<strong>Chats with Wappi:</strong> questions and answers are stored with your account, along with the figures and queries used to answer. In questions, phone numbers, ID numbers, emails, card and account numbers are replaced by a label before they are stored and sent on; names and addresses are not detected.",
+        "voice": "<strong>Voice:</strong> when you speak to Wappi, the recording is sent as it is (it cannot be masked) to be turned into text; when you listen to an answer, the spoken audio is kept for 30 days so it need not be made again.",
         "guest": "<strong>Trial guests:</strong> a temporary account with no real email, deleted after 24 hours (expired ones are cleared when a new guest arrives)."
       }
     },
     "sharing": {
       "title": "3. Who receives your data",
-      "body": "Some parts of the service are handled by others. We send only what each needs, and some of them are outside Vietnam:",
+      "body": "Some parts of the service are handled by others, some of them outside Vietnam. WattPrint logs what its own server sends (receiver, purpose, kind of data, level of detail, never the content); the entries about you from the last 30 days are shown in Settings > Privacy:",
       "items": {
-        "ai": "<strong>OpenRouter and AstralX</strong> (Wappi's language models): your question with personal details masked, and the figures Wappi's tools look up from your home's data to answer it.",
-        "voice": "<strong>AstralX</strong> (voice): the audio you record to turn into text, and the answer to be read aloud.",
+        "ai": "<strong>OpenRouter (outside Vietnam), and AstralX when OpenRouter fails</strong> (Wappi's AI models, including question screening, document search and result ranking): your question, the open conversation and what Wappi looks up from your home's data, such as daily or hourly electricity figures, appliance names, bills, alerts and some details about the home. By default Wappi sees daily figures only (sample homes: hourly); the owner can allow hourly, and then night-by-night standby results may be sent too. WattPrint asks OpenRouter to use only providers that keep no data and do not train on it; this request is not applied to AstralX. We have not confirmed where AstralX's servers are, how long it keeps data or whether it passes it on.",
+        "voice": "<strong>AstralX</strong> (voice): your recording as it is, to turn into text, and the text of an answer to be read aloud.",
         "weather": "<strong>OpenWeather</strong> (weather): only the province or city coordinates of your home, never your address or name.",
-        "google": "<strong>Google</strong> (sign-in, if you choose it): Google knows that you sign in to WattPrint its way."
+        "google": "<strong>Google</strong> (sign-in, if you choose it): Google knows that you sign in to WattPrint its way. <strong>Telegram</strong> (feedback): when you press 👎, the rating and the answer's ID go to the maintainer. Only if you tick the box to include the content are the question and answer (which may hold your home's figures) sent too, and the maintainer can read them. <strong>Email servers</strong>: your email address, with alerts, weekly summaries, and account verification or reset mail. Account mail sent by Keycloak and Google sign-in are not in the log."
       },
-      "abroad": "Each of them has its own policy on the data it gets; read it if that matters to you. We do not use your data for advertising and we have built no advertising trackers into the service."
+      "abroad": "Each of them has its own policy on the data it gets. Data already sent to them cannot be deleted from WattPrint. We do not use your data for advertising and we have built no advertising trackers into the service."
     },
     "bases": {
       "title": "4. Why we may handle your data",
@@ -100,7 +100,7 @@
       },
       "consent": {
         "title": "You agree",
-        "body": "You sign up yourself, turn email notifications on yourself and choose to talk to Wappi. Silence or a pre-ticked box is not agreement."
+        "body": "You sign up yourself, turn email notifications on yourself and choose to talk to Wappi. Settings > Privacy has consent switches for Wappi, voice and email, and each change is recorded. The server does not currently block sending based on these switches: if you do not want data sent, do not use Wappi or voice, and turn email notifications off in Settings."
       },
       "interests": {
         "title": "Protecting the service",
@@ -122,11 +122,11 @@
     },
     "retention": {
       "title": "6. How long we keep it",
-      "body": "Data is kept while the account exists, except for:",
+      "body": "There is currently no schedule that shortens retention by level of detail. The owner can erase the electricity history at any time (section 8).",
       "items": {
-        "readings": "Per-minute readings and per-appliance estimates: the last 400 days; older ones are deleted automatically.",
-        "rollups": "Hourly and daily totals: kept until you delete your account.",
-        "account": "Profile, chats, alerts and plans: kept until you delete your account.",
+        "readings": "Meter readings (about every 10 seconds), per-appliance estimates and per-minute totals: 400 days; older ones are deleted automatically.",
+        "rollups": "Hourly and daily totals, appliance on/off runs, expected use, forecasts and alerts: not deleted automatically, kept until erased (section 8). Bills: the last 25 cycles.",
+        "account": "Profile, plans and chats (with their figures and queries): kept until you delete them. Spoken audio: 30 days. Ended watches: 90 days. Outbound log: 90 days.",
         "guest": "Trial guest accounts: 24 hours, cleared when a new guest arrives."
       }
     },
@@ -134,17 +134,17 @@
       "title": "7. Your rights",
       "body": "Under Law No. 91/2025/QH15 and Decree No. 356/2025/ND-CP you have these rights over your data. Send a request to the email in section 1; we answer within the time the law sets.",
       "items": {
-        "access": "To know and see your data.",
+        "access": "To know and see your data. Settings > Privacy shows what is kept, since when, and what was sent outside.",
         "correct": "To correct wrong data. You can edit your home and notification choices in settings; for your name or email, write to the email in section 1.",
-        "withdraw": "To withdraw consent, for example by turning email notifications off in settings.",
-        "erase": "To ask for your data to be deleted: do it yourself right away from the account menu, see section 8.",
+        "withdraw": "To withdraw consent with the switches in Settings > Privacy (see the limit in section 4), or by turning email notifications off in Settings.",
+        "erase": "To delete your data: do it yourself in the app, see section 8.",
         "complain": "To complain, report or sue if you think your data was handled unlawfully."
       }
     },
     "deletion": {
-      "title": "8. Deleting your account",
-      "body": "Open the account menu at the bottom of the sidebar and choose <strong>Delete account</strong>. Your profile, chats, savings plans, the alerts you set, your choices and your sign-in account are deleted at once (if deleting the sign-in account fails, you are asked to try again). If you are the only person in your home, the home goes too, with its alerts, all its meter readings and its totals. The data is deleted from the running system.",
-      "limit": "If other people are still in your home we cannot delete it yet, because their data is not yours to delete: ask them to leave first. If you cannot use the menu, send the request to the email in section 1."
+      "title": "8. Deleting data and your account",
+      "body": "In Settings > Privacy: the owner can erase the electricity history before a day or all of it (not for sample homes; chats are not erased with it and may still hold old figures); each person can delete all their own chats in the home, with the audio. To delete your account, choose <strong>Delete account</strong> on that page or in the account menu. Your profile, chats, savings plans, the watches you set, your choices and your sign-in account are deleted (if deleting the sign-in account fails, you are asked to try again). If you are the only person in your home, the home goes too, with its readings, totals and alerts; the meter is unlinked from it, not deleted. Deletion covers the running system, not what was already sent to others.",
+      "limit": "An owner with other members cannot delete the account yet: the members must first leave or be removed by the owner. The server supports inviting, changing what a member sees, removing and leaving, but the app has no screens for these yet; send the request to the email in section 1."
     },
     "ai": {
       "title": "9. The Wappi assistant and automated processing",
@@ -152,8 +152,8 @@
       "items": {
         "automated": "<strong>Wappi is an automated system.</strong> It is not a person, and nobody reads each answer before you see it.",
         "estimates": "<strong>Per-appliance figures are estimates.</strong> They are worked out from the main meter by an appliance-recognition model, not from separate meters, and are labelled “estimated”.",
-        "providers": "<strong>Your question goes to the model providers</strong> (section 3) so Wappi can answer. We do not control what they do with it afterwards; weigh that before you ask.",
-        "training": "<strong>Our appliance-recognition models are trained on public datasets</strong> (REFIT, Plegma, ENERTALK), not on your data."
+        "providers": "<strong>Your question and figures go to the model providers</strong> (section 3) so Wappi can answer. We cannot control what they do with them afterwards; weigh that before you ask.",
+        "training": "<strong>Appliance-recognition models are trained on public datasets</strong> (REFIT, Plegma, ENERTALK). The expected-use model, however, is trained on your own home's data. <strong>Who can see your home's data:</strong> the owner, and members at the level granted (a “daily only” member sees nothing finer than a day). Operators with access to the server and database can still read it."
       }
     }
   }

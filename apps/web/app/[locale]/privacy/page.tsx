@@ -9,7 +9,7 @@ import type { Locale } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/seo"
 
 // Noon UTC keeps the same calendar day whatever the server's time zone.
-const EFFECTIVE = new Date("2026-11-25T12:00:00Z")
+const EFFECTIVE = new Date("2026-11-28T12:00:00Z")
 const COLLECTED = [
   "account",
   "session",
