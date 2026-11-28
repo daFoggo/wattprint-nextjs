@@ -18,9 +18,11 @@ const MODEL_KINDS = new Set(["usage_anomaly", "device_anomaly"])
 const TONE = { info: "info", warning: "warning", critical: "danger" } as const
 
 /** "5 hours ago" from two instants: the server passes `now`, so nothing reads the clock while rendering. */
-function ago(ts: number, now: number, locale: string) {
+function ago(ts: number, now: number, locale: string, byDay: boolean) {
   const minutes = Math.round((ts - now) / 60_000)
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" })
+  // `ts` is then the day's own midnight: whole days since it.
+  if (byDay) return rtf.format(Math.ceil(minutes / (24 * 60)) || 0, "day")
   if (minutes > -60) return rtf.format(minutes, "minute")
   if (minutes > -24 * 60) return rtf.format(Math.round(minutes / 60), "hour")
   return rtf.format(Math.round(minutes / 1440), "day")
@@ -40,6 +42,7 @@ export function AlertList({
   onFeedback,
   mine,
   title,
+  byDay = false,
   className,
 }: {
   alerts: AlertData[]
@@ -51,6 +54,8 @@ export function AlertList({
   /** Ids of the viewer's own watches: only those have a row on the alerts page to link to. */
   mine?: Set<string>
   title?: string
+  /** A member who sees days only: an alert's time is its day. */
+  byDay?: boolean
   className?: string
 }) {
   const t = useTranslations("insight.alerts")
@@ -116,7 +121,7 @@ export function AlertList({
                   : null}
                 <span className="text-muted-foreground">
                   {brief ? "" : "· "}
-                  {ago(a.ts, now, locale)}
+                  {ago(a.ts, now, locale, byDay)}
                   {a.status === "resolved" ? ` · ${t("resolved")}` : ""}
                 </span>
                 {onFeedback && MODEL_KINDS.has(a.kind) ? (

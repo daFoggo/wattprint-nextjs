@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 import { getLocale, getTranslations } from "next-intl/server"
 
 import { PageHead } from "@/components/layout/page-head"
+import { ByDayNote } from "@/components/shared/by-day-note"
 import { HideOnError } from "@/components/shared/hide-on-error"
 import { PillLink } from "@/components/shared/nav-links"
 import { Stagger } from "@/components/shared/stagger"
@@ -90,6 +91,7 @@ async function Tiles() {
       onSeen={viewer ? undefined : acknowledgeAlertAction}
       onFeedback={viewer ? undefined : sendAlertFeedbackAction}
       mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
+      byDay={data.byDay}
       className={cn(data.latest ? TILE.alerts : "lg:col-span-12", "lg:order-3")}
     />
   )
@@ -118,6 +120,7 @@ async function Tiles() {
           className={cn(TILE.activity, "lg:order-4")}
         />
       ) : null}
+      {data.byDay ? <ByDayNote className="lg:order-5 lg:col-span-12" /> : null}
     </>
   )
 }

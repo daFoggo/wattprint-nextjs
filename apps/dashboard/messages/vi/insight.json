@@ -30,11 +30,11 @@
     },
     "viewWatch": "Xem cảnh báo",
     "device_on": {
-      "title": "{device} vừa bật lúc {at}",
+      "title": "{timed, select, false {{device} vừa bật} other {{device} vừa bật lúc {at}}}",
       "body": "Bạn nhờ Wappi báo mỗi lần thiết bị này bật."
     },
     "device_off": {
-      "title": "{device} vừa tắt (lần chạy từ {at})",
+      "title": "{timed, select, false {{device} vừa tắt} other {{device} vừa tắt (lần chạy từ {at})}}",
       "body": "Bạn nhờ Wappi báo mỗi lần thiết bị này tắt."
     },
     "device_long_run": {
@@ -51,7 +51,7 @@
     "emptyAction": "Đặt cảnh báo",
     "usage_anomaly": {
       "title": "Hôm nay nhà dùng hơn mức thường {excess_kwh, number} kWh (≈ {excess_vnd, number} đ)",
-      "body": "So với một ngày như hôm nay (thời tiết, ngày nghỉ, nếp sinh hoạt), từ {start} nhà dùng nhiều hơn dự kiến.",
+      "body": "{timed, select, false {So với một ngày như hôm nay (thời tiết, ngày nghỉ, nếp sinh hoạt), nhà dùng nhiều hơn dự kiến.} other {So với một ngày như hôm nay (thời tiết, ngày nghỉ, nếp sinh hoạt), từ {start} nhà dùng nhiều hơn dự kiến.}}",
       "weather": "Thời tiết đã làm mức thường cao hơn {weather_kwh, number} kWh, phần vượt nằm ngoài phần đó."
     },
     "feedback": {
@@ -67,11 +67,11 @@
       },
       "long_run": {
         "title": "{device} chạy lâu bất thường",
-        "body": "Lần chạy lúc {at} kéo dài {value, number} phút, thường khoảng {usual, number} phút ở cùng khung giờ và nhiệt độ (≈ {excess_vnd, number} đ hơn). Kiểm tra xem máy có chạy lặp không."
+        "body": "{timed, select, false {Một lần chạy kéo dài {value, number} phút, thường khoảng {usual, number} phút (≈ {excess_vnd, number} đ hơn). Kiểm tra xem máy có chạy lặp không.} other {Lần chạy lúc {at} kéo dài {value, number} phút, thường khoảng {usual, number} phút ở cùng khung giờ và nhiệt độ (≈ {excess_vnd, number} đ hơn). Kiểm tra xem máy có chạy lặp không.}}"
       },
       "odd_hour": {
         "title": "{device} chạy vào giờ hiếm thấy",
-        "body": "Bắt đầu lúc {at}; 60 ngày qua thiết bị chạy giờ này chỉ {usual, number}% số ngày. Có ai bật không?"
+        "body": "{timed, select, false {Thiết bị chạy vào giờ ít khi chạy trong 60 ngày qua. Có ai bật không?} other {Bắt đầu lúc {at}; 60 ngày qua thiết bị chạy giờ này chỉ {usual, number}% số ngày. Có ai bật không?}}"
       },
       "denser": {
         "title": "{device} chạy dày hơn thường lệ",

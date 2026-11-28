@@ -5,10 +5,12 @@ import { EmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { viewDemoHomeAction } from "@/features/auth/actions"
 import { DemoHomePicker } from "@/features/auth/components/demo-home-picker"
 import { getDemoHomes } from "@/features/auth/queries"
+import { acceptInviteAction } from "@/features/home/actions"
+import { JoinHome } from "@/features/home/components/join-home"
 
 /**
  * In place of a page's tiles while the account belongs to no home: they would describe a home it does not have.
- * A new account can view a demo home read-only from here.
+ * A new account can join a home with its invite code, or view a demo home read-only from here.
  */
 export async function NoHome() {
   const [t, demo, homes] = await Promise.all([
@@ -23,6 +25,7 @@ export async function NoHome() {
         title={t("noHomeTitle")}
         description={t("noHomeDescription")}
       />
+      <JoinHome action={acceptInviteAction} />
       {homes.length ? (
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">

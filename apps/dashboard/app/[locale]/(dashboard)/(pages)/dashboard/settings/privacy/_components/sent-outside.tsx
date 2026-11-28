@@ -81,8 +81,16 @@ export function SentOutside({
 
   const words = (p: Purpose) =>
     p === "email"
-      ? { what: t("email.what"), to: t("email.to") }
-      : { what: tConsent(`${p}.what`), to: tConsent(`${p}.to`) }
+      ? {
+          what: t("email.what"),
+          to: t("email.to"),
+          where: t("email.where"),
+        }
+      : {
+          what: tConsent(`${p}.what`),
+          to: tConsent(`${p}.to`),
+          where: tConsent(`${p}.where`),
+        }
 
   return (
     <Tile
@@ -111,6 +119,10 @@ export function SentOutside({
               <dd>{words(p).what}</dd>
               <dt className="text-muted-foreground">{tConsent("labels.to")}</dt>
               <dd>{words(p).to}</dd>
+              <dt className="text-muted-foreground">
+                {tConsent("labels.where")}
+              </dt>
+              <dd>{words(p).where}</dd>
             </dl>
             {p === "wappi" ? (
               <div className="flex flex-wrap items-center gap-3">

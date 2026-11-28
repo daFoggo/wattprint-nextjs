@@ -45,6 +45,14 @@ export async function patchPreferences(
   )
 }
 
+export async function acceptInvite(token: string, code: string) {
+  await apiFetch("/homes/invites/accept", {
+    token,
+    method: "POST",
+    ...json({ code }),
+  })
+}
+
 /** The province catalog is public reference data. */
 export async function fetchProvinces() {
   return z.array(ProvinceSchema).parse(await apiFetch("/homes/provinces"))

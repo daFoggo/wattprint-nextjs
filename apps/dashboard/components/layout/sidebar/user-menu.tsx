@@ -33,13 +33,19 @@ export function UserMenu({
   const tCommon = useTranslations("common")
   const t = useTranslations("layout")
   const roleLabel = t(`roles.${role}`)
-  // A link in the panel leads to a page: the panel closes on arriving.
+  // A link in the panel leads to a page: the panel closes on the click (also to the page already open), and on any
+  // change of page, so it never comes back open.
   const pathname = usePathname()
-  const [openOn, setOpenOn] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const [openedOn, setOpenedOn] = useState(pathname)
+  if (openedOn !== pathname) {
+    setOpenedOn(pathname)
+    setOpen(false)
+  }
   return (
     <Popover
-      open={openOn === pathname}
-      onOpenChange={(open) => setOpenOn(open ? pathname : null)}
+      open={open}
+      onOpenChange={setOpen}
       label={t("account")}
       width={288}
       side={iconRail ? "right" : "top"}
@@ -65,7 +71,12 @@ export function UserMenu({
         </button>
       }
     >
-      <div className="flex flex-col gap-4">
+      <div
+        className="flex flex-col gap-4"
+        onClick={(e) => {
+          if ((e.target as Element).closest("a")) setOpen(false)
+        }}
+      >
         <div className="flex items-center gap-3">
           <Avatar name={name} />
           <div className="flex min-w-0 flex-col">

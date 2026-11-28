@@ -23,6 +23,20 @@ export const AiHomeSchema = z.object({
 })
 export type AiDetail = z.infer<typeof AiHomeSchema>["ai_detail_effective"]
 
+/** GET /homes/current/members: the household, owner first; addresses come to the owner only. */
+export const MembersSchema = z.array(
+  z.object({
+    user_id: z.uuid(),
+    name: z.string().nullable(),
+    email: z.string().nullable(),
+    role: z.enum(["owner", "member"]),
+    detail: z.enum(["full", "daily"]),
+  })
+)
+export type Member = z.infer<typeof MembersSchema>[number]
+
+export const InviteSchema = z.object({ code: z.string() })
+
 export const ConsentsSchema = z.array(
   z.object({
     purpose: z.enum(["wappi", "voice", "email"]),

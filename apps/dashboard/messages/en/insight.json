@@ -30,11 +30,11 @@
     },
     "viewWatch": "View alert",
     "device_on": {
-      "title": "{device} turned on at {at}",
+      "title": "{timed, select, false {{device} turned on} other {{device} turned on at {at}}}",
       "body": "You asked Wappi to tell you each time it turns on."
     },
     "device_off": {
-      "title": "{device} turned off (run from {at})",
+      "title": "{timed, select, false {{device} turned off} other {{device} turned off (run from {at})}}",
       "body": "You asked Wappi to tell you each time it turns off."
     },
     "device_long_run": {
@@ -51,7 +51,7 @@
     "emptyAction": "Set an alert",
     "usage_anomaly": {
       "title": "Today your home used {excess_kwh, number} kWh more than usual (≈ {excess_vnd, number} ₫)",
-      "body": "Against a day like today (weather, days off, routine), usage since {start} is above what was expected.",
+      "body": "{timed, select, false {Compared with a day like today (weather, day off, routine), the home used more than expected.} other {Against a day like today (weather, days off, routine), usage since {start} is above what was expected.}}",
       "weather": "The weather already raised the usual by {weather_kwh, number} kWh; the excess is beyond that."
     },
     "feedback": {
@@ -67,11 +67,11 @@
       },
       "long_run": {
         "title": "{device} ran unusually long",
-        "body": "The run at {at} lasted {value, number} min, usually about {usual, number} min at this time and temperature (≈ {excess_vnd, number} ₫ more). Check it is not repeating."
+        "body": "{timed, select, false {One run lasted {value, number} minutes, usually about {usual, number} (≈ {excess_vnd, number} đ more). Check that it is not cycling again and again.} other {The run at {at} lasted {value, number} min, usually about {usual, number} min at this time and temperature (≈ {excess_vnd, number} ₫ more). Check it is not repeating.}}"
       },
       "odd_hour": {
         "title": "{device} ran at an unusual hour",
-        "body": "It started at {at}; over 60 days it ran at this hour on only {usual, number}% of days. Did someone switch it on?"
+        "body": "{timed, select, false {The device ran at an hour it seldom runs in the last 60 days. Did someone switch it on?} other {It started at {at}; over 60 days it ran at this hour on only {usual, number}% of days. Did someone switch it on?}}"
       },
       "denser": {
         "title": "{device} is cycling more than usual",

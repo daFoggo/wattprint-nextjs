@@ -26,6 +26,19 @@ const isNoHome = (error: unknown) =>
   error.status === 404 &&
   (error.body as { code?: string } | undefined)?.code === "home_not_found"
 
+/** The owner lets this account see days only (R4.3): the finer routes refuse, and the pages leave their blocks out. */
+const isByDay = (error: unknown) =>
+  error instanceof ApiError &&
+  error.status === 403 &&
+  (error.body as { code?: string } | undefined)?.code === "detail_restricted"
+
+/** Null instead of the refusal; any other failure still throws. */
+const unlessByDay = <T>(read: Promise<T>) =>
+  read.catch((error: unknown) => {
+    if (isByDay(error)) return null
+    throw error
+  })
+
 /**
  * The newest reading and today so far, fresh on every request (docs/data-fetching.md §3: no directive,
  * inside <Suspense>), deduped per request by React.cache. Not "use cache: private": its session
@@ -50,12 +63,10 @@ export const getDashboard = cache(async () => {
   const { now, accessToken } = overview
   const today = localMidnight(now)
   // 90 days is the backend's longest window; 1 point per day.
-  const daily = await fetchSeries(
-    accessToken,
-    new Date(today - 89 * DAY),
-    new Date(now),
-    90
+  const series = await unlessByDay(
+    fetchSeries(accessToken, new Date(today - 89 * DAY), new Date(now), 90)
   )
+  const daily = series ?? []
   // The backend leaves out days without readings. Gaps after the first reading are days at
   // 0 kWh; days before it are not part of this home's history (a new home has only a few).
   const kwh = new Map(
@@ -66,11 +77,14 @@ export const getDashboard = cache(async () => {
     .filter((p) => p.min_w > 0)
     .map((p) => ({ date: localDate(Date.parse(p.ts)), watts: p.min_w }))
   const first = daily[0] ? localMidnight(Date.parse(daily[0].ts)) : today
+  // By day only there is no series: today's total is all there is, not a history of zeros.
+  if (!series) kwh.set(localDate(today), overview.today?.kwh ?? 0)
   const days = Array.from(
     { length: Math.round((today - first) / DAY) + 1 },
     (_, i) => localDate(first + i * DAY)
   ).map((date) => ({ date, value: kwh.get(date) ?? 0 }))
   return {
+    byDay: !series,
     latest: overview.live?.ts ?? null,
     live: overview.live?.watts ?? null,
     now,
@@ -92,7 +106,7 @@ export const getPower = cache(async () => {
   if (!overview) return null
   const { now, accessToken } = overview
   const points = { day: 96, week: 168, month: 120, quarter: 90 }
-  const entries = await Promise.all(
+  const reads = Promise.all(
     (Object.keys(RANGES) as PowerRange[]).map(async (range) => {
       const series = await fetchSeries(
         accessToken,
@@ -106,6 +120,8 @@ export const getPower = cache(async () => {
       ] as const
     })
   )
+  const entries = await unlessByDay(reads)
+  if (!entries) return null
   const ranges = Object.fromEntries(entries) as Record<
     PowerRange,
     { ts: number; watts: number }[]
@@ -128,12 +144,10 @@ export const getTodayUsual = cache(async () => {
   const overview = await getOverview()
   if (!overview) return null
   const { now, accessToken } = overview
-  const hours = await fetchExpected(
-    accessToken,
-    new Date(localMidnight(now)),
-    new Date(now)
+  const hours = await unlessByDay(
+    fetchExpected(accessToken, new Date(localMidnight(now)), new Date(now))
   )
-  return todaySoFar(hours, now)
+  return hours && todaySoFar(hours, now)
 })
 
 /** VND per kWh with VAT, for a home without a tariff (about the 2025 tariff's average). */
@@ -187,7 +201,7 @@ export const getDevices = cache(async (bill?: number) => {
   const price = pricePerKwh(rows, bill)
   return rows.map((d) => ({
     ...d,
-    watts: Math.round(d.watts), // NILM estimates carry decimals no one reads
+    watts: d.watts === null ? null : Math.round(d.watts), // NILM estimates carry decimals no one reads
     // The sparkline's screen-reader summary prints raw values, ignoring its `format`.
     week_kwh: d.week_kwh.map((v) => Math.round(v * 100) / 100),
     month_amount: d.month_kwh * price,
@@ -210,7 +224,7 @@ export const getDevice = cache(async (id: string, bill?: number) => {
   return {
     ...d,
     tip: tip(d),
-    watts: Math.round(d.watts),
+    watts: d.watts === null ? null : Math.round(d.watts),
     avg_on_w: Math.round(d.avg_on_w),
     peak_w: Math.round(d.peak_w),
     month_amount: d.month_kwh * price,
@@ -223,5 +237,5 @@ export const getDevice = cache(async (id: string, bill?: number) => {
 export const getActivity = cache(async () => {
   const overview = await getOverview()
   if (!overview) return null
-  return fetchActivity(overview.accessToken)
+  return (await unlessByDay(fetchActivity(overview.accessToken))) ?? []
 })

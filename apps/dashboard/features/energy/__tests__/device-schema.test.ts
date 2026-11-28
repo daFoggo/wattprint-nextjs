@@ -30,3 +30,8 @@ describe("DeviceApiSchema estimate", () => {
     expect(DeviceApiSchema.parse(DEVICE).estimate).toBeNull()
   })
 })
+
+it("accepts a device without its state now (days only)", () => {
+  const d = DeviceApiSchema.parse({ ...DEVICE, on: null, watts: null })
+  expect([d.on, d.watts]).toEqual([null, null])
+})

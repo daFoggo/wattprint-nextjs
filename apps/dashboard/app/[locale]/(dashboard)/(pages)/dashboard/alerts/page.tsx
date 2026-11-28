@@ -54,7 +54,8 @@ async function Add() {
     getLocale(),
   ])
   if (!devices || !data) return null
-  const named = devices.filter((d) => d.type !== "other")
+  // Alerts on a device or the home's power are about the moment: by day only the backend refuses them.
+  const named = data.byDay ? [] : devices.filter((d) => d.type !== "other")
   // shortcut: one device read per named device for its run lengths; a bulk endpoint once homes have ~20+ devices.
   const details = await Promise.all(named.map((d) => getDevice(d.id)))
   const price = avgPrice(bill)
@@ -68,7 +69,7 @@ async function Add() {
         locale,
         billNow: bill?.amount_total ?? null,
         powerNow: data.live,
-      })}
+      }).filter((s) => !(data.byDay && s.key === "power"))}
       devices={named.map((d, i) => ({
         id: d.id,
         name: d.name,
@@ -102,6 +103,7 @@ async function Fired({ className }: { className?: string }) {
       onFeedback={viewer ? undefined : sendAlertFeedbackAction}
       // Only watches still listed below have a row to link to.
       mine={new Set((watches ?? []).filter(isWatched).map((w) => w.id))}
+      byDay={data.byDay}
       className={className}
     />
   )

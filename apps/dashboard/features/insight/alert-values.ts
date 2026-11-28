@@ -3,14 +3,19 @@ import type { Alert } from "./schemas"
 /**
  * An alert's payload as the values its words read: ICU selects read strings, so a boolean (a watch's `repeat`)
  * becomes "true"/"false", a run's start reads as a time of day, and an alert stored before watches could repeat
- * reads as one that does not.
+ * reads as one that does not. `timed` is "false" when the payload carries no time of day: a member who sees days
+ * only gets it that way, and the words must not ask for one.
  */
 export function alertValues(
   payload: Record<string, unknown>,
   device: string,
   time: (iso: string) => string
 ): Record<string, string | number> {
-  const values: Record<string, string | number> = { device, repeat: "false" }
+  const values: Record<string, string | number> = {
+    device,
+    repeat: "false",
+    timed: String("at" in payload || "start" in payload),
+  }
   for (const [k, v] of Object.entries(payload)) {
     if (typeof v === "boolean") values[k] = String(v)
     else if ((k === "at" || k === "start") && typeof v === "string")

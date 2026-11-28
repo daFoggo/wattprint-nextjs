@@ -16,7 +16,7 @@
     "forever": "Not deleted automatically",
     "oldest": "Oldest from {date}",
     "none": "Nothing stored yet",
-    "erased": "Figures before {date} were deleted."
+    "erased": "Older figures were deleted up to {date}. If you chose to delete all, what had been recorded on that day went too."
   },
   "outside": {
     "title": "Sent outside",
@@ -29,8 +29,9 @@
     },
     "email": {
       "name": "Email",
-      "what": "Your email address, alerts and the weekly summary. The weekly summary also has to be on in Settings.",
-      "to": "The email server."
+      "what": "Your email address, alerts and the weekly summary. Alerts also have to be switched on in Alerts (off by default), the weekly summary in Settings.",
+      "to": "The email server.",
+      "where": "A mail server delivers it to your inbox. WattPrint has not confirmed where that server is."
     },
     "level": "Wappi sees figures",
     "hourly": "By hour",
@@ -64,11 +65,14 @@
     "datePlaceholder": "day/month/year",
     "questionAll": "Delete all electricity history?",
     "questionBefore": "Delete electricity history before {date}?",
-    "readings": "Meter readings, per-device figures and alerts in that time are deleted.",
+    "readings": "Meter readings, per-device figures, alerts, forecasts and suggestions in that time are deleted.",
     "bills": "Bills of cycles wholly in that time are deleted. A cycle cut in two shows as incomplete.",
     "stays": "The device list and device recognition stay.",
-    "sent": "What was already sent to outside services cannot be recalled.",
-    "cannot": "Only the home owner can delete it. Demo homes cannot be deleted."
+    "sent": "Copies already sent to outside services cannot be deleted from here; each keeps them by its own rules.",
+    "cannot": "Only the home owner can delete it. Demo homes cannot be deleted.",
+    "plans": "Savings plans stay, but lose the figures of the deleted days.",
+    "openrouter": "OpenRouter privacy policy",
+    "dateInvalid": "That date cannot be read. Enter day/month/year, no later than today."
   },
   "chats": {
     "title": "My chats",
@@ -97,5 +101,32 @@
     "demo": "A demo home cannot be deleted or changed.",
     "owner": "Only the home owner can do this.",
     "other": "That did not work. Try again in a few minutes."
+  },
+  "members": {
+    "title": "Who can see",
+    "description": "The people in the home and how finely they see it.",
+    "invite": "Invite someone",
+    "code": "Invite code",
+    "codeHint": "Shown only once. For one person, for 7 days. They sign in, then enter it.",
+    "copy": "Copy code",
+    "copied": "Copied",
+    "copyFailed": "Not copied",
+    "unnamed": "No name",
+    "owner": "Owner",
+    "member": "Member",
+    "level": "{name} sees",
+    "full": "Everything",
+    "daily": "By day",
+    "remove": "Remove {name}",
+    "removeConfirm": "Remove",
+    "removing": "Removing",
+    "removed": "Removed",
+    "removeLoses": "Removing someone deletes their chats, alerts and plans in this home.",
+    "leave": "Leave the home",
+    "leaveLoses": "Your chats, alerts and plans in this home will be deleted.",
+    "leaveConfirm": "Leave",
+    "leaving": "Leaving",
+    "left": "Left",
+    "visitor": "You are viewing a demo home. With an invite code you can join your family's home."
   }
 }

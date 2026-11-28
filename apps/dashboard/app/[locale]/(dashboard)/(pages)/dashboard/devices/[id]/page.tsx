@@ -7,6 +7,7 @@ import { Badge } from "@workspace/ui/components/hairline/badge"
 import { Skeleton } from "@workspace/ui/components/hairline/skeleton"
 
 import { PageHead } from "@/components/layout/page-head"
+import { ByDayNote } from "@/components/shared/by-day-note"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { ALERTS_PATH, DEVICES_PATH } from "@/config/routes"
 import { DeviceForecastTile } from "@/features/billing/components/device-forecast"
@@ -86,7 +87,7 @@ async function Head({ params }: { params: Params }) {
     getLocale(),
   ])
   if (!device) notFound()
-  const watts = new Intl.NumberFormat(locale).format(device.watts)
+  const watts = new Intl.NumberFormat(locale).format(device.watts ?? 0)
   return (
     <PageHead
       title={device.name}
@@ -99,9 +100,11 @@ async function Head({ params }: { params: Params }) {
       <span className="flex flex-wrap items-center gap-3">
         <DeviceIcon type={device.type} size="lg" />
         {device.room ? <span>{device.room}</span> : null}
-        <Badge tone={device.on ? "success" : "neutral"} dot>
-          {device.on ? t("deviceList.onAt", { watts }) : t("deviceList.off")}
-        </Badge>
+        {device.on === null ? null : (
+          <Badge tone={device.on ? "success" : "neutral"} dot>
+            {device.on ? t("deviceList.onAt", { watts }) : t("deviceList.off")}
+          </Badge>
+        )}
       </span>
     </PageHead>
   )
@@ -128,12 +131,23 @@ async function Stats({ params, className }: Slot) {
 
 async function Days({ params, className }: Slot) {
   const device = await load(params)
-  return device ? <DeviceDays device={device} className={className} /> : null
+  // By day only the log beside it is gone: it takes the row.
+  return device ? (
+    <DeviceDays
+      device={device}
+      className={device.on === null ? TILE.stats : className}
+    />
+  ) : null
 }
 
 async function About({ params, className }: Slot) {
   const device = await load(params)
-  return device ? <DeviceAbout device={device} className={className} /> : null
+  return device ? (
+    <DeviceAbout
+      device={device}
+      className={device.on === null ? TILE.stats : className}
+    />
+  ) : null
 }
 
 async function Power({ params, className }: Slot) {
@@ -142,6 +156,8 @@ async function Power({ params, className }: Slot) {
     getTranslations("energy"),
   ])
   if (!device) return null
+  // By day only: one line where the 24 hours' power and (above) the log of runs would be.
+  if (device.on === null) return <ByDayNote className={TILE.stats} />
   // No estimate in the last 24 hours (a new home, a long meter gap): the tile stays and says so.
   const last = device.power.at(-1)
   return (
@@ -160,7 +176,7 @@ async function Log({ params, className }: Slot) {
     load(params),
     getTranslations("energy"),
   ])
-  if (!device) return null
+  if (!device || device.on === null) return null
   return (
     <DeviceTimeline
       title={t("timeline.deviceTitle")}
@@ -215,6 +231,7 @@ async function Anomalies({ params, className }: Slot) {
       now={data.now}
       onSeen={acknowledgeAlertAction}
       onFeedback={sendAlertFeedbackAction}
+      byDay={data.byDay}
       className={className}
     />
   )
@@ -236,7 +253,9 @@ async function Watches({
     isDemoViewer(),
   ])
   // The unknown remainder is always on: no runs to tell about. A demo home is read-only: no alerts to set.
+  // Every alert here is about the moment: none to set by day only.
   if (!device || !watches || device.type === "other" || viewer) return null
+  if (device.on === null) return null
   return (
     <Tile
       title={t("tileTitle")}

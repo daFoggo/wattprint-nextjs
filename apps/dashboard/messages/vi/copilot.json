@@ -207,7 +207,7 @@
       "description": "Để trả lời, Wappi nhờ một dịch vụ AI bên ngoài. Xem trước những gì được gửi đi.",
       "what": "Câu hỏi của bạn, cuộc trò chuyện đang mở và những con số về điện của nhà cần để trả lời, ở mức chi tiết của nhà (theo ngày hoặc theo giờ).",
       "to": "OpenRouter, dịch vụ chuyển câu hỏi tới mô hình AI. Khi OpenRouter lỗi, nhà cung cấp AstralX trả lời thay.",
-      "where": "OpenRouter ở ngoài Việt Nam; AstralX xử lý trên máy chủ của họ.",
+      "where": "OpenRouter ở ngoài Việt Nam. AstralX xử lý ở đâu, có chuyển tiếp cho bên nào khác không thì chưa xác nhận được.",
       "note": "WattPrint yêu cầu OpenRouter chỉ dùng nơi xử lý không lưu lại gì và không lấy dữ liệu để huấn luyện AI. Yêu cầu này chưa áp được cho AstralX.",
       "who": "Nhóm WattPrint.",
       "off": "Trong Cài đặt. Khi tắt, Wappi ngừng trả lời cho tới khi bạn đồng ý lại."
@@ -217,7 +217,7 @@
       "description": "Giọng nói được gửi tới một dịch vụ bên ngoài để chuyển thành chữ và đọc câu trả lời.",
       "what": "Bản ghi âm giọng bạn, và chữ của câu trả lời cần đọc thành tiếng. Lời bạn nói, sau khi thành chữ và gửi cho Wappi, được xử lý như câu bạn gõ.",
       "to": "Nhà cung cấp AstralX: chuyển giọng nói thành chữ và đọc câu trả lời.",
-      "where": "Trên máy chủ của nhà cung cấp AstralX.",
+      "where": "Ở nhà cung cấp AstralX. Họ xử lý ở đâu, có chuyển tiếp cho bên nào khác không thì chưa xác nhận được.",
       "note": "Bản ghi âm không che được thông tin cá nhân: bạn nói gì, như số điện thoại hay địa chỉ, nó được gửi đi nguyên như vậy.",
       "who": "Nhóm WattPrint.",
       "off": "Trong Cài đặt. Khi tắt, micro và chế độ nói chuyện ngừng dùng được."

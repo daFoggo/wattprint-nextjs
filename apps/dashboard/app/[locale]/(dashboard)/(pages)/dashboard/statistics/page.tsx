@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
 import { PageHead } from "@/components/layout/page-head"
+import { ByDayNote } from "@/components/shared/by-day-note"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { BillForecast } from "@/features/billing/components/bill-forecast"
 import { DeviceForecastCard } from "@/features/billing/components/device-forecast"
@@ -232,6 +233,12 @@ function Group({
   )
 }
 
+/** The group drawn from the meter's series; by day only there is none, and one line says why. */
+async function Meter({ children }: { children: React.ReactNode }) {
+  const data = await getDashboard()
+  return data?.byDay ? <ByDayNote what="charts" /> : children
+}
+
 /** Without a home there is nothing to group: one empty state, not headings over empty rows. */
 async function Groups({ children }: { children: React.ReactNode }) {
   // Start the tiles' reads now, not after the home check: React.cache hands them the same promises.
@@ -267,20 +274,24 @@ export default function StatisticsPage() {
               <Power className={TILE.power} />
             </Suspense>
           </Group>
-          <Group>
-            <Suspense fallback={<Skeleton tile="weeks" />}>
-              <Weeks className={TILE.weeks} />
-            </Suspense>
-            <Suspense fallback={<Skeleton tile="cycle" />}>
-              <Cycle className={TILE.cycle} />
-            </Suspense>
-            <Suspense fallback={<Skeleton tile="days" />}>
-              <Days className={TILE.days} />
-            </Suspense>
-            <Suspense fallback={<Skeleton tile="standby" />}>
-              <Background className={TILE.standby} />
-            </Suspense>
-          </Group>
+          <Suspense fallback={null}>
+            <Meter>
+              <Group>
+                <Suspense fallback={<Skeleton tile="weeks" />}>
+                  <Weeks className={TILE.weeks} />
+                </Suspense>
+                <Suspense fallback={<Skeleton tile="cycle" />}>
+                  <Cycle className={TILE.cycle} />
+                </Suspense>
+                <Suspense fallback={<Skeleton tile="days" />}>
+                  <Days className={TILE.days} />
+                </Suspense>
+                <Suspense fallback={<Skeleton tile="standby" />}>
+                  <Background className={TILE.standby} />
+                </Suspense>
+              </Group>
+            </Meter>
+          </Suspense>
           <Suspense fallback={<TileSkeleton height={140} />}>
             <Peers className={TILE.peers} />
           </Suspense>

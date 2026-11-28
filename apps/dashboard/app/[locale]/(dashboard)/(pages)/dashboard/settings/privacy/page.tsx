@@ -5,9 +5,12 @@ import { getTranslations } from "next-intl/server"
 
 import { PageHead } from "@/components/layout/page-head"
 import { TileSkeleton } from "@/components/shared/tile-skeleton"
+import { acceptInviteAction } from "@/features/home/actions"
+import { JoinHome } from "@/features/home/components/join-home"
 import { getHome } from "@/features/home/queries"
 import { HowAi } from "@/features/privacy/components/how-ai"
 import { Kept } from "@/features/privacy/components/kept"
+import { Members } from "@/features/privacy/components/members"
 import { getPrivacyPage } from "@/features/privacy/queries"
 
 import { NoHome } from "../../../../_components/no-home"
@@ -21,10 +24,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 async function Privacy() {
   if (!(await getHome())) return <NoHome />
-  const { privacy, home, consents, outbound } = await getPrivacyPage()
+  const { privacy, home, consents, outbound, members } = await getPrivacyPage()
   return (
     <div className="flex flex-col gap-4">
       <Kept privacy={privacy} />
+      <Members members={members} role={home.role}>
+        {home.role === "viewer" ? (
+          <JoinHome action={acceptInviteAction} />
+        ) : null}
+      </Members>
       <SentOutside
         consents={consents}
         detail={home.ai_detail_effective}

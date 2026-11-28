@@ -37,8 +37,9 @@ export const DeviceSchema = z.object({
   room: z.string().nullable(),
   /** cat_device_type.code; picks the icon. */
   type: z.string(),
-  on: z.boolean(),
-  watts: z.number(),
+  /** Null with `watts`: this account sees days only, not what the device does now. */
+  on: z.boolean().nullable(),
+  watts: z.number().nullable(),
   today_kwh: z.number(),
   month_kwh: z.number(),
   /** Its share of the home's bill so far this month (VND, VAT included). */

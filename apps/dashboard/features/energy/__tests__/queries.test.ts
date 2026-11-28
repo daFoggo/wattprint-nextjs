@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 
+import { ApiError } from "@/lib/errors"
+
 vi.mock("server-only", () => ({}))
 // React's `cache` memoizes only inside a server request; this stand-in keys by the arguments the same way.
 vi.mock("react", async (orig) => ({
@@ -31,13 +33,24 @@ const device = {
   week_kwh: [],
 }
 const fetchDevices = vi.fn(async () => [device])
+// A member who sees days only (R4.3).
+const refuse = () => {
+  throw new ApiError(403, "no", { code: "detail_restricted" })
+}
 vi.mock("../server", () => ({
-  fetchOverview: async () => ({}),
+  fetchOverview: async () => ({
+    live: null,
+    today: { kwh: 3, typical_kwh: null },
+  }),
+  fetchSeries: async () => refuse(),
+  fetchExpected: async () => refuse(),
+  fetchActivity: async () => refuse(),
   fetchDevices: () => fetchDevices(),
   fetchDevice: async () => device,
 }))
 
-const { getDevice, getDevices } = await import("../queries")
+const { getActivity, getDashboard, getDevice, getDevices, getPower } =
+  await import("../queries")
 
 describe("getDevice", () => {
   it("reuses the request's device list read for the same bill", async () => {
@@ -45,5 +58,15 @@ describe("getDevice", () => {
     const d = await getDevice(device.id, 500_000)
     expect(fetchDevices).toHaveBeenCalledTimes(1)
     expect(d?.month_amount).toBe(500_000) // the whole bill on its one device
+  })
+})
+
+describe("a member who sees days only", () => {
+  it("gets today from the overview and no by-the-moment figures", async () => {
+    const data = await getDashboard()
+    expect(data?.byDay).toBe(true)
+    expect(data?.days.map((d) => d.value)).toEqual([3])
+    expect(await getPower()).toBeNull()
+    expect(await getActivity()).toEqual([])
   })
 })

@@ -6,17 +6,26 @@ vi.mock("server-only", () => ({}))
 vi.mock("@/lib/dal", () => ({
   requirePermission: vi.fn(async () => ({ accessToken: "token" })),
 }))
-vi.mock("next-intl/server", () => ({
-  getTranslations: vi.fn(async () => (key: string) => key),
-}))
 const patchHome = vi.fn()
 const patchPreferences = vi.fn()
+const acceptInvite = vi.fn()
+vi.mock("next/cache", () => ({ refresh: vi.fn() }))
+vi.mock("next-intl/server", () => ({
+  getLocale: async () => "vi",
+  getTranslations: vi.fn(async () => (key: string) => key),
+}))
+const redirect = vi.fn()
+vi.mock("@/i18n/navigation", () => ({
+  redirect: (a: unknown) => redirect(a),
+}))
 vi.mock("../server", () => ({
   patchHome: (...a: unknown[]) => patchHome(...a),
   patchPreferences: (...a: unknown[]) => patchPreferences(...a),
+  acceptInvite: (...a: unknown[]) => acceptInvite(...a),
 }))
 
-const { saveHomeSettingsAction } = await import("../actions")
+const { acceptInviteAction, saveHomeSettingsAction } =
+  await import("../actions")
 
 describe("saveHomeSettingsAction", () => {
   beforeEach(() => {
@@ -76,5 +85,29 @@ describe("saveHomeSettingsAction", () => {
     })
     patchHome.mockRejectedValueOnce(new ApiError(503, "down"))
     await expect(saveHomeSettingsAction({ name: "x" })).rejects.toThrow("down")
+  })
+})
+
+describe("acceptInviteAction", () => {
+  beforeEach(() => {
+    acceptInvite.mockReset()
+    redirect.mockReset()
+  })
+
+  it("joins with the trimmed code and opens the dashboard", async () => {
+    await acceptInviteAction("  abcdefgh23 ")
+    expect(acceptInvite).toHaveBeenCalledWith("token", "abcdefgh23")
+    expect(redirect).toHaveBeenCalledWith({ href: "/dashboard", locale: "vi" })
+  })
+
+  it("says why a code did not work, and never sends an empty one", async () => {
+    expect(await acceptInviteAction("  ")).toEqual({ error: "invite_invalid" })
+    expect(acceptInvite).not.toHaveBeenCalled()
+    acceptInvite.mockRejectedValueOnce(
+      new ApiError(409, "no", { code: "already_has_home" })
+    )
+    expect(await acceptInviteAction("X")).toEqual({
+      error: "already_has_home",
+    })
   })
 })

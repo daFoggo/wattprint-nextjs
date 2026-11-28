@@ -32,7 +32,9 @@ export function DeviceList({
   const t = useTranslations("energy")
   const locale = useLocale()
   const router = useRouter()
-  const columns: DataTableColumn<Device>[] = [
+  // By day only: no state and no power now, so no columns for them.
+  const byDay = devices.some((d) => d.on === null)
+  const all: DataTableColumn<Device>[] = [
     {
       key: "name",
       header: t("deviceList.colDevice"),
@@ -89,7 +91,9 @@ export function DeviceList({
       align: "right",
       sortable: true,
       card: "hidden",
-      cell: (d) => <NumberRoll value={d.watts} suffix=" W" locales={locale} />,
+      cell: (d) => (
+        <NumberRoll value={d.watts ?? 0} suffix=" W" locales={locale} />
+      ),
     },
     {
       key: "today_kwh",
@@ -120,6 +124,9 @@ export function DeviceList({
       ),
     },
   ]
+  const columns = all.filter(
+    (c) => !(byDay && (c.key === "on" || c.key === "watts"))
+  )
   return (
     <DataTable
       className={className}

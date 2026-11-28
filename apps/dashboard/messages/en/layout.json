@@ -62,5 +62,9 @@
   "alerts": {
     "title": "Alerts",
     "description": "What WattPrint told you and what it watches for your home."
+  },
+  "byDay": {
+    "hidden": "The owner lets you see by the day, so the by-the-hour parts are hidden.",
+    "charts": "The owner lets you see by the day, so charts drawn from moment-by-moment readings are hidden."
   }
 }

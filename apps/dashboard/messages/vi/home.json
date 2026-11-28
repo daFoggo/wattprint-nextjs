@@ -30,5 +30,18 @@
     "summaryHint": "Mỗi tuần một email tóm tắt điện năng và tiền điện.",
     "locationSaved": "Đã lưu vị trí.",
     "cycleDayInvalid": "Nhập một ngày từ 1 đến 28."
+  },
+  "join": {
+    "label": "Mã mời",
+    "hint": "Người thân là chủ nhà đưa mã này cho bạn.",
+    "submit": "Vào nhà",
+    "errors": {
+      "invite_invalid": "Mã sai, đã dùng hoặc quá hạn.",
+      "already_has_home": "Tài khoản này đã ở trong một nhà.",
+      "guest_cannot_join": "Tài khoản khách chỉ tạm thời. Đăng nhập bằng tài khoản của bạn rồi nhập mã.",
+      "invite_rate_limited": "Thử quá nhiều lần. Chờ 15 phút rồi thử lại.",
+      "demo_home_read_only": "Nhà demo không nhận thêm người.",
+      "other": "Chưa vào được nhà. Thử lại sau ít phút."
+    }
   }
 }

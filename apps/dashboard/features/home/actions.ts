@@ -1,7 +1,11 @@
 "use server"
 
-import { getTranslations } from "next-intl/server"
+import { refresh } from "next/cache"
+import { getLocale, getTranslations } from "next-intl/server"
+import { z } from "zod"
 
+import { DASHBOARD_PATH } from "@/config/routes"
+import { redirect } from "@/i18n/navigation"
 import { requirePermission } from "@/lib/dal"
 import { isExpectedDataError } from "@/lib/errors"
 
@@ -10,7 +14,7 @@ import {
   PreferencesPatchSchema,
   type SaveResult,
 } from "./schemas"
-import { patchHome, patchPreferences } from "./server"
+import { acceptInvite, patchHome, patchPreferences } from "./server"
 
 type Patch = Record<string, string | boolean | null>
 
@@ -51,4 +55,31 @@ export async function saveHomeSettingsAction(
     }
   }
   return { ok: true }
+}
+
+const JOIN_REFUSALS = [
+  "invite_invalid",
+  "already_has_home",
+  "guest_cannot_join",
+  "invite_rate_limited",
+  "demo_home_read_only",
+] as const
+
+/** Joins a home with its invite code, then opens the dashboard on it; a refusal comes back as words. */
+export async function acceptInviteAction(
+  code: string
+): Promise<{ error: string } | void> {
+  const { accessToken } = await requirePermission("account:view")
+  const t = await getTranslations("home.join.errors")
+  const valid = z.string().trim().min(1).max(32).safeParse(code)
+  if (!valid.success) return { error: t("invite_invalid") }
+  try {
+    await acceptInvite(accessToken, valid.data)
+  } catch (error) {
+    if (!isExpectedDataError(error)) throw error
+    const refused = (error.body as { code?: string } | undefined)?.code
+    return { error: t(JOIN_REFUSALS.find((c) => c === refused) ?? "other") }
+  }
+  refresh() // the layouts too: the sidebar shows the new home
+  redirect({ href: DASHBOARD_PATH, locale: await getLocale() })
 }

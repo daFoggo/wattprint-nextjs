@@ -27,7 +27,31 @@ describe("alertValues", () => {
   })
 
   it("formats a run's start as a time of day", () => {
-    const values = alertValues({ start: "2026-11-22T09:47:00Z" }, "Microwave", () => "16:47")
+    const values = alertValues(
+      { start: "2026-11-22T09:47:00Z" },
+      "Microwave",
+      () => "16:47"
+    )
     expect(values).toMatchObject({ start: "16:47", device: "Microwave" })
+  })
+
+  it("has words without a clock time for a member who sees days only", () => {
+    const t = createTranslator({ locale: "vi", messages: { insight: vi } })
+    const values = alertValues(
+      { value: 40, usual: 20, excess_vnd: 1000 },
+      "Ấm",
+      (s) => s
+    )
+    for (const key of [
+      "device_on.title",
+      "device_off.title",
+      "usage_anomaly.body",
+      "device_anomaly.long_run.body",
+      "device_anomaly.odd_hour.body",
+    ] as const) {
+      const words = t(`insight.alerts.${key}`, values)
+      expect(words).not.toContain("insight.")
+      expect(words).not.toContain("{")
+    }
   })
 })

@@ -16,7 +16,7 @@
     "forever": "Không tự xóa",
     "oldest": "Cũ nhất từ {date}",
     "none": "Chưa có số liệu",
-    "erased": "Số liệu trước ngày {date} đã được xóa."
+    "erased": "Đã xóa số liệu cũ tới mốc ngày {date}. Nếu lúc đó bạn chọn xóa tất cả thì phần đã ghi trong ngày ấy cũng mất."
   },
   "outside": {
     "title": "Gửi ra ngoài",
@@ -29,8 +29,9 @@
     },
     "email": {
       "name": "Email",
-      "what": "Địa chỉ email của bạn, cảnh báo và tóm tắt tuần. Tóm tắt tuần còn phải bật trong Cài đặt.",
-      "to": "Máy chủ gửi email."
+      "what": "Địa chỉ email của bạn, cảnh báo và tóm tắt tuần. Cảnh báo còn phải bật trong trang Cảnh báo (mặc định tắt), tóm tắt tuần bật trong Cài đặt.",
+      "to": "Máy chủ gửi email.",
+      "where": "Máy chủ gửi thư chuyển thư tới hộp thư của bạn. WattPrint chưa xác nhận máy chủ đó đặt ở đâu."
     },
     "level": "Wappi xem tới mức",
     "hourly": "Theo giờ",
@@ -64,11 +65,14 @@
     "datePlaceholder": "ngày/tháng/năm",
     "questionAll": "Xóa toàn bộ lịch sử điện?",
     "questionBefore": "Xóa lịch sử điện trước ngày {date}?",
-    "readings": "Số đo điện, số liệu từng thiết bị và cảnh báo trong khoảng này bị xóa.",
+    "readings": "Số đo điện, số liệu từng thiết bị, cảnh báo, dự báo và gợi ý trong khoảng này bị xóa.",
     "bills": "Hóa đơn của kỳ nằm trọn trong khoảng này bị xóa. Kỳ bị cắt ngang sẽ ghi là thiếu số liệu.",
     "stays": "Danh sách thiết bị và khả năng nhận ra thiết bị vẫn giữ.",
-    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được.",
-    "cannot": "Chỉ chủ nhà xóa được. Nhà demo không xóa được."
+    "sent": "Bản đã gửi cho dịch vụ bên ngoài không xóa được từ đây; mỗi nơi giữ theo quy định riêng của họ.",
+    "cannot": "Chỉ chủ nhà xóa được. Nhà demo không xóa được.",
+    "plans": "Kế hoạch tiết kiệm vẫn giữ, nhưng mất số liệu của các ngày bị xóa.",
+    "openrouter": "Chính sách của OpenRouter (tiếng Anh)",
+    "dateInvalid": "Chưa đọc được ngày này. Nhập ngày/tháng/năm, không sau hôm nay."
   },
   "chats": {
     "title": "Trò chuyện của tôi",
@@ -97,5 +101,32 @@
     "demo": "Nhà demo không xóa hay đổi được.",
     "owner": "Chỉ chủ nhà làm được việc này.",
     "other": "Chưa làm được. Thử lại sau ít phút."
+  },
+  "members": {
+    "title": "Ai xem được",
+    "description": "Những người trong nhà và mức họ xem được.",
+    "invite": "Mời người thân",
+    "code": "Mã mời",
+    "codeHint": "Chỉ hiện một lần. Dùng được cho một người, trong 7 ngày. Người đó đăng nhập rồi nhập mã.",
+    "copy": "Chép mã",
+    "copied": "Đã chép",
+    "copyFailed": "Chưa chép được",
+    "unnamed": "Chưa đặt tên",
+    "owner": "Chủ nhà",
+    "member": "Người thân",
+    "level": "{name} xem được",
+    "full": "Đầy đủ",
+    "daily": "Theo ngày",
+    "remove": "Gỡ {name}",
+    "removeConfirm": "Gỡ",
+    "removing": "Đang gỡ",
+    "removed": "Đã gỡ",
+    "removeLoses": "Gỡ một người sẽ xóa trò chuyện, cảnh báo và kế hoạch của họ ở nhà này.",
+    "leave": "Rời nhà",
+    "leaveLoses": "Trò chuyện, cảnh báo và kế hoạch của bạn ở nhà này sẽ bị xóa.",
+    "leaveConfirm": "Rời nhà",
+    "leaving": "Đang rời",
+    "left": "Đã rời",
+    "visitor": "Bạn đang xem nhà demo. Có mã mời thì nhập để vào nhà của người thân."
   }
 }

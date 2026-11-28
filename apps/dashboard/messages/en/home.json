@@ -30,5 +30,18 @@
     "summaryHint": "One email a week summing up your energy and bill.",
     "locationSaved": "Location saved.",
     "cycleDayInvalid": "Enter a day from 1 to 28."
+  },
+  "join": {
+    "label": "Invite code",
+    "hint": "The home owner gives you this code.",
+    "submit": "Join",
+    "errors": {
+      "invite_invalid": "The code is wrong, used or out of date.",
+      "already_has_home": "This account already belongs to a home.",
+      "guest_cannot_join": "A guest account is temporary. Sign in with your own, then enter the code.",
+      "invite_rate_limited": "Too many tries. Wait 15 minutes.",
+      "demo_home_read_only": "A demo home takes no members.",
+      "other": "Could not join. Try again in a few minutes."
+    }
   }
 }

@@ -207,7 +207,7 @@
       "description": "To answer, Wappi asks an outside AI service. Here is what gets sent.",
       "what": "Your question, the open conversation and the figures about your home's electricity needed to answer, at your home's level of detail (daily or hourly).",
       "to": "OpenRouter, a service that passes the question to an AI model. When OpenRouter is down, the provider AstralX answers instead.",
-      "where": "OpenRouter is outside Vietnam; AstralX processes it on its own servers.",
+      "where": "OpenRouter is outside Vietnam. Where AstralX processes it, and whether it passes it on to anyone else, is not yet confirmed.",
       "note": "WattPrint asks OpenRouter to use only processors that keep nothing and do not train on the data. This request cannot yet be made to AstralX.",
       "who": "The WattPrint team.",
       "off": "In Settings. Once off, Wappi stops answering until you agree again."
@@ -217,7 +217,7 @@
       "description": "Your voice is sent to an outside service to turn it into text and read answers aloud.",
       "what": "A recording of your voice, and the text of the answer to be read aloud. What you said, once turned into text and sent to Wappi, is handled like a typed question.",
       "to": "The provider AstralX: speech to text, and reading answers aloud.",
-      "where": "On the provider AstralX's servers.",
+      "where": "At the provider AstralX. Where they process it, and whether they pass it on to anyone else, is not yet confirmed.",
       "note": "Personal details cannot be hidden in a recording: whatever you say, such as a phone number or address, is sent as it is.",
       "who": "The WattPrint team.",
       "off": "In Settings. Once off, the microphone and voice mode stop working."

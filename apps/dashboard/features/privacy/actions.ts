@@ -7,13 +7,21 @@ import { z } from "zod"
 import { requirePermission } from "@/lib/dal"
 import { isExpectedDataError } from "@/lib/errors"
 
-import { AiHomeSchema, type AiDetail } from "./schemas"
-import { deleteHistory, patchAiDetail } from "./server"
+import { AiHomeSchema, type AiDetail, type Member } from "./schemas"
+import {
+  createInvite,
+  deleteHistory,
+  deleteMember,
+  deleteMembership,
+  patchAiDetail,
+  patchMember,
+} from "./server"
 
-type Result = { ok: true } | { ok: false; error: string }
+type Refused = { ok: false; error: string }
+type Result = { ok: true } | Refused
 
 /** The backend's refusal as words to show; anything unexpected throws. */
-async function refusal(error: unknown): Promise<Result> {
+async function refusal(error: unknown): Promise<Refused> {
   if (!isExpectedDataError(error)) throw error
   const t = await getTranslations("privacy.refused")
   const code = (error.body as { code?: string } | undefined)?.code
@@ -56,4 +64,47 @@ export async function eraseHistoryAction(
   }
   refresh()
   return { ok: true }
+}
+
+/** A one-time code to invite someone (owner only). */
+export async function inviteAction(): Promise<
+  { ok: true; code: string } | Refused
+> {
+  const { accessToken } = await requirePermission("account:view")
+  try {
+    const { code } = await createInvite(accessToken)
+    return { ok: true, code }
+  } catch (error) {
+    return refusal(error)
+  }
+}
+
+/** Runs one change to the household, then re-reads the page. */
+async function change(run: (token: string) => Promise<void>): Promise<Result> {
+  const { accessToken } = await requirePermission("account:view")
+  try {
+    await run(accessToken)
+  } catch (error) {
+    return refusal(error)
+  }
+  refresh()
+  return { ok: true }
+}
+
+export async function setMemberDetailAction(
+  userId: string,
+  detail: Member["detail"]
+) {
+  const id = z.uuid().parse(userId)
+  const valid = z.enum(["full", "daily"]).parse(detail)
+  return change((token) => patchMember(token, id, valid))
+}
+
+export async function removeMemberAction(userId: string) {
+  const id = z.uuid().parse(userId)
+  return change((token) => deleteMember(token, id))
+}
+
+export async function leaveHomeAction() {
+  return change(deleteMembership)
 }
