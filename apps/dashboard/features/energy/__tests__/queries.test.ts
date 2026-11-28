@@ -37,13 +37,17 @@ const fetchDevices = vi.fn(async () => [device])
 const refuse = () => {
   throw new ApiError(403, "no", { code: "detail_restricted" })
 }
+const fetchSeries = vi.fn(async (): Promise<unknown[]> => refuse())
+const fetchExpected = vi.fn(async (): Promise<unknown[]> => refuse())
+let detail = "daily"
 vi.mock("../server", () => ({
   fetchOverview: async () => ({
     live: null,
     today: { kwh: 3, typical_kwh: null },
   }),
-  fetchSeries: async () => refuse(),
-  fetchExpected: async () => refuse(),
+  fetchDetail: async () => detail,
+  fetchSeries: () => fetchSeries(),
+  fetchExpected: () => fetchExpected(),
   fetchActivity: async () => refuse(),
   fetchDevices: () => fetchDevices(),
   fetchDevice: async () => device,
@@ -62,11 +66,29 @@ describe("getDevice", () => {
 })
 
 describe("a member who sees days only", () => {
-  it("gets today from the overview and no by-the-moment figures", async () => {
+  it("gets the days of the series and no by-the-moment figures", async () => {
+    // The backend answers a daily member's series with day buckets.
+    fetchSeries.mockResolvedValueOnce([
+      { ts: new Date().toISOString(), avg_w: 1, min_w: 90, energy_wh: 3000 },
+    ])
     const data = await getDashboard()
     expect(data?.byDay).toBe(true)
     expect(data?.days.map((d) => d.value)).toEqual([3])
+    expect(data?.baseline).toEqual([])
     expect(await getPower()).toBeNull()
     expect(await getActivity()).toEqual([])
+  })
+})
+
+describe("minute detail no longer kept", () => {
+  const point = { ts: "2026-01-01T00:00:00Z", avg_w: 1, min_w: 1, energy_wh: 1 }
+
+  it.each([true, false])("flags the day range: %s", async (coarsened) => {
+    vi.resetModules() // a new request: React.cache starts empty
+    detail = "full"
+    fetchExpected.mockResolvedValue([])
+    fetchSeries.mockResolvedValue([{ ...point, coarsened }])
+    const next = await import("../queries")
+    expect((await next.getPower())?.coarsened).toBe(coarsened)
   })
 })

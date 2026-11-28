@@ -64,7 +64,6 @@
     "description": "Những gì WattPrint đã báo và đang theo dõi cho nhà bạn."
   },
   "byDay": {
-    "hidden": "Chủ nhà cho bạn xem theo ngày, nên phần theo giờ không hiện.",
-    "charts": "Chủ nhà cho bạn xem theo ngày, nên các biểu đồ lấy từ số đo từng lúc không hiện."
+    "hidden": "Chủ nhà cho bạn xem theo ngày, nên phần theo giờ không hiện."
   }
 }

@@ -122,11 +122,13 @@
     "removing": "Removing",
     "removed": "Removed",
     "removeLoses": "Removing someone deletes their chats, alerts and plans in this home.",
+    "toDaily": "Switching someone to \"By day\" deletes their moment-by-moment and custom alerts.",
     "leave": "Leave the home",
     "leaveLoses": "Your chats, alerts and plans in this home will be deleted.",
     "leaveConfirm": "Leave",
     "leaving": "Leaving",
     "left": "Left",
+    "retry": "Try again",
     "visitor": "You are viewing a demo home. With an invite code you can join your family's home."
   }
 }

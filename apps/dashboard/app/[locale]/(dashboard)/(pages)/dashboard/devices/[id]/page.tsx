@@ -253,9 +253,7 @@ async function Watches({
     isDemoViewer(),
   ])
   // The unknown remainder is always on: no runs to tell about. A demo home is read-only: no alerts to set.
-  // Every alert here is about the moment: none to set by day only.
   if (!device || !watches || device.type === "other" || viewer) return null
-  if (device.on === null) return null
   return (
     <Tile
       title={t("tileTitle")}
@@ -269,6 +267,7 @@ async function Watches({
         watches={watches}
         save={saveWatchAction}
         setEvent={setDeviceEventAction}
+        byDay={device.on === null}
       />
     </Tile>
   )

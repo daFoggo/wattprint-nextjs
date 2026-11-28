@@ -14,6 +14,7 @@ import { DAY, dateStart, localDate, localMidnight } from "./days"
 import { todaySoFar, usualWatts } from "./expected"
 import {
   fetchActivity,
+  fetchDetail,
   fetchDevice,
   fetchDevices,
   fetchExpected,
@@ -26,7 +27,7 @@ const isNoHome = (error: unknown) =>
   error.status === 404 &&
   (error.body as { code?: string } | undefined)?.code === "home_not_found"
 
-/** The owner lets this account see days only (R4.3): the finer routes refuse, and the pages leave their blocks out. */
+/** What a finer route answers an account that sees days only (R4.3). */
 const isByDay = (error: unknown) =>
   error instanceof ApiError &&
   error.status === 403 &&
@@ -40,7 +41,8 @@ const unlessByDay = <T>(read: Promise<T>) =>
   })
 
 /**
- * The newest reading and today so far, fresh on every request (docs/data-fetching.md §3: no directive,
+ * The newest reading, today so far and whether this account sees days only (R4.3: the pages leave their finer blocks
+ * out), fresh on every request (docs/data-fetching.md §3: no directive,
  * inside <Suspense>), deduped per request by React.cache. Not "use cache: private": its session
  * check joined the page's own session read from inside the cache scope and hung until the
  * use-cache timeout.
@@ -49,11 +51,21 @@ const unlessByDay = <T>(read: Promise<T>) =>
 const getOverview = cache(async () => {
   const { accessToken } = await requirePermission("account:view")
   await io() // the session read above is cached: read the clock at request time
-  const overview = await fetchOverview(accessToken).catch((error: unknown) => {
+  const read = await Promise.all([
+    fetchOverview(accessToken),
+    fetchDetail(accessToken),
+  ]).catch((error: unknown) => {
     if (isNoHome(error)) return null
     throw error
   })
-  return overview && { ...overview, now: Date.now(), accessToken }
+  if (!read) return null
+  const [overview, detail] = read
+  return {
+    ...overview,
+    byDay: detail === "daily",
+    now: Date.now(),
+    accessToken,
+  }
 })
 
 /** The newest reading's time, today against its usual, and per local day (90 days) the energy and the lowest draw. */
@@ -63,28 +75,31 @@ export const getDashboard = cache(async () => {
   const { now, accessToken } = overview
   const today = localMidnight(now)
   // 90 days is the backend's longest window; 1 point per day.
-  const series = await unlessByDay(
-    fetchSeries(accessToken, new Date(today - 89 * DAY), new Date(now), 90)
+  const daily = await fetchSeries(
+    accessToken,
+    new Date(today - 89 * DAY),
+    new Date(now),
+    90
   )
-  const daily = series ?? []
   // The backend leaves out days without readings. Gaps after the first reading are days at
   // 0 kWh; days before it are not part of this home's history (a new home has only a few).
   const kwh = new Map(
     daily.map((p) => [localDate(Date.parse(p.ts)), p.energy_wh / 1000])
   )
-  // The lowest draw each day: what the home uses with nothing switched on. A 0 is a gap in the readings.
-  const baseline = daily
-    .filter((p) => p.min_w > 0)
-    .map((p) => ({ date: localDate(Date.parse(p.ts)), watts: p.min_w }))
+  // The lowest draw each day: what the home uses with nothing switched on. A 0 is a gap in the readings. It is the
+  // draw of a moment, so none by day only.
+  const baseline = overview.byDay
+    ? []
+    : daily
+        .filter((p) => p.min_w > 0)
+        .map((p) => ({ date: localDate(Date.parse(p.ts)), watts: p.min_w }))
   const first = daily[0] ? localMidnight(Date.parse(daily[0].ts)) : today
-  // By day only there is no series: today's total is all there is, not a history of zeros.
-  if (!series) kwh.set(localDate(today), overview.today?.kwh ?? 0)
   const days = Array.from(
     { length: Math.round((today - first) / DAY) + 1 },
     (_, i) => localDate(first + i * DAY)
   ).map((date) => ({ date, value: kwh.get(date) ?? 0 }))
   return {
-    byDay: !series,
+    byDay: overview.byDay,
     latest: overview.live?.ts ?? null,
     live: overview.live?.watts ?? null,
     now,
@@ -103,10 +118,10 @@ export type PowerRange = keyof typeof RANGES
  */
 export const getPower = cache(async () => {
   const overview = await getOverview()
-  if (!overview) return null
+  if (!overview || overview.byDay) return null // the draw over time is finer than a day
   const { now, accessToken } = overview
   const points = { day: 96, week: 168, month: 120, quarter: 90 }
-  const reads = Promise.all(
+  const entries = await Promise.all(
     (Object.keys(RANGES) as PowerRange[]).map(async (range) => {
       const series = await fetchSeries(
         accessToken,
@@ -117,11 +132,13 @@ export const getPower = cache(async () => {
       return [
         range,
         series.map((p) => ({ ts: Date.parse(p.ts), watts: p.avg_w })),
+        series.some((p) => p.coarsened),
       ] as const
     })
   )
-  const entries = await unlessByDay(reads)
-  if (!entries) return null
+  // shortcut: only the day range is asked in minutes; the longer ones start inside what hours keep (400 days
+  // against a 90 day window). Flag them too, with their own words, if a window ever reaches past that.
+  const coarsened = entries.some(([range, , lost]) => range === "day" && lost)
   const ranges = Object.fromEntries(entries) as Record<
     PowerRange,
     { ts: number; watts: number }[]
@@ -136,7 +153,7 @@ export const getPower = cache(async () => {
     ranges.day.map((p) => p.ts),
     hours
   )
-  return { now, ranges, usual: day ? { day } : {} }
+  return { now, ranges, usual: day ? { day } : {}, coarsened }
 })
 
 /** Today's measured kWh against what the home's model expected for those hours; null without a model or a home. */

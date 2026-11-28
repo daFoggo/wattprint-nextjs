@@ -18,6 +18,13 @@ export async function fetchOverview(token: string) {
   return OverviewSchema.parse(await apiFetch("/energy/overview", { token }))
 }
 
+/** How finely the owner lets this account see the home (R4.3). */
+export async function fetchDetail(token: string) {
+  return z
+    .object({ detail: z.enum(["full", "daily"]) })
+    .parse(await apiFetch("/homes/current", { token })).detail
+}
+
 export async function fetchSeries(
   token: string,
   since: Date,

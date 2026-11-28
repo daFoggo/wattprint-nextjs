@@ -75,7 +75,8 @@
     "title": "Whole-home power over time",
     "deviceDescription": "Estimated draw in 5-minute steps",
     "usual": "Usual",
-    "description": "How much power the home draws (W) moment to moment, against usual."
+    "description": "How much power the home draws (W) moment to moment, against usual.",
+    "coarsened": "Minute-by-minute detail is kept for 90 days only."
   },
   "deviceStats": {
     "avgOn": "Average when on",

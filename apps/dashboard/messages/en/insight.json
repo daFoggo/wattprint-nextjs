@@ -67,7 +67,7 @@
       },
       "long_run": {
         "title": "{device} ran unusually long",
-        "body": "{timed, select, false {One run lasted {value, number} minutes, usually about {usual, number} (≈ {excess_vnd, number} đ more). Check that it is not cycling again and again.} other {The run at {at} lasted {value, number} min, usually about {usual, number} min at this time and temperature (≈ {excess_vnd, number} ₫ more). Check it is not repeating.}}"
+        "body": "{timed, select, false {One run lasted {value, number} minutes, usually about {usual, number} (≈ {excess_vnd, number} ₫ more). Check that it is not cycling again and again.} other {The run at {at} lasted {value, number} min, usually about {usual, number} min at this time and temperature (≈ {excess_vnd, number} ₫ more). Check it is not repeating.}}"
       },
       "odd_hour": {
         "title": "{device} ran at an unusual hour",

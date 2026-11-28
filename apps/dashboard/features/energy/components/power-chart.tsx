@@ -27,6 +27,7 @@ export function PowerChart({
   ranges,
   usual,
   now,
+  coarsened = false,
   className,
 }: {
   title: string
@@ -36,6 +37,8 @@ export function PowerChart({
   usual?: Partial<Record<Range, number[]>>
   /** When the data was read: the step it falls in is still running and drawn dashed. */
   now: number
+  /** The day range came back coarser than minutes: they are no longer kept. */
+  coarsened?: boolean
   className?: string
 }) {
   const t = useTranslations("energy.power")
@@ -75,6 +78,9 @@ export function PowerChart({
             now={now}
             locale={locale}
           />
+          {coarsened && range === "day" ? (
+            <p className="text-xs text-muted-foreground">{t("coarsened")}</p>
+          ) : null}
           <ChartKey
             items={[
               { label: k("now") },

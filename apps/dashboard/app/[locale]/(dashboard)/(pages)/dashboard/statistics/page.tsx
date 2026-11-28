@@ -55,6 +55,7 @@ async function Power({ className }: Props) {
       ranges={power.ranges}
       usual={power.usual}
       now={power.now}
+      coarsened={power.coarsened}
       className={className}
     />
   )
@@ -116,7 +117,14 @@ async function Rooms({ className }: Props) {
 
 async function Days({ className }: Props) {
   const data = await getDashboard()
-  return data ? <DailyTrend days={data.days} className={className} /> : null
+  if (!data) return null
+  // By day only there is no background load beside it: it takes the row.
+  return (
+    <DailyTrend
+      days={data.days}
+      className={data.byDay ? "lg:col-span-12" : className}
+    />
+  )
 }
 
 async function Weeks({ className }: Props) {
@@ -153,7 +161,7 @@ async function Peers({ className }: Props) {
 
 async function Background({ className }: Props) {
   const [data, bill] = await Promise.all([getDashboard(), getCurrentBill()])
-  if (!data) return null
+  if (!data || data.byDay) return null
   return (
     <Standby
       baseline={data.baseline}
@@ -233,10 +241,10 @@ function Group({
   )
 }
 
-/** The group drawn from the meter's series; by day only there is none, and one line says why. */
-async function Meter({ children }: { children: React.ReactNode }) {
+/** One line saying why blocks are missing for a member who sees days only. `Groups` has awaited the same read. */
+async function ByDay() {
   const data = await getDashboard()
-  return data?.byDay ? <ByDayNote what="charts" /> : children
+  return data?.byDay ? <ByDayNote /> : null
 }
 
 /** Without a home there is nothing to group: one empty state, not headings over empty rows. */
@@ -274,24 +282,21 @@ export default function StatisticsPage() {
               <Power className={TILE.power} />
             </Suspense>
           </Group>
-          <Suspense fallback={null}>
-            <Meter>
-              <Group>
-                <Suspense fallback={<Skeleton tile="weeks" />}>
-                  <Weeks className={TILE.weeks} />
-                </Suspense>
-                <Suspense fallback={<Skeleton tile="cycle" />}>
-                  <Cycle className={TILE.cycle} />
-                </Suspense>
-                <Suspense fallback={<Skeleton tile="days" />}>
-                  <Days className={TILE.days} />
-                </Suspense>
-                <Suspense fallback={<Skeleton tile="standby" />}>
-                  <Background className={TILE.standby} />
-                </Suspense>
-              </Group>
-            </Meter>
-          </Suspense>
+          <Group>
+            <Suspense fallback={<Skeleton tile="weeks" />}>
+              <Weeks className={TILE.weeks} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="cycle" />}>
+              <Cycle className={TILE.cycle} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="days" />}>
+              <Days className={TILE.days} />
+            </Suspense>
+            <Suspense fallback={<Skeleton tile="standby" />}>
+              <Background className={TILE.standby} />
+            </Suspense>
+          </Group>
+          <ByDay />
           <Suspense fallback={<TileSkeleton height={140} />}>
             <Peers className={TILE.peers} />
           </Suspense>

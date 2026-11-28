@@ -122,11 +122,13 @@
     "removing": "Đang gỡ",
     "removed": "Đã gỡ",
     "removeLoses": "Gỡ một người sẽ xóa trò chuyện, cảnh báo và kế hoạch của họ ở nhà này.",
+    "toDaily": "Chuyển một người sang \"Theo ngày\" sẽ xóa các cảnh báo theo từng lúc và cảnh báo tùy chỉnh của người đó.",
     "leave": "Rời nhà",
     "leaveLoses": "Trò chuyện, cảnh báo và kế hoạch của bạn ở nhà này sẽ bị xóa.",
     "leaveConfirm": "Rời nhà",
     "leaving": "Đang rời",
     "left": "Đã rời",
+    "retry": "Thử lại",
     "visitor": "Bạn đang xem nhà demo. Có mã mời thì nhập để vào nhà của người thân."
   }
 }

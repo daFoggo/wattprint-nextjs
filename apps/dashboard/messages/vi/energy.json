@@ -75,7 +75,8 @@
     "title": "Công suất cả nhà theo thời gian",
     "deviceDescription": "Công suất ước tính theo bước 5 phút",
     "usual": "Thường lệ",
-    "description": "Mức điện cả nhà đang dùng (W) từng lúc, so với thường lệ."
+    "description": "Mức điện cả nhà đang dùng (W) từng lúc, so với thường lệ.",
+    "coarsened": "Chi tiết theo phút chỉ giữ 90 ngày."
   },
   "deviceStats": {
     "avgOn": "Trung bình khi bật",

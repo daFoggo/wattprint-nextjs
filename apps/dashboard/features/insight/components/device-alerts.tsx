@@ -79,6 +79,7 @@ export function DeviceAlertTile({
   watches,
   save,
   setEvent,
+  byDay = false,
 }: {
   device: Device
   days: Day[]
@@ -86,10 +87,14 @@ export function DeviceAlertTile({
   watches: Watch[]
   save: (input: unknown) => Promise<SaveResult>
   setEvent: SetEvent
+  /** A member who sees days only: the day's cost is the one alert not about the moment. */
+  byDay?: boolean
 }) {
   const t = useTranslations("insight.devices")
   const locale = useLocale()
-  const [level, setLevel] = useState<Level>("device_run_min")
+  const [level, setLevel] = useState<Level>(
+    byDay ? "device_kwh_today" : "device_run_min"
+  )
   const [values, setValues] = useState<Partial<Record<Level, number>>>({})
   const [pending, startSaving] = useTransition()
   const whole = days.slice(0, -1)
@@ -145,14 +150,22 @@ export function DeviceAlertTile({
 
   return (
     <div className="flex flex-col gap-5">
-      <EventSwitches device={device} watches={watches} setEvent={setEvent} />
-      <SegmentedControl
-        label={t("level")}
-        options={LEVELS.map((l) => ({ value: l, label: t(`${l}.name`) }))}
-        value={level}
-        onValueChange={(v) => setLevel(v as Level)}
-        size="sm"
-      />
+      {byDay ? null : (
+        <>
+          <EventSwitches
+            device={device}
+            watches={watches}
+            setEvent={setEvent}
+          />
+          <SegmentedControl
+            label={t("level")}
+            options={LEVELS.map((l) => ({ value: l, label: t(`${l}.name`) }))}
+            value={level}
+            onValueChange={(v) => setLevel(v as Level)}
+            size="sm"
+          />
+        </>
+      )}
       {data.length >= 2 ? (
         <ThresholdLine
           key={level}

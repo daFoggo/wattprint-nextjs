@@ -18,6 +18,8 @@ export const SeriesPointSchema = z.object({
   avg_w: z.number(),
   min_w: z.number(),
   energy_wh: z.number(),
+  /** Coarser than asked: the finer level is no longer kept. */
+  coarsened: z.boolean().default(false),
 })
 
 // Devices are what NILM finds (tb_device + cat_device_type); their runs come from its estimates.

@@ -147,6 +147,7 @@ export function Members({
                         idle: t("removeConfirm"),
                         pending: t("removing"),
                         success: t("removed"),
+                        error: t("retry"),
                       }}
                       tone="danger"
                       onConfirm={() =>
@@ -167,7 +168,9 @@ export function Members({
         <p className="text-sm">{t("visitor")}</p>
       )}
       {owner && members?.some((m) => m.role === "member") ? (
-        <p className="text-xs text-muted-foreground">{t("removeLoses")}</p>
+        <p className="text-xs text-muted-foreground">
+          {t("removeLoses")} {t("toDaily")}
+        </p>
       ) : null}
       {role === "member" ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -182,6 +185,7 @@ export function Members({
               idle: t("leaveConfirm"),
               pending: t("leaving"),
               success: t("left"),
+              error: t("retry"),
             }}
             tone="danger"
             onConfirm={() => confirm(leaveHomeAction)}
