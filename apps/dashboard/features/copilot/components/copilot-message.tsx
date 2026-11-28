@@ -9,6 +9,7 @@ import { Link } from "@/i18n/navigation"
 import { Alert } from "@workspace/ui/components/hairline/alert"
 import { Badge } from "@workspace/ui/components/hairline/badge"
 import { Button } from "@workspace/ui/components/hairline/button"
+import { Checkbox } from "@workspace/ui/components/hairline/checkbox"
 import { CodeBlock } from "@workspace/ui/components/hairline/code-block"
 import {
   AnswerActions,
@@ -26,10 +27,14 @@ import { citedSegments, plainText } from "../text"
 import type { AssistantMessage } from "../threads"
 import { speechUrl } from "../voice"
 import { useCopilot } from "./copilot-provider"
+import { SentOutside } from "./sent-outside"
 import { WappiAvatar } from "./wappi-avatar"
 import { CopilotWidget } from "./widgets"
 
-const TIER_TONE: Record<DataTier, "success" | "neutral" | "primary" | "warning"> = {
+const TIER_TONE: Record<
+  DataTier,
+  "success" | "neutral" | "primary" | "warning"
+> = {
   measured: "success",
   document: "neutral",
   estimated: "primary",
@@ -37,6 +42,7 @@ const TIER_TONE: Record<DataTier, "success" | "neutral" | "primary" | "warning">
 }
 
 const ERRORS = [
+  "consent_required",
   "copilot_unavailable",
   "copilot_rate_limited",
   "conversation_not_found",
@@ -59,6 +65,7 @@ export function UserMessage({ text }: { text: string }) {
 function SpeakButton({ messageId }: { messageId: string }) {
   const t = useTranslations("copilot.message")
   const locale = useLocale()
+  const { consents, askConsent } = useCopilot()
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle")
   const audio = useRef<HTMLAudioElement>(null)
   const release = () => {
@@ -92,7 +99,10 @@ function SpeakButton({ messageId }: { messageId: string }) {
         size="icon"
         aria-label={label}
         aria-pressed={busy}
-        onClick={busy ? stop : play}
+        // Reading aloud sends the answer's text to the voice provider: the voice yes comes first.
+        onClick={() =>
+          busy ? stop() : consents?.voice ? play() : askConsent("voice", play)
+        }
       >
         {busy ? (
           <IconPlayerStopFilled aria-hidden className="size-4" />
@@ -101,6 +111,31 @@ function SpeakButton({ messageId }: { messageId: string }) {
         )}
       </Button>
     </Tooltip>
+  )
+}
+
+/** After a thumbs-down: the rating goes alone unless the box is ticked. */
+function ShareChoice({
+  onSend,
+  onCancel,
+}: {
+  onSend: (share: boolean) => void
+  onCancel: () => void
+}) {
+  const t = useTranslations("copilot.feedback")
+  const [share, setShare] = useState(false)
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border p-3">
+      <Checkbox checked={share} onCheckedChange={setShare} label={t("share")} />
+      <div className="flex justify-end gap-1">
+        <Button variant="ghost" size="sm" onClick={onCancel}>
+          {t("cancel")}
+        </Button>
+        <Button size="sm" onClick={() => onSend(share)}>
+          {t("send")}
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -120,6 +155,8 @@ export function AssistantMessageView({
   const name = useTranslations("copilot")("name")
   const locale = useLocale()
   const { send, rate } = useCopilot()
+  // A thumbs-down waits here until the user says whether the content goes with it.
+  const [rating, setRating] = useState(false)
   const { reply, phase } = message
   const settled = phase === "done"
   const working = phase === "working"
@@ -194,7 +231,8 @@ export function AssistantMessageView({
                 {c.title}
               </>
             )
-            const link = "underline-offset-2 hover:text-foreground hover:underline"
+            const link =
+              "underline-offset-2 hover:text-foreground hover:underline"
             return c.url.startsWith("/") ? (
               <Link key={c.n} href={c.url} className={link}>
                 {label}
@@ -241,16 +279,33 @@ export function AssistantMessageView({
         <div className="flex items-center gap-1">
           <AnswerActions
             copyText={plain}
-            feedback={message.feedback}
-            onFeedback={(value) => rate(message.id, value)}
+            feedback={rating ? "down" : message.feedback}
+            onFeedback={(value) => {
+              // A second press only closes the box: the stored rating stays.
+              if (rating && value === null) return setRating(false)
+              setRating(value === "down")
+              if (value !== "down") rate(message.id, value)
+            }}
           />
           {plain ? <SpeakButton messageId={message.id} /> : null}
         </div>
       ) : null}
 
+      {rating ? (
+        <ShareChoice
+          onSend={(share) => {
+            setRating(false)
+            rate(message.id, "down", share)
+          }}
+          onCancel={() => setRating(false)}
+        />
+      ) : null}
+
       {settled && reply ? (
         <p className="text-xs text-muted-foreground">{t("aiNote")}</p>
       ) : null}
+
+      {reply?.sent?.parties.length ? <SentOutside sent={reply.sent} /> : null}
 
       {settled && last && reply?.followUps.length ? (
         <FollowUps

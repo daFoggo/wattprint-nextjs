@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/hairline/voice-session"
 import { VoiceTalk } from "@workspace/ui/components/hairline/voice-talk"
 
-import { speechUrl, transcribeAudio } from "../voice"
+import { speechUrl, transcribeAudio, VoiceError } from "../voice"
 import { useCopilot } from "./copilot-provider"
 import { MOODS } from "../moods"
 import { WappiAvatar, useWappiState } from "./wappi-avatar"
@@ -36,13 +36,19 @@ export function VoiceMode({
 }) {
   const t = useTranslations("copilot")
   const locale = useLocale()
-  const { send } = useCopilot()
+  const { send, askConsent } = useCopilot()
   const chat = useWappiState()
   // One turn: the recording to text (backend), the question through the chat (so it stays in the history), the
   // answer read in Wappi's voice. VoiceTalk plays the voice as it streams in and stops it on Interrupt.
   const session = useVoiceSession({
     onTurn: async (audio, { signal }) => {
-      const question = await transcribeAudio(audio, locale, signal)
+      const question = await transcribeAudio(audio, locale, signal).catch(
+        (error: unknown) => {
+          if (error instanceof VoiceError && error.code === "consent_required")
+            askConsent("voice")
+          throw error
+        }
+      )
       if (!question || signal.aborted) return
       const answer = await send(question)
       if (!answer || signal.aborted) return

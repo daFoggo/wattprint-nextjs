@@ -232,3 +232,15 @@ describe("toMessages", () => {
     )
   })
 })
+
+describe("reply sent", () => {
+  it("is read when present, and absent or null on older answers", () => {
+    const sent = { parties: ["openrouter"], data: ["question"], detail: null }
+    for (const value of [sent, null, undefined]) {
+      const event = done("/dashboard/bill")
+      Object.assign(event.data.reply, { sent: value })
+      const parsed = ChatEventSchema.parse(event)
+      expect(parsed.event === "done" && parsed.data.reply.sent).toEqual(value)
+    }
+  })
+})

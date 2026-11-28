@@ -4,6 +4,12 @@ Shortcuts and deferred findings. Each entry: what, why it was left, when to pay 
 
 ## Open
 
+### Đồng ý đang chưa chặn (2026-11-28)
+
+`consent_enforced` (wattprint-backend `app/config.py`) đang tắt: chưa từ chối lời gọi nào khi chưa đồng ý, vì dev và
+prod chung API mà dashboard prod cũ chưa có hộp đồng ý. Trả khi triển khai dashboard mới: đặt
+`CONSENT_ENFORCED=true` trong `.env` backend, dựng lại container `api`, thử chat bằng tài khoản chưa đồng ý (403).
+
 ### Backlog (cập nhật 2026-11-26)
 
 Ưu tiên: P3 = khi còn thời gian. Độ khó: Dễ (dưới nửa ngày), Vừa (1-2 ngày), Khó (nhiều ngày hoặc cần thứ ngoài code).

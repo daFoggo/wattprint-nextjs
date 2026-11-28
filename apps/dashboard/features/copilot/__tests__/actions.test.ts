@@ -6,12 +6,17 @@ vi.mock("@/lib/dal", () => ({
 }))
 const fetchConversation = vi.fn()
 const fetchWatchStatuses = vi.fn()
+const putFeedback = vi.fn()
+const putConsent = vi.fn()
 vi.mock("../server", () => ({
+  putFeedback: (...a: unknown[]) => putFeedback(...a),
+  putConsent: (...a: unknown[]) => putConsent(...a),
   fetchConversation: (...a: unknown[]) => fetchConversation(...a),
   fetchWatchStatuses: (...a: unknown[]) => fetchWatchStatuses(...a),
 }))
 
-const { loadConversationAction } = await import("../actions")
+const { loadConversationAction, rateAnswerAction, setConsentAction } =
+  await import("../actions")
 
 const ID = "6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b"
 const watch = {
@@ -79,5 +84,22 @@ describe("loadConversationAction", () => {
     expect(widgetsOf(messages)).toEqual([watch]) // shown as live, without the "Ended" mark
     expect(error).toHaveBeenCalled()
     error.mockRestore()
+  })
+})
+
+describe("what an action lets out", () => {
+  it("shares an answer's content on a true boolean only", async () => {
+    await rateAnswerAction(ID, "down", "false" as unknown as boolean)
+    expect(putFeedback).toHaveBeenLastCalledWith("token", ID, "down", false)
+    await rateAnswerAction(ID, "down", true)
+    expect(putFeedback).toHaveBeenLastCalledWith("token", ID, "down", true)
+  })
+
+  it("refuses an unknown purpose or a non-boolean consent", async () => {
+    await expect(setConsentAction("sms" as "voice", true)).rejects.toThrow()
+    await expect(
+      setConsentAction("voice", "yes" as unknown as boolean)
+    ).rejects.toThrow()
+    expect(putConsent).not.toHaveBeenCalled()
   })
 })

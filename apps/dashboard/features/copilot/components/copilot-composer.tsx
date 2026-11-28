@@ -19,7 +19,7 @@ import { record, transcribeAudio, VoiceError } from "../voice"
 import { NEW, useCopilot } from "./copilot-provider"
 
 /** Dictation: the recording goes to the backend's speech to text, and its words land in the field. */
-function useDictation(onText: (text: string) => void) {
+function useDictation(onText: (text: string) => void, onRefused: () => void) {
   const locale = useLocale()
   const [status, setStatus] = useState<VoiceStatus>("idle")
   const [startedAt, setStartedAt] = useState<number>()
@@ -54,7 +54,12 @@ function useDictation(onText: (text: string) => void) {
         if (text) onText(text)
         setStatus("idle")
       } catch (error) {
-        setFailed(error instanceof VoiceError ? error.code : "error")
+        const code = error instanceof VoiceError ? error.code : "error"
+        if (code === "consent_required") {
+          onRefused()
+          return setStatus("idle")
+        }
+        setFailed(code)
         setStatus("error")
       }
     },
@@ -78,7 +83,11 @@ export function CopilotComposer({
 }) {
   const t = useTranslations("copilot")
   const locale = useLocale()
-  const { send, stop, status, active, threads } = useCopilot()
+  const { send, stop, status, active, threads, consents, askConsent } =
+    useCopilot()
+  /** The microphone only after the voice invite is agreed. */
+  const withVoice = (run: () => void) =>
+    consents?.voice ? run() : askConsent("voice", run)
   // Each conversation keeps its own draft ("" is a new one): switching never carries text across.
   const thread = active?.id ?? ""
   const [drafts, setDrafts] = useState<Record<string, string>>({})
@@ -110,8 +119,10 @@ export function CopilotComposer({
     setText("")
     setHeld(undefined)
   }
-  const dictation = useDictation((heard) =>
-    setText((prev) => (prev.trim() ? `${prev.trim()} ${heard}` : heard))
+  const dictation = useDictation(
+    (heard) =>
+      setText((prev) => (prev.trim() ? `${prev.trim()} ${heard}` : heard)),
+    () => askConsent("voice")
   )
 
   return (
@@ -151,7 +162,7 @@ export function CopilotComposer({
           setHeld(undefined)
         }}
         onSubmit={(value) => {
-          if (!value.trim()) return
+          if (!value.trim() || !consents?.wappi) return
           const hidden = redact(value.trim(), {
             email: t("privacy.labels.email"),
             card: t("privacy.labels.card"),
@@ -183,7 +194,7 @@ export function CopilotComposer({
                 variant="ghost"
                 size="icon"
                 aria-label={t("voice.start")}
-                onClick={onVoice}
+                onClick={() => withVoice(onVoice)}
               >
                 <IconWaveSine aria-hidden className="size-4" />
               </Button>
@@ -193,7 +204,7 @@ export function CopilotComposer({
               className="w-48"
               status={dictation.status}
               startedAt={dictation.startedAt}
-              onStart={dictation.start}
+              onStart={() => withVoice(dictation.start)}
               onStop={dictation.stop}
               onCancel={dictation.cancel}
               errorText={

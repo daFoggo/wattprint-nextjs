@@ -57,6 +57,10 @@
       "session": {
         "title": "Your session has ended",
         "body": "Reload the page to sign in again, then ask again."
+      },
+      "consent_required": {
+        "title": "Wappi needs your agreement first",
+        "body": "Wappi can only answer if you let it send your question and the figures it needs to an outside AI service. The other pages work as usual."
       }
     },
     "aiNote": "AI-generated from your home's data; it may be inaccurate.",
@@ -185,5 +189,84 @@
       "phone": "[phone number]",
       "account": "[account number]"
     }
+  },
+  "consent": {
+    "agree": "Agree",
+    "later": "Not now",
+    "failed": "Your choice was not saved. Please try again.",
+    "labels": {
+      "what": "What is sent",
+      "to": "Who receives it",
+      "where": "Where",
+      "note": "Good to know",
+      "who": "Who is responsible",
+      "off": "Where to turn it off"
+    },
+    "wappi": {
+      "title": "Let Wappi use an outside AI?",
+      "description": "To answer, Wappi asks an outside AI service. Here is what gets sent.",
+      "what": "Your question, the open conversation and the figures about your home's electricity needed to answer, at your home's level of detail (daily or hourly).",
+      "to": "OpenRouter, a service that passes questions on to AI models.",
+      "where": "Outside Vietnam.",
+      "note": "WattPrint asks OpenRouter to use only providers that keep nothing and do not train AI on the data.",
+      "who": "The WattPrint team.",
+      "off": "In Settings. Once off, Wappi stops answering until you agree again."
+    },
+    "voice": {
+      "title": "Let Wappi listen and read aloud?",
+      "description": "Your voice is sent to an outside service to turn it into text and read answers aloud.",
+      "what": "A recording of your voice, and the text of the answer to be read aloud. What you said, once turned into text and sent to Wappi, is handled like a typed question.",
+      "to": "The provider AstralX: speech to text, and reading answers aloud.",
+      "where": "On the provider AstralX's servers.",
+      "note": "Personal details cannot be hidden in a recording: whatever you say, such as a phone number or address, is sent as it is.",
+      "who": "The WattPrint team.",
+      "off": "In Settings. Once off, the microphone and voice mode stop working."
+    },
+    "required": {
+      "title": "Wappi needs your agreement first",
+      "description": "Wappi can only answer if you let it send your question and the figures it needs to an outside AI service. The other pages work as usual.",
+      "action": "Read and agree"
+    },
+    "unread": {
+      "title": "Your choice could not be checked",
+      "body": "Wappi has sent nothing. Try again in a few minutes."
+    }
+  },
+  "notice": "Your question and the figures needed to answer are sent to OpenRouter (outside Vietnam).",
+  "sent": {
+    "title": "Sent outside",
+    "to": "Sent to",
+    "data": "Included",
+    "detail": "Level of detail",
+    "levels": {
+      "daily": "Daily figures",
+      "hourly": "Hourly figures"
+    },
+    "parties": {
+      "openrouter": "OpenRouter (outside Vietnam)",
+      "astralx": "AstralX",
+      "openweather": "OpenWeather",
+      "telegram": "Telegram",
+      "smtp": "Email server"
+    },
+    "kinds": {
+      "question": "question",
+      "conversation": "conversation",
+      "toolResults": "lookup results",
+      "homeNumbers": "your home's figures",
+      "voiceRecording": "voice recording",
+      "answerText": "answer text",
+      "provinceLocation": "your home's province",
+      "rating": "rating",
+      "answer": "answer",
+      "emailAddress": "email address",
+      "alert": "alert",
+      "weeklySummary": "weekly summary"
+    }
+  },
+  "feedback": {
+    "share": "Also send the question and answer to the maintainers",
+    "send": "Send rating",
+    "cancel": "Discard"
   }
 }

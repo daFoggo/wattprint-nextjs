@@ -14,13 +14,15 @@ import { useLocale } from "next-intl"
 import { DASHBOARD_PATH } from "@/config/routes"
 
 import {
+  listConsentsAction,
   listConversationsAction,
   loadConversationAction,
   rateAnswerAction,
+  setConsentAction,
   updateConversationAction,
 } from "../actions"
 import type { Mood } from "../moods"
-import type { Message, Thread } from "../schemas"
+import type { Message, Purpose, Thread } from "../schemas"
 import { chatEvents } from "../stream"
 import {
   addTurn,
@@ -31,12 +33,15 @@ import {
   type AssistantMessage,
   type Status,
 } from "../threads"
+import { ConsentDialog } from "./consent-dialog"
 
 /** A short reaction of Wappi's avatar to something that just happened. */
 export type Reaction = Extract<
   Mood,
   "answered" | "liked" | "disliked" | "celebrating"
 >
+
+type Consents = Partial<Record<Purpose, boolean>>
 
 type CopilotState = {
   threads: Thread[]
@@ -54,7 +59,18 @@ type CopilotState = {
   rename: (id: string, title: string) => void
   remove: (id: string) => void
   pin: (id: string, pinned: boolean) => void
-  rate: (messageId: string, value: "up" | "down" | null) => void
+  rate: (
+    messageId: string,
+    value: "up" | "down" | null,
+    shareContent?: boolean
+  ) => void
+  /** What the user has agreed to; undefined until read. */
+  consents?: Consents
+  /** The consents could not be read: not the same as "not agreed". */
+  consentsFailed: boolean
+  loadConsents: () => void
+  /** Open the invite for a purpose; `then` runs once the user agrees. */
+  askConsent: (purpose: Purpose, then?: () => void) => void
   react: (reaction: Reaction) => void
 }
 
@@ -106,6 +122,13 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
   const [activeId, setActiveId] = useState<string>()
   const [panelOpen, setPanelOpen] = useState(false)
   const [reaction, setReaction] = useState<Reaction>()
+  const [consents, setConsents] = useState<Consents>()
+  const [asking, setAsking] = useState<{
+    purpose: Purpose
+    then?: () => void
+  }>()
+  const [consentsFailed, setConsentsFailed] = useState(false)
+  const consentsRef = useRef(false)
   const returnToRef = useRef(DASHBOARD_PATH)
   const toggleRef = useRef<HTMLButtonElement>(null)
   const abortRef = useRef<AbortController>(undefined)
@@ -150,6 +173,41 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       .finally(() => (loadingRef.current = false))
   }, [])
 
+  const askConsent = useCallback(
+    (purpose: Purpose, then?: () => void) => setAsking({ purpose, then }),
+    []
+  )
+
+  // Read once, when a chat first shows: Wappi's invite opens by itself then, if not agreed yet.
+  const loadConsents = useCallback(() => {
+    if (consentsRef.current) return
+    consentsRef.current = true
+    setConsentsFailed(false)
+    listConsentsAction()
+      .then((list) => {
+        const read: Consents = Object.fromEntries(
+          list.map((c) => [c.purpose, c.granted])
+        )
+        setConsents(read)
+        if (!read.wappi) askConsent("wappi")
+      })
+      .catch((error) => {
+        // Unknown, so nothing is sent; the next chat that shows (or "retry") reads again.
+        console.error(error)
+        consentsRef.current = false
+        setConsentsFailed(true)
+      })
+  }, [askConsent])
+
+  const agree = async () => {
+    if (!asking) return
+    const { purpose, then } = asking
+    await setConsentAction(purpose, true)
+    setConsents((all) => ({ ...all, [purpose]: true }))
+    setAsking(undefined)
+    then?.()
+  }
+
   const react = useCallback((r: Reaction) => {
     window.clearTimeout(reactTimer.current)
     setReaction(r)
@@ -157,6 +215,8 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const send = async (text: string): Promise<string | null> => {
+    // Every way of asking (composer, suggestion, follow-up, voice) passes here: nothing leaves before the yes.
+    if (!consents?.wappi) return null
     // A question while an answer comes (a follow-up, a voice turn) stops that answer rather than being dropped.
     abortRef.current?.abort()
     const controller = new AbortController()
@@ -205,8 +265,14 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
         ?.startsWith("text/event-stream")
       if (!res.ok || !res.body || !stream) {
         const code =
-          res.ok || res.type === "opaqueredirect" ? "session" : await codeOf(res)
+          res.ok || res.type === "opaqueredirect"
+            ? "session"
+            : await codeOf(res)
         change((m) => ({ ...m, phase: "error", error: code }))
+        if (code === "consent_required") {
+          setConsents((all) => ({ ...all, wappi: false }))
+          askConsent("wappi")
+        }
         return null
       }
       let final: string | null = null
@@ -316,7 +382,11 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       setThread(threadId, { pinned })
       updateConversationAction(threadId, { pinned }).catch(resync)
     },
-    rate: (messageId, feedback) => {
+    consents,
+    consentsFailed,
+    loadConsents,
+    askConsent,
+    rate: (messageId, feedback, shareContent) => {
       if (!activeId) return
       setThreads((all) =>
         updateMessage(all, activeId, messageId, (m) =>
@@ -324,13 +394,20 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
         )
       )
       if (feedback) react(feedback === "up" ? "liked" : "disliked")
-      rateAnswerAction(messageId, feedback).catch(console.error)
+      rateAnswerAction(messageId, feedback, shareContent).catch(console.error)
     },
   }
 
   return (
     <PanelContext value={panel}>
-      <CopilotContext value={value}>{children}</CopilotContext>
+      <CopilotContext value={value}>
+        {children}
+        <ConsentDialog
+          purpose={asking?.purpose}
+          onAgree={agree}
+          onClose={() => setAsking(undefined)}
+        />
+      </CopilotContext>
     </PanelContext>
   )
 }

@@ -57,6 +57,10 @@
       "session": {
         "title": "Phiên đăng nhập đã hết",
         "body": "Tải lại trang để đăng nhập lại rồi hỏi tiếp."
+      },
+      "consent_required": {
+        "title": "Wappi cần bạn đồng ý trước",
+        "body": "Wappi chỉ trả lời được khi bạn cho phép gửi câu hỏi và số liệu cần thiết tới dịch vụ AI bên ngoài. Các trang khác vẫn dùng bình thường."
       }
     },
     "aiNote": "Nội dung do AI tạo từ dữ liệu nhà bạn, có thể chưa chính xác.",
@@ -185,5 +189,84 @@
       "phone": "[số điện thoại]",
       "account": "[số tài khoản]"
     }
+  },
+  "consent": {
+    "agree": "Đồng ý",
+    "later": "Để sau",
+    "failed": "Chưa lưu được lựa chọn của bạn. Thử lại nhé.",
+    "labels": {
+      "what": "Gửi gì",
+      "to": "Gửi cho ai",
+      "where": "Ở đâu",
+      "note": "Lưu ý",
+      "who": "Ai chịu trách nhiệm",
+      "off": "Tắt ở đâu"
+    },
+    "wappi": {
+      "title": "Cho Wappi dùng AI bên ngoài?",
+      "description": "Để trả lời, Wappi nhờ một dịch vụ AI bên ngoài. Xem trước những gì được gửi đi.",
+      "what": "Câu hỏi của bạn, cuộc trò chuyện đang mở và những con số về điện của nhà cần để trả lời, ở mức chi tiết của nhà (theo ngày hoặc theo giờ).",
+      "to": "OpenRouter, dịch vụ chuyển câu hỏi tới mô hình AI.",
+      "where": "Ngoài Việt Nam.",
+      "note": "WattPrint yêu cầu OpenRouter chỉ dùng nơi xử lý không lưu lại gì và không lấy dữ liệu để huấn luyện AI.",
+      "who": "Nhóm WattPrint.",
+      "off": "Trong Cài đặt. Khi tắt, Wappi ngừng trả lời cho tới khi bạn đồng ý lại."
+    },
+    "voice": {
+      "title": "Cho Wappi nghe và đọc thành tiếng?",
+      "description": "Giọng nói được gửi tới một dịch vụ bên ngoài để chuyển thành chữ và đọc câu trả lời.",
+      "what": "Bản ghi âm giọng bạn, và chữ của câu trả lời cần đọc thành tiếng. Lời bạn nói, sau khi thành chữ và gửi cho Wappi, được xử lý như câu bạn gõ.",
+      "to": "Nhà cung cấp AstralX: chuyển giọng nói thành chữ và đọc câu trả lời.",
+      "where": "Trên máy chủ của nhà cung cấp AstralX.",
+      "note": "Bản ghi âm không che được thông tin cá nhân: bạn nói gì, như số điện thoại hay địa chỉ, nó được gửi đi nguyên như vậy.",
+      "who": "Nhóm WattPrint.",
+      "off": "Trong Cài đặt. Khi tắt, micro và chế độ nói chuyện ngừng dùng được."
+    },
+    "required": {
+      "title": "Wappi cần bạn đồng ý trước",
+      "description": "Wappi chỉ trả lời được khi bạn cho phép gửi câu hỏi và số liệu cần thiết tới dịch vụ AI bên ngoài. Các trang khác vẫn dùng bình thường.",
+      "action": "Xem và đồng ý"
+    },
+    "unread": {
+      "title": "Chưa kiểm tra được lựa chọn của bạn",
+      "body": "Wappi chưa gửi gì đi. Thử lại sau ít phút."
+    }
+  },
+  "notice": "Câu hỏi và số liệu cần để trả lời được gửi tới OpenRouter (ngoài Việt Nam).",
+  "sent": {
+    "title": "Đã gửi ra ngoài",
+    "to": "Gửi tới",
+    "data": "Gồm",
+    "detail": "Mức chi tiết",
+    "levels": {
+      "daily": "Số liệu theo ngày",
+      "hourly": "Số liệu theo giờ"
+    },
+    "parties": {
+      "openrouter": "OpenRouter (ngoài Việt Nam)",
+      "astralx": "AstralX",
+      "openweather": "OpenWeather",
+      "telegram": "Telegram",
+      "smtp": "Máy chủ email"
+    },
+    "kinds": {
+      "question": "câu hỏi",
+      "conversation": "cuộc trò chuyện",
+      "toolResults": "kết quả tra cứu",
+      "homeNumbers": "số liệu của nhà",
+      "voiceRecording": "bản ghi giọng nói",
+      "answerText": "chữ của câu trả lời",
+      "provinceLocation": "vị trí tỉnh của nhà",
+      "rating": "đánh giá",
+      "answer": "câu trả lời",
+      "emailAddress": "địa chỉ email",
+      "alert": "cảnh báo",
+      "weeklySummary": "tóm tắt tuần"
+    }
+  },
+  "feedback": {
+    "share": "Gửi kèm nội dung câu hỏi và câu trả lời cho người bảo trì",
+    "send": "Gửi đánh giá",
+    "cancel": "Bỏ"
   }
 }

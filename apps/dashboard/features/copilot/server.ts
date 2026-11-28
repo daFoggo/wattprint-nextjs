@@ -5,9 +5,11 @@ import { z } from "zod"
 import { apiFetch, apiResponse } from "@/lib/http"
 
 import {
+  ConsentSchema,
   ConversationSchema,
   ConversationSummarySchema,
   TranscriptSchema,
+  type Purpose,
 } from "./schemas"
 
 const json = (body: unknown) => ({
@@ -60,11 +62,33 @@ export async function deleteConversation(token: string, id: string) {
 export async function putFeedback(
   token: string,
   messageId: string,
-  value: "up" | "down" | null
+  value: "up" | "down" | null,
+  shareContent = false
 ) {
   await apiFetch(
     `/copilot/messages/${encodeURIComponent(messageId)}/feedback`,
-    { token, method: "PUT", ...json({ value }) }
+    { token, method: "PUT", ...json({ value, share_content: shareContent }) }
+  )
+}
+
+export async function fetchConsents(token: string) {
+  return z
+    .array(ConsentSchema)
+    .parse(await apiFetch("/users/me/consents", { token }))
+}
+
+/** Each call is a new record on the backend; withdrawing is `granted: false`. */
+export async function putConsent(
+  token: string,
+  purpose: Purpose,
+  granted: boolean
+) {
+  return ConsentSchema.parse(
+    await apiFetch(`/users/me/consents/${purpose}`, {
+      token,
+      method: "PUT",
+      ...json({ granted }),
+    })
   )
 }
 

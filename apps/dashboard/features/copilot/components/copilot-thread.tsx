@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   IconChartLine,
   IconDevices,
@@ -16,6 +16,7 @@ import { useTranslations } from "next-intl"
 import { Alert } from "@workspace/ui/components/hairline/alert"
 import { Button } from "@workspace/ui/components/hairline/button"
 import { ChatScroll } from "@workspace/ui/components/hairline/chat-scroll"
+import { EmptyState as HairlineEmptyState } from "@workspace/ui/components/hairline/empty-state"
 import { INTERACTION_FOCUS } from "@workspace/ui/components/hairline/motion"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -76,11 +77,12 @@ const ICONS: Record<Topic, Icon> = {
 
 /** A question to send in one tap: an icon in a round well and the question, as a card on the plate or the page. */
 function Suggestion({ topic, children }: { topic: Topic; children: string }) {
-  const { send } = useCopilot()
+  const { send, consents } = useCopilot()
   const Glyph = ICONS[topic]
   return (
     <button
       type="button"
+      disabled={!consents}
       onClick={() => void send(children)}
       className={cn(
         "flex cursor-pointer items-center gap-3 rounded-xl border bg-background p-3 text-left text-sm transition-colors duration-150 hover:bg-accent",
@@ -158,7 +160,15 @@ function EmptyState({ page, wide }: { page?: Page; wide: boolean }) {
  */
 export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
   const t = useTranslations("copilot")
-  const { active, status, select } = useCopilot()
+  const {
+    active,
+    status,
+    select,
+    consents,
+    consentsFailed,
+    loadConsents,
+    askConsent,
+  } = useCopilot()
   const [voice, setVoice] = useState(false)
   const pathname = usePathname()
   const wide = variant === "page"
@@ -166,6 +176,41 @@ export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
   const messages = active?.messages ?? []
   const lastUser = messages.filter((m) => m.role === "user").at(-1)
   const column = cn("mx-auto w-full px-4", wide && "max-w-3xl")
+
+  useEffect(() => loadConsents(), [loadConsents])
+
+  if (consentsFailed)
+    return (
+      <div className={cn(column, "py-6")}>
+        <Alert
+          tone="warning"
+          title={t("consent.unread.title")}
+          action={
+            <Button variant="outline" size="sm" onClick={loadConsents}>
+              {t("loadFailed.retry")}
+            </Button>
+          }
+        >
+          {t("consent.unread.body")}
+        </Alert>
+      </div>
+    )
+
+  // Not agreed (or withdrawn): no chat, no composer, only why and the way to agree.
+  if (consents && !consents.wappi)
+    return (
+      <div className="no-scrollbar flex min-h-0 flex-1 flex-col justify-center overflow-y-auto p-4">
+        <HairlineEmptyState
+          title={t("consent.required.title")}
+          description={t("consent.required.description")}
+          action={
+            <Button onClick={() => askConsent("wappi")}>
+              {t("consent.required.action")}
+            </Button>
+          }
+        />
+      </div>
+    )
 
   if (voice)
     return <VoiceMode size={wide ? 260 : 180} onBack={() => setVoice(false)} />
@@ -218,6 +263,9 @@ export function CopilotThread({ variant }: { variant: "panel" | "page" }) {
           context={page && t(`pages.${page}`)}
           onVoice={() => setVoice(true)}
         />
+        <p className="text-center text-xs text-muted-foreground">
+          {t("notice")}
+        </p>
       </div>
     </div>
   )

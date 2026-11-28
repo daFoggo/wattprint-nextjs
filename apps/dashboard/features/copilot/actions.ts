@@ -4,12 +4,14 @@ import { z } from "zod"
 
 import { requirePermission } from "@/lib/dal"
 
-import { toMessages } from "./schemas"
+import { ConsentSchema, toMessages, type Purpose } from "./schemas"
 import {
+  fetchConsents,
   fetchConversation,
   fetchConversations,
   fetchWatchStatuses,
   patchConversation,
+  putConsent,
   putFeedback,
 } from "./server"
 
@@ -62,12 +64,29 @@ export async function updateConversationAction(
 
 export async function rateAnswerAction(
   messageId: string,
-  value: "up" | "down" | null
+  value: "up" | "down" | null,
+  shareContent = false
 ) {
   const { accessToken } = await requirePermission("account:view")
   await putFeedback(
     accessToken,
     Id.parse(messageId),
-    z.enum(["up", "down"]).nullable().parse(value)
+    z.enum(["up", "down"]).nullable().parse(value),
+    // Content leaves only on an explicit true.
+    shareContent === true
+  )
+}
+
+export async function listConsentsAction() {
+  const { accessToken } = await requirePermission("account:view")
+  return fetchConsents(accessToken)
+}
+
+export async function setConsentAction(purpose: Purpose, granted: boolean) {
+  const { accessToken } = await requirePermission("account:view")
+  await putConsent(
+    accessToken,
+    ConsentSchema.shape.purpose.parse(purpose),
+    z.boolean().parse(granted)
   )
 }

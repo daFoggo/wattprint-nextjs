@@ -138,6 +138,14 @@ const WidgetsSchema = z.array(z.unknown()).transform((items) =>
   })
 )
 
+/** What left WattPrint for one answer: party and data ids, and how fine the home's figures were. */
+const SentSchema = z.object({
+  parties: z.array(z.string()),
+  data: z.array(z.string()),
+  detail: z.enum(["daily", "hourly"]).nullable(),
+})
+export type Sent = z.infer<typeof SentSchema>
+
 const ReplySchema = z.object({
   intent: z.string(),
   tier: DataTierSchema,
@@ -149,6 +157,8 @@ const ReplySchema = z.object({
   sources: z.array(SourceSchema),
   widgets: WidgetsSchema,
   followUps: z.array(z.string()),
+  /** Absent on answers stored before the backend recorded it. */
+  sent: SentSchema.nullish(),
 })
 export type Reply = z.infer<typeof ReplySchema>
 
@@ -175,6 +185,13 @@ export const ConversationSchema = ConversationSummarySchema.extend({
     })
   ),
 })
+
+/** One purpose the user agrees to before data leaves WattPrint. */
+export const ConsentSchema = z.object({
+  purpose: z.enum(["wappi", "voice", "email"]),
+  granted: z.boolean(),
+})
+export type Purpose = z.infer<typeof ConsentSchema>["purpose"]
 
 export const TranscriptSchema = z.object({
   text: z.string(),
