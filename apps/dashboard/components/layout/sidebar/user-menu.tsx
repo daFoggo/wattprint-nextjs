@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { IconSelector } from "@tabler/icons-react"
 import { useTranslations } from "next-intl"
 
@@ -10,6 +11,7 @@ import { ThemeToggle } from "@workspace/ui-patterns/theme-toggle"
 
 import { useSidebar } from "@/components/layout/sidebar/sidebar"
 import { LocaleSwitch } from "@/components/shared/locale-switch"
+import { usePathname } from "@/i18n/navigation"
 
 /**
  * Account row pinned to the sidebar bottom: initials avatar, name and role (just the avatar in the
@@ -31,8 +33,13 @@ export function UserMenu({
   const tCommon = useTranslations("common")
   const t = useTranslations("layout")
   const roleLabel = t(`roles.${role}`)
+  // A link in the panel leads to a page: the panel closes on arriving.
+  const pathname = usePathname()
+  const [openOn, setOpenOn] = useState<string | null>(null)
   return (
     <Popover
+      open={openOn === pathname}
+      onOpenChange={(open) => setOpenOn(open ? pathname : null)}
       label={t("account")}
       width={288}
       side={iconRail ? "right" : "top"}
@@ -42,7 +49,7 @@ export function UserMenu({
           type="button"
           data-sidebar="menu-button"
           aria-label={t("accountLabel", { name, role: roleLabel })}
-          className="flex w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl p-1.5 text-left transition-colors duration-150 hover:bg-accent aria-expanded:bg-accent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0.5"
+          className="flex w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-xl p-1.5 text-left transition-colors duration-150 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0.5 hover:bg-accent aria-expanded:bg-accent"
         >
           <Avatar name={name} size="sm" />
           <span className="flex min-w-0 flex-1 flex-col group-data-[collapsible=icon]:hidden">

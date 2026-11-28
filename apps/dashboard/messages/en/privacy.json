@@ -1,0 +1,101 @@
+{
+  "title": "Privacy",
+  "description": "What WattPrint keeps, what it sends outside, and how to delete it.",
+  "link": "Privacy",
+  "entry": "See what is kept, what is sent outside, and delete data.",
+  "kept": {
+    "title": "What is kept",
+    "description": "Your home's electricity figures, from the finest to the coarsest.",
+    "levels": {
+      "raw": "Readings every 10 seconds",
+      "1m": "By minute",
+      "1h": "By hour",
+      "1d": "By day"
+    },
+    "days": "Kept {days} days",
+    "forever": "Not deleted automatically",
+    "oldest": "Oldest from {date}",
+    "none": "Nothing stored yet",
+    "erased": "Figures before {date} were deleted."
+  },
+  "outside": {
+    "title": "Sent outside",
+    "description": "Turn each service on or off.",
+    "wappi": {
+      "name": "Wappi"
+    },
+    "voice": {
+      "name": "Voice"
+    },
+    "email": {
+      "name": "Email",
+      "what": "Your email address, alerts and the weekly summary. The weekly summary also has to be on in Settings.",
+      "to": "The email server."
+    },
+    "level": "Wappi sees figures",
+    "hourly": "By hour",
+    "daily": "By day",
+    "ownerOnly": "Only the home owner can change it."
+  },
+  "log": {
+    "open": "View log",
+    "title": "Sent outside in the last 30 days",
+    "description": "Only the kinds of data are recorded, never the content.",
+    "times": "{count, plural, one {# time} other {# times}}",
+    "empty": "Nothing sent in the last 30 days"
+  },
+  "delete": {
+    "title": "Delete",
+    "description": "What is deleted cannot be got back.",
+    "noUndo": "What is deleted cannot be got back.",
+    "cancel": "Cancel",
+    "confirm": "Delete for good",
+    "done": "Deleted.",
+    "failed": "Not deleted. Try again in a few minutes."
+  },
+  "history": {
+    "title": "The home's electricity history",
+    "hint": "Delete figures before a date, or all of them.",
+    "open": "Delete history",
+    "scope": "Which part",
+    "before": "Before a date",
+    "all": "All",
+    "date": "Delete before",
+    "datePlaceholder": "day/month/year",
+    "questionAll": "Delete all electricity history?",
+    "questionBefore": "Delete electricity history before {date}?",
+    "readings": "Meter readings, per-device figures and alerts in that time are deleted.",
+    "bills": "Bills of cycles wholly in that time are deleted. A cycle cut in two shows as incomplete.",
+    "stays": "The device list and device recognition stay.",
+    "sent": "What was already sent to outside services cannot be recalled.",
+    "cannot": "Only the home owner can delete it. Demo homes cannot be deleted."
+  },
+  "chats": {
+    "title": "My chats",
+    "hint": "All your conversations with Wappi in this home.",
+    "open": "Delete chats",
+    "question": "Delete every conversation?",
+    "loses": "All questions, answers and read-aloud audio are deleted.",
+    "sent": "What was already sent to outside services cannot be recalled."
+  },
+  "account": {
+    "title": "My account",
+    "hint": "Delete your account and your data.",
+    "open": "Delete account",
+    "question": "Delete the account?",
+    "loses": "Your profile, chats, savings plans, the alerts you set and your sign-in are deleted.",
+    "home": "If you are the only one in the home, the home and all its electricity figures are deleted too.",
+    "sent": "What was already sent to outside services cannot be recalled."
+  },
+  "ai": {
+    "title": "How AI uses your data",
+    "devices": "Telling devices apart from the main meter runs on WattPrint's servers, with models learned from public datasets, not from your home's data.",
+    "wappi": "Wappi sends your question and the figures needed to answer it to an outside AI service; a phone number, email or card number you type is masked first.",
+    "policy": "Read the privacy policy"
+  },
+  "refused": {
+    "demo": "A demo home cannot be deleted or changed.",
+    "owner": "Only the home owner can do this.",
+    "other": "That did not work. Try again in a few minutes."
+  }
+}

@@ -206,9 +206,9 @@
       "title": "Cho Wappi dùng AI bên ngoài?",
       "description": "Để trả lời, Wappi nhờ một dịch vụ AI bên ngoài. Xem trước những gì được gửi đi.",
       "what": "Câu hỏi của bạn, cuộc trò chuyện đang mở và những con số về điện của nhà cần để trả lời, ở mức chi tiết của nhà (theo ngày hoặc theo giờ).",
-      "to": "OpenRouter, dịch vụ chuyển câu hỏi tới mô hình AI.",
-      "where": "Ngoài Việt Nam.",
-      "note": "WattPrint yêu cầu OpenRouter chỉ dùng nơi xử lý không lưu lại gì và không lấy dữ liệu để huấn luyện AI.",
+      "to": "OpenRouter, dịch vụ chuyển câu hỏi tới mô hình AI. Khi OpenRouter lỗi, nhà cung cấp AstralX trả lời thay.",
+      "where": "OpenRouter ở ngoài Việt Nam; AstralX xử lý trên máy chủ của họ.",
+      "note": "WattPrint yêu cầu OpenRouter chỉ dùng nơi xử lý không lưu lại gì và không lấy dữ liệu để huấn luyện AI. Yêu cầu này chưa áp được cho AstralX.",
       "who": "Nhóm WattPrint.",
       "off": "Trong Cài đặt. Khi tắt, Wappi ngừng trả lời cho tới khi bạn đồng ý lại."
     },
@@ -232,7 +232,7 @@
       "body": "Wappi chưa gửi gì đi. Thử lại sau ít phút."
     }
   },
-  "notice": "Câu hỏi và số liệu cần để trả lời được gửi tới OpenRouter (ngoài Việt Nam).",
+  "notice": "Câu hỏi và số liệu cần để trả lời được gửi tới OpenRouter (ngoài Việt Nam), hoặc AstralX khi OpenRouter lỗi.",
   "sent": {
     "title": "Đã gửi ra ngoài",
     "to": "Gửi tới",

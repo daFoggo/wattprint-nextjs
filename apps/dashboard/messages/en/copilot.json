@@ -206,9 +206,9 @@
       "title": "Let Wappi use an outside AI?",
       "description": "To answer, Wappi asks an outside AI service. Here is what gets sent.",
       "what": "Your question, the open conversation and the figures about your home's electricity needed to answer, at your home's level of detail (daily or hourly).",
-      "to": "OpenRouter, a service that passes questions on to AI models.",
-      "where": "Outside Vietnam.",
-      "note": "WattPrint asks OpenRouter to use only providers that keep nothing and do not train AI on the data.",
+      "to": "OpenRouter, a service that passes the question to an AI model. When OpenRouter is down, the provider AstralX answers instead.",
+      "where": "OpenRouter is outside Vietnam; AstralX processes it on its own servers.",
+      "note": "WattPrint asks OpenRouter to use only processors that keep nothing and do not train on the data. This request cannot yet be made to AstralX.",
       "who": "The WattPrint team.",
       "off": "In Settings. Once off, Wappi stops answering until you agree again."
     },
@@ -232,7 +232,7 @@
       "body": "Wappi has sent nothing. Try again in a few minutes."
     }
   },
-  "notice": "Your question and the figures needed to answer are sent to OpenRouter (outside Vietnam).",
+  "notice": "Your question and the figures needed to answer it go to OpenRouter (outside Vietnam), or to AstralX when OpenRouter is down.",
   "sent": {
     "title": "Sent outside",
     "to": "Sent to",

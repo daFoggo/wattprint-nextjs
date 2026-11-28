@@ -59,6 +59,10 @@ export async function deleteConversation(token: string, id: string) {
   })
 }
 
+export async function deleteConversations(token: string) {
+  await apiFetch("/copilot/conversations", { token, method: "DELETE" })
+}
+
 export async function putFeedback(
   token: string,
   messageId: string,

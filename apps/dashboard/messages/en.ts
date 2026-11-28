@@ -8,6 +8,7 @@ import insight from "./en/insight.json"
 import weather from "./en/weather.json"
 import copilot from "./en/copilot.json"
 import plan from "./en/plan.json"
+import privacy from "./en/privacy.json"
 
 import type vi from "./vi"
 
@@ -23,4 +24,5 @@ export default {
   weather,
   copilot,
   plan,
+  privacy,
 } satisfies typeof vi

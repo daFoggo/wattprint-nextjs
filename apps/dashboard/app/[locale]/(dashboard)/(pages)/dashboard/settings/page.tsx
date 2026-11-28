@@ -8,6 +8,7 @@ import { TileSkeleton } from "@/components/shared/tile-skeleton"
 import { saveHomeSettingsAction } from "@/features/home/actions"
 import { HomeSettingsForm } from "@/features/home/components/home-settings"
 import { getHomeSettings, getProvinces } from "@/features/home/queries"
+import { PrivacyEntry } from "@/features/privacy/components/privacy-entry"
 
 import { NoHome } from "../../../_components/no-home"
 
@@ -31,12 +32,13 @@ async function Settings() {
   )
 }
 
-// The form alone: alerts live on their own page.
+// The way to the privacy page, then the form: alerts live on their own page.
 export default function SettingsPage() {
   const t = useTranslations("layout.settings")
   return (
     <>
       <PageHead title={t("title")}>{t("description")}</PageHead>
+      <PrivacyEntry />
       <Suspense fallback={<TileSkeleton height={600} />}>
         <Settings />
       </Suspense>

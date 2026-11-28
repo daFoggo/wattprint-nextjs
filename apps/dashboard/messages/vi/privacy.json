@@ -1,0 +1,101 @@
+{
+  "title": "Quyền riêng tư",
+  "description": "WattPrint đang giữ gì, gửi gì ra ngoài, và cách xóa.",
+  "link": "Quyền riêng tư",
+  "entry": "Xem đang giữ gì, gửi gì ra ngoài, và xóa dữ liệu.",
+  "kept": {
+    "title": "Đang giữ gì",
+    "description": "Số liệu điện của nhà, từ chi tiết nhất đến gọn nhất.",
+    "levels": {
+      "raw": "Số đo mỗi 10 giây",
+      "1m": "Theo phút",
+      "1h": "Theo giờ",
+      "1d": "Theo ngày"
+    },
+    "days": "Giữ {days} ngày",
+    "forever": "Không tự xóa",
+    "oldest": "Cũ nhất từ {date}",
+    "none": "Chưa có số liệu",
+    "erased": "Số liệu trước ngày {date} đã được xóa."
+  },
+  "outside": {
+    "title": "Gửi ra ngoài",
+    "description": "Bật hay tắt từng dịch vụ.",
+    "wappi": {
+      "name": "Wappi"
+    },
+    "voice": {
+      "name": "Giọng nói"
+    },
+    "email": {
+      "name": "Email",
+      "what": "Địa chỉ email của bạn, cảnh báo và tóm tắt tuần. Tóm tắt tuần còn phải bật trong Cài đặt.",
+      "to": "Máy chủ gửi email."
+    },
+    "level": "Wappi xem tới mức",
+    "hourly": "Theo giờ",
+    "daily": "Theo ngày",
+    "ownerOnly": "Chỉ chủ nhà đổi được."
+  },
+  "log": {
+    "open": "Xem nhật ký",
+    "title": "Đã gửi ra ngoài trong 30 ngày",
+    "description": "Chỉ ghi loại dữ liệu, không ghi nội dung.",
+    "times": "{count} lần",
+    "empty": "30 ngày qua chưa gửi gì"
+  },
+  "delete": {
+    "title": "Xóa",
+    "description": "Đã xóa thì không lấy lại được.",
+    "noUndo": "Đã xóa thì không lấy lại được.",
+    "cancel": "Thôi",
+    "confirm": "Xóa vĩnh viễn",
+    "done": "Đã xóa.",
+    "failed": "Chưa xóa được. Thử lại sau ít phút."
+  },
+  "history": {
+    "title": "Lịch sử điện của nhà",
+    "hint": "Xóa số liệu trước một ngày, hoặc tất cả.",
+    "open": "Xóa lịch sử",
+    "scope": "Xóa phần nào",
+    "before": "Trước một ngày",
+    "all": "Tất cả",
+    "date": "Xóa trước ngày",
+    "datePlaceholder": "ngày/tháng/năm",
+    "questionAll": "Xóa toàn bộ lịch sử điện?",
+    "questionBefore": "Xóa lịch sử điện trước ngày {date}?",
+    "readings": "Số đo điện, số liệu từng thiết bị và cảnh báo trong khoảng này bị xóa.",
+    "bills": "Hóa đơn của kỳ nằm trọn trong khoảng này bị xóa. Kỳ bị cắt ngang sẽ ghi là thiếu số liệu.",
+    "stays": "Danh sách thiết bị và khả năng nhận ra thiết bị vẫn giữ.",
+    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được.",
+    "cannot": "Chỉ chủ nhà xóa được. Nhà demo không xóa được."
+  },
+  "chats": {
+    "title": "Trò chuyện của tôi",
+    "hint": "Mọi cuộc trò chuyện của bạn với Wappi trong nhà này.",
+    "open": "Xóa trò chuyện",
+    "question": "Xóa mọi cuộc trò chuyện?",
+    "loses": "Toàn bộ câu hỏi, câu trả lời và bản đọc thành tiếng bị xóa.",
+    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được."
+  },
+  "account": {
+    "title": "Tài khoản của tôi",
+    "hint": "Xóa tài khoản và dữ liệu của bạn.",
+    "open": "Xóa tài khoản",
+    "question": "Xóa tài khoản?",
+    "loses": "Hồ sơ, trò chuyện, kế hoạch tiết kiệm, cảnh báo bạn đặt và đăng nhập bị xóa.",
+    "home": "Nếu chỉ có bạn trong nhà, cả nhà và toàn bộ số liệu điện cũng bị xóa.",
+    "sent": "Những gì đã gửi cho dịch vụ bên ngoài không thu lại được."
+  },
+  "ai": {
+    "title": "AI dùng dữ liệu của bạn thế nào",
+    "devices": "Việc nhận ra từng thiết bị từ công tơ tổng chạy trên máy chủ WattPrint, bằng mô hình học từ các bộ dữ liệu công khai chứ không phải từ dữ liệu nhà bạn.",
+    "wappi": "Wappi gửi câu hỏi và số liệu cần để trả lời tới dịch vụ AI bên ngoài; số điện thoại, email hay số thẻ bạn gõ được che trước khi gửi.",
+    "policy": "Đọc chính sách quyền riêng tư"
+  },
+  "refused": {
+    "demo": "Nhà demo không xóa hay đổi được.",
+    "owner": "Chỉ chủ nhà làm được việc này.",
+    "other": "Chưa làm được. Thử lại sau ít phút."
+  }
+}

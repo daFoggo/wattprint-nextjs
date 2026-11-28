@@ -14,6 +14,7 @@ import { useLocale } from "next-intl"
 import { DASHBOARD_PATH } from "@/config/routes"
 
 import {
+  deleteConversationsAction,
   listConsentsAction,
   listConversationsAction,
   loadConversationAction,
@@ -71,6 +72,10 @@ type CopilotState = {
   loadConsents: () => void
   /** Open the invite for a purpose; `then` runs once the user agrees. */
   askConsent: (purpose: Purpose, then?: () => void) => void
+  /** Record a yes or no; the chat follows it at once. */
+  saveConsent: (purpose: Purpose, granted: boolean) => Promise<void>
+  /** Delete all my conversations here, then forget the ones held. */
+  deleteAll: () => Promise<void>
   react: (reaction: Reaction) => void
 }
 
@@ -199,11 +204,23 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
       })
   }, [askConsent])
 
+  const saveConsent = async (purpose: Purpose, granted: boolean) => {
+    await setConsentAction(purpose, granted)
+    // Not read yet: leave it unread, a partial list would look like "not agreed" for the others.
+    setConsents((all) => all && { ...all, [purpose]: granted })
+  }
+
+  const deleteAll = async () => {
+    stop()
+    await deleteConversationsAction()
+    setThreads([])
+    setActiveId(undefined)
+  }
+
   const agree = async () => {
     if (!asking) return
     const { purpose, then } = asking
-    await setConsentAction(purpose, true)
-    setConsents((all) => ({ ...all, [purpose]: true }))
+    await saveConsent(purpose, true)
     setAsking(undefined)
     then?.()
   }
@@ -386,6 +403,8 @@ export function CopilotProvider({ children }: { children: React.ReactNode }) {
     consentsFailed,
     loadConsents,
     askConsent,
+    saveConsent,
+    deleteAll,
     rate: (messageId, feedback, shareContent) => {
       if (!activeId) return
       setThreads((all) =>

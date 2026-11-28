@@ -7,6 +7,7 @@ export const AUTH_PAGES = [SIGN_IN_PATH] as const
 export const DASHBOARD_PATH = "/dashboard"
 export const BILL_PATH = "/dashboard/bill"
 export const SETTINGS_PATH = "/dashboard/settings"
+export const PRIVACY_PATH = "/dashboard/settings/privacy"
 export const STATISTICS_PATH = "/dashboard/statistics"
 export const DEVICES_PATH = "/dashboard/devices"
 export const ALERTS_PATH = "/dashboard/alerts"
